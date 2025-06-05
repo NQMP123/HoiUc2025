@@ -28,8 +28,19 @@ public class TieuDoiTruong extends Boss {
         this.name = "Tiểu đội trưởng";
         setInfo(150000000, 1000000, 10000, 100, 5);
         this.willLeaveAtDeath = false;
+        if(team.getType() == 0)
+        {
+            setInfo(50000000, 1000000, 10000, 100, 5);
+        this.percentDame = 35;            
+        }
     }
+    @Override
+    public long injure(Player plAtt, Mob mob, long dameInput) {
+        if(team.getType() == 0)
+       { return Math.min(500000, dameInput);}
+       return dameInput;
 
+    }
     @Override
     public void initSkill() {
         try {
@@ -87,17 +98,6 @@ public class TieuDoiTruong extends Boss {
             itemMap.playerID = Math.abs(c.id);
             itemMap.x = getX();
             itemMap.y = zone.map.collisionLand(getX(), getY());
-            zone.addItemMap(itemMap);
-            zone.service.addItemMap(itemMap);
-        } else {
-            Item item = new Item(ItemName.THOI_VANG);
-            item.setDefaultOptions();
-            item.quantity = 1;
-            ItemMap itemMap = new ItemMap(zone.autoIncrease++);
-            itemMap.item = item;
-            itemMap.playerID = -1;
-            itemMap.x = (short) Utils.nextInt(50, zone.map.width - 50);
-            itemMap.y = zone.map.collisionLand(itemMap.x, getY());
             zone.addItemMap(itemMap);
             zone.service.addItemMap(itemMap);
         }

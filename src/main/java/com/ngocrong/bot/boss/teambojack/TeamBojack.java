@@ -29,6 +29,7 @@ public class TeamBojack extends Boss {
 
     public TeamBojack() {
         super();
+        setInfo(50000000, 1000000, 10000, 100, 5);
         this.percentDame = 35;
     }
 
