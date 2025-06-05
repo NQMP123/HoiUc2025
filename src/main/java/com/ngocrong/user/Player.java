@@ -15102,6 +15102,14 @@ public class Player {
             if (isUocLocPhat1) {
                 exp *= 2;
             }
+            if (baiSu_id != -1) {
+                Player _baisu = SessionManager.findChar(baiSu_id);
+                if (_baisu != null && _baisu.zone == this.zone
+                        && info.power < 100_000_000_000L
+                        && _baisu.info.power < 100_000_000_000L) {
+                    exp *= 2;
+                }
+            }
         }
         exp /= 5;
         exp = Zone.callEXP(this, exp);

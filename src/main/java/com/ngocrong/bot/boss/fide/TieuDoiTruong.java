@@ -65,7 +65,20 @@ public class TieuDoiTruong extends Boss {
         }
         Player c = (Player) obj;
 
-        if (zone.map.mapID > 70) {
+        if (team.getType() == 0) {
+            for (int i = 0; i < 5; i++) {
+                Item item = new Item(ItemName.THOI_VANG);
+                item.setDefaultOptions();
+                item.quantity = 1;
+                ItemMap itemMap = new ItemMap(zone.autoIncrease++);
+                itemMap.item = item;
+                itemMap.playerID = -1;
+                itemMap.x = (short) Utils.nextInt(50, zone.map.width - 50);
+                itemMap.y = zone.map.collisionLand(itemMap.x, getY());
+                zone.addItemMap(itemMap);
+                zone.service.addItemMap(itemMap);
+            }
+        } else if (zone.map.mapID > 70) {
             Item item = new Item(ItemName.NGOC_RONG_5_SAO);
             item.setDefaultOptions();
             item.quantity = 1;
@@ -111,8 +124,16 @@ public class TieuDoiTruong extends Boss {
         try {
             super.startDie();
         } finally {
-            team.next(this);
             zone.leave(this);
+            if (team.getType() == 0) {
+                Utils.setTimeout(() -> {
+                    this.wakeUpFromDead();
+                    team.spawnSolo(this);
+                    this.setTypePK((byte) 5);
+                }, 30 * 60000L);
+            } else {
+                team.next(this);
+            }
         }
     }
 

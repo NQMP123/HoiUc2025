@@ -22,6 +22,10 @@ public class GinyuForce {
     private final TieuDoiTruong tieuDoiTruong;
     private final byte type;
 
+    public byte getType() {
+        return type;
+    }
+
     public GinyuForce(byte type) {
         this.type = type;
         this.so4 = new So4(this);
@@ -32,37 +36,45 @@ public class GinyuForce {
     }
 
     public void born() {
-        int[] maps;
         if (type == 0) {
-            maps = MAP_NAMEC;
+            spawnSolo(so4);
+            spawnSolo(so3);
+            spawnSolo(so2);
+            spawnSolo(so1);
+            spawnSolo(tieuDoiTruong);
+            so4.setTypePK((byte) 5);
+            so3.setTypePK((byte) 5);
+            so2.setTypePK((byte) 5);
+            so1.setTypePK((byte) 5);
+            tieuDoiTruong.setTypePK((byte) 5);
         } else {
-            maps = MAP_FIDE;
+            int[] maps = MAP_FIDE;
+            int z = Utils.nextInt(maps.length);
+            int mapID = maps[z];
+            TMap map = MapManager.getInstance().getMap(mapID);
+            int zoneID = map.randomZoneID();
+            if (so4.isDead()) {
+                so4.wakeUpFromDead();
+            }
+            if (so3.isDead()) {
+                so3.wakeUpFromDead();
+            }
+            if (so2.isDead()) {
+                so2.wakeUpFromDead();
+            }
+            if (so1.isDead()) {
+                so1.wakeUpFromDead();
+            }
+            if (tieuDoiTruong.isDead()) {
+                tieuDoiTruong.wakeUpFromDead();
+            }
+            useAirshipToArrive(so4, map.mapID, zoneID);
+            useAirshipToArrive(so3, map.mapID, zoneID);
+            useAirshipToArrive(so2, map.mapID, zoneID);
+            useAirshipToArrive(so1, map.mapID, zoneID);
+            useAirshipToArrive(tieuDoiTruong, map.mapID, zoneID);
+            so4.setTypePK((byte) 5);
         }
-        int z = Utils.nextInt(maps.length);
-        int mapID = maps[z];
-        TMap map = MapManager.getInstance().getMap(mapID);
-        int zoneID = map.randomZoneID();
-        if (so4.isDead()) {
-            so4.wakeUpFromDead();
-        }
-        if (so3.isDead()) {
-            so3.wakeUpFromDead();
-        }
-        if (so2.isDead()) {
-            so2.wakeUpFromDead();
-        }
-        if (so1.isDead()) {
-            so1.wakeUpFromDead();
-        }
-        if (tieuDoiTruong.isDead()) {
-            tieuDoiTruong.wakeUpFromDead();
-        }
-        useAirshipToArrive(so4, map.mapID, zoneID);
-        useAirshipToArrive(so3, map.mapID, zoneID);
-        useAirshipToArrive(so2, map.mapID, zoneID);
-        useAirshipToArrive(so1, map.mapID, zoneID);
-        useAirshipToArrive(tieuDoiTruong, map.mapID, zoneID);
-        so4.setTypePK((byte) 5);
     }
 
     public void next(Boss boss) {
@@ -95,6 +107,18 @@ public class GinyuForce {
         Utils.setTimeout(() -> {
             born();
         }, type == 0 ? 15 * 60000 : 3 * 60000L);
+    }
+
+    public void spawnSolo(Boss boss) {
+        int[] maps = MAP_NAMEC;
+        int z = Utils.nextInt(maps.length);
+        int mapID = maps[z];
+        TMap map = MapManager.getInstance().getMap(mapID);
+        int zoneID = map.randomZoneID();
+        if (boss.isDead()) {
+            boss.wakeUpFromDead();
+        }
+        useAirshipToArrive(boss, mapID, zoneID);
     }
 
     public void useAirshipToArrive(Boss boss, int mapID, int zoneID) {
