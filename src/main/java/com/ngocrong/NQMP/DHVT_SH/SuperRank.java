@@ -1,0 +1,150 @@
+package com.ngocrong.NQMP.DHVT_SH;
+
+import com.ngocrong.NQMP.Whis.RewardWhis;
+import com.ngocrong.item.Item;
+import com.ngocrong.server.mysql.MySQLConnect;
+import com.ngocrong.user.Player;
+import com.ngocrong.util.Utils;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.json.JSONArray;
+import org.json.JSONException;
+
+public class SuperRank {
+
+    public int rank;
+    public byte ticket;
+    public long lastBonusTicket;
+    public long lastReward;
+    public static long DAY = 1000 * 60 * 60 * 24;
+
+    public SuperRank() {
+        ticket = 3;
+        lastReward = System.currentTimeMillis();
+        lastBonusTicket = System.currentTimeMillis();
+    }
+
+    public static SuperRank getJSON(String jsonString) {
+        try {
+            JSONArray jsonArray = new JSONArray(jsonString);
+            SuperRank rank = new SuperRank();
+
+            if (jsonArray.length() >= 2) {
+                rank.ticket = (byte) jsonArray.getInt(0);
+                rank.lastReward = jsonArray.getLong(1);
+
+                if (jsonArray.length() >= 3) {
+                    rank.lastBonusTicket = jsonArray.getLong(2);
+                }
+
+                if (System.currentTimeMillis() - rank.lastBonusTicket >= DAY) {
+                    rank.lastBonusTicket = System.currentTimeMillis();
+                    if (rank.ticket < 3) {
+                        rank.ticket++;
+                    }
+                }
+            }
+
+            return rank;
+        } catch (JSONException e) {
+            // Xử lý ngoại lệ nếu có
+            e.printStackTrace();
+            return new SuperRank();
+        }
+    }
+
+    public static void loadSuperRank(Player player) {
+        if (player.superrank != null) {
+            return;
+        }
+        try {
+            PreparedStatement ps = MySQLConnect.getConnection().prepareStatement("select * from `nr_super_rank` where player_id = ? limit 1");
+            ps.setInt(1, player.id);
+            ResultSet rs = ps.executeQuery();
+            try {
+                boolean found = rs.next();
+                if (found) {
+                    String data = rs.getString("data");
+                    if (!data.equals("[-1,-1,-1]")) {
+                        player.superrank = getJSON(data);
+                        checkReward(player);
+                    } else {
+                        player.superrank = new SuperRank();
+                    }
+                    player.superrank.rank = rs.getInt("rank");
+                }
+            } catch (Exception e) {
+                com.ngocrong.NQMP.UtilsNQMP.logError(e);
+                e.printStackTrace();
+            } finally {
+                rs.close();
+                ps.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void saveSuperRank(Player player) {
+        try {
+            if (player == null || player.superrank == null) {
+                return;
+            }
+            try (PreparedStatement ps = MySQLConnect.getConnection().prepareStatement("update nr_super_rank set data = ? where player_id = ?")) {
+                ps.setString(1, player.superrank.toJSON());
+                ps.setInt(2, player.id);
+                ps.executeUpdate();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(SuperRank.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public String toJSON() {
+        var rank = this;
+        if (rank == null) {
+            return String.format("[%d,%d,%d]", 3, System.currentTimeMillis(), System.currentTimeMillis());
+        }
+        return String.format("[%d,%d,%d]", rank.ticket, rank.lastReward, rank.lastBonusTicket);
+    }
+
+    public static void checkReward(Player player) {
+        Utils.setTimeout(()
+                -> {
+
+            if (player.superrank.rank < 100 && System.currentTimeMillis() - player.superrank.lastReward >= DAY) {
+                var rank = player.superrank.rank;
+                player.superrank.lastReward = System.currentTimeMillis();
+                int goldReward = 5;
+                if (rank == 1) {
+                    goldReward = 200;
+                } else if (rank == 2 || rank == 3) {
+                    goldReward = 100;
+                } else if (rank <= 9) {
+                    goldReward = 50;
+                } else if (rank <= 20) {
+                    goldReward = 10;
+                } else if (rank <= 50) {
+                    goldReward = 5;
+                } else if (rank <= 100) {
+                    goldReward = 2;
+                }
+
+                Item thoivang = new Item(457);
+                thoivang.quantity = goldReward;
+                player.addItem(thoivang);
+                player.service.dialogMessage(String.format(
+                        "Bạn đạt Top %d ở Giải Đấu Siêu Hạng\n"
+                        + "Bạn nhận được %d thỏi vàng", player.superrank.rank, goldReward));
+            }
+
+        },
+                5000);
+
+    }
+
+}
