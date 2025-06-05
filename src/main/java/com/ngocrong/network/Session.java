@@ -51,6 +51,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.json.JSONException;
@@ -930,32 +932,29 @@ public class Session implements ISession {
 
     private class Sender implements Runnable {
 
-        private final ArrayList<Message> sendingMessage;
+        private final BlockingQueue<Message> sendingMessage;
 
         public Sender() {
-            sendingMessage = new ArrayList<>();
+            sendingMessage = new LinkedBlockingQueue<>();
         }
 
         public void addMessage(Message message) {
-            sendingMessage.add(message);
+            if (message != null) {
+                sendingMessage.offer(message);
+            }
         }
 
         @Override
         public void run() {
             try {
                 while (isConnected()) {
-                    while (sendingMessage.size() > 0) {
-                        Message m = sendingMessage.get(0);
-                        doSendMessage(m);
-
-                        sendingMessage.remove(0);
-                    }
-                    try {
-                        Thread.sleep(10);
-                    } catch (InterruptedException e) {
-                    }
+                    Message m = sendingMessage.take();
+                    doSendMessage(m);
                 }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             } catch (IOException e) {
+                // ignore
             }
         }
     }
