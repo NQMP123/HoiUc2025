@@ -22,6 +22,7 @@ public class GameRepository {
     public HistoryGoldBarRepository historyGoldBar;
     public HistoryTradeRepository historyTradeRepository;
     public WhisDataRepository whisDataRepository;
+    public OsinCheckInRepository osinCheckInRepository;
 
     public static GameRepository getInstance() {
         if (instance == null) {
