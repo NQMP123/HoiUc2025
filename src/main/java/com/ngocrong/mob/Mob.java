@@ -497,22 +497,22 @@ public class Mob {
                 }
             }
 //
-//            if (Utils.nextInt(10) == 5) {
-//                int[] dnc = new int[]{220, 221, 222, 223, 224};
-//                ItemMap danangcap = new ItemMap(zone.autoIncrease++);
-//
-//                item = new Item(dnc[Utils.nextInt(dnc.length)]);
-//                item.quantity = 1;
-//                danangcap.playerID = Math.abs(_c.id);
-//                danangcap.isPickedUp = false;
-//                danangcap.x = (short) (this.x + Utils.nextInt(-30, 30));
-//                danangcap.y = zone.map.collisionLand(this.x, this.y);
-//                danangcap.item = item;
-//                this.items.add(danangcap);
-//                zone.addItemMap(danangcap);
-//                _c.itemDrop[2]++;
-//                return;
-//            }
+            if (Utils.nextInt(100) == 5) {
+                int[] dnc = new int[]{220, 221, 222, 223, 224};
+                ItemMap danangcap = new ItemMap(zone.autoIncrease++);
+
+                item = new Item(dnc[Utils.nextInt(dnc.length)]);
+                item.quantity = 1;
+                danangcap.playerID = Math.abs(_c.id);
+                danangcap.isPickedUp = false;
+                danangcap.x = (short) (this.x + Utils.nextInt(-30, 30));
+                danangcap.y = zone.map.collisionLand(this.x, this.y);
+                danangcap.item = item;
+                this.items.add(danangcap);
+                zone.addItemMap(danangcap);
+                _c.itemDrop[2]++;
+                return;
+            }
         }
 
 //        else if (type == ItemType.GEM) {

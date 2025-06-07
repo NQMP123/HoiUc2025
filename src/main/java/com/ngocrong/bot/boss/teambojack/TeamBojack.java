@@ -29,8 +29,10 @@ public class TeamBojack extends Boss {
 
     public TeamBojack() {
         super();
-        setInfo(50000000, 1000000, 10000, 100, 5);
+        setInfo(50000000, Long.MAX_VALUE, 10000, 100, 5);
         this.percentDame = 35;
+        this.limit = -1;
+        this.distanceToAddToList = 500;
     }
 
     public void useAirshipToArrive(Boss boss, int mapID, int zoneID) {
@@ -60,7 +62,6 @@ public class TeamBojack extends Boss {
         try {
             super.startDie();
         } finally {
-
             zone.leave(this);
             Utils.setTimeout(() -> {
                 this.wakeUpFromDead();
@@ -69,6 +70,12 @@ public class TeamBojack extends Boss {
             }, 600000);
         }
 
+    }
+
+    @Override
+    public void update() {
+        super.update();
+        //  System.err.println("update boss : " + this.name + " - " + this.skills.size());
     }
 
     @Override
@@ -97,12 +104,12 @@ public class TeamBojack extends Boss {
     public void initSkill() {
         try {
             skills = new ArrayList<>();
-            skills.add(Skills.getSkill((byte) SkillName.CHIEU_DAM_DRAGON, (byte) 7).clone());
-            skills.add(Skills.getSkill((byte) SkillName.CHIEU_DAM_DEMON, (byte) 7).clone());
-            skills.add(Skills.getSkill((byte) SkillName.CHIEU_DAM_GALICK, (byte) 7).clone());
-            skills.add(Skills.getSkill((byte) SkillName.CHIEU_KAMEJOKO, (byte) 7).clone());
-            skills.add(Skills.getSkill((byte) SkillName.CHIEU_MASENKO, (byte) 7).clone());
-            skills.add(Skills.getSkill((byte) SkillName.CHIEU_ANTOMIC, (byte) 7).clone());
+            skills.add(Skills.getSkill((byte) SkillName.CHIEU_DAM_DRAGON, (byte) 1).clone());
+            skills.add(Skills.getSkill((byte) SkillName.CHIEU_DAM_DEMON, (byte) 1).clone());
+            skills.add(Skills.getSkill((byte) SkillName.CHIEU_DAM_GALICK, (byte) 1).clone());
+            skills.add(Skills.getSkill((byte) SkillName.CHIEU_KAMEJOKO, (byte) 1).clone());
+            skills.add(Skills.getSkill((byte) SkillName.CHIEU_MASENKO, (byte) 1).clone());
+            skills.add(Skills.getSkill((byte) SkillName.CHIEU_ANTOMIC, (byte) 1).clone());
             skills.add(Skills.getSkill((byte) SkillName.KHIEN_NANG_LUONG, (byte) 7).clone());
         } catch (Exception ex) {
             com.ngocrong.NQMP.UtilsNQMP.logError(ex);

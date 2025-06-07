@@ -785,7 +785,9 @@ public class Zone extends Thread {
         ArrayList<Player> targets = new ArrayList<>();
         targets.add(target);
         Skill skill = _player.select;
+
         if (skill == null) {
+
             return;
         }
         long manaUse = skill.manaUse;
@@ -795,11 +797,14 @@ public class Zone extends Thread {
         if (_player.isSkillSpecial() || _player.isBoss()) {
             manaUse = 0;
         }
+
         if (_player.info.mp < manaUse) {
+
             _player.service.sendThongBao("Không đủ KI đế sử dụng");
             return;
         }
         if (skill.template.type == 3) {
+
             return;
         }
         int distance1 = Utils.getDistance(_player.getX(), _player.getY(), target.getX(), target.getY());

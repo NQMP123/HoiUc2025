@@ -37,11 +37,14 @@ public class Main implements CommandLineRunner {
         GameRepository.getInstance().historyTradeRepository = historyTradeRepository;
         GameRepository.getInstance().whisDataRepository = whisDataRepository;
         GameRepository.getInstance().dropRateRepository = dropRateRepository;
-
+        GameRepository.getInstance().osinCheckInRepository = osinReward;
         DropRateService.load();
 
         DragonBall.getInstance().start();
     }
+
+    @Autowired
+    OsinCheckInRepository osinReward;
 
     @Autowired
     WhisDataRepository whisDataRepository;

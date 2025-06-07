@@ -3034,8 +3034,8 @@ public class Service implements IService {
             ds.writeUTF(str);
             byte[] raw = Utils.getFile(path);
             byte[] ab = Utils.compress(raw);
-            ds.writeInt(ab.length);
-            ds.write(ab);
+            ds.writeInt(raw.length);
+            ds.write(raw);
             ds.flush();
             sendMessage(mss);
             mss.cleanup();

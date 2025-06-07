@@ -29,7 +29,7 @@ public abstract class Boss extends Player implements Bot {
     private static final Logger logger = Logger.getLogger(Boss.class);
     public static RandomCollection<Integer> ITEM_GOD = new RandomCollection<>();
 
-    public int limit;
+    public int limit = -1;
     public long waitingTimeToLeave;
     public String sayTheLastWordBeforeDie;
     public ArrayList<Player> listTarget;
@@ -181,6 +181,8 @@ public abstract class Boss extends Player implements Bot {
         info.originalDefense = def;
         info.originalCritical = crit;
         info.setInfo();
+        info.hp = hp;
+        info.mp = Long.MAX_VALUE;
         info.recovery(Info.ALL, 100, false);
     }
 
@@ -305,9 +307,7 @@ public abstract class Boss extends Player implements Bot {
             }
             this.select = skill;
             moveTo((short) (target.getX() + Utils.nextInt(-d, d)), target.getY());
-
             zone.attackPlayer(this, target);
-
         }
     }
 

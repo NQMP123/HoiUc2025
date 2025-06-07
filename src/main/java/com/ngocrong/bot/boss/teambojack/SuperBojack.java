@@ -9,6 +9,7 @@ import com.ngocrong.item.ItemOption;
 import com.ngocrong.map.GalaxySoldier;
 import com.ngocrong.model.RandomItem;
 import com.ngocrong.server.SessionManager;
+import com.ngocrong.skill.Skill;
 import com.ngocrong.skill.SkillName;
 import com.ngocrong.skill.Skills;
 import com.ngocrong.user.Player;
@@ -51,7 +52,6 @@ public class SuperBojack extends TeamBojack {
 //            logger.error("init skill err");
 //        }
 //    }
-
     @Override
     public void sendNotificationWhenAppear(String map) {
         SessionManager.chatVip(String.format("BOSS %s vừa xuất hiện tại %s", this.name, map));
@@ -93,5 +93,45 @@ public class SuperBojack extends TeamBojack {
 //            zone.leave(this);
 //        }
 //    }
+    @Override
+    public void update() {
+        super.update();
+        //  System.err.println("update boss : " + this.name + " - " + this.skills.size());
+    }
 
+    @Override
+    public void attack(Object obj) {
+        long now = System.currentTimeMillis();
+        if (now - lastTimeSkillShoot < 1000) {
+            return;
+        }
+        Player target = (Player) obj;
+        Skill skill = selectSkillAttack();
+        if (skill != null) {
+            int d = Utils.getDistance(0, 0, skill.dx, skill.dy);
+            if (skill.template.id == SkillName.CHIEU_KAMEJOKO || skill.template.id == SkillName.CHIEU_MASENKO || skill.template.id == SkillName.CHIEU_ANTOMIC) {
+                lastTimeSkillShoot = now;
+            }
+            this.select = skill;
+            moveTo((short) (target.getX() + Utils.nextInt(-d, d)), target.getY());
+            zone.attackPlayer(this, target);
+        }
+    }
+    
+    @Override
+    public void updateEveryHalfSeconds() {
+        super.updateEveryHalfSeconds();
+        if (!isDead()) {
+            if (isAttack() && meCanAttack()) {
+                if (!isRecoveryEnergy() && !isCharge()) {
+                    Object target = targetDetect();
+                    if (target != null) {
+                        attack(target);
+                        System.err.println("Log4");
+                    }
+                    useSkillNotFocus();
+                }
+            }
+        }
+    }
 }

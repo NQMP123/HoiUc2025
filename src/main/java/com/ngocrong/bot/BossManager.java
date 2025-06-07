@@ -224,7 +224,7 @@ public class BossManager {
         MainUpdate.runTaskDayInWindow(() -> {
             GalaxySoldier gB = new GalaxySoldier();
             gB.next((byte) 0);
-        }, "00:00","23:00");
+        }, "06:00","12:00");
     }
 
     public static void bossHaiTac() {

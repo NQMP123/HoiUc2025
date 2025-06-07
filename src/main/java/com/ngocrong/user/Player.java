@@ -1734,11 +1734,11 @@ public class Player {
     }
 
     private static final String[] NAMES = {
-            // 2-3 ký tự
-            "an", "ha", "ly", "my", "tu", "vy", "lan", "nam", "son", "tan", "thi", "thu", "van",
-            // 3-4 ký tự
-            "anh", "dao", "duc", "hai", "hoa", "hon", "huy", "kim", "lan", "linh", "mai", "minh",
-            "nam", "nga", "nhu", "tam", "tan", "thu", "tuan", "tung", "viet", "xuan"
+        // 2-3 ký tự
+        "an", "ha", "ly", "my", "tu", "vy", "lan", "nam", "son", "tan", "thi", "thu", "van",
+        // 3-4 ký tự
+        "anh", "dao", "duc", "hai", "hoa", "hon", "huy", "kim", "lan", "linh", "mai", "minh",
+        "nam", "nga", "nhu", "tam", "tan", "thu", "tuan", "tung", "viet", "xuan"
     };
 
     public static String generateCharacterName() {
@@ -1767,9 +1767,9 @@ public class Player {
     }
 
     private static final String[] SYLLABLES = {
-            "anh", "binh", "chi", "dung", "giang", "hai", "hieu", "khoa",
-            "lam", "long", "mai", "minh", "nam", "ngoc", "nhat", "phong",
-            "quang", "son", "tien", "trung", "viet", "yen"
+        "anh", "binh", "chi", "dung", "giang", "hai", "hieu", "khoa",
+        "lam", "long", "mai", "minh", "nam", "ngoc", "nhat", "phong",
+        "quang", "son", "tien", "trung", "viet", "yen"
     };
 
     public static String generateName() {
@@ -2580,7 +2580,7 @@ public class Player {
             if (this.select.template.id == SkillName.DE_TRUNG) {
                 info.mp -= manaUse;
                 this.select.lastTimeUseThisSkill = now;
-                int[] arr = { 8, 11, 32, 25, 43, 49, 50 };
+                int[] arr = {8, 11, 32, 25, 43, 49, 50};
                 int level = getSkill(12).point;
                 int templateId = arr[level - 1];
                 long hp = this.info.hpFull * level;
@@ -2739,7 +2739,7 @@ public class Player {
         return dameInput;
     }
 
-    public static short[] listTypeBody = new short[] { 35, 36, 37 };
+    public static short[] listTypeBody = new short[]{35, 36, 37};
 
     public void itemBagToPet(int index) {
         if (myDisciple == null) {
@@ -3832,12 +3832,12 @@ public class Player {
 
                         }
                         service.openUIConfirm(npc.templateId, "Ta có thể giúp gì cho ngươi? \n " // + "Bạn có thể thu
-                                                                                                 // thập x99 bình nước
-                                                                                                 // xanh lam,lục,đỏ và
-                                                                                                 // 500tr vàng để lấy 1
-                                                                                                 // phần quà sự kiện"
+                                // thập x99 bình nước
+                                // xanh lam,lục,đỏ và
+                                // 500tr vàng để lấy 1
+                                // phần quà sự kiện"
                                 ,
-                                npc.avatar, menus);
+                                 npc.avatar, menus);
                         break;
                     case NpcName.RUONG_DO_HE_THONG:
                     case NpcName.TORIBOT:
@@ -3862,12 +3862,12 @@ public class Player {
                         menus.add(new KeyValue(1155, "Đổi Hộp Mù Bé Ba"));
 
                         service.openUIConfirm(npc.templateId, "Ta có thể giúp gì cho ngươi? \n " // + "Bạn có thể thu
-                                                                                                 // thập x99 bình nước
-                                                                                                 // xanh lam,lục,đỏ và
-                                                                                                 // 500tr vàng để lấy 1
-                                                                                                 // phần quà sự kiện"
+                                // thập x99 bình nước
+                                // xanh lam,lục,đỏ và
+                                // 500tr vàng để lấy 1
+                                // phần quà sự kiện"
                                 ,
-                                npc.avatar, menus);
+                                 npc.avatar, menus);
                         break;
                     case NpcName.ONG_GOHAN:
                     case NpcName.ONG_PARAGUS:
@@ -3911,7 +3911,7 @@ public class Player {
                         menus.add(new KeyValue(CMDMenu.CANCEL, "Từ chối"));
                         service.openUIConfirm(npc.templateId, "Ta có thể giúp gì cho ngươi?", npc.avatar, menus);
                     }
-                        break;
+                    break;
 
                     case NpcName.CUA_HANG_KY_GUI:
                         // khoidt
@@ -3981,7 +3981,7 @@ public class Player {
                         }
                         service.openUIConfirm(npc.templateId, text, npc.avatar, menus);
                     }
-                        break;
+                    break;
 
                     case NpcName.CARGO:
                         menus.add(new KeyValue(CMDMenu.TELEPORT_TRAI_DAT, "Đến\nTrái đất"));
@@ -4067,7 +4067,7 @@ public class Player {
                         menus.add(new KeyValue(CMDMenu.CLAN_SHOP, "Cửa hàng"));
                         service.openUIConfirm(npc.templateId, sb.toString(), npc.avatar, menus);
                     }
-                        break;
+                    break;
 
                     case NpcName.BO_MONG:
                         // menus.add(new KeyValue(420, "Nhận Ngọc\nMiễn Phí"));
@@ -4217,7 +4217,7 @@ public class Player {
                         menus.add(new KeyValue(CMDMenu.CANCEL, "Từ chối"));
                         service.openUIConfirm(npc.templateId, text3, npc.avatar, menus);
                     }
-                        break;
+                    break;
                     case NpcName.GHI_DANH: {
                         StringBuilder sb = new StringBuilder();
                         if (mapId == MapName.DAI_HOI_VO_THUAT || this.zone.map.isLang()) {
@@ -4246,7 +4246,7 @@ public class Player {
                         service.openUIConfirm(npc.templateId, sb.toString(), npc.avatar, menus);
 
                     }
-                        break;
+                    break;
                     case NpcName.TRONG_TAI:
                         if (zone != null && zone.map.mapID == MapName.DAI_HOI_VO_THUAT_2) {
                             StringBuilder sb = new StringBuilder();
@@ -4293,8 +4293,8 @@ public class Player {
                             service.openUISay(
                                     npc.id,
                                     "Bạn có thể tham gia doanh trại sau " + minutes + " phút " + seconds
-                                            + " giây nữa.\b"
-                                            + "17h00 06/04/2025",
+                                    + " giây nữa.\b"
+                                    + "17h00 06/04/2025",
                                     npc.avatar);
                             return;
                         }
@@ -4410,7 +4410,25 @@ public class Player {
 
                     case NpcName.OSIN: {
                         StringBuilder sb = new StringBuilder();
-                        if (zone.map.mapID == 127) {
+                        if (zone.map.mapID == 7 || zone.map.mapID == 14 || zone.map.mapID == 0) {
+                            sb.append("Sự kiện: Điểm Danh Nhận Quà Tại NPC Ôsin\n");
+                            sb.append("- Thời gian điểm danh: Sau bảo trì các ngày Thứ 2, 4, 6.\n");
+                            sb.append("- Thời gian nhận quà: Vào các ngày Thứ 3, 5, 7.\n");
+                            sb.append("- Hướng dẫn: Đến gặp NPC Ôsin tại 3 làng để 'Điểm danh'. Số người điểm danh càng đông, quà vào ngày hôm sau càng lớn.\n");
+                            sb.append("- Các mốc phần thưởng:\n");
+                            sb.append("  + Mốc 200 người: Ngọc Rồng ngẫu nhiên (5-7 sao).\n");
+                            sb.append("  + Mốc 300 người: 2 viên Sao Pha Lê ngẫu nhiên.\n");
+                            sb.append("  + Mốc 400 người: x2 Vệ tinh ngẫu nhiên.\n");
+                            sb.append("  + Mốc 500 người: x2 TNSM trong ngày nhận quà.\n");
+                            sb.append("  + Mốc 1000 người: 5 Thỏi vàng.\n");
+                            sb.append("- Lưu ý quan trọng: Phải tham gia 'Điểm danh' mới có thể 'Nhận quà'.\n");
+                            sb.append("- Số người đã điểm danh: " + OsinCheckInEvent.getTotalTodayCheckIns());
+//                            if (OsinCheckInEvent.) {
+                                menus.add(new KeyValue(CMDMenu.OSIN_CHECKIN, "Điểm danh"));
+//                            } else if (OsinCheckInEvent.isRewardDay()) {
+//                                menus.add(new KeyValue(CMDMenu.OSIN_REWARD, "Nhận quà"));
+//                            }
+                        } else if (zone.map.mapID == 127) {
                             sb.append("Tôi có thể phù hộ cho bạn với 2 thỏi vàng").append("\n");
                             sb.append("Sau khi phù hộ bạn sẽ được tăng 10% Chỉ số").append("\n");
                             sb.append("Ngoài ra tôi có thể đưa bạn ra khỏi đây");
@@ -4439,17 +4457,11 @@ public class Player {
                             }
                         } else {
                             menus.add(new KeyValue(1133, "Phù Hộ"));
-                            if (zone.map.mapID == 7 || zone.map.mapID == 14 || zone.map.mapID == 0) {
-                                if (OsinCheckInEvent.isCheckInDay()) {
-                                    menus.add(new KeyValue(CMDMenu.OSIN_CHECKIN, "Điểm danh"));
-                                } else if (OsinCheckInEvent.isRewardDay()) {
-                                    menus.add(new KeyValue(CMDMenu.OSIN_REWARD, "Nhận quà"));
-                                }
-                            }
+
                             if (this.flag == 9) {
                                 sb.append(
                                         "Đừng vội xem thường Babiđây, ngay đến cha hắn là thần ma đạo sĩ Bibiđây khi còn sống cũng phải sợ hắn đấy!\n"
-                                                + "Ta có thể Phù hộ để ngươi có để đánh tới 10% HP với giá 2 thỏi vàng");
+                                        + "Ta có thể Phù hộ để ngươi có để đánh tới 10% HP với giá 2 thỏi vàng");
                                 menus.add(new KeyValue(456, "Hướng\ndẫn\nthêm"));
                                 int floor = getCurrentNumberFloorInBaseBabidi();
                                 if ((accumulatedPoint != null && accumulatedPoint.isMaxPoint()
@@ -4468,7 +4480,7 @@ public class Player {
                         }
                         service.openUIConfirm(npc.templateId, sb.toString(), npc.avatar, menus);
                     }
-                        break;
+                    break;
 
                     case NpcName.KIBIT:
                         if (zone.map.isBaseBabidi()) {
@@ -4511,7 +4523,7 @@ public class Player {
                         menus.add(new KeyValue(458, "Về nhà"));
                         service.openUIConfirm(npc.templateId, sb.toString(), npc.avatar, menus);
                     }
-                        break;
+                    break;
 
                     case NpcName.MR_POPO:
                         service.dialogMessage("Chức năng đang được phát triển.");
@@ -4527,8 +4539,8 @@ public class Player {
                                         + "đã thoát khỏi phong ấn ngàn năm\n"
                                         + "Hãy giúp tôi chế ngự nó?"
                                         : "Bạn có thể phù hộ với giá 2 thỏi vàng\n"
-                                                + "Khi phù hộ bạn có thể đánh được 2% hp và tăng tỉ lệ nhặt trứng bư"
-                                                + "\nTôi sẽ đưa bạn về",
+                                        + "Khi phù hộ bạn có thể đánh được 2% hp và tăng tỉ lệ nhặt trứng bư"
+                                        + "\nTôi sẽ đưa bạn về",
                                 npc.avatar, menus);
                         break;
                     case NpcName.LY_TIEU_NUONG:
@@ -4600,16 +4612,16 @@ public class Player {
         return cAtt != null && !cAtt.isMiniDisciple() && select != null && select.template.type != 2
                 && (select.template.type != 4 || cAtt.statusMe == 14 || cAtt.statusMe == 5)
                 && ((((int) cAtt.typePk == 3 && (int) this.typePk == 3)
-                        || ((int) this.typePk == 5 || (int) cAtt.typePk == 5
-                                || ((int) this.typePk == 1 && (int) cAtt.typePk == 1))
-                        || ((int) this.typePk == 4 && (int) cAtt.typePk == 4)
-                        || (this.testCharId >= 0 && this.testCharId == cAtt.id)
-                        || (this.killCharId >= 0 && this.killCharId == cAtt.id && !this.isLang())
-                        || (cAtt.killCharId >= 0 && cAtt.killCharId == this.id && !this.isLang())
-                        || ((int) this.flag == 8 && (int) cAtt.flag != 0)
-                        || ((int) this.flag != 0 && (int) cAtt.flag == 8)
-                        || ((int) this.flag != (int) cAtt.flag && (int) this.flag != 0 && (int) cAtt.flag != 0))
-                        && cAtt.statusMe != 14)
+                || ((int) this.typePk == 5 || (int) cAtt.typePk == 5
+                || ((int) this.typePk == 1 && (int) cAtt.typePk == 1))
+                || ((int) this.typePk == 4 && (int) cAtt.typePk == 4)
+                || (this.testCharId >= 0 && this.testCharId == cAtt.id)
+                || (this.killCharId >= 0 && this.killCharId == cAtt.id && !this.isLang())
+                || (cAtt.killCharId >= 0 && cAtt.killCharId == this.id && !this.isLang())
+                || ((int) this.flag == 8 && (int) cAtt.flag != 0)
+                || ((int) this.flag != 0 && (int) cAtt.flag == 8)
+                || ((int) this.flag != (int) cAtt.flag && (int) this.flag != 0 && (int) cAtt.flag != 0))
+                && cAtt.statusMe != 14)
                 && cAtt.statusMe != 5;
     }
 
@@ -4794,7 +4806,7 @@ public class Player {
                     service.viewShop(shop);
                 }
             }
-                break;
+            break;
             case CMDMenu.GOLD_BAR_SHOP: {
                 // khoidtif (this.session.user.getActivated() != 1) {
                 // service.sendThongBao("Bạn cần kích hoạt tài khoản để sử dụng tính năng này");
@@ -4807,7 +4819,7 @@ public class Player {
                     service.viewShop(shop);
                 }
             }
-                break;
+            break;
             case CMDMenu.FOOD_SHOP_PUDDING:
                 if (this.session.user.getActivated() != 1) {
                     service.sendThongBao("Bạn cần kích hoạt tài khoản để sử dụng tính năng này");
@@ -4875,7 +4887,7 @@ public class Player {
                     service.viewShop(shop);
                 }
             }
-                break;
+            break;
             case CMDMenu.UPGRADE_ITEM:
                 combine = CombineFactory.getCombine(CombineType.NANG_CAP);
                 combine.setNpc(npc);
@@ -4953,7 +4965,7 @@ public class Player {
                 combine.setPlayer(this);
                 this.combine.showTab();
             }
-                break;
+            break;
 
             case CMDMenu.MO_CHI_SO_PORATA2: {
                 this.combine = CombineFactory.getCombine(CombineType.NANG_OPTION_PORATA);
@@ -4961,7 +4973,7 @@ public class Player {
                 combine.setPlayer(this);
                 this.combine.showTab();
             }
-                break;
+            break;
 
             case CMDMenu.CHUYEN_HOA_BANG_VANG:
             case CMDMenu.CHUYEN_HOA_BANG_NGOC:
@@ -4984,17 +4996,17 @@ public class Player {
                 int zoneID = map.getZoneID();
                 map.enterZone(this, zoneID);
             }
-                break;
+            break;
 
             case CMDMenu.TANG_QUA_HONG_DAO: {
                 Event.exchange(0, this);
             }
-                break;
+            break;
 
             case CMDMenu.TANG_QUA_HONG_DAO_CHIN: {
                 Event.exchange(1, this);
             }
-                break;
+            break;
 
             case CMDMenu.TELEPORT_ARU: {
                 TMap map = MapManager.getInstance().getMap(MapName.LANG_ARU);
@@ -5004,17 +5016,17 @@ public class Player {
                 int zoneID = map.getZoneID();
                 map.enterZone(this, zoneID);
             }
-                break;
+            break;
 
             case CMDMenu.GIAI_PHONG_AN: {
                 Event.exchange(2, this);
             }
-                break;
+            break;
 
             case CMDMenu.THINH_KINH: {
                 Event.exchange(3, this);
             }
-                break;
+            break;
 
             case CMDMenu.REPORT: {
                 int playerID = ((Integer) keyValue.elements[0]).intValue();
@@ -5033,7 +5045,7 @@ public class Player {
                     inputDlg.show();
                 }
             }
-                break;
+            break;
 
             case CMDMenu.MUA_CAI_TRANG: {
                 int playerID = ((Integer) keyValue.elements[0]).intValue();
@@ -5065,7 +5077,7 @@ public class Player {
                     }
                 }
             }
-                break;
+            break;
 
             case CMDMenu.DUONG_TANG_REWARD: {
                 StringBuilder sb3 = new StringBuilder();
@@ -5081,7 +5093,7 @@ public class Player {
                         sb3.toString(),
                         npc.avatar, menus);
             }
-                break;
+            break;
 
             case CMDMenu.DOI_1000_DIEM:
                 Event.exchange(4, this);
@@ -5292,7 +5304,7 @@ public class Player {
                 } else {
                 }
             }
-                break;
+            break;
             case 456: {
                 StringBuilder sb = new StringBuilder();
                 sb.append("Tại khu vực này, ta đang dùng ma pháp phong ấn").append("\b");
@@ -5308,7 +5320,7 @@ public class Player {
                 sb.append("ta sẽ đưa ngươi xuống tầng tiếp theo");
                 service.openUISay(npc.templateId, sb.toString(), (short) 4388);
             }
-                break;
+            break;
             case 457: {
                 TMap map = MapManager.getInstance().getMap(MapName.CONG_PHI_THUYEN_2);
                 zone.leave(this);
@@ -5323,7 +5335,7 @@ public class Player {
                 goHome();
             }
 
-                break;
+            break;
 
             case 459: {
                 if (MapManager.getInstance().baseBabidi != null) {
@@ -5333,7 +5345,7 @@ public class Player {
                     }
                 }
             }
-                break;
+            break;
 
             case 500: {
                 String text = "Sức mạnh của con đã đạt mức tối đa";
@@ -5403,7 +5415,7 @@ public class Player {
                 service.sendThongBao(
                         String.format("Giớ hạn sức mạnh đã năng lên %s", Utils.formatNumber(limit.power + 1)));
             }
-                break;
+            break;
 
             case 504:
                 if (myDisciple != null) {
@@ -5681,7 +5693,7 @@ public class Player {
                     return;
                 }
                 CrackBall crackBall = new CrackBall();
-                crackBall.setImgs(new int[] { 419, 420, 421, 422, 423, 424, 425 });
+                crackBall.setImgs(new int[]{419, 420, 421, 422, 423, 424, 425});
                 crackBall.setPrice(1);
                 crackBall.setTypePrice((byte) 0);
                 crackBall.setIdTicket(821);
@@ -5691,20 +5703,20 @@ public class Player {
                 crackBall.show();
                 this.crackBall = crackBall;
             }
-                break;
+            break;
 
             case 526: {
                 int index = ((Integer) keyValue.elements[0]).intValue();
                 deleteItemBoxCrackBall(index);
             }
-                break;
+            break;
 
             case 527: {
                 isNoNeedToConfirm = true;
                 int index = ((Integer) keyValue.elements[0]).intValue();
                 deleteItemBoxCrackBall(index);
             }
-                break;
+            break;
 
             case 530:
                 taskTalk(npc);
@@ -5732,7 +5744,7 @@ public class Player {
                 menus.add(new KeyValue(CMDMenu.CANCEL, "Đóng"));
                 service.openUIConfirm(npc.templateId, sb.toString(), npc.avatar, menus);
             }
-                break;
+            break;
 
             case CMDMenu.GIAI_TAN_BANG:
                 if (clan != null) {
@@ -5790,7 +5802,7 @@ public class Player {
                     clan.clanTerritory.enter(this);
                 }
             }
-                break;
+            break;
 
             case 540:
                 transport(MapName.NHA_BUNMA, 0, 60);
@@ -5825,7 +5837,7 @@ public class Player {
                 sb.append("Các phần thường mỗi giờ đến gặp ta để nhận nhé");
                 service.openUISay(npc.templateId, sb.toString(), npc.avatar);
             }
-                break;
+            break;
             case CMDMenu.BLACK_DRAGONBALL_JOIN: {
                 if (this.session.user.getActivated() == 0) {
                     service.sendThongBao("Bạn cần kích hoạt thành viên để sử dụng tính năng này");
@@ -5864,7 +5876,7 @@ public class Player {
                 setCommandTransport((byte) 1);
                 service.mapTransport(list);
             }
-                break;
+            break;
 
             case CMDMenu.BLACK_DRAGONBALL_REWARD:
                 if (clan != null) {
@@ -5977,7 +5989,7 @@ public class Player {
                     }
                 }
             }
-                break;
+            break;
 
             case CMDMenu.BLACK_DRAGONBALL_REWARD_6_STAR: {
                 if (clan != null) {
@@ -6007,7 +6019,7 @@ public class Player {
                     }
                 }
             }
-                break;
+            break;
 
             case CMDMenu.BLACK_DRAGONBALL_REWARD_7_STAR: {
                 if (clan != null) {
@@ -6035,7 +6047,7 @@ public class Player {
                     }
                 }
             }
-                break;
+            break;
 
             case 543:
                 shop = Shop.getShop(npc.templateId);
@@ -6076,12 +6088,12 @@ public class Player {
                     service.sendThongBao("Đang offline");
                 }
             }
-                break;
+            break;
 
             case CMDMenu.CONSIGNMENT: {
                 Consignment.getInstance().showShop(this);
             }
-                break;
+            break;
 
             case CMDMenu.CONSIGNMENT_GUIDE: {
                 StringBuilder sb = new StringBuilder();
@@ -6091,7 +6103,7 @@ public class Player {
                 sb.append("Một người bán, vạn người mua, mại dô, mại dô");
                 service.openUISay(npc.templateId, sb.toString(), npc.avatar);
             }
-                break;
+            break;
 
             case CMDMenu.BLACK_DRAGONBALL_PHU:
                 menus.add(new KeyValue(CMDMenu.BLACK_DRAGONBALL_PHU_X3, "X3\n5 thỏi vàng"));
@@ -6185,7 +6197,7 @@ public class Player {
                 sb.append("Vui lòng đến đúng giờ để đăng ký thi đấu");
                 service.openUISay(npc.templateId, sb.toString(), npc.avatar);
             }
-                break;
+            break;
 
             case 581: {
                 zone.leave(this);
@@ -6193,7 +6205,7 @@ public class Player {
                 int zoneId = map.getZoneID();
                 map.enterZone(this, zoneId);
             }
-                break;
+            break;
 
             case 582: {
                 StringBuilder sb = new StringBuilder();
@@ -6207,7 +6219,7 @@ public class Player {
                 sb.append("nhận phần thưởng xứng đáng nhất nhé");
                 service.openUISay(npc.templateId, sb.toString(), npc.avatar);
             }
-                break;
+            break;
 
             case 583:
                 if (this.session.user.getActivated() == 0) {
@@ -6236,7 +6248,7 @@ public class Player {
                 this.y -= 24;
                 map.enterZone(this, zoneId);
             }
-                break;
+            break;
             case 586: {
                 zone.leave(this);
                 TMap map = MapManager.getInstance().getMap(MapName.DAI_HOI_VO_THUAT_2);
@@ -6244,24 +6256,24 @@ public class Player {
                 this.y -= 24;
                 map.enterZone(this, zoneId);
             }
-                break;
+            break;
             case CMDMenu.DANG_KY_DAI_HOI_VO_THUAT: {
 
             }
-                break;
+            break;
 
             case CMDMenu.HUY_DANG_KY_DAI_HOI_VO_THUAT: {
 
             }
-                break;
+            break;
 
             case CMDMenu.XAC_NHAN_HUY_DANG_KY_DAI_HOI_VO_THUAT: {
             }
-                break;
+            break;
 
             case CMDMenu.XAC_NHAN_DANG_KY_DAI_HOI_VO_THUAT: {
             }
-                break;
+            break;
             case CMDMenu.GIAI_SIEU_HANG_HUONG_DAN: {
                 StringBuilder sb = new StringBuilder();
                 sb.append("- Cơ cấu giải thưởng như sau ( chốt và trao giải nhẫu nhiên từ 20-23h mỗi ngày)")
@@ -6277,7 +6289,7 @@ public class Player {
                         + "của đối thủ mà bạn đã hạ gục được");
                 service.openUISay(npc.templateId, sb.toString(), npc.avatar);
             }
-                break;
+            break;
             case CMDMenu.GIAI_SIEU_HANG_THI_DAU: {
                 TMap map = MapManager.getInstance().getMap(MapName.DAU_TRUONG);
                 ArenaSieuHang arenaSieuHang = new ArenaSieuHang(map, this.zone.zoneID);
@@ -6292,7 +6304,7 @@ public class Player {
                 arenaSieuHang.enter(this);
                 zone.service.setPosition(this, (byte) 0);
             }
-                break;
+            break;
             case CMDMenu.GIAI_SIEU_HANG_TOP_100: {
                 Top dhvtSieuHang = Top.getTop(Top.TOP_DHVT_SIEU_HANG);
                 assert dhvtSieuHang != null;
@@ -6347,7 +6359,7 @@ public class Player {
                     }
                 }
             }
-                break;
+            break;
 
             case 601: {
                 StringBuilder sb = new StringBuilder();
@@ -6369,7 +6381,7 @@ public class Player {
                         "6) Mỗi lần vào, ngươi chỉ có 30 phút để đánh. Sau 30 phút mà ngươi vẫn không thắng, ta sẽ cho máy bay trở ngươi về nhà.");
                 service.openUISay(npc.id, sb.toString(), npc.avatar);
             }
-                break;
+            break;
 
             case 602:
                 if (clan == null) {
@@ -6467,7 +6479,7 @@ public class Player {
                     service.clanInfo();
                 }
             }
-                break;
+            break;
 
             case 605:
                 Top top = Top.getTop(Top.TOP_POWER);
@@ -6509,7 +6521,7 @@ public class Player {
                 menus.add(new KeyValue(CMDMenu.CANCEL, "Từ chối"));
                 service.openUIConfirm(npc.templateId, sb.toString(), npc.avatar, menus);
             }
-                break;
+            break;
 
             case 609: {
                 if (clan == null) {
@@ -6551,7 +6563,7 @@ public class Player {
                 inputDlg.setService(service);
                 inputDlg.show();
             }
-                break;
+            break;
 
             case 610: {
                 if (this.clan != null) {
@@ -6594,7 +6606,7 @@ public class Player {
                     }
                 }
             }
-                break;
+            break;
 
             case 1100:
                 menus.clear();
@@ -6709,7 +6721,7 @@ public class Player {
                 this.y -= 24;
                 map2.enterZone(this, zoneId2);
             }
-                break;
+            break;
             case 1117: {
                 item = getItemInBag(ItemName.THOI_VANG);
                 if (item == null || item.quantity < 2) {
@@ -6797,7 +6809,7 @@ public class Player {
                     service.sendThongBao("Hành trang không đủ ô trống");
                 }
             }
-                break;
+            break;
             case 1129: {
                 int index = getIndexBagById(2156);
                 item = null;
@@ -6823,7 +6835,7 @@ public class Player {
                     service.sendThongBao("Hành trang không đủ ô trống");
                 }
             }
-                break;
+            break;
             case 1130: {
                 int index = getIndexBagById(2156);
                 item = null;
@@ -6848,7 +6860,7 @@ public class Player {
                     service.sendThongBao("Hành trang không đủ ô trống");
                 }
             }
-                break;
+            break;
             case 1131: {
                 int index = getIndexBagById(2156);
                 item = null;
@@ -6873,7 +6885,7 @@ public class Player {
                     service.sendThongBao("Hành trang không đủ ô trống");
                 }
             }
-                break;
+            break;
             case 1132: {
                 int index = getIndexBagById(2156);
                 item = null;
@@ -6898,7 +6910,7 @@ public class Player {
                     service.sendThongBao("Hành trang không đủ ô trống");
                 }
             }
-                break;
+            break;
             case 1133:
                 item = getItemInBag(ItemName.THOI_VANG);
                 if (item == null || item.quantity < 2) {
@@ -7097,10 +7109,10 @@ public class Player {
             case 1166:
                 service.dialogMessage(
                         "Top 1 : x7 đá Huyết Ma Thiên Tử cấp 5 ( sử dụng 10 viên ) nhận Huyết Ma Thiên Tử Cấp 5 : 5% HP,KI,SĐ vĩnh viễn\n"
-                                + "Top 2 : x3 đá Huyết Ma Thiên Tử cấp 5 ( sử dụng 10 viên ) nhận Huyết Ma Thiên Tử cấp 5 : 5% HP,KI,SĐ vĩnh viễn\n"
-                                + "Top 3,4,5,6 : x5 đá Huyết Ma Thiên Tử cấp 3 : ( sử dụng 10 viên ) nhận Huyết Ma Thiên Tử cấp 3 : 3% HP,KI,SĐ vĩnh viễn\n"
-                                + "Top 7-16 : x3 đá Huyết Ma Thiên Tử cấp 2 : ( sử dụng 10 viên ) nhận Huyết Ma Thiên Tử cấp 2 : 2% HP,KI,SĐ vĩnh viễn\n"
-                                + "Ngày nào chốt thưởng ngày đấy, chốt top vào lúc 00h00 hàng ngày");
+                        + "Top 2 : x3 đá Huyết Ma Thiên Tử cấp 5 ( sử dụng 10 viên ) nhận Huyết Ma Thiên Tử cấp 5 : 5% HP,KI,SĐ vĩnh viễn\n"
+                        + "Top 3,4,5,6 : x5 đá Huyết Ma Thiên Tử cấp 3 : ( sử dụng 10 viên ) nhận Huyết Ma Thiên Tử cấp 3 : 3% HP,KI,SĐ vĩnh viễn\n"
+                        + "Top 7-16 : x3 đá Huyết Ma Thiên Tử cấp 2 : ( sử dụng 10 viên ) nhận Huyết Ma Thiên Tử cấp 2 : 2% HP,KI,SĐ vĩnh viễn\n"
+                        + "Ngày nào chốt thưởng ngày đấy, chốt top vào lúc 00h00 hàng ngày");
                 break;
             case 1167:
                 Top topWhisRw = Top.getTop(Top.TOP_WHIS_Reward);
@@ -7212,7 +7224,7 @@ public class Player {
                     }
                 }
             }
-                break;
+            break;
 
             case CMDMenu.CLAN_UPGRADE_CONFIRM: {
                 if (clan != null) {
@@ -7237,7 +7249,7 @@ public class Player {
                     }
                 }
             }
-                break;
+            break;
 
             case CMDMenu.RENAME_CLAN: {
                 if (clan != null) {
@@ -7254,7 +7266,7 @@ public class Player {
                     inputDlg.show();
                 }
             }
-                break;
+            break;
 
             case CMDMenu.RANDOM_CLAN_NAME:
                 if (clan != null) {
@@ -7385,7 +7397,7 @@ public class Player {
                 menus.add(new KeyValue(CMDMenu.CANCEL, "Từ chối"));
                 service.openUIConfirm(NpcName.CON_MEO, sb2.toString(), getPetAvatar(), menus);
             }
-                break;
+            break;
 
             case 1113: {
                 StringBuilder sb2 = new StringBuilder();
@@ -7398,7 +7410,7 @@ public class Player {
                 menus.add(new KeyValue(CMDMenu.CANCEL, "Từ chối"));
                 service.openUIConfirm(NpcName.CON_MEO, sb2.toString(), getPetAvatar(), menus);
             }
-                break;
+            break;
 
             case 1114: {
                 long require = 10000000000L;
@@ -7427,7 +7439,7 @@ public class Player {
                 service.specialSkill((byte) 0);
                 service.sendThongBao(String.format("Bạn nhận được Nội tại: %s", specialSkill.getInfo()));
             }
-                break;
+            break;
 
             case 1115: {
                 long require = 10000000000L;
@@ -7452,7 +7464,7 @@ public class Player {
                 service.specialSkill((byte) 0);
                 service.sendThongBao(String.format("Bạn nhận được Nội tại: %s", specialSkill.getInfo()));
             }
-                break;
+            break;
 
             case 3500:
                 magicTree.harvest(this);
@@ -7483,12 +7495,12 @@ public class Player {
             case 7878: {
                 teleport(155);
             }
-                break;
+            break;
 
             case 7879: {
                 teleport(0);
             }
-                break;
+            break;
 
             case 10000:
                 int playerId = ((Integer) keyValue.elements[0]).intValue();
@@ -7587,7 +7599,7 @@ public class Player {
                             String.format("%s vừa gọi rồng thần tại %s khu %d", this.name, zone.map.name, zone.zoneID));
                 }
             }
-                break;
+            break;
             case 20008: {
                 if (this.clan == null) {
                     service.openUISay(NpcName.CON_MEO, "Chỉ tiếp các bang hội, miễn tiếp khách vãng lai",
@@ -7641,7 +7653,7 @@ public class Player {
                     }
                 }
             }
-                break;
+            break;
             case CMDMenu.TELEPORT_HANH_TINH_KAIO: {
                 teleport(MapName.HANH_TINH_KAIO);
                 break;
@@ -7682,9 +7694,9 @@ public class Player {
             case CMDMenu.OSIN_CHECKIN:
                 OsinCheckInEvent.checkIn(this);
                 break;
-            case CMDMenu.OSIN_REWARD:
-                OsinCheckInEvent.receiveReward(this);
-                break;
+//            case CMDMenu.OSIN_REWARD:
+//                OsinCheckInEvent.receiveReward(this);
+//                break;
             case CMDMenu.UOC_RONG_THIEN_MENH_1:
                 uocRongThienMenh(1);
                 break;
@@ -7862,7 +7874,7 @@ public class Player {
                 removeItem(index1, 1);
                 openDoCuoiKHRandom(0);
             }
-                break;
+            break;
             case CMDMenu.OPEN_1_CUOI_NM: {
                 int index1 = getIndexBagById(2302);
                 Item rtl = null;
@@ -7875,7 +7887,7 @@ public class Player {
                 removeItem(index1, 1);
                 openDoCuoiKHRandom(1);
             }
-                break;
+            break;
             case CMDMenu.OPEN_1_CUOI_XD: {
                 int index1 = getIndexBagById(2302);
                 Item rtl = null;
@@ -7940,7 +7952,7 @@ public class Player {
                 removeItem(index1, 1);
                 this.openSetHD(0, false, -1);
             }
-                break;
+            break;
             case CMDMenu.OPEN_SET_HD_NM: {
                 int index1 = getIndexBagById(2300);
                 Item rtl = null;
@@ -7953,7 +7965,7 @@ public class Player {
                 removeItem(index1, 1);
                 this.openSetHD(1, false, -1);
             }
-                break;
+            break;
             case CMDMenu.OPEN_SET_HD_XD: {
                 int index1 = getIndexBagById(2300);
                 Item rtl = null;
@@ -7966,7 +7978,7 @@ public class Player {
                 removeItem(index1, 1);
                 this.openSetHD(2, false, -1);
             }
-                break;
+            break;
             case CMDMenu.OPEN_SET_TL_TD_KH:
                 menus.clear();
                 menus.add(new KeyValue(CMDMenu.OPEN_SET_TL_TD_KH + 1, "Set Thiên Xin Hăng"));
@@ -8004,7 +8016,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetDoCuoi(0, true, Item.THIENXINHANG);
             }
-                break;
+            break;
             case CMDMenu.OPEN_SET_CUOI_TD_KH + 2: {
                 int index1 = getIndexBagById(ItemName.RUONG_DO_CUOI_KICH_HOAT);
                 Item rtl = null;
@@ -8017,7 +8029,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetDoCuoi(0, true, Item.KIRIN);
             }
-                break;
+            break;
             case CMDMenu.OPEN_SET_CUOI_TD_KH + 3: {
                 int index1 = getIndexBagById(ItemName.RUONG_DO_CUOI_KICH_HOAT);
                 Item rtl = null;
@@ -8030,7 +8042,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetDoCuoi(0, true, Item.SONGOKU);
             }
-                break;
+            break;
 
             case CMDMenu.OPEN_SET_CUOI_NM_KH + 1: {
                 int index1 = getIndexBagById(ItemName.RUONG_DO_CUOI_KICH_HOAT);
@@ -8044,7 +8056,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetDoCuoi(1, true, Item.PICOLO);
             }
-                break;
+            break;
             case CMDMenu.OPEN_SET_CUOI_NM_KH + 2: {
                 int index1 = getIndexBagById(ItemName.RUONG_DO_CUOI_KICH_HOAT);
                 Item rtl = null;
@@ -8057,7 +8069,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetDoCuoi(1, true, Item.OCTIEU);
             }
-                break;
+            break;
             case CMDMenu.OPEN_SET_CUOI_NM_KH + 3: {
                 int index1 = getIndexBagById(ItemName.RUONG_DO_CUOI_KICH_HOAT);
                 Item rtl = null;
@@ -8070,7 +8082,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetDoCuoi(1, true, Item.DAIMAO);
             }
-                break;
+            break;
 
             case CMDMenu.OPEN_SET_CUOI_XD_KH + 1: {
                 int index1 = getIndexBagById(ItemName.RUONG_DO_CUOI_KICH_HOAT);
@@ -8084,7 +8096,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetDoCuoi(2, true, Item.NAPPA);
             }
-                break;
+            break;
             case CMDMenu.OPEN_SET_CUOI_XD_KH + 2: {
                 int index1 = getIndexBagById(ItemName.RUONG_DO_CUOI_KICH_HOAT);
                 Item rtl = null;
@@ -8097,7 +8109,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetDoCuoi(2, true, Item.CADIC);
             }
-                break;
+            break;
             case CMDMenu.OPEN_SET_CUOI_XD_KH + 3: {
                 int index1 = getIndexBagById(ItemName.RUONG_DO_CUOI_KICH_HOAT);
                 Item rtl = null;
@@ -8110,7 +8122,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetDoCuoi(2, true, Item.KAKAROT);
             }
-                break;
+            break;
 
             case CMDMenu.OPEN_SET_TL_TD_KH + 1: {
                 int index1 = getIndexBagById(ItemName.RUONG_THAN_LINH_KICH_HOAT);
@@ -8124,7 +8136,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetTL(0, true, Item.THIENXINHANG);
             }
-                break;
+            break;
             case CMDMenu.OPEN_SET_TL_TD_KH + 2: {
                 int index1 = getIndexBagById(ItemName.RUONG_THAN_LINH_KICH_HOAT);
                 Item rtl = null;
@@ -8137,7 +8149,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetTL(0, true, Item.KIRIN);
             }
-                break;
+            break;
             case CMDMenu.OPEN_SET_TL_TD_KH + 3: {
                 int index1 = getIndexBagById(ItemName.RUONG_THAN_LINH_KICH_HOAT);
                 Item rtl = null;
@@ -8150,7 +8162,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetTL(0, true, Item.SONGOKU);
             }
-                break;
+            break;
             case CMDMenu.OPEN_SET_TL_NM_KH + 1: {
                 int index1 = getIndexBagById(ItemName.RUONG_THAN_LINH_KICH_HOAT);
                 Item rtl = null;
@@ -8163,7 +8175,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetTL(1, true, Item.PICOLO);
             }
-                break;
+            break;
             case CMDMenu.OPEN_SET_TL_NM_KH + 2: {
                 int index1 = getIndexBagById(ItemName.RUONG_THAN_LINH_KICH_HOAT);
                 Item rtl = null;
@@ -8176,7 +8188,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetTL(1, true, Item.OCTIEU);
             }
-                break;
+            break;
             case CMDMenu.OPEN_SET_TL_NM_KH + 3: {
                 int index1 = getIndexBagById(ItemName.RUONG_THAN_LINH_KICH_HOAT);
                 Item rtl = null;
@@ -8189,7 +8201,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetTL(1, true, Item.DAIMAO);
             }
-                break;
+            break;
             case CMDMenu.OPEN_SET_TL_XD_KH + 1: {
                 int index1 = getIndexBagById(ItemName.RUONG_THAN_LINH_KICH_HOAT);
                 Item rtl = null;
@@ -8202,7 +8214,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetTL(2, true, Item.NAPPA);
             }
-                break;
+            break;
             case CMDMenu.OPEN_SET_TL_XD_KH + 2: {
                 int index1 = getIndexBagById(ItemName.RUONG_THAN_LINH_KICH_HOAT);
                 Item rtl = null;
@@ -8215,7 +8227,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetTL(2, true, Item.CADIC);
             }
-                break;
+            break;
             case CMDMenu.OPEN_SET_TL_XD_KH + 3: {
                 int index1 = getIndexBagById(ItemName.RUONG_THAN_LINH_KICH_HOAT);
                 Item rtl = null;
@@ -8228,7 +8240,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetTL(2, true, Item.KAKAROT);
             }
-                break;
+            break;
             case CMDMenu.OPEN_SET_TL_TD:
                 int index1 = getIndexBagById(ItemName.RUONG_THAN_LINH);
                 Item rtl = null;
@@ -8424,7 +8436,7 @@ public class Player {
     }
 
     public void setDropRate(int mob, int boss) {
-        DropRateService.setDropRate(mob, boss);
+        DropRateService.update(mob, boss);
         this.service.sendThongBao("Đã thiết lập tỉ lệ rơi đồ");
     }
 
@@ -9008,14 +9020,14 @@ public class Player {
                     service.sendThongBao("Bạn đã thua vì bỏ chạy");
                 }
             }
-                break;
+            break;
 
             case CMDPk.TRA_THU: {
                 if (type == 3) {
                     service.sendThongBao("Bạn đã bị xử thua");
                 }
             }
-                break;
+            break;
 
             case CMDPk.DAI_HOI_VO_THUAT:
                 // Arena arena = (Arena) zone;
@@ -9624,7 +9636,7 @@ public class Player {
 
                     if (skill != null) {
                         menus.clear();
-                        menus.add(new KeyValue(600, "Đồng ý x" + quantity, new Object[] { item, quantity }));
+                        menus.add(new KeyValue(600, "Đồng ý x" + quantity, new Object[]{item, quantity}));
                         menus.add(new KeyValue(CMDMenu.CANCEL, "Từ chối"));
                         Npc npc = shop.getNpc();
                         service.openUIConfirm(npc.templateId,
@@ -9972,7 +9984,7 @@ public class Player {
                 }
                 // Add HD gear specific options
                 if (item2.isDoHD()) {
-                    int[] optionBonus = new int[] { 77, 103, 50 };
+                    int[] optionBonus = new int[]{77, 103, 50};
                     item2.addItemOption(
                             new ItemOption(optionBonus[Utils.nextInt(optionBonus.length)], Utils.nextInt(1, 5)));
                     item2.addItemOption(new ItemOption(30, 0));
@@ -11729,7 +11741,7 @@ public class Player {
                 itemTime = new ItemTime(ItemTimeName.SACH_DAC_BIET[index], item.template.iconID, 10 * 60, true);
                 isUpdate = true;
             }
-                break;
+            break;
         }
         if (itemTime != null) {
             removeItem(item.indexUI, 1);
@@ -11986,7 +11998,7 @@ public class Player {
                 addItem(itm);
                 service.sendThongBao("Bạn nhận được " + itm.template.name);
             }
-                break;
+            break;
             case 2176:
                 this.SKIPNV(item);
                 break;
@@ -12106,7 +12118,7 @@ public class Player {
                     updateTaskCount(1);
                 }
             }
-                break;
+            break;
             case ItemName.NHO_TIM:
                 info.stamina = info.maxStamina;
                 service.setStamina();
@@ -12303,7 +12315,7 @@ public class Player {
                     service.sendThongBao(Language.ME_BAG_FULL);
                     return;
                 }
-                int[] rewardCskb = { ItemName.CUONG_NO, ItemName.BO_HUYET, ItemName.BO_KHI, ItemName.AN_DANH };
+                int[] rewardCskb = {ItemName.CUONG_NO, ItemName.BO_HUYET, ItemName.BO_KHI, ItemName.AN_DANH};
                 Item itm = null;
                 int rd = Utils.nextInt(100);
                 if (rd >= 70) {
@@ -12318,7 +12330,7 @@ public class Player {
                 removeItem(item.indexUI, 1);
                 service.combine((byte) 6, null, item.template.iconID, itm.template.iconID);
             }
-                break;
+            break;
 
             case ItemName.CAPSULE_SQUID_GAME: {
                 if (getSlotNullInBag() == 0) {
@@ -12329,7 +12341,7 @@ public class Player {
                 int itemID = rd.next();
                 Item itm = new Item(itemID);
                 itm.setDefaultOptions();
-                int[] arr = { -1, 7, 7, 7, 7, 15, 15, 15, 30, 30 };
+                int[] arr = {-1, 7, 7, 7, 7, 15, 15, 15, 30, 30};
                 int expire = arr[Utils.nextInt(arr.length)];
                 if (expire != -1) {
                     itm.addItemOption(new ItemOption(93, expire));
@@ -12339,7 +12351,7 @@ public class Player {
                 removeItem(item.indexUI, 1);
                 service.combine((byte) 6, null, item.template.iconID, itm.template.iconID);
             }
-                break;
+            break;
             // case ItemName.BUA_DOI_SKILL_DE_TU:
             // this.myDisciple.changeSkill();
             // removeItem(item.indexUI, 1);
@@ -12392,7 +12404,7 @@ public class Player {
             case ItemName.THAN_CHET_CUTE:
             case ItemName.BI_NGO_NHI_NHANH:
             case ItemName.CUA_DO_1008:
-                // case ItemName.PET_KE_XAM_LANG:
+            // case ItemName.PET_KE_XAM_LANG:
             case ItemName.RONG_HONG:
             case ItemName.RONG_VANG:
                 setMiniDisciple(item);
@@ -12607,7 +12619,7 @@ public class Player {
                         menus.add(new KeyValue(CMDMenu.CANCEL, "OK"));
                         service.openUIConfirm(NpcName.CON_MEO, String.valueOf(sbnew), getPetAvatar(), menus);
                     }
-                        break;
+                    break;
                     case 2: {
                         int itemId = RandomItem.DA_NANG_CAP.next();
                         it = new Item(itemId);
@@ -12624,7 +12636,7 @@ public class Player {
                         sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
 
                     }
-                        break;
+                    break;
                     case 3: {
                         int itemId = RandomItem.DA_NANG_CAP.next();
                         it = new Item(itemId);
@@ -12648,7 +12660,7 @@ public class Player {
                         sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
 
                     }
-                        break;
+                    break;
                     case 4: {
                         int itemId = RandomItem.DA_NANG_CAP.next();
                         it = new Item(itemId);
@@ -12679,7 +12691,7 @@ public class Player {
                         sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
 
                     }
-                        break;
+                    break;
                     case 5: {
                         int itemId = RandomItem.DA_NANG_CAP.next();
                         it = new Item(itemId);
@@ -12717,7 +12729,7 @@ public class Player {
                         sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
 
                     }
-                        break;
+                    break;
                     case 6: {
                         int itemId = RandomItem.DA_NANG_CAP.next();
                         it = new Item(itemId);
@@ -12754,7 +12766,7 @@ public class Player {
                         addItem(it);
                         sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
                     }
-                        break;
+                    break;
                     case 7: {
                         int itemId = RandomItem.DA_NANG_CAP.next();
                         it = new Item(itemId);
@@ -12791,7 +12803,7 @@ public class Player {
                         addItem(it);
                         sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
                     }
-                        break;
+                    break;
                     case 8: {
                         int itemId = RandomItem.DA_NANG_CAP.next();
                         it = new Item(itemId);
@@ -12836,7 +12848,7 @@ public class Player {
                         addItem(it);
                         sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
                     }
-                        break;
+                    break;
                     case 9: {
 
                         int itemId = RandomItem.DA_NANG_CAP.next();
@@ -12875,7 +12887,7 @@ public class Player {
                         addItem(it);
                         sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
                     }
-                        break;
+                    break;
                     case 10: {
 
                         int itemId = RandomItem.DA_NANG_CAP.next();
@@ -12922,7 +12934,7 @@ public class Player {
                         addItem(it);
                         sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
                     }
-                        break;
+                    break;
                     case 11: {
 
                         int itemId = RandomItem.ITEM_CAP_2.next();
@@ -12969,7 +12981,7 @@ public class Player {
                         addItem(it);
                         sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
                     }
-                        break;
+                    break;
                     case 12: {
 
                         int itemId = RandomItem.ITEM_CAP_2.next();
@@ -13030,7 +13042,7 @@ public class Player {
                         addItem(it);
                         sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
                     }
-                        break;
+                    break;
                     case 13: {
                         int itemId = RandomItem.ITEM_CAP_2.next();
                         it = new Item(itemId);
@@ -13104,7 +13116,7 @@ public class Player {
                         addItem(it);
                         sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
                     }
-                        break;
+                    break;
                     default:
                         service.serverMessage("Có lỗi xảy ra");
                         return;
@@ -13113,7 +13125,7 @@ public class Player {
                 service.openUIConfirm(NpcName.CON_MEO, String.valueOf(sbnew), getPetAvatar(), menus);
                 removeItem(item.indexUI, 1);
             }
-                break;
+            break;
             case ItemName.NGOC_RONG_THIEN_MENH_1_SAO:
                 int indexThienMenh1s = getIndexBagById(ItemName.NGOC_RONG_THIEN_MENH_1_SAO);
                 int indexThienMenh2s = getIndexBagById(ItemName.NGOC_RONG_THIEN_MENH_2_SAO);
@@ -13785,7 +13797,7 @@ public class Player {
         }
 
         if (mapID == 39 || mapID == 40 || mapID == 41) {
-            String petName = new String[] { "Puaru", "Piano", "Icarus" }[gender];
+            String petName = new String[]{"Puaru", "Piano", "Icarus"}[gender];
             service.openUISay((short) NpcName.CON_MEO, String.format(
                     "Chào mừng bạn đến với thế giới Ngọc Rồng!\nMình là %s sẽ đồng hành cùng bạn ở thế giới này\nĐể di chuyển, hãy chạm 1 lần vào nơi muốn đến",
                     petName), (short) getPetAvatar());
@@ -13808,7 +13820,7 @@ public class Player {
                 }
             }
             if (task.id == 11 && task.index == 0) {
-                int map = (new int[] { 5, 13, 20 })[gender];
+                int map = (new int[]{5, 13, 20})[gender];
                 if (mapID == map) {
                     taskNext();
                 }
@@ -14385,8 +14397,8 @@ public class Player {
                     }
                     List<Player> list = zone.getListChar(Zone.TYPE_HUMAN, Zone.TYPE_PET);
                     if (list.size() > 1) {
-                        String[] chats2 = { "Tránh ra đi Xinbatô ơi", "Phân tâm quá", "Nực quá", "Bực bội quá",
-                                "Im đi ông Xinbatô ơi" };
+                        String[] chats2 = {"Tránh ra đi Xinbatô ơi", "Phân tâm quá", "Nực quá", "Bực bội quá",
+                            "Im đi ông Xinbatô ơi"};
                         if (info.options[8] > 0) {
                             info.recovery(Info.ALL, info.options[8], true);
                         }
@@ -14755,8 +14767,8 @@ public class Player {
     public void updateEveryTenSeconds() {
         try {
             if (!isDead) {
-                String[] chats = { "Thúi quá", "Biến đi", "Mùi gì hôi quá", "Hôi quá, tránh xa ta ra",
-                        "Trời ơi, đồ ở dơ" };
+                String[] chats = {"Thúi quá", "Biến đi", "Mùi gì hôi quá", "Hôi quá, tránh xa ta ra",
+                    "Trời ơi, đồ ở dơ"};
                 if (info.options[109] > 0) {
                     List<Player> list = zone.getListChar(Zone.TYPE_HUMAN, Zone.TYPE_PET);
                     if (list.size() > 1) {
@@ -16181,9 +16193,9 @@ public class Player {
 
                     case 6:// nhiệm vụ
                         if (task.index <= 2) {
-                            int[][] mobTask = { { MobName.KHUNG_LONG_ME, MobName.LON_LOI_ME, MobName.QUY_DAT_ME },
-                                    { MobName.LON_LOI_ME, MobName.QUY_DAT_ME, MobName.KHUNG_LONG_ME },
-                                    { MobName.QUY_DAT_ME, MobName.KHUNG_LONG_ME, MobName.LON_LOI_ME } };
+                            int[][] mobTask = {{MobName.KHUNG_LONG_ME, MobName.LON_LOI_ME, MobName.QUY_DAT_ME},
+                            {MobName.LON_LOI_ME, MobName.QUY_DAT_ME, MobName.KHUNG_LONG_ME},
+                            {MobName.QUY_DAT_ME, MobName.KHUNG_LONG_ME, MobName.LON_LOI_ME}};
                             int mobId = mobTask[gender][task.index];
                             if (mob.templateId == mobId) {
                                 updateTaskCount(1);
@@ -16193,7 +16205,7 @@ public class Player {
 
                     case 7:// nhiệm vụ giải cứu
                         if (task.index == 1) {
-                            int mobId = (new int[] { MobName.THAN_LAN_BAY, MobName.PHI_LONG, MobName.QUY_BAY })[gender];
+                            int mobId = (new int[]{MobName.THAN_LAN_BAY, MobName.PHI_LONG, MobName.QUY_BAY})[gender];
                             if (mob.templateId == mobId) {
                                 updateTaskCount(1);
                             }
@@ -16201,7 +16213,7 @@ public class Player {
                         break;
 
                     case 13: {// nhiem vu danh heo
-                        int[] mobs = { MobName.HEO_RUNG, MobName.HEO_DA_XANH, MobName.HEO_XAYDA };
+                        int[] mobs = {MobName.HEO_RUNG, MobName.HEO_DA_XANH, MobName.HEO_XAYDA};
                         if (task.index < 3 && mob.templateId == mobs[task.index]) {
                             updateTaskCount(1);
                         }
@@ -16209,22 +16221,22 @@ public class Player {
                     }
 
                     case 15: {// nhiem vu bulon
-                        int[] mobs = { MobName.BULON, MobName.UKULELE, MobName.QUY_MAP };
+                        int[] mobs = {MobName.BULON, MobName.UKULELE, MobName.QUY_MAP};
                         if (task.index > 0 && task.index < 4 && mob.templateId == mobs[task.index - 1]) {
                             updateTaskCount(1);
                         }
                         break;
                     }
                     case 16: {// nhiem vu danh tabourine, drum, akkuman
-                        int[] mobs = { MobName.TAMBOURINE, MobName.DRUM, MobName.AKKUMAN };
+                        int[] mobs = {MobName.TAMBOURINE, MobName.DRUM, MobName.AKKUMAN};
                         if (task.index < 3 && mob.templateId == mobs[task.index]) {
                             updateTaskCount(1);
                         }
                         break;
                     }
                     case 18: {
-                        int[] mobs = { MobName.NAPPA, MobName.SOLDIER, MobName.APPULE, MobName.RASPBERRY,
-                                MobName.THAN_LAN_XANH };
+                        int[] mobs = {MobName.NAPPA, MobName.SOLDIER, MobName.APPULE, MobName.RASPBERRY,
+                            MobName.THAN_LAN_XANH};
                         if (task.index < 5 && mob.templateId == mobs[task.index]) {
                             updateTaskCount(1);
                         }
@@ -16577,8 +16589,8 @@ public class Player {
         } else if (map.mapID == MapName.RUNG_KARIN) {
             z = new KarinForest(map, zoneID, this);
         } // else if (map.mapID == MapName.DONG_NAM_KARIN) {
-          // z = new SoutheastKarin(map, zoneID);
-          // }
+        // z = new SoutheastKarin(map, zoneID);
+        // }
         else if (map.mapID == MapName.THAP_KARIN) {
             z = new KarinTower(map, zoneID, typeTraining);
         } else {
@@ -17255,9 +17267,9 @@ public class Player {
                 service.sendThongBao("Bạn đã nhận được " + Utils.currencyFormat(gold) + " vàng");
                 break;
             case ItemName.VO_SO:
-                int[] spl = { ItemName.SAO_PHA_LE_DAME_TO_HP, ItemName.SAO_PHA_LE_DAME_TO_MP, ItemName.SAO_PHA_LE_PST,
-                        ItemName.SAO_PHA_LE_TNSM,
-                        ItemName.SAO_PHA_LE_VANG, ItemName.SAO_PHA_LE_XG_CAN_CHIET, ItemName.SAO_PHA_LE_XG_CHUONG };
+                int[] spl = {ItemName.SAO_PHA_LE_DAME_TO_HP, ItemName.SAO_PHA_LE_DAME_TO_MP, ItemName.SAO_PHA_LE_PST,
+                    ItemName.SAO_PHA_LE_TNSM,
+                    ItemName.SAO_PHA_LE_VANG, ItemName.SAO_PHA_LE_XG_CAN_CHIET, ItemName.SAO_PHA_LE_XG_CHUONG};
                 for (int i = 0; i < 3; i++) {
                     Item saophale = new Item(spl[new Random().nextInt(spl.length - 1)]);
                     saophale.quantity = 1;
@@ -17267,9 +17279,9 @@ public class Player {
                 }
                 break;
             case ItemName.CON_CUA:
-                int[] nrList = { ItemName.NGOC_RONG_1_SAO, ItemName.NGOC_RONG_2_SAO, ItemName.NGOC_RONG_3_SAO,
-                        ItemName.NGOC_RONG_4_SAO,
-                        ItemName.NGOC_RONG_5_SAO, ItemName.NGOC_RONG_6_SAO, ItemName.NGOC_RONG_7_SAO };
+                int[] nrList = {ItemName.NGOC_RONG_1_SAO, ItemName.NGOC_RONG_2_SAO, ItemName.NGOC_RONG_3_SAO,
+                    ItemName.NGOC_RONG_4_SAO,
+                    ItemName.NGOC_RONG_5_SAO, ItemName.NGOC_RONG_6_SAO, ItemName.NGOC_RONG_7_SAO};
                 Item nr = new Item(nrList[new Random().nextInt(nrList.length - 1)]);
                 nr.quantity = 1;
                 nr.setDefaultOptions();
@@ -17496,7 +17508,7 @@ public class Player {
         try {
             int idMAP = server.mapNrNamec[id];
             int idZone = server.zoneNrNamec[id];
-            Integer[] sttMap = { 8, 9, 11, 12, 13, 31, 32, 33, 34, 43 };
+            Integer[] sttMap = {8, 9, 11, 12, 13, 31, 32, 33, 34, 43};
             TMap map = MapManager.getInstance().getMap(idMAP);
             Zone z = null;
             if (map != null) {
@@ -17851,12 +17863,12 @@ public class Player {
     public void openDoHDRandom(int gender, int setkh) {
         Item item = null;
         int isDoTL = 0;
-        int[] DO_TL_TD = { ItemName.AO_HUY_DIET_TD, ItemName.QUAN_HUY_DIET_TD, ItemName.GANG_HUY_DIET_TD,
-                ItemName.GIAY_HUY_DIET_TD, ItemName.NHAN_HUY_DIET };
-        int[] DO_TL_XD = { ItemName.AO_HUY_DIET_XD, ItemName.QUAN_HUY_DIET_XD, ItemName.GANG_HUY_DIET_XD,
-                ItemName.GIAY_HUY_DIET_XD, ItemName.NHAN_HUY_DIET };
-        int[] DO_TL_NM = { ItemName.AO_HUY_DIET_NM, ItemName.QUAN_HUY_DIET_NM, ItemName.GANG_HUY_DIET_NM,
-                ItemName.GIAY_HUY_DIET_NM, ItemName.NHAN_HUY_DIET };
+        int[] DO_TL_TD = {ItemName.AO_HUY_DIET_TD, ItemName.QUAN_HUY_DIET_TD, ItemName.GANG_HUY_DIET_TD,
+            ItemName.GIAY_HUY_DIET_TD, ItemName.NHAN_HUY_DIET};
+        int[] DO_TL_XD = {ItemName.AO_HUY_DIET_XD, ItemName.QUAN_HUY_DIET_XD, ItemName.GANG_HUY_DIET_XD,
+            ItemName.GIAY_HUY_DIET_XD, ItemName.NHAN_HUY_DIET};
+        int[] DO_TL_NM = {ItemName.AO_HUY_DIET_NM, ItemName.QUAN_HUY_DIET_NM, ItemName.GANG_HUY_DIET_NM,
+            ItemName.GIAY_HUY_DIET_NM, ItemName.NHAN_HUY_DIET};
 
         switch (gender) {
             case 0:
@@ -17885,11 +17897,11 @@ public class Player {
 
     public void openTLRandom(int gender) {
         Item item = null;
-        int[][][] options = { { { 127, 139 }, { 128, 140 }, { 129, 141 } },
-                { { 130, 195 }, { 131, 143 }, { 132, 144 } }, { { 133, 136 }, { 134, 137 }, { 135, 138 } } };
-        int[] DO_TL_TD = { 555, 556, 562, 563, 561 };
-        int[] DO_TL_XD = { 559, 560, 566, 567, 561 };
-        int[] DO_TL_NM = { 557, 558, 564, 565, 561 };
+        int[][][] options = {{{127, 139}, {128, 140}, {129, 141}},
+        {{130, 195}, {131, 143}, {132, 144}}, {{133, 136}, {134, 137}, {135, 138}}};
+        int[] DO_TL_TD = {555, 556, 562, 563, 561};
+        int[] DO_TL_XD = {559, 560, 566, 567, 561};
+        int[] DO_TL_NM = {557, 558, 564, 565, 561};
         int isDoTL = 0;
         switch (gender) {
             case 0:
@@ -17928,11 +17940,11 @@ public class Player {
 
     public void openSKHRandom(int gender) {
         Item item = null;
-        int[][][] options = { { { 127, 139 }, { 128, 140 }, { 129, 141 } },
-                { { 130, 195 }, { 131, 143 }, { 132, 144 } }, { { 133, 136 }, { 134, 137 }, { 135, 138 } } };
-        int[] DO_TL_TD = { 0, 6, 21, 27, 12 };
-        int[] DO_TL_NM = { 1, 7, 22, 28, 12 };
-        int[] DO_TL_XD = { 2, 8, 23, 29, 12 };
+        int[][][] options = {{{127, 139}, {128, 140}, {129, 141}},
+        {{130, 195}, {131, 143}, {132, 144}}, {{133, 136}, {134, 137}, {135, 138}}};
+        int[] DO_TL_TD = {0, 6, 21, 27, 12};
+        int[] DO_TL_NM = {1, 7, 22, 28, 12};
+        int[] DO_TL_XD = {2, 8, 23, 29, 12};
         int isDoTL = 0;
         switch (gender) {
             case 0:
@@ -17974,11 +17986,11 @@ public class Player {
 
     public void openDoTLKHRandom(int gender) {
         Item item = null;
-        int[][][] options = { { { 127, 139 }, { 128, 140 }, { 129, 141 } },
-                { { 130, 195 }, { 131, 143 }, { 132, 144 } }, { { 133, 136 }, { 134, 137 }, { 135, 138 } } };
-        int[] DO_TL_TD = { 555, 556, 562, 563, 561 };
-        int[] DO_TL_XD = { 559, 560, 566, 567, 561 };
-        int[] DO_TL_NM = { 557, 558, 564, 565, 561 };
+        int[][][] options = {{{127, 139}, {128, 140}, {129, 141}},
+        {{130, 195}, {131, 143}, {132, 144}}, {{133, 136}, {134, 137}, {135, 138}}};
+        int[] DO_TL_TD = {555, 556, 562, 563, 561};
+        int[] DO_TL_XD = {559, 560, 566, 567, 561};
+        int[] DO_TL_NM = {557, 558, 564, 565, 561};
         int isDoTL = 0;
         switch (gender) {
             case 0:
@@ -18014,11 +18026,11 @@ public class Player {
 
     public void openDoCuoiKHRandom(int gender) {
         Item item = null;
-        int[][][] options = { { { 127, 139 }, { 128, 140 }, { 129, 141 } },
-                { { 130, 195 }, { 131, 143 }, { 132, 144 } }, { { 133, 136 }, { 134, 137 }, { 135, 138 } } };
-        int[] DO_TL_TD = { 233, 245, 257, 269, 281 };
-        int[] DO_TL_XD = { 241, 253, 265, 277, 281 };
-        int[] DO_TL_NM = { 237, 249, 261, 273, 281 };
+        int[][][] options = {{{127, 139}, {128, 140}, {129, 141}},
+        {{130, 195}, {131, 143}, {132, 144}}, {{133, 136}, {134, 137}, {135, 138}}};
+        int[] DO_TL_TD = {233, 245, 257, 269, 281};
+        int[] DO_TL_XD = {241, 253, 265, 277, 281};
+        int[] DO_TL_NM = {237, 249, 261, 273, 281};
         int isDoTL = 0;
         switch (gender) {
             case 0:
@@ -18563,68 +18575,68 @@ public class Player {
 
     public static int[] GetImgDanhHieu(Item item) {
         if (item == null) {
-            return new int[] { -1, 0 };
+            return new int[]{-1, 0};
         }
         switch (item.template.id) {
             case ItemName.DANH_HIEU_THAN_HO_VE: {
-                return new int[] { 31259, 6 };
+                return new int[]{31259, 6};
             }
             case ItemName.DANH_HIEU_THAN_LONG: {
-                return new int[] { 31260, 6 };
+                return new int[]{31260, 6};
             }
             case ItemName.DANH_HIEU_BE_NGOAN: {
-                return new int[] { 31262, 6 };
+                return new int[]{31262, 6};
             }
             case ItemName.DANH_HIEU_PHONG_BA: {
-                return new int[] { 31264, 6 };
+                return new int[]{31264, 6};
             }
             case ItemName.DANH_HIEU_FAN_CUNG: {
-                return new int[] { 15510, 6 };
+                return new int[]{15510, 6};
             }
             case ItemName.DANH_HIEU_TOP_1_DAI_GIA: {
-                return new int[] { 32227, 6 };
+                return new int[]{32227, 6};
             }
             case ItemName.DANH_HIEU_TOP_2_DAI_GIA: {
-                return new int[] { 32229, 6 };
+                return new int[]{32229, 6};
             }
             case ItemName.DANH_HIEU_TOP_3_DAI_GIA: {
-                return new int[] { 32231, 6 };
+                return new int[]{32231, 6};
             }
             case ItemName.DANH_HIEU_TOP_1_NHIEM_VU: {
-                return new int[] { 32233, 6 };
+                return new int[]{32233, 6};
             }
             case ItemName.DANH_HIEU_TOP_2_NHIEM_VU: {
-                return new int[] { 32235, 6 };
+                return new int[]{32235, 6};
             }
             case ItemName.DANH_HIEU_TOP_3_NHIEM_VU: {
-                return new int[] { 32237, 6 };
+                return new int[]{32237, 6};
             }
             case ItemName.DANH_HIEU_TOP_1_SUC_MANH: {
-                return new int[] { 32239, 6 };
+                return new int[]{32239, 6};
             }
             case ItemName.DANH_HIEU_TOP_2_SUC_MANH: {
-                return new int[] { 32241, 6 };
+                return new int[]{32241, 6};
             }
             case ItemName.DANH_HIEU_TOP_3_SUC_MANH: {
-                return new int[] { 32243, 6 };
+                return new int[]{32243, 6};
             }
             case ItemName.DANH_HIEU_TOP_1_VONG_QUAY: {
-                return new int[] { 32245, 6 };
+                return new int[]{32245, 6};
             }
             case ItemName.DANH_HIEU_TOP_2_VONG_QUAY: {
-                return new int[] { 32247, 6 };
+                return new int[]{32247, 6};
             }
             case ItemName.DANH_HIEU_TOP_3_VONG_QUAY: {
-                return new int[] { 32249, 6 };
+                return new int[]{32249, 6};
             }
             case 2198: {
-                return new int[] { 16661, 6 };
+                return new int[]{16661, 6};
             }
             case 2260: {
-                return new int[] { 9138, 6 };
+                return new int[]{9138, 6};
             }
         }
-        return new int[] { -1, 0 };
+        return new int[]{-1, 0};
     }
 
     public void uocRongThienMenh(int type) {
@@ -18801,7 +18813,7 @@ public class Player {
         }
         Item itemCreate = new Item(item.template.id + 114);
         itemCreate.setDefaultOptions();
-        int[] optionBonus = new int[] { 77, 103, 50, item.template.gender == 2 ? 94 : 5 };
+        int[] optionBonus = new int[]{77, 103, 50, item.template.gender == 2 ? 94 : 5};
         itemCreate.addItemOption(new ItemOption(optionBonus[Utils.nextInt(optionBonus.length)], Utils.nextInt(1, 5)));
         itemCreate.addItemOption(new ItemOption(30, 0));
         itemCreate.quantity = 1;
@@ -18829,10 +18841,10 @@ public class Player {
     }
 
     public void getDoTanThu(int gender) {
-        int[][] items = new int[][] {
-                { 0, 6, 21, 27, 12 },
-                { 1, 7, 22, 28, 12 },
-                { 2, 8, 23, 29, 12 }
+        int[][] items = new int[][]{
+            {0, 6, 21, 27, 12},
+            {1, 7, 22, 28, 12},
+            {2, 8, 23, 29, 12}
         };
         if (getCountEmptyBag() < 5) {
             service.sendThongBao("Hành trang không đủ ô trống , cần 5 ô trống");
