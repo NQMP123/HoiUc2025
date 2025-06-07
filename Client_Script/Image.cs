@@ -8,6 +8,8 @@ public class Image
 
     private const int MAXTIME = 500;
 
+    private static readonly AutoResetEvent operationEvent = new AutoResetEvent(false);
+
     public Texture2D texture = new Texture2D(1, 1);
 
     public static Image imgTemp;
@@ -141,30 +143,35 @@ public class Image
             status = 1;
             imgTemp = __createEmptyImage();
             status = 0;
+            operationEvent.Set();
         }
         else if (status == 3)
         {
             status = 1;
             imgTemp = __createImage(filenametemp);
             status = 0;
+            operationEvent.Set();
         }
         else if (status == 4)
         {
             status = 1;
             imgTemp = __createImage(datatemp);
             status = 0;
+            operationEvent.Set();
         }
         else if (status == 5)
         {
             status = 1;
             imgTemp = __createImage(imgSrcTemp, xtemp, ytemp, wtemp, htemp, transformtemp);
             status = 0;
+            operationEvent.Set();
         }
         else if (status == 6)
         {
             status = 1;
             imgTemp = __createImage(wtemp, htemp);
             status = 0;
+            operationEvent.Set();
         }
     }
 
@@ -176,17 +183,9 @@ public class Image
             return null;
         }
         imgTemp = null;
+        operationEvent.Reset();
         status = 2;
-        int i;
-        for (i = 0; i < 500; i++)
-        {
-            Thread.Sleep(5);
-            if (status == 0)
-            {
-                break;
-            }
-        }
-        if (i == 500)
+        if (!operationEvent.WaitOne(INTERVAL * MAXTIME))
         {
             Cout.LogError("TOO LONG FOR CREATE EMPTY IMAGE");
             status = 0;
@@ -203,17 +202,9 @@ public class Image
         }
         imgTemp = null;
         filenametemp = filename;
+        operationEvent.Reset();
         status = 3;
-        int i;
-        for (i = 0; i < 500; i++)
-        {
-            Thread.Sleep(5);
-            if (status == 0)
-            {
-                break;
-            }
-        }
-        if (i == 500)
+        if (!operationEvent.WaitOne(INTERVAL * MAXTIME))
         {
             Cout.LogError("TOO LONG FOR CREATE IMAGE " + filename);
             status = 0;
@@ -230,17 +221,9 @@ public class Image
         }
         imgTemp = null;
         datatemp = imageData;
+        operationEvent.Reset();
         status = 4;
-        int i;
-        for (i = 0; i < 500; i++)
-        {
-            Thread.Sleep(5);
-            if (status == 0)
-            {
-                break;
-            }
-        }
-        if (i == 500)
+        if (!operationEvent.WaitOne(INTERVAL * MAXTIME))
         {
             Cout.LogError("TOO LONG FOR CREATE IMAGE(FromArray)");
             status = 0;
@@ -262,17 +245,9 @@ public class Image
         wtemp = w;
         htemp = h;
         transformtemp = transform;
+        operationEvent.Reset();
         status = 5;
-        int i;
-        for (i = 0; i < 500; i++)
-        {
-            Thread.Sleep(5);
-            if (status == 0)
-            {
-                break;
-            }
-        }
-        if (i == 500)
+        if (!operationEvent.WaitOne(INTERVAL * MAXTIME))
         {
             Cout.LogError("TOO LONG FOR CREATE IMAGE(FromSrcPart)");
             status = 0;
@@ -290,17 +265,9 @@ public class Image
         imgTemp = null;
         wtemp = w;
         htemp = h;
+        operationEvent.Reset();
         status = 6;
-        int i;
-        for (i = 0; i < 500; i++)
-        {
-            Thread.Sleep(5);
-            if (status == 0)
-            {
-                break;
-            }
-        }
-        if (i == 500)
+        if (!operationEvent.WaitOne(INTERVAL * MAXTIME))
         {
             Cout.LogError("TOO LONG FOR CREATE IMAGE(w,h)");
             status = 0;

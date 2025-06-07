@@ -8,7 +8,9 @@ public class DataInputStream
 
 	private const int INTERVAL = 5;
 
-	private const int MAXTIME = 500;
+        private const int MAXTIME = 500;
+
+        private static readonly AutoResetEvent operationEvent = new AutoResetEvent(false);
 
 	public static DataInputStream istemp;
 
@@ -27,15 +29,16 @@ public class DataInputStream
 		r = new myReader(data);
 	}
 
-	public static void update()
-	{
-		if (status == 2)
-		{
-			status = 1;
-			istemp = __getResourceAsStream(filenametemp);
-			status = 0;
-		}
-	}
+        public static void update()
+        {
+                if (status == 2)
+                {
+                        status = 1;
+                        istemp = __getResourceAsStream(filenametemp);
+                        status = 0;
+                        operationEvent.Set();
+                }
+        }
 
 	public static DataInputStream getResourceAsStream(string filename)
 	{
@@ -44,42 +47,27 @@ public class DataInputStream
 
 	private static DataInputStream _getResourceAsStream(string filename)
 	{
-		if (status != 0)
-		{
-			for (int i = 0; i < 500; i++)
-			{
-				Thread.Sleep(5);
-				if (status == 0)
-				{
-					break;
-				}
-			}
-			if (status != 0)
-			{
-				Debug.LogError("CANNOT GET INPUTSTREAM " + filename + " WHEN GETTING " + filenametemp);
-				return null;
-			}
-		}
-		istemp = null;
-		filenametemp = filename;
-		status = 2;
-		int j;
-		for (j = 0; j < 500; j++)
-		{
-			Thread.Sleep(5);
-			if (status == 0)
-			{
-				break;
-			}
-		}
-		if (j == 500)
-		{
-			Debug.LogError("TOO LONG FOR CREATE INPUTSTREAM " + filename);
-			status = 0;
-			return null;
-		}
-		return istemp;
-	}
+                if (status != 0)
+                {
+                        operationEvent.WaitOne(INTERVAL * MAXTIME);
+                        if (status != 0)
+                        {
+                                Debug.LogError("CANNOT GET INPUTSTREAM " + filename + " WHEN GETTING " + filenametemp);
+                                return null;
+                        }
+                }
+                istemp = null;
+                filenametemp = filename;
+                operationEvent.Reset();
+                status = 2;
+                if (!operationEvent.WaitOne(INTERVAL * MAXTIME))
+                {
+                        Debug.LogError("TOO LONG FOR CREATE INPUTSTREAM " + filename);
+                        status = 0;
+                        return null;
+                }
+                return istemp;
+        }
 
 	private static DataInputStream __getResourceAsStream(string filename)
 	{
