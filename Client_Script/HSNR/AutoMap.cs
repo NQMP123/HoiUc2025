@@ -79,23 +79,21 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                                 return;
                             }
                             currIndex++;
-                            int num2 = 0;
-                            while (true)
+                            int index = -1;
+                            for (int i = 0; i < GameCanvas.menu.menuItems.size(); i++)
                             {
-                                if (num2 < GameCanvas.menu.menuItems.size())
-                                {
-                                    string item = ((Command)GameCanvas.menu.menuItems.elementAt(num2)).caption.Trim().ToLower().Replace("\n", " ")
+                                string item = ((Command)GameCanvas.menu.menuItems.elementAt(i)).caption.Trim().ToLower().Replace("\n", " ")
                                         .Replace("\b", " ");
-                                    if (listMapNext.Contains(item) || 1 == 0)
-                                    {
-                                        break;
-                                    }
-                                    num2++;
-                                    continue;
+                                if (listMapNext.Contains(item) || 1 == 0)
+                                {
+                                    index = i;
+                                    break;
                                 }
-                                return;
                             }
-                            Service.gI().confirmMenu((short)Npc, (sbyte)num2);
+                            if (index >= 0)
+                            {
+                                Service.gI().confirmMenu((short)Npc, (sbyte)index);
+                            }
                         }
                     }
                 }
@@ -103,23 +101,15 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
 
             public Waypoint GetWayPoint()
             {
-                int num = 0;
-                Waypoint waypoint;
-                while (true)
+                for (int i = 0; i < TileMap.vGo.size(); i++)
                 {
-                    if (num < TileMap.vGo.size())
+                    Waypoint waypoint = (Waypoint)TileMap.vGo.elementAt(i);
+                    if (GetMapName().Equals(GetMapName(waypoint.popup)) || 1 == 0)
                     {
-                        waypoint = (Waypoint)TileMap.vGo.elementAt(num);
-                        if (GetMapName().Equals(GetMapName(waypoint.popup)) || 1 == 0)
-                        {
-                            break;
-                        }
-                        num++;
-                        continue;
+                        return waypoint;
                     }
-                    return null;
                 }
-                return waypoint;
+                return null;
             }
 
             public string GetMapName()
@@ -704,59 +694,39 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
             }
             int num = 9999;
             int[] result = null;
-            using List<int[]>.Enumerator enumerator2 = list.GetEnumerator();
-            while (true)
+            foreach (int[] current2 in list)
             {
-                if (enumerator2.MoveNext() ? true : false)
+                if (!hasWayGoFutureAndBack(current2) && (Char.myCharz().taskMaint.taskId > 30 || !hasWayGoToColdMap(current2) || 1 == 0) && current2.Length < num)
                 {
-                    int[] current2 = enumerator2.Current;
-                    if (!hasWayGoFutureAndBack(current2) && 0 == 0 && (Char.myCharz().taskMaint.taskId > 30 || !hasWayGoToColdMap(current2) || 1 == 0) && current2.Length < num)
-                    {
-                        num = current2.Length;
-                        result = current2;
-                    }
-                    continue;
+                    num = current2.Length;
+                    result = current2;
                 }
-                return result;
             }
+            return result;
         }
 
         private bool hasWayGoFutureAndBack(int[] int_10)
         {
-            int num = 1;
-            while (true)
+            for (int i = 1; i < int_10.Length - 1; i++)
             {
-                if (num < int_10.Length - 1)
+                if (int_10[i] == 102 && int_10[i + 1] == 24 && (int_10[i - 1] == 27 || int_10[i - 1] == 28 || int_10[i - 1] == 29))
                 {
-                    if (int_10[num] == 102 && int_10[num + 1] == 24 && (int_10[num - 1] == 27 || int_10[num - 1] == 28 || int_10[num - 1] == 29))
-                    {
-                        break;
-                    }
-                    num++;
-                    continue;
+                    return true;
                 }
-                return false;
             }
-            return true;
+            return false;
         }
 
         private bool hasWayGoToColdMap(int[] int_10)
         {
-            int num = 0;
-            while (true)
+            for (int i = 0; i < int_10.Length; i++)
             {
-                if (num < int_10.Length)
+                if (int_10[i] >= 105 && int_10[i] <= 110)
                 {
-                    if (int_10[num] >= 105 && int_10[num] <= 110)
-                    {
-                        break;
-                    }
-                    num++;
-                    continue;
+                    return true;
                 }
-                return false;
             }
-            return true;
+            return false;
         }
 
         private string GetMapName(int int_10)
@@ -879,21 +849,14 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
 
         private bool isFutureMap(int int_10)
         {
-            int num = 0;
-            while (true)
+            for (int i = 0; i < int_7.Length; i++)
             {
-                if (num < int_7.Length)
+                if (int_7[i] == int_10)
                 {
-                    if (int_7[num] == int_10)
-                    {
-                        break;
-                    }
-                    num++;
-                    continue;
+                    return true;
                 }
-                return false;
             }
-            return true;
+            return false;
         }
 
         private bool isNRD(ItemMap gclass82_0)
