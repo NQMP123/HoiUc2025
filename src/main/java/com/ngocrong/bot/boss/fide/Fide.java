@@ -27,13 +27,13 @@ public class Fide extends Boss {
         this.limit = -1;
         if (this.level == 0) {
             this.name = "Fide Đại Ca";
-            setInfo(100000000, 1000000, 15000, 1000, 50);
+            setInfo(30000000, 1000000, 15000, 1000, 50);
         } else if (this.level == 1) {
             this.name = "Fide Đại Ca 2";
-            setInfo(150000000, 1000000, 20000, 1000, 50);
+            setInfo(33000000, 1000000, 20000, 1000, 50);
         } else {
             this.name = "Fide Đại Ca 3";
-            setInfo(200000000, 1000000, 20000, 1000, 50);
+            setInfo(36000000, 1000000, 20000, 1000, 50);
         }
         this.waitingTimeToLeave = 0;
         setTypePK((byte) 5);

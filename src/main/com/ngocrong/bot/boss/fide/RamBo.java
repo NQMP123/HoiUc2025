@@ -23,7 +23,7 @@ public class RamBo extends Boss {
         this.distanceToAddToList = 500;
         this.limit = 500;
         this.name = "RamBo";
-        setInfo(50000000, 1000000, 20000, 1000, 50);
+        setInfo(12000000, 1000000, 20000, 1000, 50);
         this.waitingTimeToLeave = 0;
         setTypePK((byte) 5);
     }

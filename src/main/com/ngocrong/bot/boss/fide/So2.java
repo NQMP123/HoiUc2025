@@ -28,10 +28,10 @@ public class So2 extends Boss {
         this.distanceToAddToList = 1000;
         this.limit = 1000;
         this.name = "Số 2";
-        setInfo(120000000, 1000000, 10000, 100, 5);
+        setInfo(24000000, 1000000, 10000, 100, 5);
         this.willLeaveAtDeath = false;
         if (team.getType() == 0) {
-            setInfo(50000000, 1000000, 10000, 100, 5);
+            setInfo(24000000, 1000000, 10000, 100, 5);
             this.percentDame = 35;
         }
     }

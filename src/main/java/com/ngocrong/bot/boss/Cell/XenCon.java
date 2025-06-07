@@ -39,7 +39,7 @@ public class XenCon extends Boss {
         this.distanceToAddToList = 500;
         this.limit = -1;
         this.name = "Xên Con";
-        setInfo(5000000000L, 1000000, 80000, 1000, 50);
+        setInfo(500000000L, 1000000, 80000, 1000, 50);
         this.waitingTimeToLeave = 0;
         setTypePK((byte) 5);
     }

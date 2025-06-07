@@ -51,10 +51,10 @@ public class Cooler extends Boss {
         this.limit = -1;
         if (this.level == 0) {
             this.name = "Cooler";
-            setInfo(2000000000L, 1000000, 100000, 100, 50);
+            setInfo(150000000, 1000000, 100000, 100, 50);
         } else {
             this.name = "Cooler 2";
-            setInfo(2000000000L, 1000000, 150000, 100, 50);
+            setInfo(200000000, 1000000, 150000, 100, 50);
             count++;
         }
         this.waitingTimeToLeave = 0;

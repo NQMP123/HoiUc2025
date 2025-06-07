@@ -785,6 +785,7 @@ public class Session implements ISession {
             }
             SuperRank.loadSuperRank(_player);
             RewardWhis.checkReward(_player);
+            OsinCheckInEvent.checkPendingReward(_player);
             _player.initializedCollectionBook();
             _player.info.setPowerLimited();
             _player.info.setChar(this._player);
