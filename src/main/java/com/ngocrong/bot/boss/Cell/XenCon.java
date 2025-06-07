@@ -8,6 +8,7 @@ import com.ngocrong.item.Item;
 import com.ngocrong.item.ItemMap;
 import com.ngocrong.lib.RandomCollection;
 import com.ngocrong.map.tzone.Zone;
+import com.ngocrong.server.DropRateService;
 import com.ngocrong.server.SessionManager;
 import com.ngocrong.skill.Skills;
 import com.ngocrong.user.Player;
@@ -76,10 +77,11 @@ public class XenCon extends Boss {
         if (obj == null) {
             return;
         }
-        //dothanlinh
-        if (Utils.isTrue(1, 10)) {
-            int[] ao = {ItemName.AO_THAN_LINH, ItemName.AO_THAN_XAYDA, ItemName.AO_THAN_NAMEC};
-            int[] quan = {ItemName.QUAN_THAN_LINH, ItemName.QUAN_THAN_NAMEC, ItemName.QUAN_THAN_XAYDA, ItemName.QUAN_THAN_LINH, ItemName.QUAN_THAN_NAMEC};
+        // dothanlinh
+        if (Utils.isTrue(1 * DropRateService.getMobRate(), 10)) {
+            int[] ao = { ItemName.AO_THAN_LINH, ItemName.AO_THAN_XAYDA, ItemName.AO_THAN_NAMEC };
+            int[] quan = { ItemName.QUAN_THAN_LINH, ItemName.QUAN_THAN_NAMEC, ItemName.QUAN_THAN_XAYDA,
+                    ItemName.QUAN_THAN_LINH, ItemName.QUAN_THAN_NAMEC };
             RandomCollection<Item> rc = new RandomCollection<>();
 
             // Thêm áo với tỷ lệ 10%
@@ -134,7 +136,7 @@ public class XenCon extends Boss {
         Zone z = zone;
         super.startDie();
         Utils.setTimeout(() -> {
-            int[] mapIDs = new int[]{103};
+            int[] mapIDs = new int[] { 103 };
             XenCon xc = new XenCon();
             xc.setLocation(mapIDs[Utils.nextInt(mapIDs.length)], -1);
         }, 600000L);

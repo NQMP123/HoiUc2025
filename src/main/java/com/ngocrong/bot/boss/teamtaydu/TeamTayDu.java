@@ -3,6 +3,7 @@ package com.ngocrong.bot.boss.teamtaydu;
 import com.ngocrong.bot.Boss;
 import com.ngocrong.item.Item;
 import com.ngocrong.mob.Mob;
+import com.ngocrong.server.DropRateService;
 import com.ngocrong.server.SessionManager;
 import com.ngocrong.skill.Skill;
 import com.ngocrong.skill.SkillName;
@@ -28,7 +29,8 @@ public class TeamTayDu extends Boss {
         if (skill == null) {
             return 0;
         }
-        if (skill.template.id == SkillName.TU_PHAT_NO || skill.template.id == SkillName.MAKANKOSAPPO || skill.template.id == SkillName.QUA_CAU_KENH_KHI) {
+        if (skill.template.id == SkillName.TU_PHAT_NO || skill.template.id == SkillName.MAKANKOSAPPO
+                || skill.template.id == SkillName.QUA_CAU_KENH_KHI) {
             return 0;
         }
         if (mob != null) {
@@ -61,9 +63,9 @@ public class TeamTayDu extends Boss {
                 int tempId = 457;
                 this.dropItem(new Item(tempId), null);
             }
-            if (Utils.isTrue(2, 100)) {
-                //dothanlinh
-                int[] temp = new int[]{555, 556, 557, 558, 559, 560, 563, 565, 567};
+            if (Utils.isTrue(1 * DropRateService.getMobRate(), 100)) {
+                // dothanlinh
+                int[] temp = new int[] { 555, 556, 557, 558, 559, 560, 563, 565, 567 };
                 Item item = new Item(temp[Utils.nextInt(temp.length)]);
                 item.setDefaultOptions();
                 dropItem(item, pl);

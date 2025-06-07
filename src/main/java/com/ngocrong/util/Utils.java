@@ -135,8 +135,7 @@ public class Utils {
             } else {
                 text += text2;
             }
-        } else if (number
-                >= 10000L) {
+        } else if (number >= 10000L) {
             text2 = "k";
             long num3 = number % 1000L / 10L;
             number /= 1000L;
@@ -393,7 +392,7 @@ public class Utils {
 
     public static boolean isTrue(long from, long to) {
         if (from >= to) {
-            return false;
+            return true;
         }
         return rand.nextLong(to + 1) <= from;
     }

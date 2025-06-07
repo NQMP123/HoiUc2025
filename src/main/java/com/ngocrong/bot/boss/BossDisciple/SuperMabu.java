@@ -9,6 +9,7 @@ import com.ngocrong.consts.ItemName;
 import com.ngocrong.item.Item;
 import com.ngocrong.item.ItemMap;
 import com.ngocrong.mob.Mob;
+import com.ngocrong.server.DropRateService;
 import com.ngocrong.server.SessionManager;
 import com.ngocrong.skill.Skill;
 import com.ngocrong.skill.SkillName;
@@ -31,7 +32,7 @@ public class SuperMabu extends Boss {
         super();
         this.percentDame = 3;
         setInfo(1_000_000_000, 1000000000, 100000, 100, 20);
-//        this.limitDame = this.info.originalHP / 300;
+        // this.limitDame = this.info.originalHP / 300;
         this.name = "Super Mabu " + Utils.nextInt(100);
         setTypePK((byte) 5);
         this.limit = -1;
@@ -62,7 +63,7 @@ public class SuperMabu extends Boss {
         if (player == null) {
             return;
         }
-        if (Utils.isTrue(3, 10)) {
+        if (Utils.isTrue(1 * DropRateService.getMobRate(), 10)) {
             ItemMap itemMap = new ItemMap(zone.autoIncrease++);
             Item quatrung = new Item(2197);
             quatrung.quantity = 1;
@@ -105,7 +106,9 @@ public class SuperMabu extends Boss {
 
     @Override
     public void sendNotificationWhenDead(String name) {
-//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
@@ -127,7 +130,7 @@ public class SuperMabu extends Boss {
     public void startDie() {
         super.startDie();
         Utils.setTimeout(() -> {
-            int[] mapIDs = new int[]{5, 7, 13, 10, 20, 19, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38};
+            int[] mapIDs = new int[] { 5, 7, 13, 10, 20, 19, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38 };
             SuperMabu bl = new SuperMabu();
             bl.setLocation(mapIDs[Utils.nextInt(mapIDs.length)], -1);
         }, 15 * 60000);
@@ -172,7 +175,8 @@ public class SuperMabu extends Boss {
         Skill skill = selectSkillAttack();
         if (skill != null) {
             int d = Utils.getDistance(0, 0, skill.dx, skill.dy);
-            if (skill.template.id == SkillName.CHIEU_KAMEJOKO || skill.template.id == SkillName.CHIEU_MASENKO || skill.template.id == SkillName.CHIEU_ANTOMIC) {
+            if (skill.template.id == SkillName.CHIEU_KAMEJOKO || skill.template.id == SkillName.CHIEU_MASENKO
+                    || skill.template.id == SkillName.CHIEU_ANTOMIC) {
                 lastTimeSkillShoot = now;
             }
             this.select = skill;

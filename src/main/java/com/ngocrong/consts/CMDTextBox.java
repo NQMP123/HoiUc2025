@@ -11,4 +11,5 @@ public class CMDTextBox {
     public static final byte CSMM_10_SO = 106;
     public static final byte CSMM_100_SO = 107;
     public static final byte BUFF_ITEM = 108;
+    public static final byte DROP_RATE = 109;
 }
