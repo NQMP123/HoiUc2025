@@ -1213,6 +1213,7 @@ public class Controller : IMessageHandler
                                 int num45 = msg.reader().readInt();
                                 sbyte[] data2 = new sbyte[num45];
                                 msg.reader().read(ref data2, 0, num45);
+                                data2 = CompressionUtils.Decompress(data2);
                                 Rms.saveRMS(filename, data2);
                             }
                             catch (Exception)

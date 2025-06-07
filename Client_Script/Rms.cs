@@ -16,6 +16,8 @@ public class Rms
 
     private const int MAXTIME = 500;
 
+    private static readonly AutoResetEvent operationEvent = new AutoResetEvent(false);
+
     public static void saveRMS(string filename, sbyte[] data)
     {
         if (Thread.CurrentThread.Name == Main.mainThreadName)
@@ -99,17 +101,9 @@ public class Rms
         }
         Rms.filename = filename;
         Rms.data = data;
+        operationEvent.Reset();
         status = 2;
-        int i;
-        for (i = 0; i < 500; i++)
-        {
-            Thread.Sleep(5);
-            if (status == 0)
-            {
-                break;
-            }
-        }
-        if (i == 500)
+        if (!operationEvent.WaitOne(INTERVAL * MAXTIME))
         {
             Debug.LogError("TOO LONG TO SAVE RMS " + filename);
         }
@@ -124,17 +118,9 @@ public class Rms
         }
         Rms.filename = filename;
         data = null;
+        operationEvent.Reset();
         status = 3;
-        int i;
-        for (i = 0; i < 500; i++)
-        {
-            Thread.Sleep(5);
-            if (status == 0)
-            {
-                break;
-            }
-        }
-        if (i == 500)
+        if (!operationEvent.WaitOne(INTERVAL * MAXTIME))
         {
             Debug.LogError("TOO LONG TO LOAD RMS " + filename);
         }
@@ -148,12 +134,14 @@ public class Rms
             status = 1;
             __saveRMS(filename, data);
             status = 0;
+            operationEvent.Set();
         }
         else if (status == 3)
         {
             status = 1;
             data = __loadRMS(filename);
             status = 0;
+            operationEvent.Set();
         }
     }
 

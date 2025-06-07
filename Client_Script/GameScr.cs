@@ -3513,10 +3513,9 @@ public class GameScr : mScreen, IChatable
         int num = Char.myCharz().cy;
         if (y < num)
         {
-            while (y < num)
+            for (int step = num - 5; step >= y; step -= 5)
             {
-                num -= 5;
-                if (TileMap.tileTypeAt(Char.myCharz().cx, num, 8192))
+                if (TileMap.tileTypeAt(Char.myCharz().cx, step, 8192))
                 {
                     auto = 0;
                     Char.myCharz().cancelAttack();
@@ -4735,10 +4734,10 @@ public class GameScr : mScreen, IChatable
             }
             if (isRongThanMenu())
             {
-                int num3 = 100;
-                while (yR - num3 < cmy)
+                int limit = yR - 100;
+                if (cmy > limit)
                 {
-                    cmy--;
+                    cmy = limit;
                 }
             }
             for (int i = 0; i < Char.vItemTime.size(); i++)
