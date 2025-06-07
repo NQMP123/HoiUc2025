@@ -27,13 +27,13 @@ public class XenBoHung extends Boss {
         this.limit = -1;
         if (this.level == 0) {
             this.name = "Xên Bọ Hung";
-            setInfo(100000000, 1000000, 15000, 1000, 50);
+            setInfo(40000000, 1000000, 15000, 1000, 50);
         } else if (this.level == 1) {
             this.name = "Xên Bọ Hung 2";
-            setInfo(150000000, 1000000, 20000, 1000, 50);
+            setInfo(45000000, 1000000, 20000, 1000, 50);
         } else {
             this.name = "Xên Hoàn Thiện";
-            setInfo(200000000, 1000000, 20000, 1000, 50);
+            setInfo(50000000, 1000000, 20000, 1000, 50);
         }
         this.waitingTimeToLeave = 0;
         setTypePK((byte) 5);
@@ -79,17 +79,7 @@ public class XenBoHung extends Boss {
         if (obj == null) {
             return;
         }
-        Player c = (Player) obj;
-        Item item = new Item(ItemName.NGOC_RONG_3_SAO);
-        item.setDefaultOptions();
-        item.quantity = 1;
-        ItemMap itemMap = new ItemMap(zone.autoIncrease++);
-        itemMap.item = item;
-        itemMap.playerID = Math.abs(c.id);
-        itemMap.x = getX();
-        itemMap.y = zone.map.collisionLand(getX(), getY());
-        zone.addItemMap(itemMap);
-        zone.service.addItemMap(itemMap);
+        dropGroupB((Player) obj);
     }
 
     @Override

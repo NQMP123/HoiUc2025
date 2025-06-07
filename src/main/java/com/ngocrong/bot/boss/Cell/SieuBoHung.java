@@ -41,10 +41,10 @@ public class SieuBoHung extends Boss {
         this.limit = -1;
         if (!this.isSuper) {
             this.name = "Xên Hoàn Thiện";
-            setInfo(3000000000L, 1000000, 100000, 1000, 50);
+            setInfo(500000000L, 1000000, 100000, 1000, 50);
         } else {
             this.name = "Siêu Bọ Hung";
-            setInfo(5000000000L, 1000000, 2000000, 1000, 50);
+            setInfo(500000000L, 1000000, 2000000, 1000, 50);
             count++;
         }
         this.waitingTimeToLeave = 5000;
@@ -86,9 +86,7 @@ public class SieuBoHung extends Boss {
         if (obj == null) {
             return;
         }
-        int[] dtl = {555, 556, 557, 558, 559, 563, 567, ItemName.GANG_THAN_NAMEC, ItemName.GANG_THAN_NAMEC};
-        Player c = (Player) obj;
-        GeneralDrop(c);
+        dropGroupC((Player) obj);
 
     }
 

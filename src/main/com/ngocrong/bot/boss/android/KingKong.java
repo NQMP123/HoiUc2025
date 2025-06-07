@@ -26,7 +26,7 @@ public class KingKong extends Boss {
         this.distanceToAddToList = 1000;
         this.limit = 1000;
         this.name = "King Kong";
-        setInfo(100000000, 1000000, 10000, 100, 5);
+        setInfo(27000000, 1000000, 10000, 100, 5);
         this.willLeaveAtDeath = false;
         point = 3;
     }
@@ -64,17 +64,7 @@ public class KingKong extends Boss {
         if (obj == null) {
             return;
         }
-        Player c = (Player) obj;
-        Item item = new Item(ItemName.NGOC_RONG_3_SAO);
-        item.setDefaultOptions();
-        item.quantity = 1;
-        ItemMap itemMap = new ItemMap(zone.autoIncrease++);
-        itemMap.item = item;
-        itemMap.playerID = Math.abs(c.id);
-        itemMap.x = getX();
-        itemMap.y = zone.map.collisionLand(getX(), getY());
-        zone.addItemMap(itemMap);
-        zone.service.addItemMap(itemMap);
+        dropGroupB((Player) obj);
     }
 
     @Override
