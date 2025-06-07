@@ -22,8 +22,8 @@ import java.util.ArrayList;
 public class MapService {
 
     private static Logger logger = Logger.getLogger(MapService.class);
-    private static final int VIEW_DISTANCE = 500;
 
+    private static final int VIEW_DISTANCE = 1024;
     public Zone zone;
 
     public MapService(Zone zone) {

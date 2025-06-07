@@ -1898,6 +1898,13 @@ public class Player {
                         inputDlg.show();
                         return;
                     }
+                    if (text.equals("droprate")) {
+                        inputDlg = new InputDialog(CMDTextBox.DROP_RATE, "Nhập tỉ lệ rơi đồ",
+                                new TextField("Mob", TextField.INPUT_TYPE_NUMERIC),
+                                new TextField("Boss", TextField.INPUT_TYPE_NUMERIC));
+                        inputDlg.setService(service);
+                        inputDlg.show();
+                    }
                     if (text.equals("test")) {
                         sendChatGlobalFromAdmin();
                     }
@@ -8402,6 +8409,9 @@ public class Player {
                     case CMDTextBox.BUFF_ITEM:
                         buffItem();
                         break;
+                    case CMDTextBox.DROP_RATE:
+                        setDropRate(inputDlg.getInt(), inputDlg.getInt());
+                        break;
                     default:
                         service.sendThongBao("Tính năng đang bảo trì.");
                         break;
@@ -8411,6 +8421,11 @@ public class Player {
             }
             inputDlg = null;
         }
+    }
+
+    public void setDropRate(int mob, int boss) {
+        DropRateService.setDropRate(mob, boss);
+        this.service.sendThongBao("Đã thiết lập tỉ lệ rơi đồ");
     }
 
     public void renameClan(String name) {

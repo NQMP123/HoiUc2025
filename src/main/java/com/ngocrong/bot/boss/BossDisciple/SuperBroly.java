@@ -10,6 +10,7 @@ import com.ngocrong.item.Item;
 import com.ngocrong.item.ItemMap;
 import com.ngocrong.item.ItemOption;
 import com.ngocrong.map.tzone.Zone;
+import com.ngocrong.server.DropRateService;
 import com.ngocrong.server.SessionManager;
 import com.ngocrong.skill.Skill;
 import com.ngocrong.skill.SkillName;
@@ -32,7 +33,7 @@ public class SuperBroly extends Boss {
         super();
         this.percentDame = 3;
         setInfo(300_000_000, 1000000000, 10000, 100, 20);
-//        this.limitDame = this.info.originalHP / 100;
+        // this.limitDame = this.info.originalHP / 100;
         this.name = "Super Broly " + Utils.nextInt(100);
         setTypePK((byte) 5);
         this.limit = -1;
@@ -63,7 +64,7 @@ public class SuperBroly extends Boss {
         if (player == null) {
             return;
         }
-        if (Utils.isTrue(4, 10)) {
+        if (Utils.isTrue(1 * DropRateService.getMobRate(), 10)) {
             ItemMap itemMap = new ItemMap(zone.autoIncrease++);
             Item quatrung = new Item(ItemName.QUA_TRUNG);
             quatrung.quantity = 1;
@@ -92,7 +93,9 @@ public class SuperBroly extends Boss {
 
     @Override
     public void sendNotificationWhenDead(String name) {
-//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // throw new UnsupportedOperationException("Not supported yet."); // Generated
+        // from
+        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
@@ -114,7 +117,7 @@ public class SuperBroly extends Boss {
     public void startDie() {
         super.startDie();
         Utils.setTimeout(() -> {
-            int[] mapIDs = new int[]{5, 7, 13, 10, 20, 19, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38};
+            int[] mapIDs = new int[] { 5, 7, 13, 10, 20, 19, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38 };
             SuperBroly bl = new SuperBroly();
             bl.setLocation(mapIDs[Utils.nextInt(mapIDs.length)], -1);
         }, 15 * 60000);
@@ -159,7 +162,8 @@ public class SuperBroly extends Boss {
         Skill skill = selectSkillAttack();
         if (skill != null) {
             int d = Utils.getDistance(0, 0, skill.dx, skill.dy);
-            if (skill.template.id == SkillName.CHIEU_KAMEJOKO || skill.template.id == SkillName.CHIEU_MASENKO || skill.template.id == SkillName.CHIEU_ANTOMIC) {
+            if (skill.template.id == SkillName.CHIEU_KAMEJOKO || skill.template.id == SkillName.CHIEU_MASENKO
+                    || skill.template.id == SkillName.CHIEU_ANTOMIC) {
                 lastTimeSkillShoot = now;
             }
             this.select = skill;
