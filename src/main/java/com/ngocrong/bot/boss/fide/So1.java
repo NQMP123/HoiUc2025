@@ -13,6 +13,7 @@ import com.ngocrong.skill.Skills;
 import com.ngocrong.user.Player;
 import com.ngocrong.util.Utils;
 import org.apache.log4j.Logger;
+import com.ngocrong.mob.Mob;
 
 import java.util.ArrayList;
 
@@ -30,17 +31,18 @@ public class So1 extends Boss {
         this.name = "Số 1";
         setInfo(130000000, 1000000, 10000, 100, 5);
         this.willLeaveAtDeath = false;
-        if(team.getType() == 0)
-        {
+        if (team.getType() == 0) {
             setInfo(50000000, 1000000, 10000, 100, 5);
-        this.percentDame = 35;            
+            this.percentDame = 35;
         }
     }
+
     @Override
     public long injure(Player plAtt, Mob mob, long dameInput) {
-        if(team.getType() == 0)
-       { return Math.min(500000, dameInput);}
-       return dameInput;
+        if (team.getType() == 0) {
+            return Math.min(500000, dameInput);
+        }
+        return dameInput;
 
     }
 
@@ -67,7 +69,8 @@ public class So1 extends Boss {
             return;
         }
         Player killer = (Player) obj;
-        if (killer.taskMain != null && killer.taskMain.id == 20 && killer.taskMain.index == 4 && killer.zone.map.mapID > 70) {
+        if (killer.taskMain != null && killer.taskMain.id == 20 && killer.taskMain.index == 4
+                && killer.zone.map.mapID > 70) {
             killer.updateTaskCount(1);
         }
     }
@@ -129,11 +132,12 @@ public class So1 extends Boss {
 
     @Override
     public void sendNotificationWhenDead(String name) {
-//        if (team != null && team.type == 0) {
-//            PlayerManager.chatVip(String.format("%s: Đã đánh bại và nhận được cải trang thành Số 1", name));
-//        } else {
+        // if (team != null && team.type == 0) {
+        // PlayerManager.chatVip(String.format("%s: Đã đánh bại và nhận được cải trang
+        // thành Số 1", name));
+        // } else {
         SessionManager.chatVip(String.format("%s: Đã tiêu diệt được %s mọi người đều ngưỡng mộ.", name, this.name));
-//        }
+        // }
     }
 
     @Override

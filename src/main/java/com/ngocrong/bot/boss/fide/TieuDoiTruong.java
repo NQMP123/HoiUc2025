@@ -11,7 +11,7 @@ import com.ngocrong.skill.Skills;
 import com.ngocrong.user.Player;
 import com.ngocrong.util.Utils;
 import org.apache.log4j.Logger;
-
+import com.ngocrong.mob.Mob;
 import java.util.ArrayList;
 
 public class TieuDoiTruong extends Boss {
@@ -28,19 +28,21 @@ public class TieuDoiTruong extends Boss {
         this.name = "Tiểu đội trưởng";
         setInfo(150000000, 1000000, 10000, 100, 5);
         this.willLeaveAtDeath = false;
-        if(team.getType() == 0)
-        {
+        if (team.getType() == 0) {
             setInfo(50000000, 1000000, 10000, 100, 5);
-        this.percentDame = 35;            
+            this.percentDame = 35;
         }
     }
+
     @Override
     public long injure(Player plAtt, Mob mob, long dameInput) {
-        if(team.getType() == 0)
-       { return Math.min(500000, dameInput);}
-       return dameInput;
+        if (team.getType() == 0) {
+            return Math.min(500000, dameInput);
+        }
+        return dameInput;
 
     }
+
     @Override
     public void initSkill() {
         try {
@@ -64,7 +66,8 @@ public class TieuDoiTruong extends Boss {
             return;
         }
         Player killer = (Player) obj;
-        if (killer.taskMain != null && killer.taskMain.id == 20 && killer.taskMain.index == 5 && killer.zone.map.mapID > 70) {
+        if (killer.taskMain != null && killer.taskMain.id == 20 && killer.taskMain.index == 5
+                && killer.zone.map.mapID > 70) {
             killer.updateTaskCount(1);
         }
     }

@@ -11,6 +11,7 @@ import com.ngocrong.server.SessionManager;
 import com.ngocrong.skill.SkillName;
 import com.ngocrong.skill.Skills;
 import com.ngocrong.user.Player;
+import com.ngocrong.mob.Mob;
 import com.ngocrong.util.Utils;
 import org.apache.log4j.Logger;
 
@@ -29,19 +30,21 @@ public class So4 extends Boss {
         this.name = "Số 4";
         setInfo(100000000, 1000000, 10000, 100, 5);
         this.willLeaveAtDeath = false;
-        if(team.getType() == 0)
-        {
+        if (team.getType() == 0) {
             setInfo(50000000, 1000000, 10000, 100, 5);
-        this.percentDame = 35;            
+            this.percentDame = 35;
         }
     }
+
     @Override
     public long injure(Player plAtt, Mob mob, long dameInput) {
-        if(team.getType() == 0)
-       { return Math.min(500000, dameInput);}
-       return dameInput;
+        if (team.getType() == 0) {
+            return Math.min(500000, dameInput);
+        }
+        return dameInput;
 
     }
+
     @Override
     public void initSkill() {
         try {
@@ -65,7 +68,8 @@ public class So4 extends Boss {
             return;
         }
         Player killer = (Player) obj;
-        if (killer.taskMain != null && killer.taskMain.id == 20 && killer.taskMain.index == 1 && killer.zone.map.mapID > 70) {
+        if (killer.taskMain != null && killer.taskMain.id == 20 && killer.taskMain.index == 1
+                && killer.zone.map.mapID > 70) {
             killer.updateTaskCount(1);
         }
     }
@@ -122,16 +126,18 @@ public class So4 extends Boss {
 
     @Override
     public void sendNotificationWhenAppear(String map) {
-        //PlayerManager.chatVip(String.format("BOSS %s vừa xuất hiện tại %s", this.name, map));
+        // PlayerManager.chatVip(String.format("BOSS %s vừa xuất hiện tại %s",
+        // this.name, map));
     }
 
     @Override
     public void sendNotificationWhenDead(String name) {
-//        if (team != null && team.type == 0) {
-//            PlayerManager.chatVip(String.format("%s: Đã đánh bại và nhận được cải trang thành Số 4", name));
-//        } else {
+        // if (team != null && team.type == 0) {
+        // PlayerManager.chatVip(String.format("%s: Đã đánh bại và nhận được cải trang
+        // thành Số 4", name));
+        // } else {
         SessionManager.chatVip(String.format("%s: Đã tiêu diệt được %s mọi người đều ngưỡng mộ.", name, this.name));
-//        }
+        // }
     }
 
     @Override
