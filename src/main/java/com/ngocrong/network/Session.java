@@ -93,6 +93,7 @@ public class Session implements ISession {
     private static final int SOCKET_BUFFER_SIZE = 4096;
     private static final int PING_INTERVAL = 30000; // 30s
     private static final int TIMEOUT = 90000; // 90s
+    private static final int SENDING_QUEUE_LIMIT = 512;
 
     public Session(Socket socket, String ip, int id) throws IOException {
         this.socket = socket;
@@ -966,12 +967,12 @@ public class Session implements ISession {
         private final BlockingQueue<Message> sendingMessage;
 
         public Sender() {
-            sendingMessage = new LinkedBlockingQueue<>();
+            sendingMessage = new LinkedBlockingQueue<>(SENDING_QUEUE_LIMIT);
         }
 
         public void addMessage(Message message) {
             if (message != null) {
-                sendingMessage.offer(message);
+                sendingMessage.offer(message); // drop if full
             }
         }
 

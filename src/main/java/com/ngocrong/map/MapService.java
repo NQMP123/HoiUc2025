@@ -12,6 +12,7 @@ import com.ngocrong.network.Message;
 import com.ngocrong.network.Service;
 import com.ngocrong.skill.Skill;
 import com.ngocrong.user.Player;
+import com.ngocrong.util.Utils;
 import org.apache.log4j.Logger;
 
 import java.io.DataOutputStream;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 public class MapService {
 
     private static Logger logger = Logger.getLogger(MapService.class);
+    private static final int VIEW_DISTANCE = 500;
 
     public Zone zone;
 
@@ -662,7 +664,9 @@ public class MapService {
         zone.lockChar.readLock().lock();
         try {
             for (Player _c : zone.players) {
-                _c.service.move(_player);
+                if (_c != _player && Utils.getDistance(_player.getX(), _player.getY(), _c.getX(), _c.getY()) <= VIEW_DISTANCE) {
+                    _c.service.move(_player);
+                }
             }
         } finally {
             zone.lockChar.readLock().unlock();
