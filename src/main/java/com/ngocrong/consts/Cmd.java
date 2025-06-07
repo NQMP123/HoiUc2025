@@ -256,6 +256,7 @@ public class Cmd {
     public static final byte ITEM_TIME = -106;
     public static final byte DISCIPLE_INFO = -107;
     public static final byte PET_STATUS = -108;
+    public static final byte PING = -109;
     public static final byte SERVER_DATA = -110;
     public static final byte CLIENT_INPUT = -125;
     public static final byte HOLD = -124;
