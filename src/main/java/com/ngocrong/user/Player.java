@@ -188,7 +188,7 @@ public class Player {
     public int pointDhvtSieuhang;
     public int countDhvtSieuHang = 0;
     public int baiSu_id = -1;
-    //Tet
+    // Tet
     public int pointPhaoHoa;
     public int pointBanhChung;
     public int pointHopQua;
@@ -197,7 +197,7 @@ public class Player {
     public int pointHoaSumVay;
     public int pointHoaSacMau;
     public int pointThoiVang;
-    //VQTD
+    // VQTD
     public int numberVongQuay;
     public int rewardMoc;
     // LONG
@@ -223,7 +223,7 @@ public class Player {
     private long lastTimePickUpDragonBallNamec;
     public long limitDame = -1;
     public long lastEnterMap = System.currentTimeMillis();
-// BOOL
+    // BOOL
     public boolean isAttackWhis;
     private boolean isNewMember;
     private boolean isNhapThe;
@@ -237,7 +237,8 @@ public class Player {
     private boolean isKhangTDHS;
     private boolean isHaveMount;
     private boolean isGoBack;
-    private boolean isCuongNo, isBoHuyet, isGiapXen, isBoKhi, isAnDanh, isMayDo, isDuoiKhi, isPudding, isXucXich, isKemDau, isMiLy, isSushi,
+    private boolean isCuongNo, isBoHuyet, isGiapXen, isBoKhi, isAnDanh, isMayDo, isDuoiKhi, isPudding, isXucXich,
+            isKemDau, isMiLy, isSushi,
             isCuongNo2, isBoHuyet2, isBoKhi2, isPhieuX2TNSM;
 
     private boolean isUocThienMenh1, isUocThienMenh2, isUocThienMenh4, isUocThienMenh5;
@@ -260,7 +261,8 @@ public class Player {
     public boolean isCold;
     private boolean isMod;
     private boolean isHaveEquipInvisible, isHaveEquipTransformIntoChocolate, isHaveEquipTransformIntoStone,
-            isHaveEquipMiNuong, isHaveEquipBulma, isHaveEquipXinbato, isHaveEquipBuiBui, isDoSaoPhaLe, optionLaze, optionTuSat;
+            isHaveEquipMiNuong, isHaveEquipBulma, isHaveEquipXinbato, isHaveEquipBuiBui, isDoSaoPhaLe, optionLaze,
+            optionTuSat;
     private boolean isInvisible;
     public boolean inFighting;
     private boolean isWaitToCallDragonNamek;
@@ -268,7 +270,7 @@ public class Player {
 
     public boolean[] sachdacbiet = new boolean[8];
 
-    //VP SK TET
+    // VP SK TET
     private boolean isXoai, isDudu, isMamTraiCay, isMangCau, isDuaXanh, isTraiSung;
     // ARRAY LIST
     public ArrayList<Skill> skills;
@@ -399,15 +401,15 @@ public class Player {
         }
     }
 
-//    public void endEscort(int type) {
-//        if (type == 1) {
-//            if (escortedPerson instanceof DuongTang) {
-//                addMerit(ItemName.VONG_KIM_CO, 100);
-//                service.sendThongBao("Nhiệm vụ hoàn thành, bạn được 100 điểm công đức");
-//            }
-//        }
-//        this.escortedPerson = null;
-//    }
+    // public void endEscort(int type) {
+    // if (type == 1) {
+    // if (escortedPerson instanceof DuongTang) {
+    // addMerit(ItemName.VONG_KIM_CO, 100);
+    // service.sendThongBao("Nhiệm vụ hoàn thành, bạn được 100 điểm công đức");
+    // }
+    // }
+    // this.escortedPerson = null;
+    // }
     public void setAuraEffect() {
         short id = -1;
         for (Card card : cards) {
@@ -714,7 +716,8 @@ public class Player {
                 list.add(new KeyValue(MapName.DAO_GURU, "Đảo Guru", "Namếc"));
             }
         }
-        if (mapID != MapName.TRAM_TAU_VU_TRU && mapID != MapName.TRAM_TAU_VU_TRU_2 && mapID != MapName.TRAM_TAU_VU_TRU_3) {
+        if (mapID != MapName.TRAM_TAU_VU_TRU && mapID != MapName.TRAM_TAU_VU_TRU_2
+                && mapID != MapName.TRAM_TAU_VU_TRU_3) {
             if (gender == 0) {
                 if (checkCanEnter(MapName.TRAM_TAU_VU_TRU)) {
                     list.add(new KeyValue(MapName.TRAM_TAU_VU_TRU, "Trạm tàu vũ trụ", "Trái đất"));
@@ -964,7 +967,8 @@ public class Player {
             if (action == 1) {
                 Player _player = SessionManager.findChar(playerId);
                 if (_player != null && _player != this) {
-                    Friend _check = this.friends.stream().filter(f -> f.name.equals(_player.name)).findAny().orElse(null);
+                    Friend _check = this.friends.stream().filter(f -> f.name.equals(_player.name)).findAny()
+                            .orElse(null);
                     if (_check != null) {
                         service.serverMessage2("Đã có trong danh sách bạn bè.");
                         return;
@@ -1150,7 +1154,9 @@ public class Player {
             Message mss = new Message(Cmd.CHAT_THEGIOI_SERVER);
             FastDataOutputStream ds = mss.writer();
             ds.writeUTF("Admin");
-            ds.writeUTF(String.format("|5|Pháo hoa đang được nổ tại Quảng trường Pháo Hoa với số lượng %d, sẽ phát nổ toàn server sau %d quả. Hãy nhanh chân di chuyển tới khu vực bắn pháo để nhận những phần quà giá trị.", SessionManager.countPhaoHoa, 100 - SessionManager.countPhaoHoa));
+            ds.writeUTF(String.format(
+                    "|5|Pháo hoa đang được nổ tại Quảng trường Pháo Hoa với số lượng %d, sẽ phát nổ toàn server sau %d quả. Hãy nhanh chân di chuyển tới khu vực bắn pháo để nhận những phần quà giá trị.",
+                    SessionManager.countPhaoHoa, 100 - SessionManager.countPhaoHoa));
             ds.writeInt(-1);
             ds.writeShort(861);
             ds.writeShort(862);
@@ -1212,7 +1218,8 @@ public class Player {
                             if (_c.zone != null) {
                                 TMap map = _c.zone.map;
                                 int mapID = map.mapID;
-                                if (_c.isAnDanh || !checkCanEnter(mapID) || map.isUnableToTeleport() || isDead || _c.isDead) {
+                                if (_c.isAnDanh || !checkCanEnter(mapID) || map.isUnableToTeleport() || isDead
+                                        || _c.isDead) {
                                     service.sendThongBao("Chưa thể đến lúc này, vui lòng thử lại sau ít phút");
                                 } else {
                                     long now = System.currentTimeMillis();
@@ -1245,10 +1252,11 @@ public class Player {
     }
 
     public void revenge(Player c) {
-//        if (escortedPerson != null) {
-//            service.sendThongBao(String.format("Bạn đang hộ tống %s, không thể thực hiện.", escortedPerson.name));
-//            return;
-//        }
+        // if (escortedPerson != null) {
+        // service.sendThongBao(String.format("Bạn đang hộ tống %s, không thể thực
+        // hiện.", escortedPerson.name));
+        // return;
+        // }
         lastTimeRevenge = System.currentTimeMillis();
         subDiamond(1);
         this.x = calculateX(c.zone.map);
@@ -1369,7 +1377,8 @@ public class Player {
         }
         TMap map = MapManager.getInstance().getMap(mapId);
         if ((itemLoot != null && itemLoot.isDragonBallNamec()) || idNRNM != -1) {
-            if (map.mapID == 21 || map.mapID == 22 || map.mapID == 23 || map.mapID == 24 || map.mapID == 25 || map.mapID == 26) {
+            if (map.mapID == 21 || map.mapID == 22 || map.mapID == 23 || map.mapID == 24 || map.mapID == 25
+                    || map.mapID == 26) {
                 service.serverMessage("Không thực hiện được");
                 return;
             }
@@ -1448,7 +1457,8 @@ public class Player {
                     int timeWaitWithDragonBallNamec = (int) ((now - lastTimePickUpDragonBallNamec) / 1000);
                     if ((itemLoot != null && itemLoot.isDragonBallNamec() || idNRNM != -1)) {
                         // map nha va tram tau vu tru
-                        if (map.mapID == 21 || map.mapID == 22 || map.mapID == 23 || map.mapID == 24 || map.mapID == 25 || map.mapID == 26) {
+                        if (map.mapID == 21 || map.mapID == 22 || map.mapID == 23 || map.mapID == 24 || map.mapID == 25
+                                || map.mapID == 26) {
                             service.serverMessage("Không thực hiện được");
                             return;
                         }
@@ -1456,7 +1466,8 @@ public class Player {
                             this.x = this.preX;
                             this.y = this.preY;
                             service.resetPoint();
-                            service.serverMessage("Chưa thể chuyển khu vực lúc này vui lòng chờ " + (60 - timeWaitWithDragonBallNamec) + "giây nữa");
+                            service.serverMessage("Chưa thể chuyển khu vực lúc này vui lòng chờ "
+                                    + (60 - timeWaitWithDragonBallNamec) + "giây nữa");
                             return;
                         }
                     }
@@ -1531,8 +1542,8 @@ public class Player {
                 byte b = ms.reader().readByte();
                 this.shortcut[i] = b;
             }
-//            service.CHANGE_ONSKILL(this.shortcut);
-//            sendSkillShortCut();
+            // service.CHANGE_ONSKILL(this.shortcut);
+            // sendSkillShortCut();
             service.changeOnSkill(shortcut);
         } catch (IOException ex) {
             com.ngocrong.NQMP.UtilsNQMP.logError(ex);
@@ -1723,11 +1734,11 @@ public class Player {
     }
 
     private static final String[] NAMES = {
-        // 2-3 ký tự
-        "an", "ha", "ly", "my", "tu", "vy", "lan", "nam", "son", "tan", "thi", "thu", "van",
-        // 3-4 ký tự
-        "anh", "dao", "duc", "hai", "hoa", "hon", "huy", "kim", "lan", "linh", "mai", "minh",
-        "nam", "nga", "nhu", "tam", "tan", "thu", "tuan", "tung", "viet", "xuan"
+            // 2-3 ký tự
+            "an", "ha", "ly", "my", "tu", "vy", "lan", "nam", "son", "tan", "thi", "thu", "van",
+            // 3-4 ký tự
+            "anh", "dao", "duc", "hai", "hoa", "hon", "huy", "kim", "lan", "linh", "mai", "minh",
+            "nam", "nga", "nhu", "tam", "tan", "thu", "tuan", "tung", "viet", "xuan"
     };
 
     public static String generateCharacterName() {
@@ -1754,10 +1765,11 @@ public class Player {
 
         return name.toString();
     }
+
     private static final String[] SYLLABLES = {
-        "anh", "binh", "chi", "dung", "giang", "hai", "hieu", "khoa",
-        "lam", "long", "mai", "minh", "nam", "ngoc", "nhat", "phong",
-        "quang", "son", "tien", "trung", "viet", "yen"
+            "anh", "binh", "chi", "dung", "giang", "hai", "hieu", "khoa",
+            "lam", "long", "mai", "minh", "nam", "ngoc", "nhat", "phong",
+            "quang", "son", "tien", "trung", "viet", "yen"
     };
 
     public static String generateName() {
@@ -1890,7 +1902,8 @@ public class Player {
                         sendChatGlobalFromAdmin();
                     }
                     if (text.equals("ccu")) {
-                        service.dialogMessage("Tổng CCU: " + SessionManager.getCountPlayer() + " người chơi đang online");
+                        service.dialogMessage(
+                                "Tổng CCU: " + SessionManager.getCountPlayer() + " người chơi đang online");
                         return;
                     }
 
@@ -2124,9 +2137,9 @@ public class Player {
             if (miniDisciple != null) {
                 miniDisciple.move();
             }
-//            if (escortedPerson != null) {
-//                escortedPerson.move();
-//            }
+            // if (escortedPerson != null) {
+            // escortedPerson.move();
+            // }
             this.zone.service.move(this);
             this.lastTimeMove = System.currentTimeMillis();
             if ((this.x <= 24 || this.x >= this.zone.map.width - 24 || this.y < 0
@@ -2422,7 +2435,8 @@ public class Player {
             stopRecoveryEnery();
             return;
         }
-        if (this.select.template.type != 3 && this.select.template.id != SkillName.QUA_CAU_KENH_KHI && this.select.template.id != SkillName.MAKANKOSAPPO) {
+        if (this.select.template.type != 3 && this.select.template.id != SkillName.QUA_CAU_KENH_KHI
+                && this.select.template.id != SkillName.MAKANKOSAPPO) {
             return;
         }
         if (this.select.isCooldown()) {
@@ -2504,7 +2518,8 @@ public class Player {
             }
         }
         if (type == 4) {
-            if (this.select.template.id == SkillName.QUA_CAU_KENH_KHI || this.select.template.id == SkillName.MAKANKOSAPPO) {
+            if (this.select.template.id == SkillName.QUA_CAU_KENH_KHI
+                    || this.select.template.id == SkillName.MAKANKOSAPPO) {
                 info.mp -= manaUse;
                 this.seconds = 3000;
                 setCharge(true);
@@ -2558,7 +2573,7 @@ public class Player {
             if (this.select.template.id == SkillName.DE_TRUNG) {
                 info.mp -= manaUse;
                 this.select.lastTimeUseThisSkill = now;
-                int[] arr = {8, 11, 32, 25, 43, 49, 50};
+                int[] arr = { 8, 11, 32, 25, 43, 49, 50 };
                 int level = getSkill(12).point;
                 int templateId = arr[level - 1];
                 long hp = this.info.hpFull * level;
@@ -2567,7 +2582,7 @@ public class Player {
                 mob.setTemplateId((byte) templateId);
                 mob.setX(this.x);
                 mob.setY((short) (this.y - 40));
-                //Mob mob = new Mob(this.id, (byte) templateId, this.x, (short) (this.y - 40));
+                // Mob mob = new Mob(this.id, (byte) templateId, this.x, (short) (this.y - 40));
                 mob.hp = mob.maxHp = hp;
                 mob.status = 4;
                 mob.sys = 0;
@@ -2628,7 +2643,8 @@ public class Player {
                     long hpFull = info.hpFull;
                     List<Player> list = zone.getListChar(Zone.TYPE_ALL);
                     List<Player> filter = list.stream().filter(f -> {
-                        if (f != null && f != this && isMeCanAttackOtherPlayer(f) && Utils.getDistance(this.x, this.y, f.x, f.y) < distance) {
+                        if (f != null && f != this && isMeCanAttackOtherPlayer(f)
+                                && Utils.getDistance(this.x, this.y, f.x, f.y) < distance) {
                             return true;
                         }
                         return false;
@@ -2716,7 +2732,7 @@ public class Player {
         return dameInput;
     }
 
-    public static short[] listTypeBody = new short[]{35, 36, 37};
+    public static short[] listTypeBody = new short[] { 35, 36, 37 };
 
     public void itemBagToPet(int index) {
         if (myDisciple == null) {
@@ -2895,10 +2911,10 @@ public class Player {
                             zone.service.setIDAuraEff(this.id, this.idAuraEff);
                         }
                     }
-//                    if (item.template.type == Item.TYPE_DANH_HIEU) {
-//                        danhHieu = null;
-//                        this.loadBody();
-//                    }
+                    // if (item.template.type == Item.TYPE_DANH_HIEU) {
+                    // danhHieu = null;
+                    // this.loadBody();
+                    // }
                     return;
                 }
             }
@@ -3045,12 +3061,12 @@ public class Player {
     }
 
     public void sort() {
-//        for (int i = 0; i < this.numberCellBag; i++) {
-//            if (this.itemBag[i] == null) {
-//                sort(i, false);
-//            }
-//        }
-//        sort(0, true);
+        // for (int i = 0; i < this.numberCellBag; i++) {
+        // if (this.itemBag[i] == null) {
+        // sort(i, false);
+        // }
+        // }
+        // sort(0, true);
     }
 
     public void sort(int index, boolean isUpdate) {
@@ -3808,9 +3824,13 @@ public class Player {
                             menus.add(new KeyValue(1156, "Di chuyển\ntới Map\nsự kiện"));
 
                         }
-                        service.openUIConfirm(npc.templateId, "Ta có thể giúp gì cho ngươi? \n " //   + "Bạn có thể thu thập x99 bình nước xanh lam,lục,đỏ và 500tr vàng để lấy 1 phần quà sự kiện"
+                        service.openUIConfirm(npc.templateId, "Ta có thể giúp gì cho ngươi? \n " // + "Bạn có thể thu
+                                                                                                 // thập x99 bình nước
+                                                                                                 // xanh lam,lục,đỏ và
+                                                                                                 // 500tr vàng để lấy 1
+                                                                                                 // phần quà sự kiện"
                                 ,
-                                 npc.avatar, menus);
+                                npc.avatar, menus);
                         break;
                     case NpcName.RUONG_DO_HE_THONG:
                     case NpcName.TORIBOT:
@@ -3824,19 +3844,23 @@ public class Player {
                             return;
                         }
                         menus.add(new KeyValue(1110, "Shop\nĐặc Biệt"));
-//                        menus.add(new KeyValue(1116, "Di chuyển\nĐến Đặc Biệt"));
-//                        menus.add(new KeyValue(1134, "Di chuyển\nĐến Quảng Trường\nPháo Hoa"));
+                        // menus.add(new KeyValue(1116, "Di chuyển\nĐến Đặc Biệt"));
+                        // menus.add(new KeyValue(1134, "Di chuyển\nĐến Quảng Trường\nPháo Hoa"));
                         menus.add(new KeyValue(1138, "Hồi Skill Ngay\n(200tr Vàng)"));
-//                        menus.add(new KeyValue(1145, "Đổi bình nước"));
-//                        menus.add(new KeyValue(1139, "Đổi Hộp Quà 2025"));
-//                        menus.add(new KeyValue(1140, "Vòng quay tết 2025"));
+                        // menus.add(new KeyValue(1145, "Đổi bình nước"));
+                        // menus.add(new KeyValue(1139, "Đổi Hộp Quà 2025"));
+                        // menus.add(new KeyValue(1140, "Vòng quay tết 2025"));
                         menus.add(new KeyValue(1152, "Đổi Bó hoa sắc màu"));
                         menus.add(new KeyValue(1153, "Đổi Bó hoa sum vầy"));
                         menus.add(new KeyValue(1155, "Đổi Hộp Mù Bé Ba"));
 
-                        service.openUIConfirm(npc.templateId, "Ta có thể giúp gì cho ngươi? \n " //   + "Bạn có thể thu thập x99 bình nước xanh lam,lục,đỏ và 500tr vàng để lấy 1 phần quà sự kiện"
+                        service.openUIConfirm(npc.templateId, "Ta có thể giúp gì cho ngươi? \n " // + "Bạn có thể thu
+                                                                                                 // thập x99 bình nước
+                                                                                                 // xanh lam,lục,đỏ và
+                                                                                                 // 500tr vàng để lấy 1
+                                                                                                 // phần quà sự kiện"
                                 ,
-                                 npc.avatar, menus);
+                                npc.avatar, menus);
                         break;
                     case NpcName.ONG_GOHAN:
                     case NpcName.ONG_PARAGUS:
@@ -3849,14 +3873,14 @@ public class Player {
                     case NpcName.RUONG_DO:
 
                         boolean isClan = false;
-//                        if (zone.map.isClanTerritory()) {
-//                            isClan = true;
-//                        }
-//                        if (isClan) {
-                        ////                            service.setItemClan();
-//                        } else {
-//                            service.setItemBox();
-//                        }
+                        // if (zone.map.isClanTerritory()) {
+                        // isClan = true;
+                        // }
+                        // if (isClan) {
+                        //// service.setItemClan();
+                        // } else {
+                        // service.setItemBox();
+                        // }
                         service.setItemBox();
                         service.showBox(isClan);
                         break;
@@ -3880,10 +3904,10 @@ public class Player {
                         menus.add(new KeyValue(CMDMenu.CANCEL, "Từ chối"));
                         service.openUIConfirm(npc.templateId, "Ta có thể giúp gì cho ngươi?", npc.avatar, menus);
                     }
-                    break;
+                        break;
 
                     case NpcName.CUA_HANG_KY_GUI:
-//                        khoidt
+                        // khoidt
                         if (this.session.user.getActivated() != 1) {
                             service.sendThongBao("Bạn cần kích hoạt để sử dụng tính năng này");
                             return;
@@ -3891,7 +3915,9 @@ public class Player {
                         menus.add(new KeyValue(CMDMenu.CONSIGNMENT_GUIDE, "Hướng\ndẫn\nthêm"));
                         menus.add(new KeyValue(CMDMenu.CONSIGNMENT, "Mua bán\nKý gửi"));
                         menus.add(new KeyValue(CMDMenu.CANCEL, "Từ chối"));
-                        service.openUIConfirm(npc.templateId, "Cửa hàng chúng tôi chuyên mua bán hàng hiệu, hàng độc, cám ơn bạn đã ghé thăm.", npc.avatar, menus);
+                        service.openUIConfirm(npc.templateId,
+                                "Cửa hàng chúng tôi chuyên mua bán hàng hiệu, hàng độc, cám ơn bạn đã ghé thăm.",
+                                npc.avatar, menus);
                         break;
 
                     case NpcName.BUNMA:
@@ -3899,7 +3925,9 @@ public class Player {
                     case NpcName.APPULE:
                         if (mapId == MapName.LANG_MORI && idNRNM != -1) {
                             menus.add(new KeyValue(20008, "Gọi\nRồng Thần\nNamek"));
-                            service.openUIConfirm(npc.templateId, "Hãy thu thập đủ 7 viên ngọc rồng Namek, ta sẽ giúp ngươi triệu hồi rồng thần", npc.avatar, menus);
+                            service.openUIConfirm(npc.templateId,
+                                    "Hãy thu thập đủ 7 viên ngọc rồng Namek, ta sẽ giúp ngươi triệu hồi rồng thần",
+                                    npc.avatar, menus);
                             break;
                         }
                         menus.add(new KeyValue(CMDMenu.STORE, "Cửa hàng"));
@@ -3946,7 +3974,7 @@ public class Player {
                         }
                         service.openUIConfirm(npc.templateId, text, npc.avatar, menus);
                     }
-                    break;
+                        break;
 
                     case NpcName.CARGO:
                         menus.add(new KeyValue(CMDMenu.TELEPORT_TRAI_DAT, "Đến\nTrái đất"));
@@ -3995,7 +4023,7 @@ public class Player {
                             menus.add(new KeyValue(536, "Bang hội"));
                             menus.add(new KeyValue(606, "Kho báu\ndưới biển"));
                         }
-//                          
+                        //
                         menus.add(new KeyValue(535, "Nói chuyện"));
                         service.openUIConfirm(npc.templateId, "Cần ta giúp gì không?", npc.avatar, menus);
                         break;
@@ -4032,10 +4060,10 @@ public class Player {
                         menus.add(new KeyValue(CMDMenu.CLAN_SHOP, "Cửa hàng"));
                         service.openUIConfirm(npc.templateId, sb.toString(), npc.avatar, menus);
                     }
-                    break;
+                        break;
 
                     case NpcName.BO_MONG:
-//                        menus.add(new KeyValue(420, "Nhận Ngọc\nMiễn Phí"));
+                        // menus.add(new KeyValue(420, "Nhận Ngọc\nMiễn Phí"));
                         service.openUIConfirm(npc.templateId,
                                 "Ngươi muốn có thêm thỏi vàng, có nhiều cách, nạp thẻ cào là nhanh nhất",
                                 npc.avatar, menus);
@@ -4062,7 +4090,7 @@ public class Player {
                         break;
 
                     case NpcName.THUONG_DE:
-//                        menus.add(new KeyValue(CMDMenu.CANCEL, "Chức năng\n tạm đóng"));
+                        // menus.add(new KeyValue(CMDMenu.CANCEL, "Chức năng\n tạm đóng"));
                         menus.add(new KeyValue(520, "Vòng quay\nMay mắn"));
                         menus.add(new KeyValue(CMDMenu.TELEPORT_HANH_TINH_KAIO, "Đến Kaio"));
                         service.openUIConfirm(npc.templateId, "Chơi vòng quay may mắn không con", npc.avatar, menus);
@@ -4070,15 +4098,16 @@ public class Player {
 
                     case NpcName.THAN_VU_TRU:
                         menus.add(new KeyValue(CMDMenu.TELEPORT_THAN_DIEN, "Về\nthần điện"));
-//                        menus.add(new KeyValue(CMDMenu.TELEPORT_THANH_DIA_KAIO, "Thánh địa Kaio"));
+                        // menus.add(new KeyValue(CMDMenu.TELEPORT_THANH_DIA_KAIO, "Thánh địa Kaio"));
                         service.openUIConfirm(npc.templateId, "Con tìm ta có việc gì?", npc.avatar, menus);
                         break;
 
                     case NpcName.BA_HAT_MIT:
-                        if (mapId == MapName.VACH_NUI_ARU_2 || mapId == MapName.VACH_NUI_MOORI_2 || mapId == MapName.VACH_NUI_KAKAROT || mapId == MapName.SIEU_THI) {
+                        if (mapId == MapName.VACH_NUI_ARU_2 || mapId == MapName.VACH_NUI_MOORI_2
+                                || mapId == MapName.VACH_NUI_KAKAROT || mapId == MapName.SIEU_THI) {
                             menus.add(new KeyValue(CMDMenu.STORE_BUA, "Cửa hàng\nBùa"));
                             menus.add(new KeyValue(CMDMenu.UPGRADE_ITEM, "Nâng cấp\nvật phẩm"));
-//                            menus.add(new KeyValue(CMDMenu.NANG_CAP_2, "Nâng cấp\nvật phẩm 2"));
+                            // menus.add(new KeyValue(CMDMenu.NANG_CAP_2, "Nâng cấp\nvật phẩm 2"));
                             menus.add(new KeyValue(CMDMenu.NHAP_NGOC_RONG, "Nhập Ngọc\nRồng"));
                             Item item = getItemInBag(ItemName.BONG_TAI_PORATA_CAP_2);
                             if (item != null) {
@@ -4097,13 +4126,13 @@ public class Player {
                         if (mapId == MapName.DAO_KAME) {
                             menus.add(new KeyValue(CMDMenu.EP_SAO_TRANG_BI, "Ép sao\ntrang bị"));
                             menus.add(new KeyValue(CMDMenu.PHA_LE_HOA, "Pha lê\nhóa trang bị"));
-//                            menus.add(new KeyValue(CMDMenu.DOI_DO_HUY_DIET, "Đổi Đồ\nHủy Diệt"));
+                            // menus.add(new KeyValue(CMDMenu.DOI_DO_HUY_DIET, "Đổi Đồ\nHủy Diệt"));
                             menus.add(new KeyValue(CMDMenu.DOI_DO_KICH_HOAT, "Đổi Đồ\nKích Hoạt"));
                             menus.add(new KeyValue(1154, "Tách Vật phẩm SK"));
                             menus.add(new KeyValue(1157, "Nâng cấp\nTrang bị\nĐệ tử"));
-//                            menus.add(new KeyValue(CMDMenu.GHEP_DA, "Ghép đá\nnâng cấp"));
-//                            menus.add(new KeyValue(CMDMenu.TACH_DO_THAN_LINH, "Tách đồ\nthần linh"));
-//                            menus.add(new KeyValue(CMDMenu.TACH_DO_KICH_HOAT, "Tách đồ\nkích hoạt"));
+                            // menus.add(new KeyValue(CMDMenu.GHEP_DA, "Ghép đá\nnâng cấp"));
+                            // menus.add(new KeyValue(CMDMenu.TACH_DO_THAN_LINH, "Tách đồ\nthần linh"));
+                            // menus.add(new KeyValue(CMDMenu.TACH_DO_KICH_HOAT, "Tách đồ\nkích hoạt"));
                         }
                         service.openUIConfirm(npc.templateId, "Ngươi tìm ta có việc gì ?", npc.avatar, menus);
                         break;
@@ -4117,44 +4146,52 @@ public class Player {
                         } else {
                             menus.add(new KeyValue(CMDMenu.TELEPORT_ARU, "Về\nLàng Aru"));
                         }
-                        service.openUIConfirm(npc.templateId, "A mi phò phò, thí chủ hãy giúp giải cứu đồ đệ của bần tăng đang bị phong ấn tại ngũ hành sơn.", npc.avatar, menus);
+                        service.openUIConfirm(npc.templateId,
+                                "A mi phò phò, thí chủ hãy giúp giải cứu đồ đệ của bần tăng đang bị phong ấn tại ngũ hành sơn.",
+                                npc.avatar, menus);
 
-//                        service.dialogMessage("Chức năng đang được phát triển.");
-//                    {
-//                        if (Event.isEvent()) {
-//                            String text2 = "A mi phò phò, thí chủ hãy thu thập bùa 'giải khai phong ấn', mỗi chữ 10 cái.";
-//                            if (zone.map.mapID == MapName.LANG_ARU) {
-//                                Item item = itemBody[5];
-//                                if (item != null && (item.id == ItemName.CAI_TRANG_TON_NGO_KHONG_TD || item.id == ItemName.CAI_TRANG_TON_NGO_KHONG_NM || item.id == ItemName.CAI_TRANG_TON_NGO_KHONG_XD)) {
-//                                    menus.add(new KeyValue(CMDMenu.THINH_KINH, "Đồng ý"));
-//                                    text2 = "A mi phò phò, Ngộ Không mau hộ tống sư phụ đi thỉnh kinh nào";
-//                                } else {
-//                                    menus.add(new KeyValue(CMDMenu.TELEPORT_NGU_HANH_SON, "Đồng ý"));
-//                                    text2 = "A mi phò phò, thí chủ hãy giúp giải cứu đồ đệ của bần tăng đang bị phong ấn tại ngũ hành sơn.";
-//                                }
-//                                menus.add(new KeyValue(CMDMenu.CANCEL, "Từ chối"));
-//                                menus.add(new KeyValue(CMDMenu.DUONG_TANG_REWARD, "Nhận\nthưởng"));
-//                            } else {
-//                                if (zone.map.mapID == MapName.NGU_HANH_SON) {
-//                                    menus.add(new KeyValue(CMDMenu.GIAI_PHONG_AN, "Giải\nPhong ấn"));
-//                                }
-//                                menus.add(new KeyValue(CMDMenu.TELEPORT_ARU, "Về\nLàng Aru"));
-//                            }
-//                            service.openUIConfirm(npc.templateId, text2, npc.avatar, menus);
-//                        } else {
-//                            menus.add(new KeyValue(CMDMenu.CANCEL, "OK"));
-//                            service.openUIConfirm(npc.templateId, "Ami phò phò, ta đang đứng đây chờ đồ đệ", npc.avatar, menus);
-//                        }
-//                    }
+                        // service.dialogMessage("Chức năng đang được phát triển.");
+                        // {
+                        // if (Event.isEvent()) {
+                        // String text2 = "A mi phò phò, thí chủ hãy thu thập bùa 'giải khai phong ấn',
+                        // mỗi chữ 10 cái.";
+                        // if (zone.map.mapID == MapName.LANG_ARU) {
+                        // Item item = itemBody[5];
+                        // if (item != null && (item.id == ItemName.CAI_TRANG_TON_NGO_KHONG_TD ||
+                        // item.id == ItemName.CAI_TRANG_TON_NGO_KHONG_NM || item.id ==
+                        // ItemName.CAI_TRANG_TON_NGO_KHONG_XD)) {
+                        // menus.add(new KeyValue(CMDMenu.THINH_KINH, "Đồng ý"));
+                        // text2 = "A mi phò phò, Ngộ Không mau hộ tống sư phụ đi thỉnh kinh nào";
+                        // } else {
+                        // menus.add(new KeyValue(CMDMenu.TELEPORT_NGU_HANH_SON, "Đồng ý"));
+                        // text2 = "A mi phò phò, thí chủ hãy giúp giải cứu đồ đệ của bần tăng đang bị
+                        // phong ấn tại ngũ hành sơn.";
+                        // }
+                        // menus.add(new KeyValue(CMDMenu.CANCEL, "Từ chối"));
+                        // menus.add(new KeyValue(CMDMenu.DUONG_TANG_REWARD, "Nhận\nthưởng"));
+                        // } else {
+                        // if (zone.map.mapID == MapName.NGU_HANH_SON) {
+                        // menus.add(new KeyValue(CMDMenu.GIAI_PHONG_AN, "Giải\nPhong ấn"));
+                        // }
+                        // menus.add(new KeyValue(CMDMenu.TELEPORT_ARU, "Về\nLàng Aru"));
+                        // }
+                        // service.openUIConfirm(npc.templateId, text2, npc.avatar, menus);
+                        // } else {
+                        // menus.add(new KeyValue(CMDMenu.CANCEL, "OK"));
+                        // service.openUIConfirm(npc.templateId, "Ami phò phò, ta đang đứng đây chờ đồ
+                        // đệ", npc.avatar, menus);
+                        // }
+                        // }
                         break;
 
                     case NpcName.NGO_KHONG:
                         service.dialogMessage("Chức năng đang được phát triển.");
-//                        if (Event.isEvent()) {
-//                            menus.add(new KeyValue(CMDMenu.TANG_QUA_HONG_DAO, "Tặng quả\nHồng đào"));
-//                            menus.add(new KeyValue(CMDMenu.TANG_QUA_HONG_DAO_CHIN, "Tặng quả\nHồng đào\nChín"));
-//                            service.openUIConfirm(npc.templateId, "Chu mi nga", npc.avatar, menus);
-//                        }
+                        // if (Event.isEvent()) {
+                        // menus.add(new KeyValue(CMDMenu.TANG_QUA_HONG_DAO, "Tặng quả\nHồng đào"));
+                        // menus.add(new KeyValue(CMDMenu.TANG_QUA_HONG_DAO_CHIN, "Tặng quả\nHồng
+                        // đào\nChín"));
+                        // service.openUIConfirm(npc.templateId, "Chu mi nga", npc.avatar, menus);
+                        // }
                         break;
 
                     case NpcName.RONG_OMEGA: {
@@ -4173,7 +4210,7 @@ public class Player {
                         menus.add(new KeyValue(CMDMenu.CANCEL, "Từ chối"));
                         service.openUIConfirm(npc.templateId, text3, npc.avatar, menus);
                     }
-                    break;
+                        break;
                     case NpcName.GHI_DANH: {
                         StringBuilder sb = new StringBuilder();
                         if (mapId == MapName.DAI_HOI_VO_THUAT || this.zone.map.isLang()) {
@@ -4202,7 +4239,7 @@ public class Player {
                         service.openUIConfirm(npc.templateId, sb.toString(), npc.avatar, menus);
 
                     }
-                    break;
+                        break;
                     case NpcName.TRONG_TAI:
                         if (zone != null && zone.map.mapID == MapName.DAI_HOI_VO_THUAT_2) {
                             StringBuilder sb = new StringBuilder();
@@ -4212,7 +4249,8 @@ public class Player {
                             menus.add(new KeyValue(1146, "Top 100\nCao Thủ"));
                             menus.add(new KeyValue(1147, "Hướng\ndẫn\nthêm"));
                             if (DHVT_SH_Service.gI().getTicket(this) >= 1) {
-                                menus.add(new KeyValue(1148, String.format("Miễn phí\n(Còn %d vé)", DHVT_SH_Service.gI().getTicket(this))));
+                                menus.add(new KeyValue(1148,
+                                        String.format("Miễn phí\n(Còn %d vé)", DHVT_SH_Service.gI().getTicket(this))));
                             } else {
                                 menus.add(new KeyValue(1148, "Thi đấu (200tr vàng)"));
                             }
@@ -4222,19 +4260,20 @@ public class Player {
                         }
                         break;
                     case NpcName.LINH_CANH:
-//                        if (true) {
-//                            service.openUISay(npc.id, "Chức năng đã tạm đóng", npc.avatar);
-//                            return;
-//                        }
+                        // if (true) {
+                        // service.openUISay(npc.id, "Chức năng đã tạm đóng", npc.avatar);
+                        // return;
+                        // }
                         if (clan == null) {
                             service.openUISay(npc.id, "Chỉ tếp các bang hội, miễn tiếp khách vãng lai", npc.avatar);
                             return;
                         }
-//                        if (clan.getNumberMember() < 5) {
-//                            service.openUISay(npc.id, "Doanh trại chỉ dành cho bang hội có tối thiểu 5 thành viên",
-//                                    npc.avatar);
-//                            return;
-//                        }
+                        // if (clan.getNumberMember() < 5) {
+                        // service.openUISay(npc.id, "Doanh trại chỉ dành cho bang hội có tối thiểu 5
+                        // thành viên",
+                        // npc.avatar);
+                        // return;
+                        // }
                         ClanMember clanMember = clan.getMember(this.id);
                         LocalDateTime now = LocalDateTime.now();
                         LocalDateTime openTime = LocalDateTime.of(2025, 4, 6, 17, 0);
@@ -4246,10 +4285,10 @@ public class Player {
 
                             service.openUISay(
                                     npc.id,
-                                    "Bạn có thể tham gia doanh trại sau " + minutes + " phút " + seconds + " giây nữa.\b"
-                                    + "17h00 06/04/2025",
-                                    npc.avatar
-                            );
+                                    "Bạn có thể tham gia doanh trại sau " + minutes + " phút " + seconds
+                                            + " giây nữa.\b"
+                                            + "17h00 06/04/2025",
+                                    npc.avatar);
                             return;
                         }
                         Barrack barrack = clan.barrack;
@@ -4351,9 +4390,9 @@ public class Player {
                         break;
 
                     case NpcName.QUOC_VUONG:
-//                        if (info.power < 17999000000L) {
-//                            return;
-//                        }
+                        // if (info.power < 17999000000L) {
+                        // return;
+                        // }
                         menus.add(new KeyValue(500, "Bản thân"));
                         menus.add(new KeyValue(501, "Đệ tử"));
                         menus.add(new KeyValue(CMDMenu.CANCEL, "Từ chối"));
@@ -4393,18 +4432,22 @@ public class Player {
                             }
                         } else {
                             menus.add(new KeyValue(1133, "Phù Hộ"));
-                            if (OsinCheckInEvent.isCheckInDay()) {
-                                menus.add(new KeyValue(CMDMenu.OSIN_CHECKIN, "Điểm danh"));
-                            } else if (OsinCheckInEvent.isRewardDay()) {
-                                menus.add(new KeyValue(CMDMenu.OSIN_REWARD, "Nhận quà"));
+                            if (zone.map.mapID == 7 || zone.map.mapID == 14 || zone.map.mapID == 0) {
+                                if (OsinCheckInEvent.isCheckInDay()) {
+                                    menus.add(new KeyValue(CMDMenu.OSIN_CHECKIN, "Điểm danh"));
+                                } else if (OsinCheckInEvent.isRewardDay()) {
+                                    menus.add(new KeyValue(CMDMenu.OSIN_REWARD, "Nhận quà"));
+                                }
                             }
                             if (this.flag == 9) {
                                 sb.append(
                                         "Đừng vội xem thường Babiđây, ngay đến cha hắn là thần ma đạo sĩ Bibiđây khi còn sống cũng phải sợ hắn đấy!\n"
-                                        + "Ta có thể Phù hộ để ngươi có để đánh tới 10% HP với giá 2 thỏi vàng");
+                                                + "Ta có thể Phù hộ để ngươi có để đánh tới 10% HP với giá 2 thỏi vàng");
                                 menus.add(new KeyValue(456, "Hướng\ndẫn\nthêm"));
                                 int floor = getCurrentNumberFloorInBaseBabidi();
-                                if ((accumulatedPoint != null && accumulatedPoint.isMaxPoint() && floor + 1 < BaseBabidi.MAPS.length) || this.getSession().user.getRole() == 1) {
+                                if ((accumulatedPoint != null && accumulatedPoint.isMaxPoint()
+                                        && floor + 1 < BaseBabidi.MAPS.length)
+                                        || this.getSession().user.getRole() == 1) {
                                     menus.add(new KeyValue(459, "Xuống\nTầngdưới"));
                                 }
                                 if (this.getSession().user.getRole() == 1) {
@@ -4418,14 +4461,15 @@ public class Player {
                         }
                         service.openUIConfirm(npc.templateId, sb.toString(), npc.avatar, menus);
                     }
-                    break;
+                        break;
 
                     case NpcName.KIBIT:
                         if (zone.map.isBaseBabidi()) {
                             if (flag == 9) {
                                 menus.add(new KeyValue(458, "Về nhà"));
                             } else {
-                                service.addBigMessage(npc.avatar, "Ngươi hãy về phe của mình mà thể hiện", (byte) 0, null,
+                                service.addBigMessage(npc.avatar, "Ngươi hãy về phe của mình mà thể hiện", (byte) 0,
+                                        null,
                                         null);
                                 return;
                             }
@@ -4441,7 +4485,8 @@ public class Player {
                             return;
                         }
                         StringBuilder sb = new StringBuilder();
-                        sb.append("Khi nhận buff bạn sẽ tăng lượng sát thương lên 10% vào người và quái trong khu ").append("\b");
+                        sb.append("Khi nhận buff bạn sẽ tăng lượng sát thương lên 10% vào người và quái trong khu ")
+                                .append("\b");
                         sb.append("Bọn Kaiô do con nhóc Ôsin cầm đầu đã có mặt tại đây..Hãy chuẩn bị").append("\b");
                         sb.append("'Tiếp khách' nhé!\n"
                                 + "Ta có thể Phù hộ để ngươi có để đánh tới 10% HP với giá 2 thỏi vàng");
@@ -4449,7 +4494,8 @@ public class Player {
                         menus.add(new KeyValue(1133, "Phù Hộ"));
                         menus.add(new KeyValue(456, "Hướng\ndẫn\nthêm"));
                         int floor = getCurrentNumberFloorInBaseBabidi();
-                        if ((accumulatedPoint != null && accumulatedPoint.isMaxPoint() && floor + 1 < BaseBabidi.MAPS.length) || this.getSession().user.getRole() == 1) {
+                        if ((accumulatedPoint != null && accumulatedPoint.isMaxPoint()
+                                && floor + 1 < BaseBabidi.MAPS.length) || this.getSession().user.getRole() == 1) {
                             menus.add(new KeyValue(459, "Xuống\nTầngdưới"));
                         }
                         if (this.getSession().user.getRole() == 1) {
@@ -4458,7 +4504,7 @@ public class Player {
                         menus.add(new KeyValue(458, "Về nhà"));
                         service.openUIConfirm(npc.templateId, sb.toString(), npc.avatar, menus);
                     }
-                    break;
+                        break;
 
                     case NpcName.MR_POPO:
                         service.dialogMessage("Chức năng đang được phát triển.");
@@ -4469,11 +4515,13 @@ public class Player {
                         }
                         menus.add(new KeyValue(1104, this.zone.map.mapID == 126 ? "Rời khỏi đây" : "OK"));
                         menus.add(new KeyValue(CMDMenu.CANCEL, "Từ chối"));
-                        service.openUIConfirm(npc.templateId, zone.map.mapID != 126 ? "Ác quỷ truyền thuyết Hirudegarn\n"
-                                + "đã thoát khỏi phong ấn ngàn năm\n"
-                                + "Hãy giúp tôi chế ngự nó?" : "Bạn có thể phù hộ với giá 2 thỏi vàng\n"
-                                + "Khi phù hộ bạn có thể đánh được 2% hp và tăng tỉ lệ nhặt trứng bư"
-                                + "\nTôi sẽ đưa bạn về",
+                        service.openUIConfirm(npc.templateId,
+                                zone.map.mapID != 126 ? "Ác quỷ truyền thuyết Hirudegarn\n"
+                                        + "đã thoát khỏi phong ấn ngàn năm\n"
+                                        + "Hãy giúp tôi chế ngự nó?"
+                                        : "Bạn có thể phù hộ với giá 2 thỏi vàng\n"
+                                                + "Khi phù hộ bạn có thể đánh được 2% hp và tăng tỉ lệ nhặt trứng bư"
+                                                + "\nTôi sẽ đưa bạn về",
                                 npc.avatar, menus);
                         break;
                     case NpcName.LY_TIEU_NUONG:
@@ -4501,23 +4549,31 @@ public class Player {
                         menus.add(new KeyValue(CMDMenu.FOOD_SHOP_KEM_DAU, "Cửa hàng\nKem dâu"));
                         menus.add(new KeyValue(CMDMenu.FOOD_SHOP_SU_SHI, "Cửa hàng\nSushi"));
                         service.openUIConfirm(npc.templateId, "Cửa hàng đồ ăn", npc.avatar, menus);
-//                        service.dialogMessage("Chức năng đang được phát triển.");
+                        // service.dialogMessage("Chức năng đang được phát triển.");
                         break;
                     case NpcName.NOI_BANH:
-//                        StringBuilder content = new StringBuilder();
-//                        menus.add(new KeyValue(CMDMenu.NAU_BANH_CHUNG, "Đổi\nBánh Chưng"));
-//                        menus.add(new KeyValue(CMDMenu.NAU_BANH_TET, "Đổi\nBánh Tét"));
-//                        menus.add(new KeyValue(CMDMenu.BANH_CHUNG_TAN_NIEN, "Đổi\nBánh Chưng\nTân Niên"));
-//                        menus.add(new KeyValue(CMDMenu.BANH_TET_XUAN_VUI, "Đổi\nBánh Tét\nXuân Vui"));
-//                        menus.add(new KeyValue(CMDMenu.HOP_QUA_XUAN, "Đổi\nHộp Quà\nXuân"));
-//                        menus.add(new KeyValue(CMDMenu.HOP_QUA_TET, "Đổi\nHộp Quà\nTết"));
-//                        menus.add(new KeyValue(CMDMenu.CANCEL, "Đóng"));
-//                        content.append("Cần 99 thúng gạo nếp + 99 lá dong + 99 nắm cơm nếp + 99 thịt heo + 1 lửa nấu bánh + 500tr để đổi Bánh chung").append("\n");
-//                        content.append("Cần 99 thúng đậu xanh + 99 lá dong + 99 nắm cơm nếp + 99 thịt heo + 1 lửa nấu bánh + 500tr để đổi Bánh tét").append("\n");
-//                        content.append("Cần 99 gạo tám thơm + 99 lá bàng tươi + 99 hạt dưa hồng + 99 thịt ba chỉ + 99 lửa hồng tết + 100tr để đổi Bánh chưng Tân Niên").append("\n");
-//                        content.append("Cần 5 Bánh chưng Tân Niên + 1 bao lì xì may mắn để đổi Hộp Quà Xuân Phú Quý").append("\n");
-//                        content.append("Cần 5 Bánh tét Xuân Vui + 1 bao lì xì may mắn để đổi Hộp Quà Tết An Khang");
-//                        service.openUIConfirm(npc.templateId, content.toString(), npc.avatar, menus);
+                        // StringBuilder content = new StringBuilder();
+                        // menus.add(new KeyValue(CMDMenu.NAU_BANH_CHUNG, "Đổi\nBánh Chưng"));
+                        // menus.add(new KeyValue(CMDMenu.NAU_BANH_TET, "Đổi\nBánh Tét"));
+                        // menus.add(new KeyValue(CMDMenu.BANH_CHUNG_TAN_NIEN, "Đổi\nBánh Chưng\nTân
+                        // Niên"));
+                        // menus.add(new KeyValue(CMDMenu.BANH_TET_XUAN_VUI, "Đổi\nBánh Tét\nXuân
+                        // Vui"));
+                        // menus.add(new KeyValue(CMDMenu.HOP_QUA_XUAN, "Đổi\nHộp Quà\nXuân"));
+                        // menus.add(new KeyValue(CMDMenu.HOP_QUA_TET, "Đổi\nHộp Quà\nTết"));
+                        // menus.add(new KeyValue(CMDMenu.CANCEL, "Đóng"));
+                        // content.append("Cần 99 thúng gạo nếp + 99 lá dong + 99 nắm cơm nếp + 99 thịt
+                        // heo + 1 lửa nấu bánh + 500tr để đổi Bánh chung").append("\n");
+                        // content.append("Cần 99 thúng đậu xanh + 99 lá dong + 99 nắm cơm nếp + 99 thịt
+                        // heo + 1 lửa nấu bánh + 500tr để đổi Bánh tét").append("\n");
+                        // content.append("Cần 99 gạo tám thơm + 99 lá bàng tươi + 99 hạt dưa hồng + 99
+                        // thịt ba chỉ + 99 lửa hồng tết + 100tr để đổi Bánh chưng Tân
+                        // Niên").append("\n");
+                        // content.append("Cần 5 Bánh chưng Tân Niên + 1 bao lì xì may mắn để đổi Hộp
+                        // Quà Xuân Phú Quý").append("\n");
+                        // content.append("Cần 5 Bánh tét Xuân Vui + 1 bao lì xì may mắn để đổi Hộp Quà
+                        // Tết An Khang");
+                        // service.openUIConfirm(npc.templateId, content.toString(), npc.avatar, menus);
 
                         service.dialogMessage("Chức năng đang được phát triển.");
                         break;
@@ -4537,16 +4593,16 @@ public class Player {
         return cAtt != null && !cAtt.isMiniDisciple() && select != null && select.template.type != 2
                 && (select.template.type != 4 || cAtt.statusMe == 14 || cAtt.statusMe == 5)
                 && ((((int) cAtt.typePk == 3 && (int) this.typePk == 3)
-                || ((int) this.typePk == 5 || (int) cAtt.typePk == 5
-                || ((int) this.typePk == 1 && (int) cAtt.typePk == 1))
-                || ((int) this.typePk == 4 && (int) cAtt.typePk == 4)
-                || (this.testCharId >= 0 && this.testCharId == cAtt.id)
-                || (this.killCharId >= 0 && this.killCharId == cAtt.id && !this.isLang())
-                || (cAtt.killCharId >= 0 && cAtt.killCharId == this.id && !this.isLang())
-                || ((int) this.flag == 8 && (int) cAtt.flag != 0)
-                || ((int) this.flag != 0 && (int) cAtt.flag == 8)
-                || ((int) this.flag != (int) cAtt.flag && (int) this.flag != 0 && (int) cAtt.flag != 0))
-                && cAtt.statusMe != 14)
+                        || ((int) this.typePk == 5 || (int) cAtt.typePk == 5
+                                || ((int) this.typePk == 1 && (int) cAtt.typePk == 1))
+                        || ((int) this.typePk == 4 && (int) cAtt.typePk == 4)
+                        || (this.testCharId >= 0 && this.testCharId == cAtt.id)
+                        || (this.killCharId >= 0 && this.killCharId == cAtt.id && !this.isLang())
+                        || (cAtt.killCharId >= 0 && cAtt.killCharId == this.id && !this.isLang())
+                        || ((int) this.flag == 8 && (int) cAtt.flag != 0)
+                        || ((int) this.flag != 0 && (int) cAtt.flag == 8)
+                        || ((int) this.flag != (int) cAtt.flag && (int) this.flag != 0 && (int) cAtt.flag != 0))
+                        && cAtt.statusMe != 14)
                 && cAtt.statusMe != 5;
     }
 
@@ -4731,20 +4787,20 @@ public class Player {
                     service.viewShop(shop);
                 }
             }
-            break;
+                break;
             case CMDMenu.GOLD_BAR_SHOP: {
-//                khoidtif (this.session.user.getActivated() != 1) {
-//                    service.sendThongBao("Bạn cần kích hoạt tài khoản để sử dụng tính năng này");
-//                    return;
-//                }
+                // khoidtif (this.session.user.getActivated() != 1) {
+                // service.sendThongBao("Bạn cần kích hoạt tài khoản để sử dụng tính năng này");
+                // return;
+                // }
                 shop = Shop.getShop(54);
-//                shop = Shop.getShop(npc.templateId);
+                // shop = Shop.getShop(npc.templateId);
                 if (shop != null) {
                     shop.setNpc(npc);
                     service.viewShop(shop);
                 }
             }
-            break;
+                break;
             case CMDMenu.FOOD_SHOP_PUDDING:
                 if (this.session.user.getActivated() != 1) {
                     service.sendThongBao("Bạn cần kích hoạt tài khoản để sử dụng tính năng này");
@@ -4806,13 +4862,13 @@ public class Player {
                     return;
                 }
                 shop = Shop.getShop(55);
-//                shop = Shop.getShop(npc.templateId);
+                // shop = Shop.getShop(npc.templateId);
                 if (shop != null) {
                     shop.setNpc(npc);
                     service.viewShop(shop);
                 }
             }
-            break;
+                break;
             case CMDMenu.UPGRADE_ITEM:
                 combine = CombineFactory.getCombine(CombineType.NANG_CAP);
                 combine.setNpc(npc);
@@ -4890,7 +4946,7 @@ public class Player {
                 combine.setPlayer(this);
                 this.combine.showTab();
             }
-            break;
+                break;
 
             case CMDMenu.MO_CHI_SO_PORATA2: {
                 this.combine = CombineFactory.getCombine(CombineType.NANG_OPTION_PORATA);
@@ -4898,7 +4954,7 @@ public class Player {
                 combine.setPlayer(this);
                 this.combine.showTab();
             }
-            break;
+                break;
 
             case CMDMenu.CHUYEN_HOA_BANG_VANG:
             case CMDMenu.CHUYEN_HOA_BANG_NGOC:
@@ -4921,17 +4977,17 @@ public class Player {
                 int zoneID = map.getZoneID();
                 map.enterZone(this, zoneID);
             }
-            break;
+                break;
 
             case CMDMenu.TANG_QUA_HONG_DAO: {
                 Event.exchange(0, this);
             }
-            break;
+                break;
 
             case CMDMenu.TANG_QUA_HONG_DAO_CHIN: {
                 Event.exchange(1, this);
             }
-            break;
+                break;
 
             case CMDMenu.TELEPORT_ARU: {
                 TMap map = MapManager.getInstance().getMap(MapName.LANG_ARU);
@@ -4941,17 +4997,17 @@ public class Player {
                 int zoneID = map.getZoneID();
                 map.enterZone(this, zoneID);
             }
-            break;
+                break;
 
             case CMDMenu.GIAI_PHONG_AN: {
                 Event.exchange(2, this);
             }
-            break;
+                break;
 
             case CMDMenu.THINH_KINH: {
                 Event.exchange(3, this);
             }
-            break;
+                break;
 
             case CMDMenu.REPORT: {
                 int playerID = ((Integer) keyValue.elements[0]).intValue();
@@ -4962,12 +5018,15 @@ public class Player {
                     setCaptcha(RandomStringUtils.randomAlphanumeric(5).toLowerCase());
                     setPlayerReportedID(_player.id);
                     setPlayerReportedName(_player.name);
-                    inputDlg = new InputDialog(CMDTextBox.REPORT, text, new TextField("Vấn đề báo cáo", TextField.INPUT_TYPE_ANY), new TextField("Nội dung cáo", TextField.INPUT_TYPE_ANY), new TextField(String.format("Nhập mã: %s", getCaptcha()), TextField.INPUT_TYPE_ANY));
+                    inputDlg = new InputDialog(CMDTextBox.REPORT, text,
+                            new TextField("Vấn đề báo cáo", TextField.INPUT_TYPE_ANY),
+                            new TextField("Nội dung cáo", TextField.INPUT_TYPE_ANY),
+                            new TextField(String.format("Nhập mã: %s", getCaptcha()), TextField.INPUT_TYPE_ANY));
                     inputDlg.setService(service);
                     inputDlg.show();
                 }
             }
-            break;
+                break;
 
             case CMDMenu.MUA_CAI_TRANG: {
                 int playerID = ((Integer) keyValue.elements[0]).intValue();
@@ -4999,12 +5058,13 @@ public class Player {
                     }
                 }
             }
-            break;
+                break;
 
             case CMDMenu.DUONG_TANG_REWARD: {
                 StringBuilder sb3 = new StringBuilder();
                 int p = getMerit(ItemName.VONG_KIM_CO);
-                sb3.append(String.format("A mi phò phò, thí chủ đang có %d điểm công đức, xin hãy chọn 1 phần quà", p)).append("\n");
+                sb3.append(String.format("A mi phò phò, thí chủ đang có %d điểm công đức, xin hãy chọn 1 phần quà", p))
+                        .append("\n");
                 sb3.append("1.000 điểm cải trang thành Bát Giới (dành riêng đệ tử)").append("\n");
                 sb3.append("2.000 điểm cải trang thành Tôn Ngộ Không (dành riêng đệ tử)");
                 menus.add(new KeyValue(CMDMenu.DOI_1000_DIEM, "1.000"));
@@ -5014,7 +5074,7 @@ public class Player {
                         sb3.toString(),
                         npc.avatar, menus);
             }
-            break;
+                break;
 
             case CMDMenu.DOI_1000_DIEM:
                 Event.exchange(4, this);
@@ -5155,10 +5215,12 @@ public class Player {
                 service.achievement((byte) 0, (byte) -1);
                 break;
             case 421:
-                service.dialogMessage("Xin chào, Nhập giftcode tại trang chủ ngocrongbaby.com rồi quay lại đây nhận quà nhé");
+                service.dialogMessage(
+                        "Xin chào, Nhập giftcode tại trang chủ ngocrongbaby.com rồi quay lại đây nhận quà nhé");
                 break;
             case 20230:
-                inputDlg = new InputDialog(CMDTextBox.SELL_GOLD_BAR, "Nhập số lượng thỏi vàng muốn bán", new TextField("Nhập Số lượng"));
+                inputDlg = new InputDialog(CMDTextBox.SELL_GOLD_BAR, "Nhập số lượng thỏi vàng muốn bán",
+                        new TextField("Nhập Số lượng"));
                 inputDlg.setService(service);
                 inputDlg.show();
                 break;
@@ -5223,7 +5285,7 @@ public class Player {
                 } else {
                 }
             }
-            break;
+                break;
             case 456: {
                 StringBuilder sb = new StringBuilder();
                 sb.append("Tại khu vực này, ta đang dùng ma pháp phong ấn").append("\b");
@@ -5239,7 +5301,7 @@ public class Player {
                 sb.append("ta sẽ đưa ngươi xuống tầng tiếp theo");
                 service.openUISay(npc.templateId, sb.toString(), (short) 4388);
             }
-            break;
+                break;
             case 457: {
                 TMap map = MapManager.getInstance().getMap(MapName.CONG_PHI_THUYEN_2);
                 zone.leave(this);
@@ -5254,7 +5316,7 @@ public class Player {
                 goHome();
             }
 
-            break;
+                break;
 
             case 459: {
                 if (MapManager.getInstance().baseBabidi != null) {
@@ -5264,7 +5326,7 @@ public class Player {
                     }
                 }
             }
-            break;
+                break;
 
             case 500: {
                 String text = "Sức mạnh của con đã đạt mức tối đa";
@@ -5272,9 +5334,10 @@ public class Player {
                     menus.add(new KeyValue(CMDMenu.CANCEL, "OK"));
                 } else {
                     PowerLimitMark limit = PowerLimitMark.limitMark.get(info.numberOpenLimitedPower + 1);
-                    text = String.format("Ta sẽ truyền năng lượng giúp con mở giới hạn sức mạnh\ncủa bản thân lên %s.\nLưu ý: từ 40 tỉ trở lên sức mạnh của con sẽ tăng chậm đáng kể",
+                    text = String.format(
+                            "Ta sẽ truyền năng lượng giúp con mở giới hạn sức mạnh\ncủa bản thân lên %s.\nLưu ý: từ 40 tỉ trở lên sức mạnh của con sẽ tăng chậm đáng kể",
                             Utils.formatNumber(limit.power + 1));
-//                    menus.add(new KeyValue(502, "Nâng\nGiới hạn\nSức mạnh"));
+                    // menus.add(new KeyValue(502, "Nâng\nGiới hạn\nSức mạnh"));
                     menus.add(new KeyValue(503, "Nâng giới hạn\nSức mạnh\n500Tr Vàng"));
                     menus.add(new KeyValue(CMDMenu.CANCEL, "Từ chối"));
                 }
@@ -5291,7 +5354,8 @@ public class Player {
                     menus.add(new KeyValue(CMDMenu.CANCEL, "OK"));
                 } else {
                     PowerLimitMark limit = PowerLimitMark.limitMark.get(myDisciple.info.numberOpenLimitedPower + 1);
-                    text = String.format("Ta sẽ truyền năng lượng giúp con mở giới hạn sức mạnh\ncủa đệ tử lên %s.\nLưu ý: từ 40 tỉ trở lên sức mạnh của đệ tử sẽ tăng chậm đáng kể",
+                    text = String.format(
+                            "Ta sẽ truyền năng lượng giúp con mở giới hạn sức mạnh\ncủa đệ tử lên %s.\nLưu ý: từ 40 tỉ trở lên sức mạnh của đệ tử sẽ tăng chậm đáng kể",
                             Utils.formatNumber(limit.power + 1));
                     menus.add(new KeyValue(504, "Nâng ngay\ncho đệ tử\n500tr vàng"));
                     menus.add(new KeyValue(CMDMenu.CANCEL, "Từ chối"));
@@ -5329,9 +5393,10 @@ public class Player {
                 subGold(500000000);
                 PowerLimitMark limit = PowerLimitMark.limitMark.get(info.numberOpenLimitedPower);
                 info.powerLimitMark = limit;
-                service.sendThongBao(String.format("Giớ hạn sức mạnh đã năng lên %s", Utils.formatNumber(limit.power + 1)));
+                service.sendThongBao(
+                        String.format("Giớ hạn sức mạnh đã năng lên %s", Utils.formatNumber(limit.power + 1)));
             }
-            break;
+                break;
 
             case 504:
                 if (myDisciple != null) {
@@ -5353,7 +5418,9 @@ public class Player {
                 menus.add(new KeyValue(52020, "Quay\n20 lần"));
                 menus.add(new KeyValue(520100, "Quay\n100 lần"));
                 service.openUIConfirm(npc.templateId,
-                        String.format("Số lượt quay của bạn là: %d\nHãy tiếp tục quay để nhận nhiều phần thưởng giá trị", numberVongQuay),
+                        String.format(
+                                "Số lượt quay của bạn là: %d\nHãy tiếp tục quay để nhận nhiều phần thưởng giá trị",
+                                numberVongQuay),
                         npc.avatar, menus);
                 break;
             case 520:
@@ -5364,7 +5431,7 @@ public class Player {
                 menus.add(new KeyValue(5200, "Bắt đầu"));
                 menus.add(new KeyValue(522, "BXH\nVòng Quay"));
                 menus.add(new KeyValue(523, "Nhận\nThưởng Mốc"));
-//                menus.add(new KeyValue(521, "Vòng quay\nĐặc biệt"));
+                // menus.add(new KeyValue(521, "Vòng quay\nĐặc biệt"));
                 if (boxCrackBall.size() > 0) {
                     menus.add(new KeyValue(524, String.format("Rương phụ\nĐang có %d món", boxCrackBall.size())));
                     menus.add(new KeyValue(5241, "Xóa tất cả\nrương phụ"));
@@ -5397,20 +5464,21 @@ public class Player {
                 } else if (rewardMoc < 5000) {
                     menus.add(new KeyValue(CMDMenu.MOC_5000_VQTD, "Phần thưởng\nmốc 5000"));
                 }
-//                else if (rewardMoc < 7000) {
-//                    menus.add(new KeyValue(CMDMenu.MOC_7000_VQTD, "Phần thưởng\nmốc 7000"));
-//                } else if (rewardMoc < 10000) {
-//                    menus.add(new KeyValue(CMDMenu.MOC_10000_VQTD, "Phần thưởng\nmốc 10000"));
-//                } else if (rewardMoc < 13000) {
-//                    menus.add(new KeyValue(CMDMenu.MOC_13000_VQTD, "Phần thưởng\nmốc 13000"));
-//                } else if (rewardMoc < 20000) {
-//                    menus.add(new KeyValue(CMDMenu.MOC_20000_VQTD, "Phần thưởng\nmốc 20000"));
-//                } else if (rewardMoc < 25000) {
-//                    menus.add(new KeyValue(CMDMenu.MOC_25000_VQTD, "Phần thưởng\nmốc 25000"));
-//                }
+                // else if (rewardMoc < 7000) {
+                // menus.add(new KeyValue(CMDMenu.MOC_7000_VQTD, "Phần thưởng\nmốc 7000"));
+                // } else if (rewardMoc < 10000) {
+                // menus.add(new KeyValue(CMDMenu.MOC_10000_VQTD, "Phần thưởng\nmốc 10000"));
+                // } else if (rewardMoc < 13000) {
+                // menus.add(new KeyValue(CMDMenu.MOC_13000_VQTD, "Phần thưởng\nmốc 13000"));
+                // } else if (rewardMoc < 20000) {
+                // menus.add(new KeyValue(CMDMenu.MOC_20000_VQTD, "Phần thưởng\nmốc 20000"));
+                // } else if (rewardMoc < 25000) {
+                // menus.add(new KeyValue(CMDMenu.MOC_25000_VQTD, "Phần thưởng\nmốc 25000"));
+                // }
                 menus.add(new KeyValue(CMDMenu.CANCEL, "Đóng"));
                 service.openUIConfirm(npc.templateId,
-                        String.format("Số lượt quay của bạn là: %d\nHãy chọn mốc phần thưởng bạn muốn nhận?", numberVongQuay),
+                        String.format("Số lượt quay của bạn là: %d\nHãy chọn mốc phần thưởng bạn muốn nhận?",
+                                numberVongQuay),
                         npc.avatar, menus);
                 break;
             case CMDMenu.MOC_100_VQTD:
@@ -5462,41 +5530,41 @@ public class Player {
                 }
                 getRewardMoc(5000);
                 break;
-//            case CMDMenu.MOC_7000_VQTD:
-//                if (rewardMoc >= 7000) {
-//                    service.serverMessage(" Bạn đã nhận thưởng mốc này rồi ");
-//                    return;
-//                }
-//                getRewardMoc(7000);
-//                break;
-//            case CMDMenu.MOC_10000_VQTD:
-//                if (rewardMoc >= 10000) {
-//                    service.serverMessage(" Bạn đã nhận thưởng mốc này rồi ");
-//                    return;
-//                }
-//                getRewardMoc(10000);
-//                break;
-//            case CMDMenu.MOC_13000_VQTD:
-//                if(rewardMoc >= 13000) {
-//                    service.serverMessage(" Bạn đã nhận thưởng mốc này rồi ");
-//                    return;
-//                }
-//                getRewardMoc(13000);
-//                break;
-//            case CMDMenu.MOC_20000_VQTD:
-//                if (rewardMoc >= 20000) {
-//                    service.serverMessage(" Bạn đã nhận thưởng mốc này rồi ");
-//                    return;
-//                }
-//                getRewardMoc(20000);
-//                break;
-//            case CMDMenu.MOC_25000_VQTD:
-//                if (rewardMoc >= 25000) {
-//                    service.serverMessage(" Bạn đã nhận thưởng mốc này rồi ");
-//                    return;
-//                }
-//                getRewardMoc(25000);
-//                break;
+            // case CMDMenu.MOC_7000_VQTD:
+            // if (rewardMoc >= 7000) {
+            // service.serverMessage(" Bạn đã nhận thưởng mốc này rồi ");
+            // return;
+            // }
+            // getRewardMoc(7000);
+            // break;
+            // case CMDMenu.MOC_10000_VQTD:
+            // if (rewardMoc >= 10000) {
+            // service.serverMessage(" Bạn đã nhận thưởng mốc này rồi ");
+            // return;
+            // }
+            // getRewardMoc(10000);
+            // break;
+            // case CMDMenu.MOC_13000_VQTD:
+            // if(rewardMoc >= 13000) {
+            // service.serverMessage(" Bạn đã nhận thưởng mốc này rồi ");
+            // return;
+            // }
+            // getRewardMoc(13000);
+            // break;
+            // case CMDMenu.MOC_20000_VQTD:
+            // if (rewardMoc >= 20000) {
+            // service.serverMessage(" Bạn đã nhận thưởng mốc này rồi ");
+            // return;
+            // }
+            // getRewardMoc(20000);
+            // break;
+            // case CMDMenu.MOC_25000_VQTD:
+            // if (rewardMoc >= 25000) {
+            // service.serverMessage(" Bạn đã nhận thưởng mốc này rồi ");
+            // return;
+            // }
+            // getRewardMoc(25000);
+            // break;
 
             case CMDMenu.OPTION_LAZE_15:
                 selectOptionCaiTrangTop5000(197);
@@ -5567,7 +5635,8 @@ public class Player {
                 menus.clear();
                 menus.add(new KeyValue(52410, "Đồng Ý"));
                 menus.add(new KeyValue(CMDMenu.CANCEL, "Từ chối"));
-                service.openUIConfirm(npc.templateId, "Bạn có muốn xóa hết vật phẩm ở rương phụ không ?", npc.avatar, menus);
+                service.openUIConfirm(npc.templateId, "Bạn có muốn xóa hết vật phẩm ở rương phụ không ?", npc.avatar,
+                        menus);
                 break;
             }
             case 5242: {
@@ -5605,7 +5674,7 @@ public class Player {
                     return;
                 }
                 CrackBall crackBall = new CrackBall();
-                crackBall.setImgs(new int[]{419, 420, 421, 422, 423, 424, 425});
+                crackBall.setImgs(new int[] { 419, 420, 421, 422, 423, 424, 425 });
                 crackBall.setPrice(1);
                 crackBall.setTypePrice((byte) 0);
                 crackBall.setIdTicket(821);
@@ -5615,20 +5684,20 @@ public class Player {
                 crackBall.show();
                 this.crackBall = crackBall;
             }
-            break;
+                break;
 
             case 526: {
                 int index = ((Integer) keyValue.elements[0]).intValue();
                 deleteItemBoxCrackBall(index);
             }
-            break;
+                break;
 
             case 527: {
                 isNoNeedToConfirm = true;
                 int index = ((Integer) keyValue.elements[0]).intValue();
                 deleteItemBoxCrackBall(index);
             }
-            break;
+                break;
 
             case 530:
                 taskTalk(npc);
@@ -5656,7 +5725,7 @@ public class Player {
                 menus.add(new KeyValue(CMDMenu.CANCEL, "Đóng"));
                 service.openUIConfirm(npc.templateId, sb.toString(), npc.avatar, menus);
             }
-            break;
+                break;
 
             case CMDMenu.GIAI_TAN_BANG:
                 if (clan != null) {
@@ -5714,7 +5783,7 @@ public class Player {
                     clan.clanTerritory.enter(this);
                 }
             }
-            break;
+                break;
 
             case 540:
                 transport(MapName.NHA_BUNMA, 0, 60);
@@ -5726,9 +5795,14 @@ public class Player {
 
             case CMDMenu.BLACK_DRAGONBALL_GUIDE: {
                 StringBuilder sb = new StringBuilder();
-                sb.append("Mỗi ngày từ 20h đến 21h các hành tinh có ngọc Rồng Sao Đen sẽ xảy ra 1 cuộc đại chiến").append("\b");
-                sb.append("Người nào tìm thấy và giữ được Ngọc Rồng Sao Đen sẽ mang phần thưởng về cho bang của mình trong vòng 1 ngày").append("\n");
-                sb.append("Lưu ý mỗi bang có thể chiếm hữu nhiều viên khác nhau nhưng nếu cùng loại cũng chỉ nhận được 1 lần phần thưởng đó.").append("\b");
+                sb.append("Mỗi ngày từ 20h đến 21h các hành tinh có ngọc Rồng Sao Đen sẽ xảy ra 1 cuộc đại chiến")
+                        .append("\b");
+                sb.append(
+                        "Người nào tìm thấy và giữ được Ngọc Rồng Sao Đen sẽ mang phần thưởng về cho bang của mình trong vòng 1 ngày")
+                        .append("\n");
+                sb.append(
+                        "Lưu ý mỗi bang có thể chiếm hữu nhiều viên khác nhau nhưng nếu cùng loại cũng chỉ nhận được 1 lần phần thưởng đó.")
+                        .append("\b");
                 sb.append("Có 2 cách để thắng:").append("\b");
                 sb.append("1) Giữ ngọc sao đen trên người hơn 5 phút liên tục").append("\b");
                 sb.append("2) Sau 30 phút tham gia tàu sẽ đón về và đang giữ ngọc sao đen trên người").append("\n");
@@ -5737,13 +5811,14 @@ public class Player {
                 sb.append("2 sao đen: +10% HP tối đa cho toàn bang").append("\b");
                 sb.append("3 sao đen: +10% KI tối đa cho toàn bang").append("\b");
                 sb.append("4 sao đen: +10% TNSM tối đa cho toàn bang").append("\b");
-                sb.append("5 sao đen: Mỗi giờ nhận được 1 Mảnh đội trưởng vàng hoặc 1 Item cấp 1 ngẫu nhiên").append("\b");
+                sb.append("5 sao đen: Mỗi giờ nhận được 1 Mảnh đội trưởng vàng hoặc 1 Item cấp 1 ngẫu nhiên")
+                        .append("\b");
                 sb.append("6 sao đen: Mỗi giờ nhận được 1 Item cấp 2 ngẫu nhiên").append("\b");
                 sb.append("7 sao đen: Mỗi giờ nhận được 2 thỏi vàng").append("\b");
                 sb.append("Các phần thường mỗi giờ đến gặp ta để nhận nhé");
                 service.openUISay(npc.templateId, sb.toString(), npc.avatar);
             }
-            break;
+                break;
             case CMDMenu.BLACK_DRAGONBALL_JOIN: {
                 if (this.session.user.getActivated() == 0) {
                     service.sendThongBao("Bạn cần kích hoạt thành viên để sử dụng tính năng này");
@@ -5782,7 +5857,7 @@ public class Player {
                 setCommandTransport((byte) 1);
                 service.mapTransport(list);
             }
-            break;
+                break;
 
             case CMDMenu.BLACK_DRAGONBALL_REWARD:
                 if (clan != null) {
@@ -5797,7 +5872,8 @@ public class Player {
                                     int star = r.getStar();
                                     if (t < timeDelay) {
                                         int timeRemaining = (int) ((timeDelay - t) / 1000);
-                                        menus.add(new KeyValue(CMDMenu.CANCEL, String.format("%d sao\n%s", star, Utils.timeAgo(timeRemaining))));
+                                        menus.add(new KeyValue(CMDMenu.CANCEL,
+                                                String.format("%d sao\n%s", star, Utils.timeAgo(timeRemaining))));
                                     } else {
                                         int cmd = -1;
                                         if (star == 5) {
@@ -5812,59 +5888,61 @@ public class Player {
                                 }
                             }
                         }
-                        service.openUIConfirm(npc.templateId, "Ngươi đang có phần thưởng ngọc sao đen, có muốn nhận không?", npc.avatar, menus);
+                        service.openUIConfirm(npc.templateId,
+                                "Ngươi đang có phần thưởng ngọc sao đen, có muốn nhận không?", npc.avatar, menus);
                     }
                 }
                 break;
 
-//            case CMDMenu.BLACK_DRAGONBALL_REWARD_3_STAR: {
-//                if (clan != null) {
-//                    ClanMember mem = clan.getMember(this.id);
-//                    if (mem != null) {
-//                        ClanReward r = mem.getClanReward(3);
-//                        if (r != null) {
-//                            long now = System.currentTimeMillis();
-//                            long t = now - r.getReceiveTime();
-//                            long timeDelay = r.getTimeDelay();
-//                            if (t >= timeDelay) {
-//                                Item item = new Item(ItemName.DAU_THAN_CAP_8);
-//                                item.quantity = 10;
-//                                item.setDefaultOptions();
-//                                if (addItem(item)) {
-//                                    r.setReceiveTime(now);
-//                                    service.sendThongBao(String.format("Bạn nhận được %d %s", item.quantity, item.template.name));
-//                                } else {
-//                                    service.sendThongBao(Language.ME_BAG_FULL);
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//            break;
-//
-//            case CMDMenu.BLACK_DRAGONBALL_REWARD_4_STAR: {
-//                if (clan != null) {
-//                    ClanMember mem = clan.getMember(this.id);
-//                    if (mem != null) {
-//                        ClanReward r = mem.getClanReward(4);
-//                        if (r != null) {
-//                            long now = System.currentTimeMillis();
-//                            long t = now - r.getReceiveTime();
-//                            long timeDelay = r.getTimeDelay();
-//                            if (t >= timeDelay) {
-//                                Item item = new Item(RandomItem.BUA.next());
-//                                item.quantity = 3600000;
-//                                item.setDefaultOptions();
-//                                addItem(item);
-//                                r.setReceiveTime(now);
-//                                service.sendThongBao(String.format("Bạn nhận được %s", item.template.name));
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//            break;
+            // case CMDMenu.BLACK_DRAGONBALL_REWARD_3_STAR: {
+            // if (clan != null) {
+            // ClanMember mem = clan.getMember(this.id);
+            // if (mem != null) {
+            // ClanReward r = mem.getClanReward(3);
+            // if (r != null) {
+            // long now = System.currentTimeMillis();
+            // long t = now - r.getReceiveTime();
+            // long timeDelay = r.getTimeDelay();
+            // if (t >= timeDelay) {
+            // Item item = new Item(ItemName.DAU_THAN_CAP_8);
+            // item.quantity = 10;
+            // item.setDefaultOptions();
+            // if (addItem(item)) {
+            // r.setReceiveTime(now);
+            // service.sendThongBao(String.format("Bạn nhận được %d %s", item.quantity,
+            // item.template.name));
+            // } else {
+            // service.sendThongBao(Language.ME_BAG_FULL);
+            // }
+            // }
+            // }
+            // }
+            // }
+            // }
+            // break;
+            //
+            // case CMDMenu.BLACK_DRAGONBALL_REWARD_4_STAR: {
+            // if (clan != null) {
+            // ClanMember mem = clan.getMember(this.id);
+            // if (mem != null) {
+            // ClanReward r = mem.getClanReward(4);
+            // if (r != null) {
+            // long now = System.currentTimeMillis();
+            // long t = now - r.getReceiveTime();
+            // long timeDelay = r.getTimeDelay();
+            // if (t >= timeDelay) {
+            // Item item = new Item(RandomItem.BUA.next());
+            // item.quantity = 3600000;
+            // item.setDefaultOptions();
+            // addItem(item);
+            // r.setReceiveTime(now);
+            // service.sendThongBao(String.format("Bạn nhận được %s", item.template.name));
+            // }
+            // }
+            // }
+            // }
+            // }
+            // break;
             case CMDMenu.BLACK_DRAGONBALL_REWARD_5_STAR: {
                 if (clan != null) {
                     ClanMember mem = clan.getMember(this.id);
@@ -5875,13 +5953,15 @@ public class Player {
                             long t = now - r.getReceiveTime();
                             long timeDelay = r.getTimeDelay();
                             if (t >= timeDelay) {
-                                int itemID = Utils.isTrue(1, 3) ? ItemName.MANH_DOI_TRUONG_VANG_956 : Utils.nextInt(381, 384);
+                                int itemID = Utils.isTrue(1, 3) ? ItemName.MANH_DOI_TRUONG_VANG_956
+                                        : Utils.nextInt(381, 384);
                                 Item item = new Item(itemID);
                                 item.quantity = 1;
                                 item.setDefaultOptions();
                                 if (addItem(item)) {
                                     r.setReceiveTime(now);
-                                    service.sendThongBao(String.format("Bạn nhận được %d %s", item.quantity, item.template.name));
+                                    service.sendThongBao(
+                                            String.format("Bạn nhận được %d %s", item.quantity, item.template.name));
                                 } else {
                                     service.sendThongBao(Language.ME_BAG_FULL);
                                 }
@@ -5890,7 +5970,7 @@ public class Player {
                     }
                 }
             }
-            break;
+                break;
 
             case CMDMenu.BLACK_DRAGONBALL_REWARD_6_STAR: {
                 if (clan != null) {
@@ -5907,7 +5987,8 @@ public class Player {
                                 item.quantity = 1;
                                 item.setDefaultOptions();
                                 if (addItem(item)) {
-                                    service.sendThongBao(String.format("Bạn nhận được %d %s", item.quantity, item.template.name));
+                                    service.sendThongBao(
+                                            String.format("Bạn nhận được %d %s", item.quantity, item.template.name));
                                     r.setReceiveTime(now);
 
                                 } else {
@@ -5919,7 +6000,7 @@ public class Player {
                     }
                 }
             }
-            break;
+                break;
 
             case CMDMenu.BLACK_DRAGONBALL_REWARD_7_STAR: {
                 if (clan != null) {
@@ -5937,7 +6018,8 @@ public class Player {
                                 item.setDefaultOptions();
                                 if (addItem(item)) {
                                     r.setReceiveTime(now);
-                                    service.sendThongBao(String.format("Bạn nhận được %d %s", item.quantity, item.template.name));
+                                    service.sendThongBao(
+                                            String.format("Bạn nhận được %d %s", item.quantity, item.template.name));
                                 } else {
                                     service.sendThongBao(Language.ME_BAG_FULL);
                                 }
@@ -5946,7 +6028,7 @@ public class Player {
                     }
                 }
             }
-            break;
+                break;
 
             case 543:
                 shop = Shop.getShop(npc.templateId);
@@ -5987,12 +6069,12 @@ public class Player {
                     service.sendThongBao("Đang offline");
                 }
             }
-            break;
+                break;
 
             case CMDMenu.CONSIGNMENT: {
                 Consignment.getInstance().showShop(this);
             }
-            break;
+                break;
 
             case CMDMenu.CONSIGNMENT_GUIDE: {
                 StringBuilder sb = new StringBuilder();
@@ -6002,13 +6084,14 @@ public class Player {
                 sb.append("Một người bán, vạn người mua, mại dô, mại dô");
                 service.openUISay(npc.templateId, sb.toString(), npc.avatar);
             }
-            break;
+                break;
 
             case CMDMenu.BLACK_DRAGONBALL_PHU:
                 menus.add(new KeyValue(CMDMenu.BLACK_DRAGONBALL_PHU_X3, "X3\n5 thỏi vàng"));
                 menus.add(new KeyValue(CMDMenu.BLACK_DRAGONBALL_PHU_X5, "X5\n10 thỏi vàng"));
                 menus.add(new KeyValue(CMDMenu.BLACK_DRAGONBALL_PHU_X7, "X7\n15 thỏi vàng"));
-                service.openUIConfirm(npc.templateId, "Ta sẽ giúp ngươi tăng HP và KI lên mức kinh hoàng, ngươi hãy chọn đi", npc.avatar, menus);
+                service.openUIConfirm(npc.templateId,
+                        "Ta sẽ giúp ngươi tăng HP và KI lên mức kinh hoàng, ngươi hãy chọn đi", npc.avatar, menus);
                 break;
 
             case CMDMenu.BLACK_DRAGONBALL_PHU_X3:
@@ -6095,7 +6178,7 @@ public class Player {
                 sb.append("Vui lòng đến đúng giờ để đăng ký thi đấu");
                 service.openUISay(npc.templateId, sb.toString(), npc.avatar);
             }
-            break;
+                break;
 
             case 581: {
                 zone.leave(this);
@@ -6103,11 +6186,12 @@ public class Player {
                 int zoneId = map.getZoneID();
                 map.enterZone(this, zoneId);
             }
-            break;
+                break;
 
             case 582: {
                 StringBuilder sb = new StringBuilder();
-                sb.append("Đại hội quy tụ nhiều cao thủ như là Jacky Chun, Thiên Xin Hăng, Tàu Bảy Bảy...").append("\b");
+                sb.append("Đại hội quy tụ nhiều cao thủ như là Jacky Chun, Thiên Xin Hăng, Tàu Bảy Bảy...")
+                        .append("\b");
                 sb.append("Phần thưởng là 1 rương gỗ chứa nhiều vật phẩm giá trị").append("\b");
                 sb.append("Khi hạ được đối thủ, phần thưởng sẽ nâng lên 1 cấp").append("\b");
                 sb.append("Rương càng cao cấp, vật phẩm trong đó càng giá trị hơn").append("\n");
@@ -6116,7 +6200,7 @@ public class Player {
                 sb.append("nhận phần thưởng xứng đáng nhất nhé");
                 service.openUISay(npc.templateId, sb.toString(), npc.avatar);
             }
-            break;
+                break;
 
             case 583:
                 if (this.session.user.getActivated() == 0) {
@@ -6145,7 +6229,7 @@ public class Player {
                 this.y -= 24;
                 map.enterZone(this, zoneId);
             }
-            break;
+                break;
             case 586: {
                 zone.leave(this);
                 TMap map = MapManager.getInstance().getMap(MapName.DAI_HOI_VO_THUAT_2);
@@ -6153,27 +6237,28 @@ public class Player {
                 this.y -= 24;
                 map.enterZone(this, zoneId);
             }
-            break;
+                break;
             case CMDMenu.DANG_KY_DAI_HOI_VO_THUAT: {
 
             }
-            break;
+                break;
 
             case CMDMenu.HUY_DANG_KY_DAI_HOI_VO_THUAT: {
 
             }
-            break;
+                break;
 
             case CMDMenu.XAC_NHAN_HUY_DANG_KY_DAI_HOI_VO_THUAT: {
             }
-            break;
+                break;
 
             case CMDMenu.XAC_NHAN_DANG_KY_DAI_HOI_VO_THUAT: {
             }
-            break;
+                break;
             case CMDMenu.GIAI_SIEU_HANG_HUONG_DAN: {
                 StringBuilder sb = new StringBuilder();
-                sb.append("- Cơ cấu giải thưởng như sau ( chốt và trao giải nhẫu nhiên từ 20-23h mỗi ngày)").append("\b");
+                sb.append("- Cơ cấu giải thưởng như sau ( chốt và trao giải nhẫu nhiên từ 20-23h mỗi ngày)")
+                        .append("\b");
                 sb.append("Top 1 : thưởng 200 thỏi vàng").append("\b");
                 sb.append("Top 2 -10 : thưởng 50 thỏi vàng").append("\b");
                 sb.append("Top 11-50 :  thưởng 10 thỏi vàng").append("\n");
@@ -6185,7 +6270,7 @@ public class Player {
                         + "của đối thủ mà bạn đã hạ gục được");
                 service.openUISay(npc.templateId, sb.toString(), npc.avatar);
             }
-            break;
+                break;
             case CMDMenu.GIAI_SIEU_HANG_THI_DAU: {
                 TMap map = MapManager.getInstance().getMap(MapName.DAU_TRUONG);
                 ArenaSieuHang arenaSieuHang = new ArenaSieuHang(map, this.zone.zoneID);
@@ -6200,7 +6285,7 @@ public class Player {
                 arenaSieuHang.enter(this);
                 zone.service.setPosition(this, (byte) 0);
             }
-            break;
+                break;
             case CMDMenu.GIAI_SIEU_HANG_TOP_100: {
                 Top dhvtSieuHang = Top.getTop(Top.TOP_DHVT_SIEU_HANG);
                 assert dhvtSieuHang != null;
@@ -6255,20 +6340,29 @@ public class Player {
                     }
                 }
             }
-            break;
+                break;
 
             case 601: {
                 StringBuilder sb = new StringBuilder();
-                sb.append("1) Trại độc nhãn là nơi các ngươi không nên vào vì những tướng tá rất mạnh. Hahaha").append("\b");
-                sb.append("2) Trong trại độc nhãn, mỗi vị tướng đều giữ ngọc rồng từ 4 sao đến 7 sao, tùy lúc").append("\n");
-                sb.append("3) Nếu ngươi thích chết thì cứ việc vào. Nhưng ta chỉ cho vào mỗi ngày một lần thôi, để ngươi khỏi phải chết nhiều, hahaha.").append("\b");
-                sb.append("4) Các vị tướng trong doanh trại rất mạnh nhé, các ngươi không đơn giản có thể đánh bại họ bằng cách bình thường như đánh quái được đâu").append("\n");
+                sb.append("1) Trại độc nhãn là nơi các ngươi không nên vào vì những tướng tá rất mạnh. Hahaha")
+                        .append("\b");
+                sb.append("2) Trong trại độc nhãn, mỗi vị tướng đều giữ ngọc rồng từ 4 sao đến 7 sao, tùy lúc")
+                        .append("\n");
+                sb.append(
+                        "3) Nếu ngươi thích chết thì cứ việc vào. Nhưng ta chỉ cho vào mỗi ngày một lần thôi, để ngươi khỏi phải chết nhiều, hahaha.")
+                        .append("\b");
+                sb.append(
+                        "4) Các vị tướng trong doanh trại rất mạnh nhé, các ngươi không đơn giản có thể đánh bại họ bằng cách bình thường như đánh quái được đâu")
+                        .append("\n");
                 ;
-                sb.append("5) Muốn vào, ngươi phải đi cùng một người đồng đội cùng bang (phải đứng gần ngươi). Nhưng ta khuyên là nên đi 3-4 người cùng.").append("\b");
-                sb.append("6) Mỗi lần vào, ngươi chỉ có 30 phút để đánh. Sau 30 phút mà ngươi vẫn không thắng, ta sẽ cho máy bay trở ngươi về nhà.");
+                sb.append(
+                        "5) Muốn vào, ngươi phải đi cùng một người đồng đội cùng bang (phải đứng gần ngươi). Nhưng ta khuyên là nên đi 3-4 người cùng.")
+                        .append("\b");
+                sb.append(
+                        "6) Mỗi lần vào, ngươi chỉ có 30 phút để đánh. Sau 30 phút mà ngươi vẫn không thắng, ta sẽ cho máy bay trở ngươi về nhà.");
                 service.openUISay(npc.id, sb.toString(), npc.avatar);
             }
-            break;
+                break;
 
             case 602:
                 if (clan == null) {
@@ -6366,7 +6460,7 @@ public class Player {
                     service.clanInfo();
                 }
             }
-            break;
+                break;
 
             case 605:
                 Top top = Top.getTop(Top.TOP_POWER);
@@ -6400,14 +6494,15 @@ public class Player {
                     sb.append("Nhớ chọn cấp độ vừa sức với mình nhé");
                     menus.add(new KeyValue(609, "Chọn\ncấp độ"));
                 } else {
-                    sb.append(String.format("Bang hội của con đang ở hang kho báu cấp %d", clan.treasure.getLevel())).append("\n");
+                    sb.append(String.format("Bang hội của con đang ở hang kho báu cấp %d", clan.treasure.getLevel()))
+                            .append("\n");
                     sb.append("con có muốn đi cùng họ không?");
                     menus.add(new KeyValue(1210, "Đồng ý"));
                 }
                 menus.add(new KeyValue(CMDMenu.CANCEL, "Từ chối"));
                 service.openUIConfirm(npc.templateId, sb.toString(), npc.avatar, menus);
             }
-            break;
+                break;
 
             case 609: {
                 if (clan == null) {
@@ -6439,15 +6534,17 @@ public class Player {
                 ClanMember mem = clan.getMember(this.id);
                 int days = mem.getNumberOfDaysJoinClan();
                 if (days < 2) {
-                    service.openUISay(npc.id, "Chỉ những thành viên gia nhập bang hội tối thiểu 2 ngày mới có thể tham gia", npc.avatar);
+                    service.openUISay(npc.id,
+                            "Chỉ những thành viên gia nhập bang hội tối thiểu 2 ngày mới có thể tham gia", npc.avatar);
                     return;
                 }
 
-                inputDlg = new InputDialog(CMDTextBox.TREASURE, "Hãy chọn cấp độ hang kho báu từ 1-110", new TextField("Cấp độ", TextField.INPUT_TYPE_NUMERIC));
+                inputDlg = new InputDialog(CMDTextBox.TREASURE, "Hãy chọn cấp độ hang kho báu từ 1-110",
+                        new TextField("Cấp độ", TextField.INPUT_TYPE_NUMERIC));
                 inputDlg.setService(service);
                 inputDlg.show();
             }
-            break;
+                break;
 
             case 610: {
                 if (this.clan != null) {
@@ -6460,7 +6557,9 @@ public class Player {
                     ClanMember mem = clan.getMember(this.id);
                     int days = mem.getNumberOfDaysJoinClan();
                     if (days < 2) {
-                        service.openUISay(npc.id, "Chỉ những thành viên gia nhập bang hội tối thiểu 2 ngày mới có thể tham gia", npc.avatar);
+                        service.openUISay(npc.id,
+                                "Chỉ những thành viên gia nhập bang hội tối thiểu 2 ngày mới có thể tham gia",
+                                npc.avatar);
                         return;
                     }
                     if (treasure == null) {
@@ -6488,7 +6587,7 @@ public class Player {
                     }
                 }
             }
-            break;
+                break;
 
             case 1100:
                 menus.clear();
@@ -6603,7 +6702,7 @@ public class Player {
                 this.y -= 24;
                 map2.enterZone(this, zoneId2);
             }
-            break;
+                break;
             case 1117: {
                 item = getItemInBag(ItemName.THOI_VANG);
                 if (item == null || item.quantity < 2) {
@@ -6691,7 +6790,7 @@ public class Player {
                     service.sendThongBao("Hành trang không đủ ô trống");
                 }
             }
-            break;
+                break;
             case 1129: {
                 int index = getIndexBagById(2156);
                 item = null;
@@ -6717,7 +6816,7 @@ public class Player {
                     service.sendThongBao("Hành trang không đủ ô trống");
                 }
             }
-            break;
+                break;
             case 1130: {
                 int index = getIndexBagById(2156);
                 item = null;
@@ -6742,7 +6841,7 @@ public class Player {
                     service.sendThongBao("Hành trang không đủ ô trống");
                 }
             }
-            break;
+                break;
             case 1131: {
                 int index = getIndexBagById(2156);
                 item = null;
@@ -6767,7 +6866,7 @@ public class Player {
                     service.sendThongBao("Hành trang không đủ ô trống");
                 }
             }
-            break;
+                break;
             case 1132: {
                 int index = getIndexBagById(2156);
                 item = null;
@@ -6792,7 +6891,7 @@ public class Player {
                     service.sendThongBao("Hành trang không đủ ô trống");
                 }
             }
-            break;
+                break;
             case 1133:
                 item = getItemInBag(ItemName.THOI_VANG);
                 if (item == null || item.quantity < 2) {
@@ -6896,9 +6995,12 @@ public class Player {
                 }
                 Boss whis = new WhisInSingleMap(this);
                 if (currentLevelBossWhis > 50) {
-                    whis.setInfo(180000000L + ((currentLevelBossWhis - 50) * Utils.percentOf(250000000L, 10)), 1000000, 250000 + ((currentLevelBossWhis - 50) * Utils.percentOf(250000, 10)), 10 * currentLevelBossWhis, 5 * currentLevelBossWhis);
+                    whis.setInfo(180000000L + ((currentLevelBossWhis - 50) * Utils.percentOf(250000000L, 10)), 1000000,
+                            250000 + ((currentLevelBossWhis - 50) * Utils.percentOf(250000, 10)),
+                            10 * currentLevelBossWhis, 5 * currentLevelBossWhis);
                 } else if (currentLevelBossWhis > 0) {
-                    whis.setInfo(3000000L * currentLevelBossWhis, 1000000 * currentLevelBossWhis, 5000 * currentLevelBossWhis, 10 * currentLevelBossWhis, 5 * currentLevelBossWhis);
+                    whis.setInfo(3000000L * currentLevelBossWhis, 1000000 * currentLevelBossWhis,
+                            5000 * currentLevelBossWhis, 10 * currentLevelBossWhis, 5 * currentLevelBossWhis);
                 } else {
                     whis.name = "Whis Level " + currentLevelBossWhis;
                     whis.setInfo(3000000L, 10000, 5000, 10, 5);
@@ -6986,11 +7088,12 @@ public class Player {
                 ItemCMS_Service.ShowCMSItem(this, npc);
                 break;
             case 1166:
-                service.dialogMessage("Top 1 : x7 đá Huyết Ma Thiên Tử cấp 5 ( sử dụng 10 viên ) nhận Huyết Ma Thiên Tử Cấp 5 : 5% HP,KI,SĐ vĩnh viễn\n"
-                        + "Top 2 : x3 đá Huyết Ma Thiên Tử cấp 5 ( sử dụng 10 viên ) nhận Huyết Ma Thiên Tử cấp 5 : 5% HP,KI,SĐ vĩnh viễn\n"
-                        + "Top 3,4,5,6 : x5 đá Huyết Ma Thiên Tử cấp 3 : ( sử dụng 10 viên ) nhận Huyết Ma Thiên Tử cấp 3 : 3% HP,KI,SĐ vĩnh viễn\n"
-                        + "Top 7-16 : x3 đá Huyết Ma Thiên Tử cấp 2 : ( sử dụng 10 viên ) nhận Huyết Ma Thiên Tử cấp 2 : 2% HP,KI,SĐ vĩnh viễn\n"
-                        + "Ngày nào chốt thưởng ngày đấy, chốt top vào lúc 00h00 hàng ngày");
+                service.dialogMessage(
+                        "Top 1 : x7 đá Huyết Ma Thiên Tử cấp 5 ( sử dụng 10 viên ) nhận Huyết Ma Thiên Tử Cấp 5 : 5% HP,KI,SĐ vĩnh viễn\n"
+                                + "Top 2 : x3 đá Huyết Ma Thiên Tử cấp 5 ( sử dụng 10 viên ) nhận Huyết Ma Thiên Tử cấp 5 : 5% HP,KI,SĐ vĩnh viễn\n"
+                                + "Top 3,4,5,6 : x5 đá Huyết Ma Thiên Tử cấp 3 : ( sử dụng 10 viên ) nhận Huyết Ma Thiên Tử cấp 3 : 3% HP,KI,SĐ vĩnh viễn\n"
+                                + "Top 7-16 : x3 đá Huyết Ma Thiên Tử cấp 2 : ( sử dụng 10 viên ) nhận Huyết Ma Thiên Tử cấp 2 : 2% HP,KI,SĐ vĩnh viễn\n"
+                                + "Ngày nào chốt thưởng ngày đấy, chốt top vào lúc 00h00 hàng ngày");
                 break;
             case 1167:
                 Top topWhisRw = Top.getTop(Top.TOP_WHIS_Reward);
@@ -7080,7 +7183,8 @@ public class Player {
                         menus.add(new KeyValue(CMDMenu.CLAN_UPGRADE, "Nâng cấp\nBang hội"));
                     }
                     menus.add(new KeyValue(CMDMenu.CANCEL, "Đóng"));
-                    service.openUIConfirm(npc.templateId, "Tôi có thể giúp gì cho bang hội của bạn ?", npc.avatar, menus);
+                    service.openUIConfirm(npc.templateId, "Tôi có thể giúp gì cho bang hội của bạn ?", npc.avatar,
+                            menus);
                 }
                 break;
 
@@ -7088,7 +7192,10 @@ public class Player {
                 if (clan != null) {
                     if (clan.level < Clan.LEVEL_MAX) {
                         StringBuilder sb = new StringBuilder();
-                        sb.append(String.format("Cần %s capsule bang [đang có %s capsule bang] để nâng cấp bang hội lên cấp %d", Utils.currencyFormat(clan.level * 10000), Utils.currencyFormat(clan.clanPoint), clan.level + 1)).append("\n");
+                        sb.append(String.format(
+                                "Cần %s capsule bang [đang có %s capsule bang] để nâng cấp bang hội lên cấp %d",
+                                Utils.currencyFormat(clan.level * 10000), Utils.currencyFormat(clan.clanPoint),
+                                clan.level + 1)).append("\n");
                         sb.append("+ 1 tối đa số lượng thành viên").append("\n");
                         sb.append("+ 1 ô trống tối đa rương bang.").append("\n");
                         sb.append(String.format("+Mở bán bùa bang cấp %d", clan.level + 1));
@@ -7098,7 +7205,7 @@ public class Player {
                     }
                 }
             }
-            break;
+                break;
 
             case CMDMenu.CLAN_UPGRADE_CONFIRM: {
                 if (clan != null) {
@@ -7108,7 +7215,8 @@ public class Player {
                             int clanPoint = clan.clanPoint;
                             int pointNeedUpgrade = clan.level * 10000;
                             if (clanPoint < pointNeedUpgrade) {
-                                service.sendThongBao(String.format("Không đủ capsule bang. cần %s capsule bang nữa.", Utils.currencyFormat(pointNeedUpgrade - clanPoint)));
+                                service.sendThongBao(String.format("Không đủ capsule bang. cần %s capsule bang nữa.",
+                                        Utils.currencyFormat(pointNeedUpgrade - clanPoint)));
                                 return;
                             }
                             clan.clanPoint -= pointNeedUpgrade;
@@ -7122,22 +7230,24 @@ public class Player {
                     }
                 }
             }
-            break;
+                break;
 
             case CMDMenu.RENAME_CLAN: {
                 if (clan != null) {
                     long now = System.currentTimeMillis();
                     long time = now - clan.lastTimeRename;
                     if (time < 60000) {
-                        service.sendThongBao(String.format("Vui lòng đợi %s nữa", Utils.timeAgo((int) ((60000 - time) / 1000))));
+                        service.sendThongBao(
+                                String.format("Vui lòng đợi %s nữa", Utils.timeAgo((int) ((60000 - time) / 1000))));
                         return;
                     }
-                    inputDlg = new InputDialog(CMDTextBox.RENAME_CLAN, "Nhập tên viết tắt bang hội", new TextField("Tên viết tắt từ 2 đến 4 ký tự", TextField.INPUT_TYPE_ANY));
+                    inputDlg = new InputDialog(CMDTextBox.RENAME_CLAN, "Nhập tên viết tắt bang hội",
+                            new TextField("Tên viết tắt từ 2 đến 4 ký tự", TextField.INPUT_TYPE_ANY));
                     inputDlg.setService(service);
                     inputDlg.show();
                 }
             }
-            break;
+                break;
 
             case CMDMenu.RANDOM_CLAN_NAME:
                 if (clan != null) {
@@ -7242,13 +7352,14 @@ public class Player {
                         menus);
                 break;
 
-//            case 1002:
-//                menus.add(new KeyValue(207, "Chuyển hóa\nDùng vàng"));
-//                menus.add(new KeyValue(208, "Chuyển hóa\nDùng ngọc"));
-//                service.openUIConfirm(npc.templateId,
-//                        "Ta sẽ biến trang bị mới cao cấp hơn của ngươi thành trang bị có cấp độ và sao pha lê của trang bị cũ",
-//                        npc.avatar, menus);
-//                break;
+            // case 1002:
+            // menus.add(new KeyValue(207, "Chuyển hóa\nDùng vàng"));
+            // menus.add(new KeyValue(208, "Chuyển hóa\nDùng ngọc"));
+            // service.openUIConfirm(npc.templateId,
+            // "Ta sẽ biến trang bị mới cao cấp hơn của ngươi thành trang bị có cấp độ và
+            // sao pha lê của trang bị cũ",
+            // npc.avatar, menus);
+            // break;
             case 1111:
                 service.specialSkill((byte) 1);
                 break;
@@ -7267,7 +7378,7 @@ public class Player {
                 menus.add(new KeyValue(CMDMenu.CANCEL, "Từ chối"));
                 service.openUIConfirm(NpcName.CON_MEO, sb2.toString(), getPetAvatar(), menus);
             }
-            break;
+                break;
 
             case 1113: {
                 StringBuilder sb2 = new StringBuilder();
@@ -7280,7 +7391,7 @@ public class Player {
                 menus.add(new KeyValue(CMDMenu.CANCEL, "Từ chối"));
                 service.openUIConfirm(NpcName.CON_MEO, sb2.toString(), getPetAvatar(), menus);
             }
-            break;
+                break;
 
             case 1114: {
                 long require = 10000000000L;
@@ -7309,7 +7420,7 @@ public class Player {
                 service.specialSkill((byte) 0);
                 service.sendThongBao(String.format("Bạn nhận được Nội tại: %s", specialSkill.getInfo()));
             }
-            break;
+                break;
 
             case 1115: {
                 long require = 10000000000L;
@@ -7334,7 +7445,7 @@ public class Player {
                 service.specialSkill((byte) 0);
                 service.sendThongBao(String.format("Bạn nhận được Nội tại: %s", specialSkill.getInfo()));
             }
-            break;
+                break;
 
             case 3500:
                 magicTree.harvest(this);
@@ -7365,12 +7476,12 @@ public class Player {
             case 7878: {
                 teleport(155);
             }
-            break;
+                break;
 
             case 7879: {
                 teleport(0);
             }
-            break;
+                break;
 
             case 10000:
                 int playerId = ((Integer) keyValue.elements[0]).intValue();
@@ -7465,13 +7576,15 @@ public class Player {
                     callDragon = new CallDragon1Star(this, this.x, this.y);
                     callDragon.appearDragon();
                     callDragon.show();
-                    SessionManager.serverMessage(String.format("%s vừa gọi rồng thần tại %s khu %d", this.name, zone.map.name, zone.zoneID));
+                    SessionManager.serverMessage(
+                            String.format("%s vừa gọi rồng thần tại %s khu %d", this.name, zone.map.name, zone.zoneID));
                 }
             }
-            break;
+                break;
             case 20008: {
                 if (this.clan == null) {
-                    service.openUISay(NpcName.CON_MEO, "Chỉ tiếp các bang hội, miễn tiếp khách vãng lai", getPetAvatar());
+                    service.openUISay(NpcName.CON_MEO, "Chỉ tiếp các bang hội, miễn tiếp khách vãng lai",
+                            getPetAvatar());
                     return;
                 }
                 if (idNRNM != 353) {
@@ -7479,29 +7592,29 @@ public class Player {
                     return;
                 }
                 byte numChar = 0;
-//                for (Player pl : zone.getPlayers()) {
-//                    if (pl.clan != null && pl.clan.id == clan.id && pl.id != this.id) {
-//                        if (pl.idNRNM != -1) {
-//                            numChar++;
-//                        }
-//                    }
-//                }
-//                if (numChar < 6) {
-//                    service.serverMessage("Bạn hãy tập hợp đủ 7 viên ngọc rồng namek đi");
-//                    return;
-//                }
+                // for (Player pl : zone.getPlayers()) {
+                // if (pl.clan != null && pl.clan.id == clan.id && pl.id != this.id) {
+                // if (pl.idNRNM != -1) {
+                // numChar++;
+                // }
+                // }
+                // }
+                // if (numChar < 6) {
+                // service.serverMessage("Bạn hãy tập hợp đủ 7 viên ngọc rồng namek đi");
+                // return;
+                // }
                 if (zone.map.mapID == 7 && idNRNM != -1) {
                     if (idNRNM == 353) {
-//                        if (!isWaitToCallDragonNamek()) {
-//                            isWaitToCallDragonNamek = true;
-//                            delayToCallDragonNamek = System.currentTimeMillis();
-//                        }
-//                        if (!isWaitToCallDragonNamek()) {
-//                            service.serverMessage("Bạn hãy tập hợp đủ 7 viên ngọc rồng namek");
-//                            return;
-//                        }
+                        // if (!isWaitToCallDragonNamek()) {
+                        // isWaitToCallDragonNamek = true;
+                        // delayToCallDragonNamek = System.currentTimeMillis();
+                        // }
+                        // if (!isWaitToCallDragonNamek()) {
+                        // service.serverMessage("Bạn hãy tập hợp đủ 7 viên ngọc rồng namek");
+                        // return;
+                        // }
                         int delay = (int) ((System.currentTimeMillis() - delayToCallDragonNamek) / 1000);
-                        //delay 60
+                        // delay 60
                         if (delay < 10) {
                             service.serverMessage("Bạn cần chờ " + (10 - delay) + " giây nữa để gọi rồng thần");
                             return;
@@ -7512,14 +7625,16 @@ public class Player {
                             doneDragonNamec();
                             Server server = DragonBall.getInstance().getServer();
                             server.initNgocRongNamec((byte) 1);
-                            SessionManager.serverMessage(String.format("Bang hội %s vừa gọi rồng vừa gọi rồng thần Namek tại %s khu %d", this.clan.name, zone.map.name, zone.zoneID));
+                            SessionManager.serverMessage(
+                                    String.format("Bang hội %s vừa gọi rồng vừa gọi rồng thần Namek tại %s khu %d",
+                                            this.clan.name, zone.map.name, zone.zoneID));
                         }
                     } else {
                         service.openUISay(NpcName.CON_MEO, "Bạn phải có viên ngọc rồng Namếc 1 sao", getPetAvatar());
                     }
                 }
             }
-            break;
+                break;
             case CMDMenu.TELEPORT_HANH_TINH_KAIO: {
                 teleport(MapName.HANH_TINH_KAIO);
                 break;
@@ -7603,8 +7718,7 @@ public class Player {
                     menus.add(new KeyValue(
                             CMDMenu.CHANGE_NOI_TAI,
                             s.info.replace("#", String.valueOf(s.max) + "%"),
-                            s.id
-                    ));
+                            s.id));
                 }
                 service.openUIConfirm(NpcName.CON_MEO, "Hãy chọn nội tại bạn mong muốn", getPetAvatar(), menus);
                 break;
@@ -7741,7 +7855,7 @@ public class Player {
                 removeItem(index1, 1);
                 openDoCuoiKHRandom(0);
             }
-            break;
+                break;
             case CMDMenu.OPEN_1_CUOI_NM: {
                 int index1 = getIndexBagById(2302);
                 Item rtl = null;
@@ -7754,7 +7868,7 @@ public class Player {
                 removeItem(index1, 1);
                 openDoCuoiKHRandom(1);
             }
-            break;
+                break;
             case CMDMenu.OPEN_1_CUOI_XD: {
                 int index1 = getIndexBagById(2302);
                 Item rtl = null;
@@ -7819,7 +7933,7 @@ public class Player {
                 removeItem(index1, 1);
                 this.openSetHD(0, false, -1);
             }
-            break;
+                break;
             case CMDMenu.OPEN_SET_HD_NM: {
                 int index1 = getIndexBagById(2300);
                 Item rtl = null;
@@ -7832,7 +7946,7 @@ public class Player {
                 removeItem(index1, 1);
                 this.openSetHD(1, false, -1);
             }
-            break;
+                break;
             case CMDMenu.OPEN_SET_HD_XD: {
                 int index1 = getIndexBagById(2300);
                 Item rtl = null;
@@ -7845,7 +7959,7 @@ public class Player {
                 removeItem(index1, 1);
                 this.openSetHD(2, false, -1);
             }
-            break;
+                break;
             case CMDMenu.OPEN_SET_TL_TD_KH:
                 menus.clear();
                 menus.add(new KeyValue(CMDMenu.OPEN_SET_TL_TD_KH + 1, "Set Thiên Xin Hăng"));
@@ -7883,7 +7997,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetDoCuoi(0, true, Item.THIENXINHANG);
             }
-            break;
+                break;
             case CMDMenu.OPEN_SET_CUOI_TD_KH + 2: {
                 int index1 = getIndexBagById(ItemName.RUONG_DO_CUOI_KICH_HOAT);
                 Item rtl = null;
@@ -7896,7 +8010,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetDoCuoi(0, true, Item.KIRIN);
             }
-            break;
+                break;
             case CMDMenu.OPEN_SET_CUOI_TD_KH + 3: {
                 int index1 = getIndexBagById(ItemName.RUONG_DO_CUOI_KICH_HOAT);
                 Item rtl = null;
@@ -7909,7 +8023,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetDoCuoi(0, true, Item.SONGOKU);
             }
-            break;
+                break;
 
             case CMDMenu.OPEN_SET_CUOI_NM_KH + 1: {
                 int index1 = getIndexBagById(ItemName.RUONG_DO_CUOI_KICH_HOAT);
@@ -7923,7 +8037,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetDoCuoi(1, true, Item.PICOLO);
             }
-            break;
+                break;
             case CMDMenu.OPEN_SET_CUOI_NM_KH + 2: {
                 int index1 = getIndexBagById(ItemName.RUONG_DO_CUOI_KICH_HOAT);
                 Item rtl = null;
@@ -7936,7 +8050,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetDoCuoi(1, true, Item.OCTIEU);
             }
-            break;
+                break;
             case CMDMenu.OPEN_SET_CUOI_NM_KH + 3: {
                 int index1 = getIndexBagById(ItemName.RUONG_DO_CUOI_KICH_HOAT);
                 Item rtl = null;
@@ -7949,7 +8063,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetDoCuoi(1, true, Item.DAIMAO);
             }
-            break;
+                break;
 
             case CMDMenu.OPEN_SET_CUOI_XD_KH + 1: {
                 int index1 = getIndexBagById(ItemName.RUONG_DO_CUOI_KICH_HOAT);
@@ -7963,7 +8077,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetDoCuoi(2, true, Item.NAPPA);
             }
-            break;
+                break;
             case CMDMenu.OPEN_SET_CUOI_XD_KH + 2: {
                 int index1 = getIndexBagById(ItemName.RUONG_DO_CUOI_KICH_HOAT);
                 Item rtl = null;
@@ -7976,7 +8090,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetDoCuoi(2, true, Item.CADIC);
             }
-            break;
+                break;
             case CMDMenu.OPEN_SET_CUOI_XD_KH + 3: {
                 int index1 = getIndexBagById(ItemName.RUONG_DO_CUOI_KICH_HOAT);
                 Item rtl = null;
@@ -7989,7 +8103,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetDoCuoi(2, true, Item.KAKAROT);
             }
-            break;
+                break;
 
             case CMDMenu.OPEN_SET_TL_TD_KH + 1: {
                 int index1 = getIndexBagById(ItemName.RUONG_THAN_LINH_KICH_HOAT);
@@ -8003,7 +8117,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetTL(0, true, Item.THIENXINHANG);
             }
-            break;
+                break;
             case CMDMenu.OPEN_SET_TL_TD_KH + 2: {
                 int index1 = getIndexBagById(ItemName.RUONG_THAN_LINH_KICH_HOAT);
                 Item rtl = null;
@@ -8016,7 +8130,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetTL(0, true, Item.KIRIN);
             }
-            break;
+                break;
             case CMDMenu.OPEN_SET_TL_TD_KH + 3: {
                 int index1 = getIndexBagById(ItemName.RUONG_THAN_LINH_KICH_HOAT);
                 Item rtl = null;
@@ -8029,7 +8143,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetTL(0, true, Item.SONGOKU);
             }
-            break;
+                break;
             case CMDMenu.OPEN_SET_TL_NM_KH + 1: {
                 int index1 = getIndexBagById(ItemName.RUONG_THAN_LINH_KICH_HOAT);
                 Item rtl = null;
@@ -8042,7 +8156,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetTL(1, true, Item.PICOLO);
             }
-            break;
+                break;
             case CMDMenu.OPEN_SET_TL_NM_KH + 2: {
                 int index1 = getIndexBagById(ItemName.RUONG_THAN_LINH_KICH_HOAT);
                 Item rtl = null;
@@ -8055,7 +8169,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetTL(1, true, Item.OCTIEU);
             }
-            break;
+                break;
             case CMDMenu.OPEN_SET_TL_NM_KH + 3: {
                 int index1 = getIndexBagById(ItemName.RUONG_THAN_LINH_KICH_HOAT);
                 Item rtl = null;
@@ -8068,7 +8182,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetTL(1, true, Item.DAIMAO);
             }
-            break;
+                break;
             case CMDMenu.OPEN_SET_TL_XD_KH + 1: {
                 int index1 = getIndexBagById(ItemName.RUONG_THAN_LINH_KICH_HOAT);
                 Item rtl = null;
@@ -8081,7 +8195,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetTL(2, true, Item.NAPPA);
             }
-            break;
+                break;
             case CMDMenu.OPEN_SET_TL_XD_KH + 2: {
                 int index1 = getIndexBagById(ItemName.RUONG_THAN_LINH_KICH_HOAT);
                 Item rtl = null;
@@ -8094,7 +8208,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetTL(2, true, Item.CADIC);
             }
-            break;
+                break;
             case CMDMenu.OPEN_SET_TL_XD_KH + 3: {
                 int index1 = getIndexBagById(ItemName.RUONG_THAN_LINH_KICH_HOAT);
                 Item rtl = null;
@@ -8107,7 +8221,7 @@ public class Player {
                 removeItem(index1, 1);
                 openSetTL(2, true, Item.KAKAROT);
             }
-            break;
+                break;
             case CMDMenu.OPEN_SET_TL_TD:
                 int index1 = getIndexBagById(ItemName.RUONG_THAN_LINH);
                 Item rtl = null;
@@ -8183,11 +8297,13 @@ public class Player {
         Item thitbachi = getItemInBag(ItemName.THIT_BA_CHI);
         Item luahong = getItemInBag(ItemName.LUA_HONG_TET);
         Item hoamai = getItemInBag(ItemName.HOA_MAI_VANG);
-        if ((gaotam == null || labang == null || hatdua == null || luahong == null) || (type == 0 && thitbachi == null) || (type == 1 && hoamai == null)) {
+        if ((gaotam == null || labang == null || hatdua == null || luahong == null) || (type == 0 && thitbachi == null)
+                || (type == 1 && hoamai == null)) {
             this.service.sendThongBao("Không tìm thấy đủ nguyên liệu");
             return;
         }
-        if (gaotam.quantity < 99 || labang.quantity < 99 || hatdua.quantity < 99 || luahong.quantity < 99 || (type == 0 && thitbachi.quantity < 99) || (type == 1 && hoamai.quantity < 99)) {
+        if (gaotam.quantity < 99 || labang.quantity < 99 || hatdua.quantity < 99 || luahong.quantity < 99
+                || (type == 0 && thitbachi.quantity < 99) || (type == 1 && hoamai.quantity < 99)) {
             this.service.sendThongBao("Bạn không đủ nguyên liệu");
             return;
         }
@@ -8222,11 +8338,13 @@ public class Player {
         Item ladong = getItemInBag(ItemName.LA_DONG);
         Item thitheo = getItemInBag(ItemName.THIT_HEO);
         Item luanaubanh = getItemInBag(ItemName.LUA_NAU_BANH);
-        if ((ladong == null || thitheo == null || luanaubanh == null) || (type == 0 && thungnep == null) || (type == 1 && dauxanh == null)) {
+        if ((ladong == null || thitheo == null || luanaubanh == null) || (type == 0 && thungnep == null)
+                || (type == 1 && dauxanh == null)) {
             this.service.sendThongBao("Không tìm thấy đủ nguyên liệu");
             return;
         }
-        if (thungnep.quantity < 99 || ladong.quantity < 99 || thitheo.quantity < 99 || luanaubanh.quantity < 1 || (type == 0 && thungnep.quantity < 99) || (type == 1 && dauxanh.quantity < 99)) {
+        if (thungnep.quantity < 99 || ladong.quantity < 99 || thitheo.quantity < 99 || luanaubanh.quantity < 1
+                || (type == 0 && thungnep.quantity < 99) || (type == 1 && dauxanh.quantity < 99)) {
             this.service.sendThongBao("Nguyên liệu không đủ");
             return;
         }
@@ -8422,7 +8540,8 @@ public class Player {
                 service.dialogMessage("Mã quà tặng không tồn tại hoặc đã hết hạn");
                 return;
             }
-            if (!GameRepository.getInstance().giftCodeHistory.findByGiftCodeIdAndPlayerId(giftCodeData.id, this.id).isEmpty()) {
+            if (!GameRepository.getInstance().giftCodeHistory.findByGiftCodeIdAndPlayerId(giftCodeData.id, this.id)
+                    .isEmpty()) {
                 service.dialogMessage("Mỗi người chỉ được sử dụng 1 lần");
                 return;
             }
@@ -8455,7 +8574,8 @@ public class Player {
                     newItem.addItemOptions(arrOption);
                 }
                 addItem(newItem);
-                sb.append(String.format("- x%s %s", Utils.currencyFormat(newItem.quantity), newItem.template.name)).append("\b");
+                sb.append(String.format("- x%s %s", Utils.currencyFormat(newItem.quantity), newItem.template.name))
+                        .append("\b");
             }
             if (giftCodeData.gold > 0) {
                 addGold(gold);
@@ -8632,7 +8752,8 @@ public class Player {
                             history1.save();
                             history2.save();
                             addItem(item2);
-                            service.sendThongBao("Mua thành công " + item2.template.description + " từ " + _player.name);
+                            service.sendThongBao(
+                                    "Mua thành công " + item2.template.description + " từ " + _player.name);
                         }
                     }
                 }
@@ -8767,6 +8888,7 @@ public class Player {
             logger.error("failed!", ex);
         }
     }
+
     long lastChangeFlag = 0;
 
     public void changeFlag(Message ms) {
@@ -8789,7 +8911,8 @@ public class Player {
                     return;
                 }
                 if (System.currentTimeMillis() - lastChangeFlag <= 60000) {
-                    service.sendThongBao("Chưa thể đổi cờ lúc này,chờ " + (((60000 + lastChangeFlag) - System.currentTimeMillis()) / 1000) + " giây nữa");
+                    service.sendThongBao("Chưa thể đổi cờ lúc này,chờ "
+                            + (((60000 + lastChangeFlag) - System.currentTimeMillis()) / 1000) + " giây nữa");
                     return;
                 }
                 if (flagType >= 0 && flagType < server.flags.size()) {
@@ -8870,18 +8993,18 @@ public class Player {
                     service.sendThongBao("Bạn đã thua vì bỏ chạy");
                 }
             }
-            break;
+                break;
 
             case CMDPk.TRA_THU: {
                 if (type == 3) {
                     service.sendThongBao("Bạn đã bị xử thua");
                 }
             }
-            break;
+                break;
 
             case CMDPk.DAI_HOI_VO_THUAT:
-//                Arena arena = (Arena) zone;
-//                arena.checkResult();
+                // Arena arena = (Arena) zone;
+                // arena.checkResult();
                 break;
         }
         setCommandPK(CMDPk.NORMAL);
@@ -9121,11 +9244,14 @@ public class Player {
                                     }
 
                                     if (item.template.id == ItemName.THOI_VANG) {
-                                        saveHistory(item.quantity, String.format("%s vừa giao dịch %d thỏi vàng cho %s", this.name, item.quantity, trader.name));
+                                        saveHistory(item.quantity, String.format("%s vừa giao dịch %d thỏi vàng cho %s",
+                                                this.name, item.quantity, trader.name));
                                     }
 
                                     if (item.template.id == ItemName.THOI_VANG) {
-                                        saveHistory(-(item.quantity), String.format("%s vừa giao dịch %d thỏi vàng cho %s", this.name, item.quantity, trader.name));
+                                        saveHistory(-(item.quantity),
+                                                String.format("%s vừa giao dịch %d thỏi vàng cho %s", this.name,
+                                                        item.quantity, trader.name));
 
                                     }
                                 }
@@ -9242,8 +9368,10 @@ public class Player {
                         menus.add(new KeyValue(300, "1000 vàng", playerId));
                         menus.add(new KeyValue(301, "10000 vàng", playerId));
                         menus.add(new KeyValue(302, "100000 vàng", playerId));
-                        service.openUIConfirm(NpcName.CON_MEO, String.format("%s (Sức mạnh: %s)\n Bạn muốn cược bao nhiêu vàng?",
-                                _player.name, Utils.formatNumber(_player.info.power)), getPetAvatar(), menus);
+                        service.openUIConfirm(NpcName.CON_MEO,
+                                String.format("%s (Sức mạnh: %s)\n Bạn muốn cược bao nhiêu vàng?",
+                                        _player.name, Utils.formatNumber(_player.info.power)),
+                                getPetAvatar(), menus);
                     }
                     if (action == 1) {
                         if (invite.findCharInvite(Invite.THACH_DAU, playerId) != null) {
@@ -9306,10 +9434,11 @@ public class Player {
 
     public void gotoPlayer(Message ms) {
         try {
-//            if (escortedPerson != null) {
-//                service.sendThongBao(String.format("Bạn đang hộ tống %s, không thể thực hiện.", escortedPerson.name));
-//                return;
-//            }
+            // if (escortedPerson != null) {
+            // service.sendThongBao(String.format("Bạn đang hộ tống %s, không thể thực
+            // hiện.", escortedPerson.name));
+            // return;
+            // }
             int playerID = ms.reader().readInt();
             if (isHaveEquipTeleport) {
                 Player player = SessionManager.findChar(playerID);
@@ -9370,8 +9499,10 @@ public class Player {
                         if (!item.isCantSaleForPlay) {
                             int gem = item.template.buyGem;
                             if (gem > 0) {
-                                if ((item.template.gender < 3 && item.template.gender == this.gender) || item.template.gender >= 3) {
-                                    menus.add(new KeyValue(CMDMenu.MUA_CAI_TRANG, "Cải trang " + gem + " ngọc xanh", _player.id));
+                                if ((item.template.gender < 3 && item.template.gender == this.gender)
+                                        || item.template.gender >= 3) {
+                                    menus.add(new KeyValue(CMDMenu.MUA_CAI_TRANG, "Cải trang " + gem + " ngọc xanh",
+                                            _player.id));
                                 }
                             }
                         }
@@ -9478,7 +9609,7 @@ public class Player {
 
                     if (skill != null) {
                         menus.clear();
-                        menus.add(new KeyValue(600, "Đồng ý x" + quantity, new Object[]{item, quantity}));
+                        menus.add(new KeyValue(600, "Đồng ý x" + quantity, new Object[] { item, quantity }));
                         menus.add(new KeyValue(CMDMenu.CANCEL, "Từ chối"));
                         Npc npc = shop.getNpc();
                         service.openUIConfirm(npc.templateId,
@@ -9489,7 +9620,8 @@ public class Player {
                     }
                 }
             } else if (typeShop == 4) {
-                boolean flagMap = this.zone != null && this.zone.map != null && (this.zone.map.mapID == 45 || this.zone.map.mapID == 21 + this.gender);
+                boolean flagMap = this.zone != null && this.zone.map != null
+                        && (this.zone.map.mapID == 45 || this.zone.map.mapID == 21 + this.gender);
                 if (!flagMap) {
                     return;
                 }
@@ -9508,7 +9640,8 @@ public class Player {
                             }
                             deleteItemBoxCrackBall(itemID);
                         } else {
-                            service.serverMessage2("Hành trang đã đầy, cần 1 ô trống trong hành trang để nhận vật phẩm");
+                            service.serverMessage2(
+                                    "Hành trang đã đầy, cần 1 ô trống trong hành trang để nhận vật phẩm");
                         }
                     }
                     if (type == 1) {// xóa
@@ -9519,7 +9652,9 @@ public class Player {
                             menus.add(new KeyValue(526, "Đồng ý", itemID));
                             menus.add(new KeyValue(527, "Xóa\nkhông cần\nhỏi lại", itemID));
                             menus.add(new KeyValue(CMDMenu.CANCEL, "Từ chối"));
-                            service.openUIConfirm(NpcName.CON_MEO, String.format("Bạn có chắc muốn xóa (mất luôn) vật phẩm %s ?", item.template.name), getPetAvatar(), menus);
+                            service.openUIConfirm(NpcName.CON_MEO,
+                                    String.format("Bạn có chắc muốn xóa (mất luôn) vật phẩm %s ?", item.template.name),
+                                    getPetAvatar(), menus);
                         }
                     }
                     if (type == 2) {// nhận tất
@@ -9528,7 +9663,8 @@ public class Player {
                             if (addItem(itm)) {
                                 list.add(itm);
                                 if (itm.quantity > 1) {
-                                    service.serverMessage2(String.format("Bạn nhận được %d %s", itm.quantity, itm.template.name));
+                                    service.serverMessage2(
+                                            String.format("Bạn nhận được %d %s", itm.quantity, itm.template.name));
                                 } else {
                                     service.serverMessage2(String.format("Bạn nhận được %s", itm.template.name));
                                 }
@@ -9591,13 +9727,13 @@ public class Player {
                 int t = 1;
                 long date = 3600000L;
                 int npc = shop.getNpcId();
-//                if (npc == 2001) {
-//                    t = 4;
-//                    g = 28800000L;
-//                } else if (npc == 2002) {
-//                    t = 100;
-//                    g = 2592000000L;
-//                }
+                // if (npc == 2001) {
+                // t = 4;
+                // g = 28800000L;
+                // } else if (npc == 2002) {
+                // t = 100;
+                // g = 2592000000L;
+                // }
                 buyGold *= t;
                 buyGem *= t;
 
@@ -9685,7 +9821,8 @@ public class Player {
                         return;
                     }
                     if (getGold() < buyGold) {
-                        service.serverMessage2("Bạn không đủ tiền. Còn thiếu " + Utils.formatNumber(buyGold - getGold()));
+                        service.serverMessage2(
+                                "Bạn không đủ tiền. Còn thiếu " + Utils.formatNumber(buyGold - getGold()));
                         return;
                     }
 
@@ -9820,8 +9957,9 @@ public class Player {
                 }
                 // Add HD gear specific options
                 if (item2.isDoHD()) {
-                    int[] optionBonus = new int[]{77, 103, 50};
-                    item2.addItemOption(new ItemOption(optionBonus[Utils.nextInt(optionBonus.length)], Utils.nextInt(1, 5)));
+                    int[] optionBonus = new int[] { 77, 103, 50 };
+                    item2.addItemOption(
+                            new ItemOption(optionBonus[Utils.nextInt(optionBonus.length)], Utils.nextInt(1, 5)));
                     item2.addItemOption(new ItemOption(30, 0));
                 }
 
@@ -9990,17 +10128,17 @@ public class Player {
             String name = item.template.name;
             int quantity = item.quantity;
             long gold = item.template.resalePrice;
-//            if (item.isCantSale || gold == -1) {
-//                service.sendThongBao("Không thể bán vật phẩm này");
-//                return;
-//            }
+            // if (item.isCantSale || gold == -1) {
+            // service.sendThongBao("Không thể bán vật phẩm này");
+            // return;
+            // }
             if (item.id == 457) {
                 menus.clear();
                 menus.add(new KeyValue(20230, "Bán theo số lượng"));
                 menus.add(new KeyValue(CMDMenu.CANCEL, "Từ chối"));
                 service.openUIConfirm(NpcName.CON_MEO, "Bạn có muốn bán nhiều không", getPetAvatar(), menus);
                 return;
-//                quantity = 1;
+                // quantity = 1;
             }
             if (item.id != 457) {
                 gold = 1;
@@ -10015,7 +10153,8 @@ public class Player {
                     ds.writeUTF(String.format("Bạn có muốn bán %dx %s với giá %s vàng?", quantity, name,
                             Utils.currencyFormat(gold)));
                 } else {
-                    ds.writeUTF(String.format("Bạn có muốn bán %s với giá là %s vàng?", name, Utils.currencyFormat(gold)));
+                    ds.writeUTF(
+                            String.format("Bạn có muốn bán %s với giá là %s vàng?", name, Utils.currencyFormat(gold)));
                 }
                 ds.flush();
                 service.sendMessage(mss);
@@ -10142,8 +10281,7 @@ public class Player {
                         element.getClassName(),
                         element.getMethodName(),
                         element.getFileName(),
-                        element.getLineNumber()
-                ));
+                        element.getLineNumber()));
             }
             logContent.append("=====================================\n\n");
 
@@ -10191,7 +10329,8 @@ public class Player {
                 Item item2 = this.itemBag[index];
                 boolean flag = false;
                 for (ItemOption o : item2.options) {
-                    if (o.optionTemplate.id == 1 || o.optionTemplate.id == 31 || o.optionTemplate.id == 11 || o.optionTemplate.id == 12 || o.optionTemplate.id == 13) {
+                    if (o.optionTemplate.id == 1 || o.optionTemplate.id == 31 || o.optionTemplate.id == 11
+                            || o.optionTemplate.id == 12 || o.optionTemplate.id == 13) {
                         for (ItemOption o2 : item.options) {
                             if (o.optionTemplate.id == o2.optionTemplate.id) {
                                 o.param += o2.param;
@@ -10383,7 +10522,8 @@ public class Player {
                             if (itemMap.item.template.id != 568) {
                                 service.sendThongBao("Vật phẩm của người khác");
                             } else {
-                                service.sendThongBao("Vui lòng chờ " + (20 - ((System.currentTimeMillis() - itemMap.throwTime) / 1000)) + "s nữa");
+                                service.sendThongBao("Vui lòng chờ "
+                                        + (20 - ((System.currentTimeMillis() - itemMap.throwTime) / 1000)) + "s nữa");
                             }
 
                             return;
@@ -10392,8 +10532,10 @@ public class Player {
 
                     String text = "";
                     Item item = itemMap.item;
-                    if (item.id == ItemName.NGOC_RONG_1_SAO_DEN || item.id == ItemName.NGOC_RONG_2_SAO_DEN || item.id == ItemName.NGOC_RONG_3_SAO_DEN || item.id == ItemName.NGOC_RONG_4_SAO_DEN
-                            || item.id == ItemName.NGOC_RONG_5_SAO_DEN || item.id == ItemName.NGOC_RONG_6_SAO_DEN || item.id == ItemName.NGOC_RONG_7_SAO_DEN) {
+                    if (item.id == ItemName.NGOC_RONG_1_SAO_DEN || item.id == ItemName.NGOC_RONG_2_SAO_DEN
+                            || item.id == ItemName.NGOC_RONG_3_SAO_DEN || item.id == ItemName.NGOC_RONG_4_SAO_DEN
+                            || item.id == ItemName.NGOC_RONG_5_SAO_DEN || item.id == ItemName.NGOC_RONG_6_SAO_DEN
+                            || item.id == ItemName.NGOC_RONG_7_SAO_DEN) {
                         if (zone.map.isBlackDragonBall()) {
                             MBlackDragonBall m = MapManager.getInstance().blackDragonBall;
                             if (zone.isDoneNRD) {
@@ -10406,7 +10548,8 @@ public class Player {
                                     return;
                                 }
                                 if (itemMap.countDown > 0) {
-                                    service.sendThongBao(String.format("Chưa thể nhặt lúc này, hãy đợi %d giây nữa", itemMap.countDown));
+                                    service.sendThongBao(String.format("Chưa thể nhặt lúc này, hãy đợi %d giây nữa",
+                                            itemMap.countDown));
                                     return;
                                 }
                             }
@@ -10440,10 +10583,14 @@ public class Player {
                     if (item.id == ItemName.DUI_GA && taskMain.id == 2 && taskMain.index == 0) {
                         updateTaskCount(1);
                     }
-                    if (item.id == ItemName.NGOC_RONG_1_SAO_DEN || item.id == ItemName.NGOC_RONG_2_SAO_DEN || item.id == ItemName.NGOC_RONG_3_SAO_DEN || item.id == ItemName.NGOC_RONG_4_SAO_DEN
-                            || item.id == ItemName.NGOC_RONG_5_SAO_DEN || item.id == ItemName.NGOC_RONG_6_SAO_DEN || item.id == ItemName.NGOC_RONG_7_SAO_DEN
-                            || item.id == ItemName.NGOC_RONG_NAMEK_1_SAO || item.id == ItemName.NGOC_RONG_NAMEK_2_SAO || item.id == ItemName.NGOC_RONG_NAMEK_3_SAO || item.id == ItemName.NGOC_RONG_NAMEK_4_SAO
-                            || item.id == ItemName.NGOC_RONG_NAMEK_5_SAO || item.id == ItemName.NGOC_RONG_NAMEK_6_SAO || item.id == ItemName.NGOC_RONG_NAMEK_7_SAO) {
+                    if (item.id == ItemName.NGOC_RONG_1_SAO_DEN || item.id == ItemName.NGOC_RONG_2_SAO_DEN
+                            || item.id == ItemName.NGOC_RONG_3_SAO_DEN || item.id == ItemName.NGOC_RONG_4_SAO_DEN
+                            || item.id == ItemName.NGOC_RONG_5_SAO_DEN || item.id == ItemName.NGOC_RONG_6_SAO_DEN
+                            || item.id == ItemName.NGOC_RONG_7_SAO_DEN
+                            || item.id == ItemName.NGOC_RONG_NAMEK_1_SAO || item.id == ItemName.NGOC_RONG_NAMEK_2_SAO
+                            || item.id == ItemName.NGOC_RONG_NAMEK_3_SAO || item.id == ItemName.NGOC_RONG_NAMEK_4_SAO
+                            || item.id == ItemName.NGOC_RONG_NAMEK_5_SAO || item.id == ItemName.NGOC_RONG_NAMEK_6_SAO
+                            || item.id == ItemName.NGOC_RONG_NAMEK_7_SAO) {
                         if (this.session.user.getActivated() == 0) {
                             service.sendThongBao("Bạn cần kích hoạt thành viên để sử dụng tính năng này");
                             itemMap.isPickedUp = false;
@@ -10524,24 +10671,26 @@ public class Player {
                                                 item.addItemOption(new ItemOption(107, hole));
                                             }
                                         }
-                                        /*if (itemMap.killerIsHuman) {
-                                            boolean isFlag = false;
-                                            int mapID = zone.map.mapID;
-                                            if ((mapID == 1 || mapID == 2 || mapID == 3 || mapID == 8 || mapID == 9
-                                                    || mapID == 11 || mapID == 15 || mapID == 16 || mapID == 17)
-                                                    && zone.zoneID < 10) {
-                                                isFlag = true;
-                                            }
-                                            if (isNewMember && !isFlag) {
-                                                if (Utils.nextInt(100 + (info.level * 30)) == 0) {
-                                                    int index = Utils.nextInt(3);
-                                                    int[] o = Mob.OPTIONS[gender][index];
-                                                    item.addItemOption(new ItemOption(o[0], 0));
-                                                    item.addItemOption(new ItemOption(o[1], 0));
-                                                    item.addItemOption(new ItemOption(30, 0));
-                                                }
-                                            }
-                                        }*/
+                                        /*
+                                         * if (itemMap.killerIsHuman) {
+                                         * boolean isFlag = false;
+                                         * int mapID = zone.map.mapID;
+                                         * if ((mapID == 1 || mapID == 2 || mapID == 3 || mapID == 8 || mapID == 9
+                                         * || mapID == 11 || mapID == 15 || mapID == 16 || mapID == 17)
+                                         * && zone.zoneID < 10) {
+                                         * isFlag = true;
+                                         * }
+                                         * if (isNewMember && !isFlag) {
+                                         * if (Utils.nextInt(100 + (info.level * 30)) == 0) {
+                                         * int index = Utils.nextInt(3);
+                                         * int[] o = Mob.OPTIONS[gender][index];
+                                         * item.addItemOption(new ItemOption(o[0], 0));
+                                         * item.addItemOption(new ItemOption(o[1], 0));
+                                         * item.addItemOption(new ItemOption(30, 0));
+                                         * }
+                                         * }
+                                         * }
+                                         */
                                     }
                                 }
                                 addItem(item);
@@ -10637,11 +10786,11 @@ public class Player {
             }
             itemLoot = null;
             updateBag();
-//            if (getPhuX() > 0) {
-//                setPhuX(0);
-//                info.setInfo();
-//                service.loadPoint();
-//            }
+            // if (getPhuX() > 0) {
+            // setPhuX(0);
+            // info.setInfo();
+            // service.loadPoint();
+            // }
         }
     }
 
@@ -11481,7 +11630,8 @@ public class Player {
                 break;
 
             case ItemName.DUOI_KHI:
-                itemTime = new ItemTime(ItemTimeName.DUOI_KHI, item.template.iconID, (gender == 0 ? (30 * 60) : (2 * 60 * 60)), true);
+                itemTime = new ItemTime(ItemTimeName.DUOI_KHI, item.template.iconID,
+                        (gender == 0 ? (30 * 60) : (2 * 60 * 60)), true);
                 break;
 
             case ItemName.BANH_PUDDING:
@@ -11564,7 +11714,7 @@ public class Player {
                 itemTime = new ItemTime(ItemTimeName.SACH_DAC_BIET[index], item.template.iconID, 10 * 60, true);
                 isUpdate = true;
             }
-            break;
+                break;
         }
         if (itemTime != null) {
             removeItem(item.indexUI, 1);
@@ -11575,12 +11725,12 @@ public class Player {
                     myDisciple.info.setInfo();
                 }
                 info.setInfo();
-//                if (item.id == ItemName.BO_HUYET) {
-//                    info.recovery(Info.HP, 50, true);
-//                }
-//                if (item.id == ItemName.BO_KHI) {
-//                    info.recovery(Info.MP, 50, true);
-//                }
+                // if (item.id == ItemName.BO_HUYET) {
+                // info.recovery(Info.HP, 50, true);
+                // }
+                // if (item.id == ItemName.BO_KHI) {
+                // info.recovery(Info.MP, 50, true);
+                // }
                 service.loadPoint();
                 zone.service.playerLoadBody(this);
             }
@@ -11821,7 +11971,7 @@ public class Player {
                 addItem(itm);
                 service.sendThongBao("Bạn nhận được " + itm.template.name);
             }
-            break;
+                break;
             case 2176:
                 this.SKIPNV(item);
                 break;
@@ -11829,7 +11979,8 @@ public class Player {
                 this.HopQuaTanThu(item);
                 break;
             case ItemName.THOI_VANG:
-                inputDlg = new InputDialog(CMDTextBox.SELL_GOLD_BAR, "Nhập số lượng thỏi vàng muốn dùng", new TextField("Nhập Số lượng , 1 thỏi vàng sẽ được 500tr vàng"));
+                inputDlg = new InputDialog(CMDTextBox.SELL_GOLD_BAR, "Nhập số lượng thỏi vàng muốn dùng",
+                        new TextField("Nhập Số lượng , 1 thỏi vàng sẽ được 500tr vàng"));
                 inputDlg.setService(service);
                 inputDlg.show();
                 break;
@@ -11940,7 +12091,7 @@ public class Player {
                     updateTaskCount(1);
                 }
             }
-            break;
+                break;
             case ItemName.NHO_TIM:
                 info.stamina = info.maxStamina;
                 service.setStamina();
@@ -12109,10 +12260,11 @@ public class Player {
 
             case ItemName.GOI_10_VIEN_CAPSULE:
             case ItemName.VIEN_CAPSULE_DAC_BIET:
-//                if (escortedPerson != null) {
-//                    service.sendThongBao(String.format("Bạn đang hộ tống %s, không thể thực hiện.", escortedPerson.name));
-//                    return;
-//                }
+                // if (escortedPerson != null) {
+                // service.sendThongBao(String.format("Bạn đang hộ tống %s, không thể thực
+                // hiện.", escortedPerson.name));
+                // return;
+                // }
                 if ((itemLoot != null && itemLoot.isDragonBallNamec())) {
                     service.serverMessage("Không thể sử dụng capsule khi đang mang Ngọc Rồng Namek!");
                     return;
@@ -12136,7 +12288,7 @@ public class Player {
                     service.sendThongBao(Language.ME_BAG_FULL);
                     return;
                 }
-                int[] rewardCskb = {ItemName.CUONG_NO, ItemName.BO_HUYET, ItemName.BO_KHI, ItemName.AN_DANH};
+                int[] rewardCskb = { ItemName.CUONG_NO, ItemName.BO_HUYET, ItemName.BO_KHI, ItemName.AN_DANH };
                 Item itm = null;
                 int rd = Utils.nextInt(100);
                 if (rd >= 70) {
@@ -12151,7 +12303,7 @@ public class Player {
                 removeItem(item.indexUI, 1);
                 service.combine((byte) 6, null, item.template.iconID, itm.template.iconID);
             }
-            break;
+                break;
 
             case ItemName.CAPSULE_SQUID_GAME: {
                 if (getSlotNullInBag() == 0) {
@@ -12162,7 +12314,7 @@ public class Player {
                 int itemID = rd.next();
                 Item itm = new Item(itemID);
                 itm.setDefaultOptions();
-                int[] arr = {-1, 7, 7, 7, 7, 15, 15, 15, 30, 30};
+                int[] arr = { -1, 7, 7, 7, 7, 15, 15, 15, 30, 30 };
                 int expire = arr[Utils.nextInt(arr.length)];
                 if (expire != -1) {
                     itm.addItemOption(new ItemOption(93, expire));
@@ -12172,11 +12324,11 @@ public class Player {
                 removeItem(item.indexUI, 1);
                 service.combine((byte) 6, null, item.template.iconID, itm.template.iconID);
             }
-            break;
-//            case ItemName.BUA_DOI_SKILL_DE_TU:
-//                this.myDisciple.changeSkill();
-//                removeItem(item.indexUI, 1);
-//                break;
+                break;
+            // case ItemName.BUA_DOI_SKILL_DE_TU:
+            // this.myDisciple.changeSkill();
+            // removeItem(item.indexUI, 1);
+            // break;
             case ItemName.CAPSULE_THOI_TRANG:
                 if (isBagFull()) {
                     service.sendThongBao(Language.ME_BAG_FULL);
@@ -12225,7 +12377,7 @@ public class Player {
             case ItemName.THAN_CHET_CUTE:
             case ItemName.BI_NGO_NHI_NHANH:
             case ItemName.CUA_DO_1008:
-//            case ItemName.PET_KE_XAM_LANG:
+                // case ItemName.PET_KE_XAM_LANG:
             case ItemName.RONG_HONG:
             case ItemName.RONG_VANG:
                 setMiniDisciple(item);
@@ -12240,142 +12392,155 @@ public class Player {
                 menus.add(new KeyValue(CMDMenu.MON_TLKH_TĐ, "Trái Đất"));
                 menus.add(new KeyValue(CMDMenu.MON_TLKH_XD, "Xayda"));
                 menus.add(new KeyValue(CMDMenu.CANCEL, "Đóng"));
-                service.openUIConfirm(NpcName.CON_MEO, "Bạn sẽ nhận được ngẫu nhiên 1 món Thần Linh Kích Hoạt\nHãy chọn hành tinh bạn muốn ?", getPetAvatar(), menus);
+                service.openUIConfirm(NpcName.CON_MEO,
+                        "Bạn sẽ nhận được ngẫu nhiên 1 món Thần Linh Kích Hoạt\nHãy chọn hành tinh bạn muốn ?",
+                        getPetAvatar(), menus);
                 break;
             case ItemName.BANH_CHUNG:
-//                if (isBagFull()) {
-//                    service.sendThongBao(Language.ME_BAG_FULL);
-//                    return;
-//                }
-//                Item randomItem = null;
-//                int[] items = {ItemName.DUA_XANH, ItemName.DU_DU, ItemName.MANG_CAU, ItemName.XOAI_CHIN, ItemName.TRAI_SUNG,
-//                    ItemName.MAM_TRAI_CAY, ItemName.NGOC_RONG_4_SAO, ItemName.THIEN_LONG_TU_THAN, ItemName.CHIEN_THAN_LUC_QUANG, ItemName.CHIEN_THAN_KIM_HOANG};
-//                int iditem = items[Utils.nextInt(items.length)];
-//                if (iditem == ItemName.NGOC_RONG_4_SAO) {
-//                    int index = Utils.nextInt(0, 3);
-//                    iditem = ItemName.NGOC_RONG_4_SAO + index;
-//                }
-//                randomItem = new Item(iditem);
-//                randomItem.quantity = 1;
-//                randomItem.setDefaultOptions();
-//                if (iditem == ItemName.THIEN_LONG_TU_THAN || iditem == ItemName.CHIEN_THAN_LUC_QUANG || iditem == ItemName.CHIEN_THAN_KIM_HOANG) {
-//                    randomItem.addItemOption(new ItemOption(93, 1));
-//                }
-//                removeItem(item.indexUI, 1);
-//                pointBanhChung += 10;
-//                isChangePoint = true;
-//                addItem(randomItem);
-//                this.service.sendThongBao("Bạn vừa nhận được " + randomItem.template.name);
+                // if (isBagFull()) {
+                // service.sendThongBao(Language.ME_BAG_FULL);
+                // return;
+                // }
+                // Item randomItem = null;
+                // int[] items = {ItemName.DUA_XANH, ItemName.DU_DU, ItemName.MANG_CAU,
+                // ItemName.XOAI_CHIN, ItemName.TRAI_SUNG,
+                // ItemName.MAM_TRAI_CAY, ItemName.NGOC_RONG_4_SAO, ItemName.THIEN_LONG_TU_THAN,
+                // ItemName.CHIEN_THAN_LUC_QUANG, ItemName.CHIEN_THAN_KIM_HOANG};
+                // int iditem = items[Utils.nextInt(items.length)];
+                // if (iditem == ItemName.NGOC_RONG_4_SAO) {
+                // int index = Utils.nextInt(0, 3);
+                // iditem = ItemName.NGOC_RONG_4_SAO + index;
+                // }
+                // randomItem = new Item(iditem);
+                // randomItem.quantity = 1;
+                // randomItem.setDefaultOptions();
+                // if (iditem == ItemName.THIEN_LONG_TU_THAN || iditem ==
+                // ItemName.CHIEN_THAN_LUC_QUANG || iditem == ItemName.CHIEN_THAN_KIM_HOANG) {
+                // randomItem.addItemOption(new ItemOption(93, 1));
+                // }
+                // removeItem(item.indexUI, 1);
+                // pointBanhChung += 10;
+                // isChangePoint = true;
+                // addItem(randomItem);
+                // this.service.sendThongBao("Bạn vừa nhận được " + randomItem.template.name);
                 break;
             case ItemName.BANH_TET:
-//                if (isBagFull()) {
-//                    service.sendThongBao(Language.ME_BAG_FULL);
-//                    return;
-//                }
-//                Item itmRandom = null;
-//                int[] itemsBanhTet = {ItemName.NGOC_RONG_LOC_PHAT_1_SAO, ItemName.NGOC_RONG_LOC_PHAT_2_SAO, ItemName.NGOC_RONG_LOC_PHAT_3_SAO, ItemName.NGOC_RONG_LOC_PHAT_4_SAO,
-//                    ItemName.NGOC_RONG_LOC_PHAT_5_SAO, ItemName.NGOC_RONG_LOC_PHAT_6_SAO, ItemName.NGOC_RONG_LOC_PHAT_7_SAO, ItemName.GOKU_TI_HON, ItemName.MEO_SAO_HOA, ItemName.HO_MAP_VANG_942, ItemName.HO_MAP_XANH_944};
-//                int iditm = itemsBanhTet[Utils.nextInt(itemsBanhTet.length)];
-//                itmRandom = new Item(iditm);
-//                itmRandom.quantity = 1;
-//                itmRandom.setDefaultOptions();
-//                removeItem(item.indexUI, 1);
-//                addItem(itmRandom);
-//                pointBanhChung += 10;
-//                isChangePoint = true;
-//                this.service.sendThongBao("Bạn vừa nhận được " + itmRandom.template.name);
+                // if (isBagFull()) {
+                // service.sendThongBao(Language.ME_BAG_FULL);
+                // return;
+                // }
+                // Item itmRandom = null;
+                // int[] itemsBanhTet = {ItemName.NGOC_RONG_LOC_PHAT_1_SAO,
+                // ItemName.NGOC_RONG_LOC_PHAT_2_SAO, ItemName.NGOC_RONG_LOC_PHAT_3_SAO,
+                // ItemName.NGOC_RONG_LOC_PHAT_4_SAO,
+                // ItemName.NGOC_RONG_LOC_PHAT_5_SAO, ItemName.NGOC_RONG_LOC_PHAT_6_SAO,
+                // ItemName.NGOC_RONG_LOC_PHAT_7_SAO, ItemName.GOKU_TI_HON,
+                // ItemName.MEO_SAO_HOA, ItemName.HO_MAP_VANG_942, ItemName.HO_MAP_XANH_944};
+                // int iditm = itemsBanhTet[Utils.nextInt(itemsBanhTet.length)];
+                // itmRandom = new Item(iditm);
+                // itmRandom.quantity = 1;
+                // itmRandom.setDefaultOptions();
+                // removeItem(item.indexUI, 1);
+                // addItem(itmRandom);
+                // pointBanhChung += 10;
+                // isChangePoint = true;
+                // this.service.sendThongBao("Bạn vừa nhận được " + itmRandom.template.name);
                 break;
             case ItemName.HOP_QUA_XUAN:
-//                if (isBagFull()) {
-//                    service.sendThongBao(Language.ME_BAG_FULL);
-//                    return;
-//                }
-//                Item quaxuan = null;
-//                int[] quaxuans = {ItemName.NGOC_SEN_HONG, ItemName.NGOC_SEN_VANG, ItemName.GOKU_ROSE_TET, ItemName.CUONG_NO_2, ItemName.BO_HUYET_2, ItemName.BO_KHI_2};
-//                int idxuan = quaxuans[Utils.nextInt(quaxuans.length)];
-//                quaxuan = new Item(idxuan);
-//                quaxuan.quantity = 1;
-//                switch (idxuan) {
-//                    case ItemName.NGOC_SEN_HONG:
-//                        quaxuan.isLock = true;
-//                        quaxuan.addItemOption(new ItemOption(50, Utils.nextInt(2, 5)));
-//                        quaxuan.addItemOption(new ItemOption(77, Utils.nextInt(2, 5)));
-//                        quaxuan.addItemOption(new ItemOption(103, Utils.nextInt(2, 5)));
-//                        quaxuan.addItemOption(new ItemOption(5, Utils.nextInt(1, 4)));
-//                        quaxuan.addItemOption(new ItemOption(93, 1));
-//                        break;
-//                    case ItemName.NGOC_SEN_VANG:
-//                        quaxuan.isLock = true;
-//                        quaxuan.addItemOption(new ItemOption(50, Utils.nextInt(2, 5)));
-//                        quaxuan.addItemOption(new ItemOption(77, Utils.nextInt(2, 5)));
-//                        quaxuan.addItemOption(new ItemOption(103, Utils.nextInt(2, 5)));
-//                        quaxuan.addItemOption(new ItemOption(Utils.nextInt(196, 197), Utils.nextInt(1, 4)));
-//                        quaxuan.addItemOption(new ItemOption(93, 1));
-//                        break;
-//                    case ItemName.GOKU_ROSE_TET:
-//                        int rand = Utils.nextInt(0, 2);
-//                        quaxuan.isLock = true;
-//                        quaxuan.addItemOption(new ItemOption(50, 25));
-//                        quaxuan.addItemOption(new ItemOption(77, 25));
-//                        quaxuan.addItemOption(new ItemOption(103, 25));
-//                        quaxuan.addItemOption(new ItemOption(93, Utils.nextInt(1, 3)));
-//                        if (rand == 0) {
-//                            quaxuan.addItemOption(new ItemOption(95, 10));
-//                            quaxuan.addItemOption(new ItemOption(96, 10));
-//                        } else if (rand == 1) {
-//                            quaxuan.addItemOption(new ItemOption(95, 10));
-//                            quaxuan.addItemOption(new ItemOption(96, 10));
-//                            quaxuan.addItemOption(new ItemOption(101, 20));
-//                        } else {
-//                            quaxuan.addItemOption(new ItemOption(94, 10));
-//                        }
-//                        break;
-//                    default:
-//                        break;
-//                }
-//                pointHopQua += 10;
-//                isChangePoint = true;
-//                removeItem(item.indexUI, 1);
-//                addItem(quaxuan);
-//                this.service.sendThongBao("Bạn vừa nhận được " + quaxuan.template.name);
+                // if (isBagFull()) {
+                // service.sendThongBao(Language.ME_BAG_FULL);
+                // return;
+                // }
+                // Item quaxuan = null;
+                // int[] quaxuans = {ItemName.NGOC_SEN_HONG, ItemName.NGOC_SEN_VANG,
+                // ItemName.GOKU_ROSE_TET, ItemName.CUONG_NO_2, ItemName.BO_HUYET_2,
+                // ItemName.BO_KHI_2};
+                // int idxuan = quaxuans[Utils.nextInt(quaxuans.length)];
+                // quaxuan = new Item(idxuan);
+                // quaxuan.quantity = 1;
+                // switch (idxuan) {
+                // case ItemName.NGOC_SEN_HONG:
+                // quaxuan.isLock = true;
+                // quaxuan.addItemOption(new ItemOption(50, Utils.nextInt(2, 5)));
+                // quaxuan.addItemOption(new ItemOption(77, Utils.nextInt(2, 5)));
+                // quaxuan.addItemOption(new ItemOption(103, Utils.nextInt(2, 5)));
+                // quaxuan.addItemOption(new ItemOption(5, Utils.nextInt(1, 4)));
+                // quaxuan.addItemOption(new ItemOption(93, 1));
+                // break;
+                // case ItemName.NGOC_SEN_VANG:
+                // quaxuan.isLock = true;
+                // quaxuan.addItemOption(new ItemOption(50, Utils.nextInt(2, 5)));
+                // quaxuan.addItemOption(new ItemOption(77, Utils.nextInt(2, 5)));
+                // quaxuan.addItemOption(new ItemOption(103, Utils.nextInt(2, 5)));
+                // quaxuan.addItemOption(new ItemOption(Utils.nextInt(196, 197),
+                // Utils.nextInt(1, 4)));
+                // quaxuan.addItemOption(new ItemOption(93, 1));
+                // break;
+                // case ItemName.GOKU_ROSE_TET:
+                // int rand = Utils.nextInt(0, 2);
+                // quaxuan.isLock = true;
+                // quaxuan.addItemOption(new ItemOption(50, 25));
+                // quaxuan.addItemOption(new ItemOption(77, 25));
+                // quaxuan.addItemOption(new ItemOption(103, 25));
+                // quaxuan.addItemOption(new ItemOption(93, Utils.nextInt(1, 3)));
+                // if (rand == 0) {
+                // quaxuan.addItemOption(new ItemOption(95, 10));
+                // quaxuan.addItemOption(new ItemOption(96, 10));
+                // } else if (rand == 1) {
+                // quaxuan.addItemOption(new ItemOption(95, 10));
+                // quaxuan.addItemOption(new ItemOption(96, 10));
+                // quaxuan.addItemOption(new ItemOption(101, 20));
+                // } else {
+                // quaxuan.addItemOption(new ItemOption(94, 10));
+                // }
+                // break;
+                // default:
+                // break;
+                // }
+                // pointHopQua += 10;
+                // isChangePoint = true;
+                // removeItem(item.indexUI, 1);
+                // addItem(quaxuan);
+                // this.service.sendThongBao("Bạn vừa nhận được " + quaxuan.template.name);
                 break;
             case ItemName.HOP_QUA_TET_AN_KHANG:
-//                if (isBagFull()) {
-//                    service.sendThongBao(Language.ME_BAG_FULL);
-//                    return;
-//                }
-//
-//                Item quatet = null;
-//                int[] quatets = {ItemName.NGOC_THAN_LONG, ItemName.NGOC_THAN_CONG, ItemName.NUOC_TANG_CUONG, ItemName.CA_NOI_GIAN, ItemName.HAT_DAU_VANG};
-//                int idtet = quatets[Utils.nextInt(quatets.length)];
-//                quatet = new Item(idtet);
-//                quatet.quantity = 1;
-//                quatet.setDefaultOptions();
-//                if (idtet == ItemName.NGOC_THAN_CONG) {
-//                    quatet.isLock = true;
-//                    int rd = Utils.nextInt(100);
-//                    quatet.addItemOption(new ItemOption(50, Utils.nextInt(1, 4)));
-//                    quatet.addItemOption(new ItemOption(77, Utils.nextInt(1, 4)));
-//                    quatet.addItemOption(new ItemOption(103, Utils.nextInt(1, 4)));
-//                    if (rd < 95) {
-//                        quatet.addItemOption(new ItemOption(93, Utils.nextInt(1, 5)));
-//                    }
-//                }
-//                if (idtet == ItemName.NGOC_THAN_LONG) {
-//                    quatet.isLock = true;
-//                    int rd = Utils.nextInt(100);
-//                    quatet.addItemOption(new ItemOption(50, Utils.nextInt(2, 6)));
-//                    quatet.addItemOption(new ItemOption(77, Utils.nextInt(2, 6)));
-//                    quatet.addItemOption(new ItemOption(103, Utils.nextInt(2, 6)));
-//                    if (rd < 95) {
-//                        quatet.addItemOption(new ItemOption(93, Utils.nextInt(1, 5)));
-//                    }
-//                }
-//                pointHopQua += 10;
-//                isChangePoint = true;
-//                removeItem(item.indexUI, 1);
-//                addItem(quatet);
-//                this.service.sendThongBao("Bạn vừa nhận được " + quatet.template.name);
+                // if (isBagFull()) {
+                // service.sendThongBao(Language.ME_BAG_FULL);
+                // return;
+                // }
+                //
+                // Item quatet = null;
+                // int[] quatets = {ItemName.NGOC_THAN_LONG, ItemName.NGOC_THAN_CONG,
+                // ItemName.NUOC_TANG_CUONG, ItemName.CA_NOI_GIAN, ItemName.HAT_DAU_VANG};
+                // int idtet = quatets[Utils.nextInt(quatets.length)];
+                // quatet = new Item(idtet);
+                // quatet.quantity = 1;
+                // quatet.setDefaultOptions();
+                // if (idtet == ItemName.NGOC_THAN_CONG) {
+                // quatet.isLock = true;
+                // int rd = Utils.nextInt(100);
+                // quatet.addItemOption(new ItemOption(50, Utils.nextInt(1, 4)));
+                // quatet.addItemOption(new ItemOption(77, Utils.nextInt(1, 4)));
+                // quatet.addItemOption(new ItemOption(103, Utils.nextInt(1, 4)));
+                // if (rd < 95) {
+                // quatet.addItemOption(new ItemOption(93, Utils.nextInt(1, 5)));
+                // }
+                // }
+                // if (idtet == ItemName.NGOC_THAN_LONG) {
+                // quatet.isLock = true;
+                // int rd = Utils.nextInt(100);
+                // quatet.addItemOption(new ItemOption(50, Utils.nextInt(2, 6)));
+                // quatet.addItemOption(new ItemOption(77, Utils.nextInt(2, 6)));
+                // quatet.addItemOption(new ItemOption(103, Utils.nextInt(2, 6)));
+                // if (rd < 95) {
+                // quatet.addItemOption(new ItemOption(93, Utils.nextInt(1, 5)));
+                // }
+                // }
+                // pointHopQua += 10;
+                // isChangePoint = true;
+                // removeItem(item.indexUI, 1);
+                // addItem(quatet);
+                // this.service.sendThongBao("Bạn vừa nhận được " + quatet.template.name);
                 break;
             case ItemName.RUONG_GO: {
                 MartialCongress martialCongress = MapManager.getInstance().martialCongress;
@@ -12400,10 +12565,10 @@ public class Player {
                     }
                 }
                 martialCongress.savePlayerOpenRuongGoDHVT23(this.id);
-//                if (!isOpen) {
-//                    service.serverMessage("Bạn chỉ có thể mở sau thời gian bảo trì");
-//                    return;
-//                }
+                // if (!isOpen) {
+                // service.serverMessage("Bạn chỉ có thể mở sau thời gian bảo trì");
+                // return;
+                // }
                 menus.clear();
                 Item it;
                 StringBuilder sbnew = new StringBuilder();
@@ -12427,7 +12592,7 @@ public class Player {
                         menus.add(new KeyValue(CMDMenu.CANCEL, "OK"));
                         service.openUIConfirm(NpcName.CON_MEO, String.valueOf(sbnew), getPetAvatar(), menus);
                     }
-                    break;
+                        break;
                     case 2: {
                         int itemId = RandomItem.DA_NANG_CAP.next();
                         it = new Item(itemId);
@@ -12444,7 +12609,7 @@ public class Player {
                         sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
 
                     }
-                    break;
+                        break;
                     case 3: {
                         int itemId = RandomItem.DA_NANG_CAP.next();
                         it = new Item(itemId);
@@ -12468,7 +12633,7 @@ public class Player {
                         sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
 
                     }
-                    break;
+                        break;
                     case 4: {
                         int itemId = RandomItem.DA_NANG_CAP.next();
                         it = new Item(itemId);
@@ -12499,7 +12664,7 @@ public class Player {
                         sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
 
                     }
-                    break;
+                        break;
                     case 5: {
                         int itemId = RandomItem.DA_NANG_CAP.next();
                         it = new Item(itemId);
@@ -12537,7 +12702,7 @@ public class Player {
                         sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
 
                     }
-                    break;
+                        break;
                     case 6: {
                         int itemId = RandomItem.DA_NANG_CAP.next();
                         it = new Item(itemId);
@@ -12574,7 +12739,7 @@ public class Player {
                         addItem(it);
                         sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
                     }
-                    break;
+                        break;
                     case 7: {
                         int itemId = RandomItem.DA_NANG_CAP.next();
                         it = new Item(itemId);
@@ -12611,7 +12776,7 @@ public class Player {
                         addItem(it);
                         sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
                     }
-                    break;
+                        break;
                     case 8: {
                         int itemId = RandomItem.DA_NANG_CAP.next();
                         it = new Item(itemId);
@@ -12656,7 +12821,7 @@ public class Player {
                         addItem(it);
                         sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
                     }
-                    break;
+                        break;
                     case 9: {
 
                         int itemId = RandomItem.DA_NANG_CAP.next();
@@ -12695,7 +12860,7 @@ public class Player {
                         addItem(it);
                         sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
                     }
-                    break;
+                        break;
                     case 10: {
 
                         int itemId = RandomItem.DA_NANG_CAP.next();
@@ -12742,7 +12907,7 @@ public class Player {
                         addItem(it);
                         sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
                     }
-                    break;
+                        break;
                     case 11: {
 
                         int itemId = RandomItem.ITEM_CAP_2.next();
@@ -12789,7 +12954,7 @@ public class Player {
                         addItem(it);
                         sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
                     }
-                    break;
+                        break;
                     case 12: {
 
                         int itemId = RandomItem.ITEM_CAP_2.next();
@@ -12850,7 +13015,7 @@ public class Player {
                         addItem(it);
                         sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
                     }
-                    break;
+                        break;
                     case 13: {
                         int itemId = RandomItem.ITEM_CAP_2.next();
                         it = new Item(itemId);
@@ -12924,7 +13089,7 @@ public class Player {
                         addItem(it);
                         sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
                     }
-                    break;
+                        break;
                     default:
                         service.serverMessage("Có lỗi xảy ra");
                         return;
@@ -12933,7 +13098,7 @@ public class Player {
                 service.openUIConfirm(NpcName.CON_MEO, String.valueOf(sbnew), getPetAvatar(), menus);
                 removeItem(item.indexUI, 1);
             }
-            break;
+                break;
             case ItemName.NGOC_RONG_THIEN_MENH_1_SAO:
                 int indexThienMenh1s = getIndexBagById(ItemName.NGOC_RONG_THIEN_MENH_1_SAO);
                 int indexThienMenh2s = getIndexBagById(ItemName.NGOC_RONG_THIEN_MENH_2_SAO);
@@ -12942,7 +13107,8 @@ public class Player {
                 int indexThienMenh5s = getIndexBagById(ItemName.NGOC_RONG_THIEN_MENH_5_SAO);
                 int indexThienMenh6s = getIndexBagById(ItemName.NGOC_RONG_THIEN_MENH_6_SAO);
                 int indexThienMenh7s = getIndexBagById(ItemName.NGOC_RONG_THIEN_MENH_7_SAO);
-                if (indexThienMenh1s == -1 || indexThienMenh2s == -1 || indexThienMenh3s == -1 || indexThienMenh4s == -1 || indexThienMenh5s == -1
+                if (indexThienMenh1s == -1 || indexThienMenh2s == -1 || indexThienMenh3s == -1 || indexThienMenh4s == -1
+                        || indexThienMenh5s == -1
                         || indexThienMenh6s == -1 || indexThienMenh7s == -1) {
                     this.service.sendThongBao("Thu thập đủ 7 viên ngọc rồng Thiên Mệnh để thực hiện điều ước");
                     return;
@@ -12955,7 +13121,9 @@ public class Player {
                 menus.add(new KeyValue(CMDMenu.UOC_RONG_THIEN_MENH_5, "Tăng\n10% HP,KI,SĐ\nĐệ Tử"));
                 menus.add(new KeyValue(CMDMenu.UOC_RONG_THIEN_MENH_6, "x1 Mảnh Đội Trưởng Vàng"));
                 menus.add(new KeyValue(CMDMenu.CANCEL, "Đóng"));
-                service.openUIConfirm(NpcName.CON_MEO, "Hãy chọn điều ước bạn mong muốn\nMỗi điều ước sẽ có tác dụng trong 20 phút", getPetAvatar(), menus);
+                service.openUIConfirm(NpcName.CON_MEO,
+                        "Hãy chọn điều ước bạn mong muốn\nMỗi điều ước sẽ có tác dụng trong 20 phút", getPetAvatar(),
+                        menus);
                 break;
             case ItemName.NGOC_RONG_LOC_PHAT_1_SAO:
                 int indexLocPhat1s = getIndexBagById(ItemName.NGOC_RONG_LOC_PHAT_1_SAO);
@@ -12965,7 +13133,8 @@ public class Player {
                 int indexLocPhat5s = getIndexBagById(ItemName.NGOC_RONG_LOC_PHAT_5_SAO);
                 int indexLocPhat6s = getIndexBagById(ItemName.NGOC_RONG_LOC_PHAT_6_SAO);
                 int indexLocPhat7s = getIndexBagById(ItemName.NGOC_RONG_LOC_PHAT_7_SAO);
-                if (indexLocPhat1s == -1 || indexLocPhat2s == -1 || indexLocPhat3s == -1 || indexLocPhat4s == -1 || indexLocPhat5s == -1
+                if (indexLocPhat1s == -1 || indexLocPhat2s == -1 || indexLocPhat3s == -1 || indexLocPhat4s == -1
+                        || indexLocPhat5s == -1
                         || indexLocPhat6s == -1 || indexLocPhat7s == -1) {
                     this.service.sendThongBao("Thu thập đủ 7 viên ngọc rồng Lộc Phát để thực hiện điều ước");
                     return;
@@ -12978,7 +13147,9 @@ public class Player {
                 menus.add(new KeyValue(CMDMenu.UOC_RONG_LOC_PHAT_5, "Đổi Kỹ\nNăng 2\nĐệ tử"));
                 menus.add(new KeyValue(CMDMenu.UOC_RONG_LOC_PHAT_6, "Đổi Max\nnội tại\ntùy chọn"));
                 menus.add(new KeyValue(CMDMenu.UOC_RONG_LOC_PHAT_7, "Tăng\n5% HP,KI,SĐ\nĐệ tử"));
-                service.openUIConfirm(NpcName.CON_MEO, "Hãy chọn điều ước bạn mong muốn\nMỗi điều ước sẽ có tác dụng trong 10 phút", getPetAvatar(), menus);
+                service.openUIConfirm(NpcName.CON_MEO,
+                        "Hãy chọn điều ước bạn mong muốn\nMỗi điều ước sẽ có tác dụng trong 10 phút", getPetAvatar(),
+                        menus);
                 break;
             case 1994:
                 List<SpecialSkillTemplate> list = SpecialSkill.getListSpecialSkill(this.gender);
@@ -12987,8 +13158,7 @@ public class Player {
                     menus.add(new KeyValue(
                             CMDMenu.CHANGE_NOI_TAI,
                             s.info.replace("#", String.valueOf(s.max) + "%"),
-                            s.id
-                    ));
+                            s.id));
                 }
                 service.openUIConfirm(NpcName.CON_MEO, "Hãy chọn nội tại bạn mong muốn", getPetAvatar(), menus);
                 break;
@@ -13032,62 +13202,66 @@ public class Player {
                 break;
 
             case ItemName.PHAO_TET:
-//                if (isBagFull()) {
-//                    service.sendThongBao(Language.ME_BAG_FULL);
-//                    return;
-//                }
-//                if (this.zone.map.mapID != 175) {
-//                    service.sendThongBao("Bạn phải ở trong map Quảng Trường Pháo Hoa");
-//                    return;
-//                }
-//                Item itphaohoa = null;
-//                int[] itphoahoas = {ItemName.QUA_HONG_DAO, ItemName.CAI_TRANG_CADIC, ItemName.CAI_TRANG_GOHAN, ItemName.CAI_TRANG_POCOLO, ItemName.DANH_HIEU_BE_NGOAN,
-//                    ItemName.DANH_HIEU_PHONG_BA, ItemName.CUONG_NO_2, ItemName.BO_HUYET_2, ItemName.BO_KHI_2};
-//                int itid = itphoahoas[Utils.nextInt(itphoahoas.length)];
-//                itphaohoa = new Item(itid);
-//                itphaohoa.quantity = 1;
-//                itphaohoa.setDefaultOptions();
-//                switch (itid) {
-//                    case ItemName.CAI_TRANG_CADIC:
-//                    case ItemName.CAI_TRANG_GOHAN:
-//                    case ItemName.CAI_TRANG_POCOLO:
-//                        itphaohoa.addItemOption(new ItemOption(116, 1));
-//                        itphaohoa.addItemOption(new ItemOption(93, 1));
-//                        break;
-//                    case ItemName.DANH_HIEU_BE_NGOAN:
-//                        itphaohoa.addItemOption(new ItemOption(50, 4));
-//                        itphaohoa.addItemOption(new ItemOption(77, 4));
-//                        itphaohoa.addItemOption(new ItemOption(103, 4));
-//                        itphaohoa.addItemOption(new ItemOption(101, 15));
-//                        itphaohoa.addItemOption(new ItemOption(93, Utils.nextInt(1, 5)));
-//                        break;
-//                    case ItemName.DANH_HIEU_PHONG_BA:
-//                        itphaohoa.addItemOption(new ItemOption(50, 5));
-//                        itphaohoa.addItemOption(new ItemOption(77, 5));
-//                        itphaohoa.addItemOption(new ItemOption(103, 5));
-//                        itphaohoa.addItemOption(new ItemOption(93, Utils.nextInt(1, 5)));
-//                        break;
-//                }
-//                this.service.phaohoaZone();
-//                removeItem(item.indexUI, 1);
-//                SessionManager.countPhaoHoa++;
-//                addItem(itphaohoa);
-//                pointPhaoHoa += 10;
-//                isChangePoint = true;
-//                this.service.sendThongBao("Bạn vừa nhận được " + itphaohoa.template.name);
-//                if (SessionManager.countPhaoHoa % 20 == 0) {
-//                    SessionManager.addBigMessage(String.format(
-//                            "Pháo tết đang được nổ tại map Quảng Trường Pháo Hoa \n"
-//                            + "Số lượng pháo hiện tại là : %d \n, sẽ nổ sau 100 quả"
-//                            + "Hãy nhanh chân tới khu vực nổ pháo để có thể nhận được các phần quà hấp dẫn nhé !!!!!",
-//                            SessionManager.countPhaoHoa));
-//                    sendChatGlobalFromAdmin();
-//                }
-//                if (SessionManager.countPhaoHoa >= 100) {
-//                    dropThoiVang();
-//                    this.service.phaohoaFull();
-//                    SessionManager.countPhaoHoa = 0;
-//                }
+                // if (isBagFull()) {
+                // service.sendThongBao(Language.ME_BAG_FULL);
+                // return;
+                // }
+                // if (this.zone.map.mapID != 175) {
+                // service.sendThongBao("Bạn phải ở trong map Quảng Trường Pháo Hoa");
+                // return;
+                // }
+                // Item itphaohoa = null;
+                // int[] itphoahoas = {ItemName.QUA_HONG_DAO, ItemName.CAI_TRANG_CADIC,
+                // ItemName.CAI_TRANG_GOHAN, ItemName.CAI_TRANG_POCOLO,
+                // ItemName.DANH_HIEU_BE_NGOAN,
+                // ItemName.DANH_HIEU_PHONG_BA, ItemName.CUONG_NO_2, ItemName.BO_HUYET_2,
+                // ItemName.BO_KHI_2};
+                // int itid = itphoahoas[Utils.nextInt(itphoahoas.length)];
+                // itphaohoa = new Item(itid);
+                // itphaohoa.quantity = 1;
+                // itphaohoa.setDefaultOptions();
+                // switch (itid) {
+                // case ItemName.CAI_TRANG_CADIC:
+                // case ItemName.CAI_TRANG_GOHAN:
+                // case ItemName.CAI_TRANG_POCOLO:
+                // itphaohoa.addItemOption(new ItemOption(116, 1));
+                // itphaohoa.addItemOption(new ItemOption(93, 1));
+                // break;
+                // case ItemName.DANH_HIEU_BE_NGOAN:
+                // itphaohoa.addItemOption(new ItemOption(50, 4));
+                // itphaohoa.addItemOption(new ItemOption(77, 4));
+                // itphaohoa.addItemOption(new ItemOption(103, 4));
+                // itphaohoa.addItemOption(new ItemOption(101, 15));
+                // itphaohoa.addItemOption(new ItemOption(93, Utils.nextInt(1, 5)));
+                // break;
+                // case ItemName.DANH_HIEU_PHONG_BA:
+                // itphaohoa.addItemOption(new ItemOption(50, 5));
+                // itphaohoa.addItemOption(new ItemOption(77, 5));
+                // itphaohoa.addItemOption(new ItemOption(103, 5));
+                // itphaohoa.addItemOption(new ItemOption(93, Utils.nextInt(1, 5)));
+                // break;
+                // }
+                // this.service.phaohoaZone();
+                // removeItem(item.indexUI, 1);
+                // SessionManager.countPhaoHoa++;
+                // addItem(itphaohoa);
+                // pointPhaoHoa += 10;
+                // isChangePoint = true;
+                // this.service.sendThongBao("Bạn vừa nhận được " + itphaohoa.template.name);
+                // if (SessionManager.countPhaoHoa % 20 == 0) {
+                // SessionManager.addBigMessage(String.format(
+                // "Pháo tết đang được nổ tại map Quảng Trường Pháo Hoa \n"
+                // + "Số lượng pháo hiện tại là : %d \n, sẽ nổ sau 100 quả"
+                // + "Hãy nhanh chân tới khu vực nổ pháo để có thể nhận được các phần quà hấp
+                // dẫn nhé !!!!!",
+                // SessionManager.countPhaoHoa));
+                // sendChatGlobalFromAdmin();
+                // }
+                // if (SessionManager.countPhaoHoa >= 100) {
+                // dropThoiVang();
+                // this.service.phaohoaFull();
+                // SessionManager.countPhaoHoa = 0;
+                // }
                 break;
         }
     }
@@ -13146,10 +13320,11 @@ public class Player {
     }
 
     public void mapTransport(Message ms) {
-//        if (escortedPerson != null) {
-//            service.sendThongBao(String.format("Bạn đang hộ tống %s, không thể thực hiện.", escortedPerson.name));
-//            return;
-//        }
+        // if (escortedPerson != null) {
+        // service.sendThongBao(String.format("Bạn đang hộ tống %s, không thể thực
+        // hiện.", escortedPerson.name));
+        // return;
+        // }
         if (listMapTransport == null) {
             return;
         }
@@ -13419,7 +13594,8 @@ public class Player {
 
                     if ((itemLoot != null && itemLoot.isDragonBallNamec()) && timeWaitWithDragonBallNamec < 60) {
                         service.addBigMessage(getPetAvatar(), String
-                                .format("Chưa thể chuyển khu vực lúc này vui lòng chờ %d giây nữa", 60 - timeWaitWithDragonBallNamec),
+                                .format("Chưa thể chuyển khu vực lúc này vui lòng chờ %d giây nữa",
+                                        60 - timeWaitWithDragonBallNamec),
                                 (byte) 0, null, null);
                         return;
                     }
@@ -13431,13 +13607,15 @@ public class Player {
                     }
                     if (!z.getBossInZone().isEmpty()) {
                         if (this.session.user.getActivated() == 0) {
-                            service.addBigMessage(getPetAvatar(), "Khu vực có BOSS , cần kích hoạt tài khoản để vào khu này",
+                            service.addBigMessage(getPetAvatar(),
+                                    "Khu vực có BOSS , cần kích hoạt tài khoản để vào khu này",
                                     (byte) 0, null, null);
                             return;
                         }
                     }
                     if (!MainUpdate.CanEnterZoneSupportMisson(this, z)) {
-                        service.addBigMessage(getPetAvatar(), "Khu vực có BOSS và đang trong khung giờ hổ trợ (17h00-19h59) , bạn không thể vào lúc này",
+                        service.addBigMessage(getPetAvatar(),
+                                "Khu vực có BOSS và đang trong khung giờ hổ trợ (17h00-19h59) , bạn không thể vào lúc này",
                                 (byte) 0, null, null);
                         return;
                     }
@@ -13538,13 +13716,13 @@ public class Player {
                                 this.hold.close();
                             }
                             zone.attackNpc(this, mob, false);
-//                            if (tempId == 70) {
-//                                zone.service.attackHiduregarn(mob);
-//                                if (mob.hp <= 0) {
-//                                    delete(mob);
-//                                    service.setMapInfo();
-//                                }
-//                            }
+                            // if (tempId == 70) {
+                            // zone.service.attackHiduregarn(mob);
+                            // if (mob.hp <= 0) {
+                            // delete(mob);
+                            // service.setMapInfo();
+                            // }
+                            // }
 
                         }
                     }
@@ -13579,12 +13757,12 @@ public class Player {
     }
 
     public void finishLoadMap() {
-        //if (activated) {
+        // if (activated) {
         if (taskMain != null && taskMain.id == 4 && taskMain.index == 0) {
             taskNext();
         }
 
-        //}
+        // }
         int mapID = -1;
 
         if (zone != null) {
@@ -13592,7 +13770,7 @@ public class Player {
         }
 
         if (mapID == 39 || mapID == 40 || mapID == 41) {
-            String petName = new String[]{"Puaru", "Piano", "Icarus"}[gender];
+            String petName = new String[] { "Puaru", "Piano", "Icarus" }[gender];
             service.openUISay((short) NpcName.CON_MEO, String.format(
                     "Chào mừng bạn đến với thế giới Ngọc Rồng!\nMình là %s sẽ đồng hành cùng bạn ở thế giới này\nĐể di chuyển, hãy chạm 1 lần vào nơi muốn đến",
                     petName), (short) getPetAvatar());
@@ -13615,7 +13793,7 @@ public class Player {
                 }
             }
             if (task.id == 11 && task.index == 0) {
-                int map = (new int[]{5, 13, 20})[gender];
+                int map = (new int[] { 5, 13, 20 })[gender];
                 if (mapID == map) {
                     taskNext();
                 }
@@ -13778,7 +13956,8 @@ public class Player {
                     return;
                 }
                 Player _player = zone.findCharByID(id);
-                if (_player != null && _player != this && (isMeCanAttackOtherPlayer(_player) || this.select.template.id == SkillName.TRI_THUONG)) {
+                if (_player != null && _player != this
+                        && (isMeCanAttackOtherPlayer(_player) || this.select.template.id == SkillName.TRI_THUONG)) {
                     if (this.hold != null) {
                         this.hold.close();
                     }
@@ -13865,7 +14044,7 @@ public class Player {
     }
 
     public void updateEveryOneSeconds() {
-        //auto update nv
+        // auto update nv
         try {
             if (taskMain != null) {
                 if (taskMain.id == 7 && taskMain.index == 0) {
@@ -13938,12 +14117,12 @@ public class Player {
             }
             if (!isDead) {
                 if (isHuman()) {
-//                    if (zone != null && zone.map.checkBlock(this.x, this.y)) {
-//                        info.recovery(Info.ALL, -10, true);
-//                        if (info.hp <= 0) {
-//                            startDie();
-//                        }
-//                    }
+                    // if (zone != null && zone.map.checkBlock(this.x, this.y)) {
+                    // info.recovery(Info.ALL, -10, true);
+                    // if (info.hp <= 0) {
+                    // startDie();
+                    // }
+                    // }
                 }
                 if (info.options[162] > 0) {
                     List<Player> list = zone.getListChar(Zone.TYPE_HUMAN, Zone.TYPE_PET);
@@ -14191,8 +14370,8 @@ public class Player {
                     }
                     List<Player> list = zone.getListChar(Zone.TYPE_HUMAN, Zone.TYPE_PET);
                     if (list.size() > 1) {
-                        String[] chats2 = {"Tránh ra đi Xinbatô ơi", "Phân tâm quá", "Nực quá", "Bực bội quá",
-                            "Im đi ông Xinbatô ơi"};
+                        String[] chats2 = { "Tránh ra đi Xinbatô ơi", "Phân tâm quá", "Nực quá", "Bực bội quá",
+                                "Im đi ông Xinbatô ơi" };
                         if (info.options[8] > 0) {
                             info.recovery(Info.ALL, info.options[8], true);
                         }
@@ -14316,11 +14495,11 @@ public class Player {
                                 }
                                 if (isHaveEquipTransformIntoStone) {
                                     int time = 5;
-//                                    if (this instanceof Drabura) {
-//                                        time = 20;
-//                                        _c.info.recovery(Info.HP, -_c.info.hp / 2);
-//                                        _c.info.recovery(Info.MP, -_c.info.mp / 2);
-//                                    }
+                                    // if (this instanceof Drabura) {
+                                    // time = 20;
+                                    // _c.info.recovery(Info.HP, -_c.info.hp / 2);
+                                    // _c.info.recovery(Info.MP, -_c.info.mp / 2);
+                                    // }
                                     _c.transformIntoStone(time);
                                 }
                             }
@@ -14334,6 +14513,7 @@ public class Player {
             logger.error("updateEveryThirtySeconds error", e);
         }
     }
+
     int tick = 0;
 
     public void updateEveryOneMinutes() {
@@ -14560,8 +14740,8 @@ public class Player {
     public void updateEveryTenSeconds() {
         try {
             if (!isDead) {
-                String[] chats = {"Thúi quá", "Biến đi", "Mùi gì hôi quá", "Hôi quá, tránh xa ta ra",
-                    "Trời ơi, đồ ở dơ"};
+                String[] chats = { "Thúi quá", "Biến đi", "Mùi gì hôi quá", "Hôi quá, tránh xa ta ra",
+                        "Trời ơi, đồ ở dơ" };
                 if (info.options[109] > 0) {
                     List<Player> list = zone.getListChar(Zone.TYPE_HUMAN, Zone.TYPE_PET);
                     if (list.size() > 1) {
@@ -14671,7 +14851,8 @@ public class Player {
                                 case ItemTimeName.KHIEN_NANG_LUONG:
                                     this.isProtected = false;
                                     if (zone != null) {
-                                        zone.service.setEffect(null, this.id, Skill.REMOVE_EFFECT, Skill.CHARACTER, (byte) 33);
+                                        zone.service.setEffect(null, this.id, Skill.REMOVE_EFFECT, Skill.CHARACTER,
+                                                (byte) 33);
                                     }
                                     break;
 
@@ -14694,14 +14875,16 @@ public class Player {
                                 case ItemTimeName.THOI_MIEN:
                                     this.isSleep = false;
                                     if (zone != null) {
-                                        zone.service.setEffect(null, this.id, Skill.REMOVE_EFFECT, Skill.CHARACTER, (byte) 41);
+                                        zone.service.setEffect(null, this.id, Skill.REMOVE_EFFECT, Skill.CHARACTER,
+                                                (byte) 41);
                                     }
                                     break;
 
                                 case ItemTimeName.DICH_CHUYEN_TUC_THOI:
                                     this.isBlind = false;
                                     if (zone != null) {
-                                        zone.service.setEffect(null, this.id, Skill.REMOVE_EFFECT, Skill.CHARACTER, (byte) 40);
+                                        zone.service.setEffect(null, this.id, Skill.REMOVE_EFFECT, Skill.CHARACTER,
+                                                (byte) 40);
                                     }
                                     break;
 
@@ -15295,7 +15478,8 @@ public class Player {
                         fusion((byte) 4);
                     } else {
                         long timeAgo = 600000 - (now - timeAtSplitFusion);
-                        service.sendThongBao(String.format("Chỉ có thể thực hiện sau %s", Utils.timeAgo((int) (timeAgo / 1000))));
+                        service.sendThongBao(
+                                String.format("Chỉ có thể thực hiện sau %s", Utils.timeAgo((int) (timeAgo / 1000))));
                     }
                     break;
 
@@ -15590,7 +15774,8 @@ public class Player {
                             }
                         } else {
                             _player.addItem(item);
-                            _player.service.sendThongBao(String.format("Bạn nhận được %s từ %s", item.template.name, name));
+                            _player.service
+                                    .sendThongBao(String.format("Bạn nhận được %s từ %s", item.template.name, name));
                         }
                         removeItemBox(index, 1);
                         message.receive++;
@@ -15653,7 +15838,8 @@ public class Player {
                     menus.clear();
                     menus.add(new KeyValue(603, "Đồng ý", clanMember.playerID));
                     menus.add(new KeyValue(CMDMenu.CANCEL, "Từ chối"));
-                    service.openUIConfirm(NpcName.CON_MEO, String.format("Bạn có đồng ý nhường chức bang chủ cho %s?", clanMember.name),
+                    service.openUIConfirm(NpcName.CON_MEO,
+                            String.format("Bạn có đồng ý nhường chức bang chủ cho %s?", clanMember.name),
                             getPetAvatar(), menus);
                 }
             }
@@ -15978,9 +16164,11 @@ public class Player {
                         }
                         break;
 
-                    case 6:// nhiệm vụ 
+                    case 6:// nhiệm vụ
                         if (task.index <= 2) {
-                            int[][] mobTask = {{MobName.KHUNG_LONG_ME, MobName.LON_LOI_ME, MobName.QUY_DAT_ME}, {MobName.LON_LOI_ME, MobName.QUY_DAT_ME, MobName.KHUNG_LONG_ME}, {MobName.QUY_DAT_ME, MobName.KHUNG_LONG_ME, MobName.LON_LOI_ME}};
+                            int[][] mobTask = { { MobName.KHUNG_LONG_ME, MobName.LON_LOI_ME, MobName.QUY_DAT_ME },
+                                    { MobName.LON_LOI_ME, MobName.QUY_DAT_ME, MobName.KHUNG_LONG_ME },
+                                    { MobName.QUY_DAT_ME, MobName.KHUNG_LONG_ME, MobName.LON_LOI_ME } };
                             int mobId = mobTask[gender][task.index];
                             if (mob.templateId == mobId) {
                                 updateTaskCount(1);
@@ -15990,7 +16178,7 @@ public class Player {
 
                     case 7:// nhiệm vụ giải cứu
                         if (task.index == 1) {
-                            int mobId = (new int[]{MobName.THAN_LAN_BAY, MobName.PHI_LONG, MobName.QUY_BAY})[gender];
+                            int mobId = (new int[] { MobName.THAN_LAN_BAY, MobName.PHI_LONG, MobName.QUY_BAY })[gender];
                             if (mob.templateId == mobId) {
                                 updateTaskCount(1);
                             }
@@ -15998,7 +16186,7 @@ public class Player {
                         break;
 
                     case 13: {// nhiem vu danh heo
-                        int[] mobs = {MobName.HEO_RUNG, MobName.HEO_DA_XANH, MobName.HEO_XAYDA};
+                        int[] mobs = { MobName.HEO_RUNG, MobName.HEO_DA_XANH, MobName.HEO_XAYDA };
                         if (task.index < 3 && mob.templateId == mobs[task.index]) {
                             updateTaskCount(1);
                         }
@@ -16006,21 +16194,22 @@ public class Player {
                     }
 
                     case 15: {// nhiem vu bulon
-                        int[] mobs = {MobName.BULON, MobName.UKULELE, MobName.QUY_MAP};
+                        int[] mobs = { MobName.BULON, MobName.UKULELE, MobName.QUY_MAP };
                         if (task.index > 0 && task.index < 4 && mob.templateId == mobs[task.index - 1]) {
                             updateTaskCount(1);
                         }
                         break;
                     }
                     case 16: {// nhiem vu danh tabourine, drum, akkuman
-                        int[] mobs = {MobName.TAMBOURINE, MobName.DRUM, MobName.AKKUMAN};
+                        int[] mobs = { MobName.TAMBOURINE, MobName.DRUM, MobName.AKKUMAN };
                         if (task.index < 3 && mob.templateId == mobs[task.index]) {
                             updateTaskCount(1);
                         }
                         break;
                     }
                     case 18: {
-                        int[] mobs = {MobName.NAPPA, MobName.SOLDIER, MobName.APPULE, MobName.RASPBERRY, MobName.THAN_LAN_XANH};
+                        int[] mobs = { MobName.NAPPA, MobName.SOLDIER, MobName.APPULE, MobName.RASPBERRY,
+                                MobName.THAN_LAN_XANH };
                         if (task.index < 5 && mob.templateId == mobs[task.index]) {
                             updateTaskCount(1);
                         }
@@ -16372,9 +16561,9 @@ public class Player {
             z = new Home(map, zoneID);
         } else if (map.mapID == MapName.RUNG_KARIN) {
             z = new KarinForest(map, zoneID, this);
-        } //        else if (map.mapID == MapName.DONG_NAM_KARIN) {
-        //            z = new SoutheastKarin(map, zoneID);
-        //        }
+        } // else if (map.mapID == MapName.DONG_NAM_KARIN) {
+          // z = new SoutheastKarin(map, zoneID);
+          // }
         else if (map.mapID == MapName.THAP_KARIN) {
             z = new KarinTower(map, zoneID, typeTraining);
         } else {
@@ -16549,16 +16738,21 @@ public class Player {
                 study = obj.toString();
             }
 
-            String dataDHVT23 = String.format("[%d,%d,%s,%d]", roundDHVT23, timesOfDHVT23, isGetChest ? "1" : "0", countDhvtSieuHang);
+            String dataDHVT23 = String.format("[%d,%d,%s,%d]", roundDHVT23, timesOfDHVT23, isGetChest ? "1" : "0",
+                    countDhvtSieuHang);
 
             JSONObject datadrop = new JSONObject();
             datadrop.put(String.valueOf(ItemName.MANH_VO_BONG_TAI), itemDrop[0]);
             datadrop.put(String.valueOf(ItemName.MANH_HON_BONG_TAI), itemDrop[1]);
             datadrop.put(String.valueOf(ItemName.NGOC_RONG_LOC_PHAT_7_SAO), itemDrop[2]);
-            GameRepository.getInstance().player.saveData(this.id, g.toJson(this.taskMain), this.gold, this.diamond, this.diamondLock, g.toJson(bags), g.toJson(bodys), g.toJson(boxs),
-                    g.toJson(maps), skills.toString(), g.toJson(this.info), this.clanID, g.toJson(this.shortcut), this.numberCellBag, this.numberCellBox, g.toJson(this.friends), g.toJson(this.enemies),
-                    this.headDefault, this.ship, g.toJson(this.magicTree), g.toJson(items), this.fusionType, g.toJson(this.amulets), this.typeTraining, g.toJson(this.achievements), this.timePlayed, study,
-                    g.toJson(this.boxCrackBall), this.timeAtSplitFusion, (int) this.head, (int) this.body, (int) this.leg, typePorata, g.toJson(this.cards), g.toJson(this.specialSkill),
+            GameRepository.getInstance().player.saveData(this.id, g.toJson(this.taskMain), this.gold, this.diamond,
+                    this.diamondLock, g.toJson(bags), g.toJson(bodys), g.toJson(boxs),
+                    g.toJson(maps), skills.toString(), g.toJson(this.info), this.clanID, g.toJson(this.shortcut),
+                    this.numberCellBag, this.numberCellBox, g.toJson(this.friends), g.toJson(this.enemies),
+                    this.headDefault, this.ship, g.toJson(this.magicTree), g.toJson(items), this.fusionType,
+                    g.toJson(this.amulets), this.typeTraining, g.toJson(this.achievements), this.timePlayed, study,
+                    g.toJson(this.boxCrackBall), this.timeAtSplitFusion, (int) this.head, (int) this.body,
+                    (int) this.leg, typePorata, g.toJson(this.cards), g.toJson(this.specialSkill),
                     this.countNumberOfSpecialSkillChanges, resetTime, dataDHVT23, thoivang, datadrop.toString());
             logger.debug("saveDataPlayer " + this.name + " success");
         } catch (Exception e) {
@@ -16587,25 +16781,29 @@ public class Player {
     public boolean checkBalanceEnough(int balance, byte type) {
         if (type == 0) {
             if (balance > getGold()) {
-                service.sendThongBao(String.format("Bạn không đủ vàng, còn thiếu %s vàng nữa", Utils.formatNumber(balance - getGold())));
+                service.sendThongBao(String.format("Bạn không đủ vàng, còn thiếu %s vàng nữa",
+                        Utils.formatNumber(balance - getGold())));
                 return false;
             }
         }
         if (type == 1) {
             if (balance > getDiamond()) {
-                service.sendThongBao(String.format("Bạn không đủ ngọc xanh, còn thiếu %s ngọc xanh nữa", Utils.formatNumber(balance - getDiamond())));
+                service.sendThongBao(String.format("Bạn không đủ ngọc xanh, còn thiếu %s ngọc xanh nữa",
+                        Utils.formatNumber(balance - getDiamond())));
                 return false;
             }
         }
         if (type == 2) {
             if (balance > getDiamondLock()) {
-                service.sendThongBao(String.format("Bạn không đủ hồng ngọc, còn thiếu %s hồng ngọc nữa", Utils.formatNumber(balance - getDiamond())));
+                service.sendThongBao(String.format("Bạn không đủ hồng ngọc, còn thiếu %s hồng ngọc nữa",
+                        Utils.formatNumber(balance - getDiamond())));
                 return false;
             }
         }
         if (type == 3) {
             if (balance > getTotalGem()) {
-                service.sendThongBao(String.format("Bạn không đủ ngọc, còn thiếu %s ngọc nữa", Utils.formatNumber(balance - getTotalGem())));
+                service.sendThongBao(String.format("Bạn không đủ ngọc, còn thiếu %s ngọc nữa",
+                        Utils.formatNumber(balance - getTotalGem())));
                 return false;
             }
         }
@@ -16660,7 +16858,8 @@ public class Player {
 
     public void enter() {
         Server server = DragonBall.getInstance().getServer();
-        GameRepository.getInstance().player.setOnline(this.id, (byte) server.getConfig().getServerID(), new Timestamp(System.currentTimeMillis()));
+        GameRepository.getInstance().player.setOnline(this.id, (byte) server.getConfig().getServerID(),
+                new Timestamp(System.currentTimeMillis()));
         updateSkin();
         setMount();
         updatePetTheoSau(false);
@@ -16798,13 +16997,15 @@ public class Player {
             if (server.isFightingDhvtSieuHang.stream().anyMatch((s) -> s == id)) {
                 service.serverMessage("Đối thủ đang thi đấu, hãy quay trở lại sau");
                 return;
-            };
+            }
+            ;
         }
         if (server.isFightingDhvtSieuHang != null) {
             if (server.isFightingDhvtSieuHang.stream().anyMatch((s) -> s == this.id)) {
                 service.serverMessage("Bạn đang bị thách đấu nên không thể khiêu chiến người khác");
                 return;
-            };
+            }
+            ;
         }
         if (this.session.user.getActivated() == 0) {
             service.sendThongBao("Bạn cần kích hoạt thành viên để sử dụng tính năng này");
@@ -16881,7 +17082,8 @@ public class Player {
             if (server.isRewardDhvtSieuHang.stream().anyMatch((s) -> s == this.id)) {
                 service.serverMessage("Bạn đã nhận phần thưởng rồi");
                 return;
-            };
+            }
+            ;
         }
         TopInfo ranking = null;
         for (TopInfo pl : top) {
@@ -16935,7 +17137,8 @@ public class Player {
         }
         addItem(thoiVang);
         server.isRewardDhvtSieuHang.add(this.id);
-        this.service.serverMessage("Bạn đã nhận được " + thoiVang.quantity + " " + thoiVang.template.name + " phần thưởng ");
+        this.service.serverMessage(
+                "Bạn đã nhận được " + thoiVang.quantity + " " + thoiVang.template.name + " phần thưởng ");
     }
 
     public void logout() {
@@ -16943,7 +17146,7 @@ public class Player {
             return;
         }
         try {
-//            com.ngocrong.NQMP.UtilsNQMP.logError(this.name + "logout");
+            // com.ngocrong.NQMP.UtilsNQMP.logError(this.name + "logout");
             try {
                 closeTrade();
             } catch (Exception e) {
@@ -16964,27 +17167,28 @@ public class Player {
             if (zone != null) {
                 zone.leave(this);
             }
-//            History history = new History(id, History.LOGOUT);
-//            history.setBefores(gold, diamond, diamondLock);
-//            history.setAfters(gold, diamond, diamondLock);
-//            for (Item item : itemBag) {
-//                if (item != null) {
-//                    history.addItem(item);
-//                }
-//            }
-//            for (Item item : itemBody) {
-//                if (item != null) {
-//                    history.addItem(item);
-//                }
-//            }
-//            for (Item item : itemBox) {
-//                if (item != null) {
-//                    history.addItem(item);
-//                }
-//            }
-//            history.setExtras(session.ip);
-//            history.save();
-            GameRepository.getInstance().player.setOffline(this.id, (byte) 0, new Timestamp(System.currentTimeMillis()));
+            // History history = new History(id, History.LOGOUT);
+            // history.setBefores(gold, diamond, diamondLock);
+            // history.setAfters(gold, diamond, diamondLock);
+            // for (Item item : itemBag) {
+            // if (item != null) {
+            // history.addItem(item);
+            // }
+            // }
+            // for (Item item : itemBody) {
+            // if (item != null) {
+            // history.addItem(item);
+            // }
+            // }
+            // for (Item item : itemBox) {
+            // if (item != null) {
+            // history.addItem(item);
+            // }
+            // }
+            // history.setExtras(session.ip);
+            // history.save();
+            GameRepository.getInstance().player.setOffline(this.id, (byte) 0,
+                    new Timestamp(System.currentTimeMillis()));
         } finally {
             isLoggedOut = true;
         }
@@ -17036,8 +17240,9 @@ public class Player {
                 service.sendThongBao("Bạn đã nhận được " + Utils.currencyFormat(gold) + " vàng");
                 break;
             case ItemName.VO_SO:
-                int[] spl = {ItemName.SAO_PHA_LE_DAME_TO_HP, ItemName.SAO_PHA_LE_DAME_TO_MP, ItemName.SAO_PHA_LE_PST, ItemName.SAO_PHA_LE_TNSM,
-                    ItemName.SAO_PHA_LE_VANG, ItemName.SAO_PHA_LE_XG_CAN_CHIET, ItemName.SAO_PHA_LE_XG_CHUONG};
+                int[] spl = { ItemName.SAO_PHA_LE_DAME_TO_HP, ItemName.SAO_PHA_LE_DAME_TO_MP, ItemName.SAO_PHA_LE_PST,
+                        ItemName.SAO_PHA_LE_TNSM,
+                        ItemName.SAO_PHA_LE_VANG, ItemName.SAO_PHA_LE_XG_CAN_CHIET, ItemName.SAO_PHA_LE_XG_CHUONG };
                 for (int i = 0; i < 3; i++) {
                     Item saophale = new Item(spl[new Random().nextInt(spl.length - 1)]);
                     saophale.quantity = 1;
@@ -17047,8 +17252,9 @@ public class Player {
                 }
                 break;
             case ItemName.CON_CUA:
-                int[] nrList = {ItemName.NGOC_RONG_1_SAO, ItemName.NGOC_RONG_2_SAO, ItemName.NGOC_RONG_3_SAO, ItemName.NGOC_RONG_4_SAO,
-                    ItemName.NGOC_RONG_5_SAO, ItemName.NGOC_RONG_6_SAO, ItemName.NGOC_RONG_7_SAO};
+                int[] nrList = { ItemName.NGOC_RONG_1_SAO, ItemName.NGOC_RONG_2_SAO, ItemName.NGOC_RONG_3_SAO,
+                        ItemName.NGOC_RONG_4_SAO,
+                        ItemName.NGOC_RONG_5_SAO, ItemName.NGOC_RONG_6_SAO, ItemName.NGOC_RONG_7_SAO };
                 Item nr = new Item(nrList[new Random().nextInt(nrList.length - 1)]);
                 nr.quantity = 1;
                 nr.setDefaultOptions();
@@ -17275,7 +17481,7 @@ public class Player {
         try {
             int idMAP = server.mapNrNamec[id];
             int idZone = server.zoneNrNamec[id];
-            Integer[] sttMap = {8, 9, 11, 12, 13, 31, 32, 33, 34, 43};
+            Integer[] sttMap = { 8, 9, 11, 12, 13, 31, 32, 33, 34, 43 };
             TMap map = MapManager.getInstance().getMap(idMAP);
             Zone z = null;
             if (map != null) {
@@ -17315,7 +17521,8 @@ public class Player {
         switch (point) {
             case 100:
                 if (numberVongQuay < 100) {
-                    this.service.serverMessage("Bạn còn thiếu " + (100 - numberVongQuay) + " lượt để nhận thưởng mốc này\n");
+                    this.service.serverMessage(
+                            "Bạn còn thiếu " + (100 - numberVongQuay) + " lượt để nhận thưởng mốc này\n");
                     return;
                 }
 
@@ -17358,12 +17565,14 @@ public class Player {
                 item.quantity = 3;
                 addItem(item);
 
-                this.service.serverMessage("Bạn vừa nhận được phần thưởng từ mốc 100, hãy kiểm tra hành trang của mình");
+                this.service
+                        .serverMessage("Bạn vừa nhận được phần thưởng từ mốc 100, hãy kiểm tra hành trang của mình");
                 break;
 
             case 200:
                 if (numberVongQuay < 200) {
-                    this.service.serverMessage("Bạn còn thiếu " + (200 - numberVongQuay) + " lượt để nhận thưởng mốc này\n");
+                    this.service.serverMessage(
+                            "Bạn còn thiếu " + (200 - numberVongQuay) + " lượt để nhận thưởng mốc này\n");
                     return;
                 }
 
@@ -17392,12 +17601,14 @@ public class Player {
                 item.quantity = 2;
                 addItem(item);
 
-                this.service.serverMessage("Bạn vừa nhận được phần thưởng từ mốc 200, hãy kiểm tra hành trang của mình");
+                this.service
+                        .serverMessage("Bạn vừa nhận được phần thưởng từ mốc 200, hãy kiểm tra hành trang của mình");
                 break;
 
             case 500:
                 if (numberVongQuay < 500) {
-                    this.service.serverMessage("Bạn còn thiếu " + (500 - numberVongQuay) + " lượt để nhận thưởng mốc này\n");
+                    this.service.serverMessage(
+                            "Bạn còn thiếu " + (500 - numberVongQuay) + " lượt để nhận thưởng mốc này\n");
                     return;
                 }
 
@@ -17438,12 +17649,14 @@ public class Player {
                 item.options.add(new ItemOption(93, 3)); // HSD 3 ngày
                 addItem(item);
 
-                this.service.serverMessage("Bạn vừa nhận được phần thưởng từ mốc 500, hãy kiểm tra hành trang của mình");
+                this.service
+                        .serverMessage("Bạn vừa nhận được phần thưởng từ mốc 500, hãy kiểm tra hành trang của mình");
                 break;
 
             case 1000:
                 if (numberVongQuay < 1000) {
-                    this.service.serverMessage("Bạn còn thiếu " + (1000 - numberVongQuay) + " lượt để nhận thưởng mốc này\n");
+                    this.service.serverMessage(
+                            "Bạn còn thiếu " + (1000 - numberVongQuay) + " lượt để nhận thưởng mốc này\n");
                     return;
                 }
 
@@ -17479,12 +17692,14 @@ public class Player {
                 item.quantity = 5;
                 addItem(item);
 
-                this.service.serverMessage("Bạn vừa nhận được phần thưởng từ mốc 1000, hãy kiểm tra hành trang của mình");
+                this.service
+                        .serverMessage("Bạn vừa nhận được phần thưởng từ mốc 1000, hãy kiểm tra hành trang của mình");
                 break;
 
             case 2000:
                 if (numberVongQuay < 2000) {
-                    this.service.serverMessage("Bạn còn thiếu " + (2000 - numberVongQuay) + " lượt để nhận thưởng mốc này\n");
+                    this.service.serverMessage(
+                            "Bạn còn thiếu " + (2000 - numberVongQuay) + " lượt để nhận thưởng mốc này\n");
                     return;
                 }
 
@@ -17516,12 +17731,14 @@ public class Player {
                 item.options.add(new ItemOption(94, 15)); // 15% giáp
                 addItem(item);
 
-                this.service.serverMessage("Bạn vừa nhận được phần thưởng từ mốc 2000, hãy kiểm tra hành trang của mình");
+                this.service
+                        .serverMessage("Bạn vừa nhận được phần thưởng từ mốc 2000, hãy kiểm tra hành trang của mình");
                 break;
 
             case 3000:
                 if (numberVongQuay < 3000) {
-                    this.service.serverMessage("Bạn còn thiếu " + (3000 - numberVongQuay) + " lượt để nhận thưởng mốc này\n");
+                    this.service.serverMessage(
+                            "Bạn còn thiếu " + (3000 - numberVongQuay) + " lượt để nhận thưởng mốc này\n");
                     return;
                 }
 
@@ -17552,12 +17769,14 @@ public class Player {
                 item.quantity = 10;
                 addItem(item);
 
-                this.service.serverMessage("Bạn vừa nhận được phần thưởng từ mốc 3000, hãy kiểm tra hành trang của mình");
+                this.service
+                        .serverMessage("Bạn vừa nhận được phần thưởng từ mốc 3000, hãy kiểm tra hành trang của mình");
                 break;
 
             case 5000:
                 if (numberVongQuay < 5000) {
-                    this.service.serverMessage("Bạn còn thiếu " + (5000 - numberVongQuay) + " lượt để nhận thưởng mốc này\n");
+                    this.service.serverMessage(
+                            "Bạn còn thiếu " + (5000 - numberVongQuay) + " lượt để nhận thưởng mốc này\n");
                     return;
                 }
 
@@ -17602,7 +17821,8 @@ public class Player {
                 item.quantity = 30;
                 addItem(item);
 
-                this.service.serverMessage("Bạn vừa nhận được phần thưởng từ mốc 5000, hãy kiểm tra hành trang của mình");
+                this.service
+                        .serverMessage("Bạn vừa nhận được phần thưởng từ mốc 5000, hãy kiểm tra hành trang của mình");
                 break;
 
             default:
@@ -17616,9 +17836,12 @@ public class Player {
     public void openDoHDRandom(int gender, int setkh) {
         Item item = null;
         int isDoTL = 0;
-        int[] DO_TL_TD = {ItemName.AO_HUY_DIET_TD, ItemName.QUAN_HUY_DIET_TD, ItemName.GANG_HUY_DIET_TD, ItemName.GIAY_HUY_DIET_TD, ItemName.NHAN_HUY_DIET};
-        int[] DO_TL_XD = {ItemName.AO_HUY_DIET_XD, ItemName.QUAN_HUY_DIET_XD, ItemName.GANG_HUY_DIET_XD, ItemName.GIAY_HUY_DIET_XD, ItemName.NHAN_HUY_DIET};
-        int[] DO_TL_NM = {ItemName.AO_HUY_DIET_NM, ItemName.QUAN_HUY_DIET_NM, ItemName.GANG_HUY_DIET_NM, ItemName.GIAY_HUY_DIET_NM, ItemName.NHAN_HUY_DIET};
+        int[] DO_TL_TD = { ItemName.AO_HUY_DIET_TD, ItemName.QUAN_HUY_DIET_TD, ItemName.GANG_HUY_DIET_TD,
+                ItemName.GIAY_HUY_DIET_TD, ItemName.NHAN_HUY_DIET };
+        int[] DO_TL_XD = { ItemName.AO_HUY_DIET_XD, ItemName.QUAN_HUY_DIET_XD, ItemName.GANG_HUY_DIET_XD,
+                ItemName.GIAY_HUY_DIET_XD, ItemName.NHAN_HUY_DIET };
+        int[] DO_TL_NM = { ItemName.AO_HUY_DIET_NM, ItemName.QUAN_HUY_DIET_NM, ItemName.GANG_HUY_DIET_NM,
+                ItemName.GIAY_HUY_DIET_NM, ItemName.NHAN_HUY_DIET };
 
         switch (gender) {
             case 0:
@@ -17647,10 +17870,11 @@ public class Player {
 
     public void openTLRandom(int gender) {
         Item item = null;
-        int[][][] options = {{{127, 139}, {128, 140}, {129, 141}}, {{130, 195}, {131, 143}, {132, 144}}, {{133, 136}, {134, 137}, {135, 138}}};
-        int[] DO_TL_TD = {555, 556, 562, 563, 561};
-        int[] DO_TL_XD = {559, 560, 566, 567, 561};
-        int[] DO_TL_NM = {557, 558, 564, 565, 561};
+        int[][][] options = { { { 127, 139 }, { 128, 140 }, { 129, 141 } },
+                { { 130, 195 }, { 131, 143 }, { 132, 144 } }, { { 133, 136 }, { 134, 137 }, { 135, 138 } } };
+        int[] DO_TL_TD = { 555, 556, 562, 563, 561 };
+        int[] DO_TL_XD = { 559, 560, 566, 567, 561 };
+        int[] DO_TL_NM = { 557, 558, 564, 565, 561 };
         int isDoTL = 0;
         switch (gender) {
             case 0:
@@ -17689,10 +17913,11 @@ public class Player {
 
     public void openSKHRandom(int gender) {
         Item item = null;
-        int[][][] options = {{{127, 139}, {128, 140}, {129, 141}}, {{130, 195}, {131, 143}, {132, 144}}, {{133, 136}, {134, 137}, {135, 138}}};
-        int[] DO_TL_TD = {0, 6, 21, 27, 12};
-        int[] DO_TL_NM = {1, 7, 22, 28, 12};
-        int[] DO_TL_XD = {2, 8, 23, 29, 12};
+        int[][][] options = { { { 127, 139 }, { 128, 140 }, { 129, 141 } },
+                { { 130, 195 }, { 131, 143 }, { 132, 144 } }, { { 133, 136 }, { 134, 137 }, { 135, 138 } } };
+        int[] DO_TL_TD = { 0, 6, 21, 27, 12 };
+        int[] DO_TL_NM = { 1, 7, 22, 28, 12 };
+        int[] DO_TL_XD = { 2, 8, 23, 29, 12 };
         int isDoTL = 0;
         switch (gender) {
             case 0:
@@ -17734,10 +17959,11 @@ public class Player {
 
     public void openDoTLKHRandom(int gender) {
         Item item = null;
-        int[][][] options = {{{127, 139}, {128, 140}, {129, 141}}, {{130, 195}, {131, 143}, {132, 144}}, {{133, 136}, {134, 137}, {135, 138}}};
-        int[] DO_TL_TD = {555, 556, 562, 563, 561};
-        int[] DO_TL_XD = {559, 560, 566, 567, 561};
-        int[] DO_TL_NM = {557, 558, 564, 565, 561};
+        int[][][] options = { { { 127, 139 }, { 128, 140 }, { 129, 141 } },
+                { { 130, 195 }, { 131, 143 }, { 132, 144 } }, { { 133, 136 }, { 134, 137 }, { 135, 138 } } };
+        int[] DO_TL_TD = { 555, 556, 562, 563, 561 };
+        int[] DO_TL_XD = { 559, 560, 566, 567, 561 };
+        int[] DO_TL_NM = { 557, 558, 564, 565, 561 };
         int isDoTL = 0;
         switch (gender) {
             case 0:
@@ -17773,10 +17999,11 @@ public class Player {
 
     public void openDoCuoiKHRandom(int gender) {
         Item item = null;
-        int[][][] options = {{{127, 139}, {128, 140}, {129, 141}}, {{130, 195}, {131, 143}, {132, 144}}, {{133, 136}, {134, 137}, {135, 138}}};
-        int[] DO_TL_TD = {233, 245, 257, 269, 281};
-        int[] DO_TL_XD = {241, 253, 265, 277, 281};
-        int[] DO_TL_NM = {237, 249, 261, 273, 281};
+        int[][][] options = { { { 127, 139 }, { 128, 140 }, { 129, 141 } },
+                { { 130, 195 }, { 131, 143 }, { 132, 144 } }, { { 133, 136 }, { 134, 137 }, { 135, 138 } } };
+        int[] DO_TL_TD = { 233, 245, 257, 269, 281 };
+        int[] DO_TL_XD = { 241, 253, 265, 277, 281 };
+        int[] DO_TL_NM = { 237, 249, 261, 273, 281 };
         int isDoTL = 0;
         switch (gender) {
             case 0:
@@ -18140,244 +18367,249 @@ public class Player {
     }
 
     public void getRewardTopVQTD(List<TopInfo> top) {
-//        TopInfo ranking = null;
-//        for (TopInfo pl : top) {
-//            if (pl.playerID == this.id) {
-//                ranking = pl;
-//                break;
-//            }
-//        }
-//        if (ranking == null || ranking.rank < 1 || ranking.rank > 50) {
-//            this.service.serverMessage("Bạn không nằm trong danh sách trao giải");
-//            return;
-//        }
-//        if (this.getSlotNullInBag() < 3) {
-//            service.serverMessage2(Language.ME_BAG_FULL);
-//            return;
-//        }
-//        Optional<RewardVQTDData> rewardVQTDDataOptional;
-//        try {
-//            rewardVQTDDataOptional = GameRepository.getInstance().rewardVQTDRepository.findFirstByName(ranking.playerID);
-//        } catch (Exception e) { com.ngocrong.NQMP.UtilsNQMP.logError(e);
-//            e.printStackTrace();
-//            this.service.serverMessage("Có lỗi khi nhận quà, vui lòng liên hệ admin để được hỗ trợ");
-//            return;
-//        }
-//        RewardVQTDData rewardVQTDData = null;
-//        if (rewardVQTDDataOptional.isPresent()) {
-//            rewardVQTDData = rewardVQTDDataOptional.get();
-//        } else {
-//            this.service.serverMessage("Bạn không nằm trong danh sách trao giải");
-//            return;
-//        }
-//        if (rewardVQTDData != null && rewardVQTDData.reward != 0) {
-//            this.service.serverMessage("Bạn đã nhận phần thưởng này rồi");
-//            return;
-//        }
-//        try {
-//            GameRepository.getInstance().rewardVQTDRepository.setReward(ranking.playerID, 1);
-//        } catch (Exception e) { com.ngocrong.NQMP.UtilsNQMP.logError(e);
-//            this.service.serverMessage("Có lỗi khi nhận quà, vui lòng liên hệ admin để được hỗ trợ");
-//            logger.error("nhan thuong loi " + ranking.name);
-//            e.printStackTrace();
-//            return;
-//        }
-//
-//        Item caiTrang = new Item(ItemName.CAI_TRANG_TOP_VQTD);
-//        Item danhHieu = new Item(ItemName.DANH_HIEU_DE_TU_THUONG_DE);
-//        Item thuCuoi = new Item(ItemName.RUA_BAY);
-//        Item buaDien = new Item(ItemName.DEO_LUNG_BUA_DIEN);
-//        caiTrang.quantity = 1;
-//        danhHieu.quantity = 1;
-//        thuCuoi.quantity = 1;
-//        Item dbv = new Item(ItemName.DA_BAO_VE_987);
-//
-//        if (ranking.rank == 1) {
-//            danhHieu.options.add(new ItemOption(50, 7));
-//            danhHieu.options.add(new ItemOption(77, 7));
-//            danhHieu.options.add(new ItemOption(103, 7));
-//            danhHieu.options.add(new ItemOption(14, 7));
-//            addItem(danhHieu);
-//
-//            caiTrang.options.add(new ItemOption(50, 45));
-//            caiTrang.options.add(new ItemOption(77, 45));
-//            caiTrang.options.add(new ItemOption(103, 45));
-//            caiTrang.options.add(new ItemOption(14, 15));
-//            addItem(caiTrang);
-//
-//            thuCuoi.options.add(new ItemOption(50, 6));
-//            thuCuoi.options.add(new ItemOption(77, 6));
-//            thuCuoi.options.add(new ItemOption(103, 6));
-//            thuCuoi.options.add(new ItemOption(5, 2));
-//            addItem(thuCuoi);
-//
-//            dbv.quantity = 99;
-//            addItem(dbv);
-//        } else if (ranking.rank == 2) {
-//            danhHieu.options.add(new ItemOption(50, 6));
-//            danhHieu.options.add(new ItemOption(77, 6));
-//            danhHieu.options.add(new ItemOption(103, 6));
-//            danhHieu.options.add(new ItemOption(14, 6));
-//            addItem(danhHieu);
-//
-//            caiTrang.options.add(new ItemOption(50, 45));
-//            caiTrang.options.add(new ItemOption(77, 45));
-//            caiTrang.options.add(new ItemOption(103, 45));
-//            caiTrang.options.add(new ItemOption(14, 15));
-//            addItem(caiTrang);
-//
-//            thuCuoi.options.add(new ItemOption(50, 6));
-//            thuCuoi.options.add(new ItemOption(77, 6));
-//            thuCuoi.options.add(new ItemOption(103, 6));
-//            thuCuoi.options.add(new ItemOption(5, 2));
-//            addItem(thuCuoi);
-//
-//            dbv.quantity = 50;
-//            addItem(dbv);
-//        } else if (ranking.rank == 3) {
-//            danhHieu.options.add(new ItemOption(50, 6));
-//            danhHieu.options.add(new ItemOption(77, 6));
-//            danhHieu.options.add(new ItemOption(103, 6));
-//            danhHieu.options.add(new ItemOption(14, 6));
-//            addItem(danhHieu);
-//
-//            caiTrang.options.add(new ItemOption(50, 45));
-//            caiTrang.options.add(new ItemOption(77, 45));
-//            caiTrang.options.add(new ItemOption(103, 45));
-//            caiTrang.options.add(new ItemOption(14, 15));
-//            addItem(caiTrang);
-//
-//            thuCuoi.options.add(new ItemOption(50, 6));
-//            thuCuoi.options.add(new ItemOption(77, 6));
-//            thuCuoi.options.add(new ItemOption(103, 6));
-//            thuCuoi.options.add(new ItemOption(5, 2));
-//            addItem(thuCuoi);
-//
-//            dbv.quantity = 30;
-//            addItem(dbv);
-//        } else if (ranking.rank >= 4 && ranking.rank <= 10) {
-//            caiTrang.options.add(new ItemOption(50, 40));
-//            caiTrang.options.add(new ItemOption(77, 40));
-//            caiTrang.options.add(new ItemOption(103, 40));
-//            caiTrang.options.add(new ItemOption(14, 15));
-//            addItem(caiTrang);
-//
-//            buaDien.options.add(new ItemOption(50, 18));
-//            buaDien.options.add(new ItemOption(77, 18));
-//            buaDien.options.add(new ItemOption(103, 18));
-//            buaDien.options.add(new ItemOption(14, 18));
-//            addItem(buaDien);
-//
-//        } else if (11 <= ranking.rank && ranking.rank <= 20) {
-//            buaDien.options.add(new ItemOption(50, 18));
-//            buaDien.options.add(new ItemOption(77, 18));
-//            buaDien.options.add(new ItemOption(103, 18));
-//            buaDien.options.add(new ItemOption(14, 18));
-//            buaDien.options.add(new ItemOption(93, 90));
-//            addItem(buaDien);
-//
-//            thuCuoi.options.add(new ItemOption(50, 6));
-//            thuCuoi.options.add(new ItemOption(77, 6));
-//            thuCuoi.options.add(new ItemOption(103, 6));
-//            thuCuoi.options.add(new ItemOption(5, 2));
-//            thuCuoi.options.add(new ItemOption(93, 90));
-//            addItem(thuCuoi);
-//
-//        } else if (21 <= ranking.rank && ranking.rank <= 50) {
-//            buaDien.options.add(new ItemOption(50, 18));
-//            buaDien.options.add(new ItemOption(77, 18));
-//            buaDien.options.add(new ItemOption(103, 18));
-//            buaDien.options.add(new ItemOption(14, 18));
-//            buaDien.options.add(new ItemOption(93, 60));
-//            addItem(buaDien);
-//
-//            thuCuoi.options.add(new ItemOption(50, 6));
-//            thuCuoi.options.add(new ItemOption(77, 6));
-//            thuCuoi.options.add(new ItemOption(103, 6));
-//            thuCuoi.options.add(new ItemOption(5, 2));
-//            thuCuoi.options.add(new ItemOption(93, 60));
-//            addItem(thuCuoi);
-//        }
-//        this.service.serverMessage("Bạn đã nhận được phần thưởng từ BXH, hãy kiểm tra hành trang của mình");
-//        this.saveData();
+        // TopInfo ranking = null;
+        // for (TopInfo pl : top) {
+        // if (pl.playerID == this.id) {
+        // ranking = pl;
+        // break;
+        // }
+        // }
+        // if (ranking == null || ranking.rank < 1 || ranking.rank > 50) {
+        // this.service.serverMessage("Bạn không nằm trong danh sách trao giải");
+        // return;
+        // }
+        // if (this.getSlotNullInBag() < 3) {
+        // service.serverMessage2(Language.ME_BAG_FULL);
+        // return;
+        // }
+        // Optional<RewardVQTDData> rewardVQTDDataOptional;
+        // try {
+        // rewardVQTDDataOptional =
+        // GameRepository.getInstance().rewardVQTDRepository.findFirstByName(ranking.playerID);
+        // } catch (Exception e) { com.ngocrong.NQMP.UtilsNQMP.logError(e);
+        // e.printStackTrace();
+        // this.service.serverMessage("Có lỗi khi nhận quà, vui lòng liên hệ admin để
+        // được hỗ trợ");
+        // return;
+        // }
+        // RewardVQTDData rewardVQTDData = null;
+        // if (rewardVQTDDataOptional.isPresent()) {
+        // rewardVQTDData = rewardVQTDDataOptional.get();
+        // } else {
+        // this.service.serverMessage("Bạn không nằm trong danh sách trao giải");
+        // return;
+        // }
+        // if (rewardVQTDData != null && rewardVQTDData.reward != 0) {
+        // this.service.serverMessage("Bạn đã nhận phần thưởng này rồi");
+        // return;
+        // }
+        // try {
+        // GameRepository.getInstance().rewardVQTDRepository.setReward(ranking.playerID,
+        // 1);
+        // } catch (Exception e) { com.ngocrong.NQMP.UtilsNQMP.logError(e);
+        // this.service.serverMessage("Có lỗi khi nhận quà, vui lòng liên hệ admin để
+        // được hỗ trợ");
+        // logger.error("nhan thuong loi " + ranking.name);
+        // e.printStackTrace();
+        // return;
+        // }
+        //
+        // Item caiTrang = new Item(ItemName.CAI_TRANG_TOP_VQTD);
+        // Item danhHieu = new Item(ItemName.DANH_HIEU_DE_TU_THUONG_DE);
+        // Item thuCuoi = new Item(ItemName.RUA_BAY);
+        // Item buaDien = new Item(ItemName.DEO_LUNG_BUA_DIEN);
+        // caiTrang.quantity = 1;
+        // danhHieu.quantity = 1;
+        // thuCuoi.quantity = 1;
+        // Item dbv = new Item(ItemName.DA_BAO_VE_987);
+        //
+        // if (ranking.rank == 1) {
+        // danhHieu.options.add(new ItemOption(50, 7));
+        // danhHieu.options.add(new ItemOption(77, 7));
+        // danhHieu.options.add(new ItemOption(103, 7));
+        // danhHieu.options.add(new ItemOption(14, 7));
+        // addItem(danhHieu);
+        //
+        // caiTrang.options.add(new ItemOption(50, 45));
+        // caiTrang.options.add(new ItemOption(77, 45));
+        // caiTrang.options.add(new ItemOption(103, 45));
+        // caiTrang.options.add(new ItemOption(14, 15));
+        // addItem(caiTrang);
+        //
+        // thuCuoi.options.add(new ItemOption(50, 6));
+        // thuCuoi.options.add(new ItemOption(77, 6));
+        // thuCuoi.options.add(new ItemOption(103, 6));
+        // thuCuoi.options.add(new ItemOption(5, 2));
+        // addItem(thuCuoi);
+        //
+        // dbv.quantity = 99;
+        // addItem(dbv);
+        // } else if (ranking.rank == 2) {
+        // danhHieu.options.add(new ItemOption(50, 6));
+        // danhHieu.options.add(new ItemOption(77, 6));
+        // danhHieu.options.add(new ItemOption(103, 6));
+        // danhHieu.options.add(new ItemOption(14, 6));
+        // addItem(danhHieu);
+        //
+        // caiTrang.options.add(new ItemOption(50, 45));
+        // caiTrang.options.add(new ItemOption(77, 45));
+        // caiTrang.options.add(new ItemOption(103, 45));
+        // caiTrang.options.add(new ItemOption(14, 15));
+        // addItem(caiTrang);
+        //
+        // thuCuoi.options.add(new ItemOption(50, 6));
+        // thuCuoi.options.add(new ItemOption(77, 6));
+        // thuCuoi.options.add(new ItemOption(103, 6));
+        // thuCuoi.options.add(new ItemOption(5, 2));
+        // addItem(thuCuoi);
+        //
+        // dbv.quantity = 50;
+        // addItem(dbv);
+        // } else if (ranking.rank == 3) {
+        // danhHieu.options.add(new ItemOption(50, 6));
+        // danhHieu.options.add(new ItemOption(77, 6));
+        // danhHieu.options.add(new ItemOption(103, 6));
+        // danhHieu.options.add(new ItemOption(14, 6));
+        // addItem(danhHieu);
+        //
+        // caiTrang.options.add(new ItemOption(50, 45));
+        // caiTrang.options.add(new ItemOption(77, 45));
+        // caiTrang.options.add(new ItemOption(103, 45));
+        // caiTrang.options.add(new ItemOption(14, 15));
+        // addItem(caiTrang);
+        //
+        // thuCuoi.options.add(new ItemOption(50, 6));
+        // thuCuoi.options.add(new ItemOption(77, 6));
+        // thuCuoi.options.add(new ItemOption(103, 6));
+        // thuCuoi.options.add(new ItemOption(5, 2));
+        // addItem(thuCuoi);
+        //
+        // dbv.quantity = 30;
+        // addItem(dbv);
+        // } else if (ranking.rank >= 4 && ranking.rank <= 10) {
+        // caiTrang.options.add(new ItemOption(50, 40));
+        // caiTrang.options.add(new ItemOption(77, 40));
+        // caiTrang.options.add(new ItemOption(103, 40));
+        // caiTrang.options.add(new ItemOption(14, 15));
+        // addItem(caiTrang);
+        //
+        // buaDien.options.add(new ItemOption(50, 18));
+        // buaDien.options.add(new ItemOption(77, 18));
+        // buaDien.options.add(new ItemOption(103, 18));
+        // buaDien.options.add(new ItemOption(14, 18));
+        // addItem(buaDien);
+        //
+        // } else if (11 <= ranking.rank && ranking.rank <= 20) {
+        // buaDien.options.add(new ItemOption(50, 18));
+        // buaDien.options.add(new ItemOption(77, 18));
+        // buaDien.options.add(new ItemOption(103, 18));
+        // buaDien.options.add(new ItemOption(14, 18));
+        // buaDien.options.add(new ItemOption(93, 90));
+        // addItem(buaDien);
+        //
+        // thuCuoi.options.add(new ItemOption(50, 6));
+        // thuCuoi.options.add(new ItemOption(77, 6));
+        // thuCuoi.options.add(new ItemOption(103, 6));
+        // thuCuoi.options.add(new ItemOption(5, 2));
+        // thuCuoi.options.add(new ItemOption(93, 90));
+        // addItem(thuCuoi);
+        //
+        // } else if (21 <= ranking.rank && ranking.rank <= 50) {
+        // buaDien.options.add(new ItemOption(50, 18));
+        // buaDien.options.add(new ItemOption(77, 18));
+        // buaDien.options.add(new ItemOption(103, 18));
+        // buaDien.options.add(new ItemOption(14, 18));
+        // buaDien.options.add(new ItemOption(93, 60));
+        // addItem(buaDien);
+        //
+        // thuCuoi.options.add(new ItemOption(50, 6));
+        // thuCuoi.options.add(new ItemOption(77, 6));
+        // thuCuoi.options.add(new ItemOption(103, 6));
+        // thuCuoi.options.add(new ItemOption(5, 2));
+        // thuCuoi.options.add(new ItemOption(93, 60));
+        // addItem(thuCuoi);
+        // }
+        // this.service.serverMessage("Bạn đã nhận được phần thưởng từ BXH, hãy kiểm tra
+        // hành trang của mình");
+        // this.saveData();
     }
 
-//    public boolean FindDanhhieu(int tempId) {
-//        for (Item item : this.danhHieu) {
-//            if (item != null && item.template.id == tempId) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
+    // public boolean FindDanhhieu(int tempId) {
+    // for (Item item : this.danhHieu) {
+    // if (item != null && item.template.id == tempId) {
+    // return true;
+    // }
+    // }
+    // return false;
+    // }
     public void AddDanhHieu(Item iddanhhieu) {
         loadBody();
     }
 
     public static int[] GetImgDanhHieu(Item item) {
         if (item == null) {
-            return new int[]{-1, 0};
+            return new int[] { -1, 0 };
         }
         switch (item.template.id) {
             case ItemName.DANH_HIEU_THAN_HO_VE: {
-                return new int[]{31259, 6};
+                return new int[] { 31259, 6 };
             }
             case ItemName.DANH_HIEU_THAN_LONG: {
-                return new int[]{31260, 6};
+                return new int[] { 31260, 6 };
             }
             case ItemName.DANH_HIEU_BE_NGOAN: {
-                return new int[]{31262, 6};
+                return new int[] { 31262, 6 };
             }
             case ItemName.DANH_HIEU_PHONG_BA: {
-                return new int[]{31264, 6};
+                return new int[] { 31264, 6 };
             }
             case ItemName.DANH_HIEU_FAN_CUNG: {
-                return new int[]{15510, 6};
+                return new int[] { 15510, 6 };
             }
             case ItemName.DANH_HIEU_TOP_1_DAI_GIA: {
-                return new int[]{32227, 6};
+                return new int[] { 32227, 6 };
             }
             case ItemName.DANH_HIEU_TOP_2_DAI_GIA: {
-                return new int[]{32229, 6};
+                return new int[] { 32229, 6 };
             }
             case ItemName.DANH_HIEU_TOP_3_DAI_GIA: {
-                return new int[]{32231, 6};
+                return new int[] { 32231, 6 };
             }
             case ItemName.DANH_HIEU_TOP_1_NHIEM_VU: {
-                return new int[]{32233, 6};
+                return new int[] { 32233, 6 };
             }
             case ItemName.DANH_HIEU_TOP_2_NHIEM_VU: {
-                return new int[]{32235, 6};
+                return new int[] { 32235, 6 };
             }
             case ItemName.DANH_HIEU_TOP_3_NHIEM_VU: {
-                return new int[]{32237, 6};
+                return new int[] { 32237, 6 };
             }
             case ItemName.DANH_HIEU_TOP_1_SUC_MANH: {
-                return new int[]{32239, 6};
+                return new int[] { 32239, 6 };
             }
             case ItemName.DANH_HIEU_TOP_2_SUC_MANH: {
-                return new int[]{32241, 6};
+                return new int[] { 32241, 6 };
             }
             case ItemName.DANH_HIEU_TOP_3_SUC_MANH: {
-                return new int[]{32243, 6};
+                return new int[] { 32243, 6 };
             }
             case ItemName.DANH_HIEU_TOP_1_VONG_QUAY: {
-                return new int[]{32245, 6};
+                return new int[] { 32245, 6 };
             }
             case ItemName.DANH_HIEU_TOP_2_VONG_QUAY: {
-                return new int[]{32247, 6};
+                return new int[] { 32247, 6 };
             }
             case ItemName.DANH_HIEU_TOP_3_VONG_QUAY: {
-                return new int[]{32249, 6};
+                return new int[] { 32249, 6 };
             }
             case 2198: {
-                return new int[]{16661, 6};
+                return new int[] { 16661, 6 };
             }
             case 2260: {
-                return new int[]{9138, 6};
+                return new int[] { 9138, 6 };
             }
         }
-        return new int[]{-1, 0};
+        return new int[] { -1, 0 };
     }
 
     public void uocRongThienMenh(int type) {
@@ -18554,7 +18786,7 @@ public class Player {
         }
         Item itemCreate = new Item(item.template.id + 114);
         itemCreate.setDefaultOptions();
-        int[] optionBonus = new int[]{77, 103, 50, item.template.gender == 2 ? 94 : 5};
+        int[] optionBonus = new int[] { 77, 103, 50, item.template.gender == 2 ? 94 : 5 };
         itemCreate.addItemOption(new ItemOption(optionBonus[Utils.nextInt(optionBonus.length)], Utils.nextInt(1, 5)));
         itemCreate.addItemOption(new ItemOption(30, 0));
         itemCreate.quantity = 1;
@@ -18582,10 +18814,10 @@ public class Player {
     }
 
     public void getDoTanThu(int gender) {
-        int[][] items = new int[][]{
-            {0, 6, 21, 27, 12},
-            {1, 7, 22, 28, 12},
-            {2, 8, 23, 29, 12}
+        int[][] items = new int[][] {
+                { 0, 6, 21, 27, 12 },
+                { 1, 7, 22, 28, 12 },
+                { 2, 8, 23, 29, 12 }
         };
         if (getCountEmptyBag() < 5) {
             service.sendThongBao("Hành trang không đủ ô trống , cần 5 ô trống");
@@ -18797,6 +19029,7 @@ public class Player {
         addItem(it);
         service.serverMessage("Bạn đã nhận được set đồ cuối tương ứng, hãy kiểm tra lại hành trang");
     }
+
     public int currentLevelBossWhis;
 
     public void joinMap(int mapid) {
