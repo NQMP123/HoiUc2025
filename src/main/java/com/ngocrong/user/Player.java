@@ -17,6 +17,7 @@ import com.ngocrong.data.*;
 import com.ngocrong.event.Event;
 import com.ngocrong.item.*;
 import com.ngocrong.lib.Menu;
+import com.ngocrong.event.OsinCheckInEvent;
 import com.ngocrong.map.*;
 import com.ngocrong.map.expansion.blackdragon.MBlackDragonBall;
 import com.ngocrong.map.expansion.blackdragon.ZBlackDragonBall;
@@ -4392,6 +4393,11 @@ public class Player {
                             }
                         } else {
                             menus.add(new KeyValue(1133, "Phù Hộ"));
+                            if (OsinCheckInEvent.isCheckInDay()) {
+                                menus.add(new KeyValue(CMDMenu.OSIN_CHECKIN, "Điểm danh"));
+                            } else if (OsinCheckInEvent.isRewardDay()) {
+                                menus.add(new KeyValue(CMDMenu.OSIN_REWARD, "Nhận quà"));
+                            }
                             if (this.flag == 9) {
                                 sb.append(
                                         "Đừng vội xem thường Babiđây, ngay đến cha hắn là thần ma đạo sĩ Bibiđây khi còn sống cũng phải sợ hắn đấy!\n"
@@ -7550,6 +7556,12 @@ public class Player {
                 break;
             case CMDMenu.HOP_QUA_TET:
                 hopquatet(1);
+                break;
+            case CMDMenu.OSIN_CHECKIN:
+                OsinCheckInEvent.checkIn(this);
+                break;
+            case CMDMenu.OSIN_REWARD:
+                OsinCheckInEvent.receiveReward(this);
                 break;
             case CMDMenu.UOC_RONG_THIEN_MENH_1:
                 uocRongThienMenh(1);

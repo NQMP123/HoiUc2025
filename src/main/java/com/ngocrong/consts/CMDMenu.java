@@ -176,4 +176,6 @@ public class CMDMenu {
     public static final int BANH_TET_XUAN_VUI = 2903;
     public static final int HOP_QUA_XUAN = 2904;
     public static final int HOP_QUA_TET = 2905;
+    public static final int OSIN_CHECKIN = 2906;
+    public static final int OSIN_REWARD = 2907;
 }
