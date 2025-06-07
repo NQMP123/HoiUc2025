@@ -25,6 +25,7 @@ public class GameRepository {
     public OsinCheckInRepository osinCheckInRepository;
     public DropRateRepository dropRateRepository;
 
+
     public static GameRepository getInstance() {
         if (instance == null) {
             instance = new GameRepository();
