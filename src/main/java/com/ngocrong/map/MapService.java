@@ -22,8 +22,8 @@ import java.util.ArrayList;
 public class MapService {
 
     private static Logger logger = Logger.getLogger(MapService.class);
-    private static final int VIEW_DISTANCE = 1024;
 
+    private static final int VIEW_DISTANCE = 1024;
     public Zone zone;
 
     public MapService(Zone zone) {
@@ -664,8 +664,7 @@ public class MapService {
         zone.lockChar.readLock().lock();
         try {
             for (Player _c : zone.players) {
-                if (_c != _player
-                        && Utils.getDistance(_player.getX(), _player.getY(), _c.getX(), _c.getY()) <= VIEW_DISTANCE) {
+                if (_c != _player && Utils.getDistance(_player.getX(), _player.getY(), _c.getX(), _c.getY()) <= VIEW_DISTANCE) {
                     _c.service.move(_player);
                 }
             }

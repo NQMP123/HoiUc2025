@@ -3032,7 +3032,8 @@ public class Service implements IService {
             FastDataOutputStream ds = mss.writer();
             ds.writeByte(2);
             ds.writeUTF(str);
-            byte[] ab = Utils.getFile(path);
+            byte[] raw = Utils.getFile(path);
+            byte[] ab = Utils.compress(raw);
             ds.writeInt(ab.length);
             ds.write(ab);
             ds.flush();

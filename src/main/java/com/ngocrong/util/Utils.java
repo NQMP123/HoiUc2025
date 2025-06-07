@@ -7,6 +7,8 @@ import com.ngocrong.lib.RandomCollection;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ByteArrayOutputStream;
+import java.util.zip.GZIPOutputStream;
 import java.nio.file.Files;
 import java.sql.Timestamp;
 import java.text.Normalizer;
@@ -317,6 +319,21 @@ public class Utils {
             ex.printStackTrace();
         }
         return null;
+    }
+
+    public static byte[] compress(byte[] data) {
+        if (data == null || data.length == 0) {
+            return data;
+        }
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+             GZIPOutputStream gzip = new GZIPOutputStream(bos)) {
+            gzip.write(data);
+            gzip.finish();
+            return bos.toByteArray();
+        } catch (IOException ex) {
+            com.ngocrong.NQMP.UtilsNQMP.logError(ex);
+            return data;
+        }
     }
 
     public static boolean checkPassword(String hashed, String plaintext) {
