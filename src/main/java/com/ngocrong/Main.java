@@ -2,6 +2,7 @@ package com.ngocrong;
 
 import com.ngocrong.repository.*;
 import com.ngocrong.server.DragonBall;
+import com.ngocrong.server.DropRateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -35,6 +36,9 @@ public class Main implements CommandLineRunner {
         GameRepository.getInstance().historyGoldBar = historyGoldBar;
         GameRepository.getInstance().historyTradeRepository = historyTradeRepository;
         GameRepository.getInstance().whisDataRepository = whisDataRepository;
+        GameRepository.getInstance().dropRateRepository = dropRateRepository;
+
+        DropRateService.load();
 
         DragonBall.getInstance().start();
     }
@@ -88,4 +92,7 @@ public class Main implements CommandLineRunner {
     HistoryGoldBarRepository historyGoldBar;
     @Autowired
     HistoryTradeRepository historyTradeRepository;
+
+    @Autowired
+    DropRateRepository dropRateRepository;
 }

@@ -86,19 +86,34 @@ public class Session implements ISession {
     public String deviceInfo;
     List<Short> iconList = new ArrayList();
     public String ip;
+    private Thread heartbeatThread;
+    private volatile long lastReceiveTime;
+    private volatile long lastSendTime;
+
+    private static final int SOCKET_BUFFER_SIZE = 4096;
+    private static final int PING_INTERVAL = 30000; // 30s
+    private static final int TIMEOUT = 90000; // 90s
 
     public Session(Socket socket, String ip, int id) throws IOException {
         this.socket = socket;
         this.id = id;
         this.ip = ip;
+        socket.setTcpNoDelay(true);
+        socket.setKeepAlive(true);
+        socket.setReceiveBufferSize(SOCKET_BUFFER_SIZE);
+        socket.setSendBufferSize(SOCKET_BUFFER_SIZE);
         this.dis = new DataInputStream(socket.getInputStream());
         this.dos = new DataOutputStream(socket.getOutputStream());
+        lastReceiveTime = System.currentTimeMillis();
+        lastSendTime = lastReceiveTime;
         setHandler(new MessageHandler(this));
         messageHandler.onConnectOK();
         setService(new Service(this));
         sendThread = new Thread(sender = new Sender());
         collectorThread = new Thread(new MessageCollector());
         collectorThread.start();
+        heartbeatThread = new Thread(new Heartbeat(), "heartbeat-" + id);
+        heartbeatThread.start();
         Server.ips.put(ip, Server.ips.getOrDefault(ip, 0) + 1);
     }
 
@@ -176,6 +191,7 @@ public class Session implements ISession {
     @Override
     public void sendMessage(Message message) {
         sender.addMessage(message);
+        lastSendTime = System.currentTimeMillis();
     }
 
     private static boolean isSpecialMessage(int command) {
@@ -320,6 +336,10 @@ public class Session implements ISession {
                 collectorThread.interrupt();
                 collectorThread = null;
             }
+            if (heartbeatThread != null && heartbeatThread.isAlive()) {
+                heartbeatThread.interrupt();
+                heartbeatThread = null;
+            }
             System.gc();
         } catch (Exception ignored) {
         } finally {
@@ -361,6 +381,17 @@ public class Session implements ISession {
         isConnected = true;
         sendThread.start();
         messageHandler.setService(service);
+    }
+
+    public void sendPing() {
+        try {
+            Message ms = new Message(Cmd.PING);
+            FastDataOutputStream ds = ms.writer();
+            ds.flush();
+            sendMessage(ms);
+            ms.cleanup();
+        } catch (IOException ignored) {
+        }
     }
 
     public void enter() {
@@ -1010,6 +1041,7 @@ public class Session implements ISession {
             } else {
                 size = dis.readUnsignedShort();
             }
+            lastReceiveTime = System.currentTimeMillis();
             byte data[] = new byte[size];
             int len = 0;
             int byteRead = 0;
@@ -1026,6 +1058,26 @@ public class Session implements ISession {
             }
             Message msg = new Message(cmd, data);
             return msg;
+        }
+    }
+
+    class Heartbeat implements Runnable {
+        @Override
+        public void run() {
+            try {
+                while (!socket.isClosed()) {
+                    long now = System.currentTimeMillis();
+                    if (now - lastReceiveTime > TIMEOUT) {
+                        close();
+                        break;
+                    }
+                    if (now - lastSendTime > PING_INTERVAL) {
+                        sendPing();
+                    }
+                    Thread.sleep(5000);
+                }
+            } catch (InterruptedException ignored) {
+            }
         }
     }
 
