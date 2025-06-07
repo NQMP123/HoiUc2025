@@ -149,6 +149,9 @@ public class Mob {
         if (zone == null) {
             return;
         }
+        if (!com.ngocrong.server.DropRateService.shouldDropMobItem()) {
+            return;
+        }
         if (this.templateId == 70) {
             Player c = _c;
             Item item = new Item(ItemName.QUA_TRUNG);

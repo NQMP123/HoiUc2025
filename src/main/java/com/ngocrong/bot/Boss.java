@@ -83,6 +83,9 @@ public abstract class Boss extends Player implements Bot {
     }
 
     public void dropItem(Item item, Player player) {
+        if (!com.ngocrong.server.DropRateService.shouldDropBossItem()) {
+            return;
+        }
         ItemMap itemMap = new ItemMap(zone.autoIncrease++);
         itemMap.item = item;
         itemMap.playerID = player == null ? -1 : Math.abs(player.id);
