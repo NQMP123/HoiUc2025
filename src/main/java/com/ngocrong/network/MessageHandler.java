@@ -49,6 +49,9 @@ public class MessageHandler implements IMessageHandler {
                     case Cmd.SUB_COMMAND:
                         messageSubCommand(mss);
                         break;
+                    case Cmd.PING:
+                        session.sendPing();
+                        break;
                     case Cmd.LOGIN2:
                         service.dialogMessage("Đăng ký tài khoản tại Ngọc Rồng Baby (ngocrongbaby.com)");
                         break;
@@ -588,16 +591,6 @@ public class MessageHandler implements IMessageHandler {
     }
 
     public void sendPing() {
-        try {
-            Message mss = Service.messageSubCommand(-99);
-            FastDataOutputStream ds = mss.writer();
-            ds.writeByte(7);
-            ds.flush();
-            session.sendMessage(mss);
-            mss.cleanup();
-        } catch (IOException ex) {
-            com.ngocrong.NQMP.UtilsNQMP.logError(ex);
-            logger.error("failed!", ex);
-        }
+        session.sendPing();
     }
 }
