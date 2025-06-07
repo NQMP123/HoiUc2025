@@ -95,6 +95,68 @@ public abstract class Boss extends Player implements Bot {
         zone.service.addItemMap(itemMap);
     }
 
+    protected void dropGroupA(Player player) {
+        RandomCollection<Integer> rc = new RandomCollection<>();
+        rc.add(10, ItemName.NGOC_RONG_3_SAO);
+        rc.add(20, ItemName.NGOC_RONG_4_SAO);
+        rc.add(20, ItemName.NGOC_RONG_5_SAO);
+        rc.add(20, ItemName.NGOC_RONG_6_SAO);
+        rc.add(30, ItemName.NGOC_RONG_7_SAO);
+        int id = rc.next();
+        Item item = new Item(id);
+        item.setDefaultOptions();
+        item.quantity = 1;
+        dropItem(item, player);
+    }
+
+    protected void dropGroupB(Player player) {
+        RandomCollection<Integer> rc = new RandomCollection<>();
+        rc.add(10, ItemName.NGOC_RONG_3_SAO);
+        rc.add(20, ItemName.NGOC_RONG_4_SAO);
+        rc.add(20, ItemName.NGOC_RONG_5_SAO);
+        rc.add(20, ItemName.NGOC_RONG_6_SAO);
+        rc.add(20, ItemName.NGOC_RONG_7_SAO);
+        int percent = Utils.nextInt(100);
+        if (percent < 10) {
+            Item item = new Item(RandomItem.DO_CUOI.next());
+            item.setDefaultOptions();
+            item.quantity = 1;
+            dropItem(item, player);
+        } else {
+            int id = rc.next();
+            Item item = new Item(id);
+            item.setDefaultOptions();
+            item.quantity = 1;
+            dropItem(item, player);
+        }
+    }
+
+    protected void dropGroupC(Player player) {
+        int percent = Utils.nextInt(100);
+        int itemId;
+        if (percent < 40) {
+            itemId = ItemName.NGOC_RONG_3_SAO;
+        } else if (percent < 80) {
+            itemId = ItemName.NGOC_RONG_4_SAO;
+        } else if (percent < 90) {
+            itemId = RandomItem.DO_CUOI.next();
+        } else if (percent < 97) {
+            int[] tl = {
+                ItemName.AO_THAN_LINH, ItemName.AO_THAN_NAMEC, ItemName.AO_THAN_XAYDA,
+                ItemName.QUAN_THAN_LINH, ItemName.QUAN_THAN_NAMEC, ItemName.QUAN_THAN_XAYDA,
+                ItemName.GIAY_THAN_LINH, ItemName.GIAY_THAN_NAMEC, ItemName.GIAY_THAN_XAYDA,
+                ItemName.NHAN_THAN_LINH
+            };
+            itemId = tl[Utils.nextInt(tl.length)];
+        } else {
+            itemId = ItemName.GANG_THAN_LINH;
+        }
+        Item item = new Item(itemId);
+        item.setDefaultOptions();
+        item.quantity = 1;
+        dropItem(item, player);
+    }
+
     public static String[][] infoBoss(Player player) {
         List<Boss> listCheck = new ArrayList<>();
         for (Boss b : listBoss) {

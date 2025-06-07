@@ -23,7 +23,7 @@ public class MapDauDinh extends Boss {
         this.distanceToAddToList = 500;
         this.limit = 500;
         this.name = "Mập Đầu Đinh";
-        setInfo(40000000, 1000000, 20000, 1000, 50);
+        setInfo(15000000, 1000000, 20000, 1000, 50);
         this.waitingTimeToLeave = 0;
         setTypePK((byte) 5);
     }
@@ -61,17 +61,7 @@ public class MapDauDinh extends Boss {
         if (obj == null) {
             return;
         }
-        Player c = (Player) obj;
-        Item item = new Item(ItemName.NGOC_RONG_5_SAO);
-        item.setDefaultOptions();
-        item.quantity = 1;
-        ItemMap itemMap = new ItemMap(zone.autoIncrease++);
-        itemMap.item = item;
-        itemMap.playerID = Math.abs(c.id);
-        itemMap.x = getX();
-        itemMap.y = zone.map.collisionLand(getX(), getY());
-        zone.addItemMap(itemMap);
-        zone.service.addItemMap(itemMap);
+        dropGroupA((Player) obj);
     }
 
     @Override

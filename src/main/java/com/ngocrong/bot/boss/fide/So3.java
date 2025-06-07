@@ -26,10 +26,10 @@ public class So3 extends Boss {
         this.distanceToAddToList = 1000;
         this.limit = 1000;
         this.name = "Số 3";
-        setInfo(110000000, 1000000, 10000, 100, 5);
+        setInfo(22000000, 1000000, 10000, 100, 5);
         this.willLeaveAtDeath = false;
         if (team.getType() == 0) {
-            setInfo(50000000, 1000000, 10000, 100, 5);
+            setInfo(22000000, 1000000, 10000, 100, 5);
             this.percentDame = 35;
         }
     }
@@ -82,42 +82,14 @@ public class So3 extends Boss {
             return;
         }
         Player c = (Player) obj;
+        dropGroupA(c);
         if (team.getType() == 0) {
             for (int i = 0; i < 5; i++) {
                 Item item = new Item(ItemName.THOI_VANG);
                 item.setDefaultOptions();
                 item.quantity = 1;
-                ItemMap itemMap = new ItemMap(zone.autoIncrease++);
-                itemMap.item = item;
-                itemMap.playerID = -1;
-                itemMap.x = (short) Utils.nextInt(50, zone.map.width - 50);
-                itemMap.y = zone.map.collisionLand(itemMap.x, getY());
-                zone.addItemMap(itemMap);
-                zone.service.addItemMap(itemMap);
+                dropItem(item, null);
             }
-        } else if (zone.map.mapID > 70) {
-            Item item = new Item(ItemName.NGOC_RONG_5_SAO);
-            item.setDefaultOptions();
-            item.quantity = 1;
-            ItemMap itemMap = new ItemMap(zone.autoIncrease++);
-            itemMap.item = item;
-            itemMap.playerID = Math.abs(c.id);
-            itemMap.x = getX();
-            itemMap.y = zone.map.collisionLand(getX(), getY());
-            zone.addItemMap(itemMap);
-            zone.service.addItemMap(itemMap);
-        } else {
-            Item item = new Item(ItemName.THOI_VANG);
-            item.setDefaultOptions();
-            item.quantity = 1;
-            ItemMap itemMap = new ItemMap(zone.autoIncrease++);
-            itemMap.item = item;
-            itemMap.playerID = -1;
-            itemMap.x = (short) Utils.nextInt(50, zone.map.width - 50);
-            itemMap.y = zone.map.collisionLand(itemMap.x, getY());
-            zone.addItemMap(itemMap);
-            zone.service.addItemMap(itemMap);
-
         }
     }
 

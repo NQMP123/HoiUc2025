@@ -42,11 +42,11 @@ public class BlackGoku extends Boss {
         this.limit = -1;
         if (isSuper) {
             this.name = "Super Black Goku " + Utils.nextInt(100);
-            setInfo(5000000000L, 1000000, 500000, 1000, 10);
+            setInfo(700000000L, 1000000, 500000, 1000, 10);
             count++;
         } else {
             this.name = "Black Goku " + Utils.nextInt(100);
-            setInfo(5000000000L, 1000000, 1000000, 1000, 10);
+            setInfo(500000000L, 1000000, 1000000, 1000, 10);
         }
         setDefaultPart();
         setTypePK((byte) 5);
@@ -119,9 +119,7 @@ public class BlackGoku extends Boss {
         if (obj == null) {
             return;
         }
-        //dothanlinh
-        Player c = (Player) obj;
-        GeneralDrop(c);
+        dropGroupC((Player) obj);
 
     }
 

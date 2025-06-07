@@ -1,17 +1,24 @@
 package com.ngocrong.event;
 
 import com.ngocrong.consts.ItemName;
+import com.ngocrong.consts.ItemTimeName;
 import com.ngocrong.data.OsinCheckInData;
 import com.ngocrong.item.Item;
+import com.ngocrong.item.ItemTime;
 import com.ngocrong.user.Player;
 import com.ngocrong.util.Utils;
 import com.ngocrong.repository.GameRepository;
 import com.ngocrong.repository.OsinCheckInRepository;
 import com.ngocrong.server.SessionManager;
+import com.ngocrong.data.PlayerData;
+import com.ngocrong.repository.PlayerDataRepository;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.ArrayList;
 
 // LƯU Ý QUAN TRỌNG CHO NGƯỜI DÙNG:
 // Các lỗi linter bạn thấy sau khi áp dụng thay đổi này có thể là do các phần sau CHƯA được triển khai
@@ -144,31 +151,50 @@ public class OsinCheckInEvent {
         }
 
         Item rewardItem = getRewardItemForMilestoneValue(currentMilestone);
-        if (rewardItem == null) {
-            return; // Không có quà cho mốc này (không nên xảy ra nếu currentMilestone > 0)
-        }
 
         Player p = playerToReward;
-        if (p == null) { // Nếu không truyền player cụ thể, lấy từ Manager
+        if (p == null) {
             p = SessionManager.findChar(checkInData.getPlayerId());
         }
 
-        if (p != null ) {
-            Item rewardToGive = rewardItem.clone(); // QUAN TRỌNG: Clone item!
+        boolean isX2 = currentMilestone >= 500;
+
+        if (p != null) {
+            if (isX2) {
+                Item base = new Item(ItemName.PHIEU_X2_TNSM);
+                p.setItemTime(ItemTimeName.PHIEU_X2_TNSM, base.template.iconID, true, 24 * 60 * 60);
+                p.service.sendThongBao(String.format("Bạn nhận được x2 TNSM trong ngày từ mốc %d người điểm danh.", currentMilestone));
+                checkInData.setRewarded((byte) 1);
+                repo().save(checkInData);
+                return;
+            }
+
+            if (rewardItem == null) {
+                return;
+            }
+
+            Item rewardToGive = rewardItem.clone();
             if (p.addItem(rewardToGive)) {
                 p.service.sendThongBao(String.format("Bạn nhận được quà điểm danh mốc %d: %s x%d.",
                         currentMilestone,
                         rewardToGive.template.name, rewardToGive.quantity));
-                checkInData.setRewarded((byte) 1); // Đánh dấu đã nhận thưởng
-                repo().save(checkInData); // Phương thức này phải hỗ trợ update.
-            } else {
-                // Chỉ thông báo cho người chơi nếu đó là người vừa điểm danh hoặc
-                // playerToReward được cung cấp
-                if (playerToReward != null && p.id == playerToReward.id) {
-                    p.service.sendThongBao(String.format("Hành trang không đủ chỗ trống để nhận quà điểm danh mốc %d.",
-                            currentMilestone));
-                }
+                checkInData.setRewarded((byte) 1);
+                repo().save(checkInData);
+            } else if (playerToReward != null && p.id == playerToReward.id) {
+                p.service.sendThongBao(String.format("Hành trang không đủ chỗ trống để nhận quà điểm danh mốc %d.",
+                        currentMilestone));
             }
+        } else {
+            // người chơi offline
+            if (isX2) {
+                Item base = new Item(ItemName.PHIEU_X2_TNSM);
+                storeItemTimeOffline(checkInData.getPlayerId(),
+                        new ItemTime(ItemTimeName.PHIEU_X2_TNSM, base.template.iconID, 24 * 60 * 60, true));
+            } else if (rewardItem != null) {
+                storeItemOffline(checkInData.getPlayerId(), rewardItem.clone());
+            }
+            checkInData.setRewarded((byte) 1);
+            repo().save(checkInData);
         }
     }
 
@@ -213,6 +239,81 @@ public class OsinCheckInEvent {
             reward.setDefaultOptions();
         }
         return reward;
+    }
+
+    private static void storeItemOffline(int playerId, Item item) {
+        if (item == null) {
+            return;
+        }
+        PlayerDataRepository pr = GameRepository.getInstance().player;
+        Optional<PlayerData> opt = pr.findById(playerId);
+        if (opt.isEmpty()) {
+            return;
+        }
+        PlayerData data = opt.get();
+        Gson g = new Gson();
+        List<Item> list;
+        try {
+            list = g.fromJson(data.boxCrackBall, new TypeToken<List<Item>>() {
+            }.getType());
+        } catch (Exception e) {
+            list = new ArrayList<>();
+        }
+        if (list == null) {
+            list = new ArrayList<>();
+        }
+        list.add(item);
+        data.boxCrackBall = g.toJson(list);
+        pr.save(data);
+    }
+
+    private static void storeItemTimeOffline(int playerId, ItemTime itemTime) {
+        PlayerDataRepository pr = GameRepository.getInstance().player;
+        Optional<PlayerData> opt = pr.findById(playerId);
+        if (opt.isEmpty()) {
+            return;
+        }
+        PlayerData data = opt.get();
+        Gson g = new Gson();
+        List<ItemTime> list;
+        try {
+            list = g.fromJson(data.itemTime, new TypeToken<List<ItemTime>>() {
+            }.getType());
+        } catch (Exception e) {
+            list = new ArrayList<>();
+        }
+        if (list == null) {
+            list = new ArrayList<>();
+        }
+        boolean found = false;
+        for (ItemTime it : list) {
+            if (it.id == itemTime.id) {
+                it.seconds += itemTime.seconds;
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            list.add(itemTime);
+        }
+        data.itemTime = g.toJson(list);
+        pr.save(data);
+    }
+
+    public static void checkPendingReward(Player player) {
+        if (player == null) {
+            return;
+        }
+        Optional<OsinCheckInData> opt = repo().findTodayByPlayer(player.id);
+        if (opt.isPresent()) {
+            OsinCheckInData data = opt.get();
+            if (data.getRewarded() == null || data.getRewarded() == 0) {
+                int milestone = getHighestAchievedMilestone(getTotalTodayCheckIns());
+                if (milestone > 0) {
+                    tryGiveRewardToPlayer(player, data, milestone);
+                }
+            }
+        }
     }
 
     // Các phương thức cũ isCheckInDay(), isRewardDay(), today(),

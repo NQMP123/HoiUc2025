@@ -21,7 +21,7 @@ public class KuKu extends Boss {
         this.distanceToAddToList = 500;
         this.limit = 500;
         this.name = "KuKu";
-        setInfo(30000000, 1000000, 20000, 1000, 50);
+        setInfo(10000000, 1000000, 20000, 1000, 50);
         this.waitingTimeToLeave = 0;
         setTypePK((byte) 5);
     }
@@ -48,17 +48,7 @@ public class KuKu extends Boss {
             return;
         }
 
-        Player c = (Player) obj;
-        Item item = new Item(ItemName.NGOC_RONG_5_SAO);
-        item.setDefaultOptions();
-        item.quantity = 1;
-        ItemMap itemMap = new ItemMap(zone.autoIncrease++);
-        itemMap.item = item;
-        itemMap.playerID = Math.abs(c.id);
-        itemMap.x = getX();
-        itemMap.y = zone.map.collisionLand(getX(), getY());
-        zone.addItemMap(itemMap);
-        zone.service.addItemMap(itemMap);
+        dropGroupA((Player) obj);
     }
 
     @Override
