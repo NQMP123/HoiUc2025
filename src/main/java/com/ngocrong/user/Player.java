@@ -5843,15 +5843,12 @@ public class Player {
                 sb.append("1) Giữ ngọc sao đen trên người hơn 5 phút liên tục").append("\b");
                 sb.append("2) Sau 30 phút tham gia tàu sẽ đón về và đang giữ ngọc sao đen trên người").append("\n");
                 sb.append("Các phần thưởng như sau").append("\b");
-                sb.append("1 sao đen: +10% sức đánh cho toàn bang").append("\b");
-                sb.append("2 sao đen: +10% HP tối đa cho toàn bang").append("\b");
-                sb.append("3 sao đen: +10% KI tối đa cho toàn bang").append("\b");
-                sb.append("4 sao đen: +10% TNSM tối đa cho toàn bang").append("\b");
-                sb.append("5 sao đen: Mỗi giờ nhận được 1 Mảnh đội trưởng vàng hoặc 1 Item cấp 1 ngẫu nhiên")
+                sb.append("1 sao đen: +20% HP, KI và Sức đánh").append("\b");
+                sb.append("2 sao đen: Mỗi giờ nhận ngẫu nhiên 1 CN/BH/BK/GX/AD/C1 hoặc CN2/BH2/BK2")
                         .append("\b");
-                sb.append("6 sao đen: Mỗi giờ nhận được 1 Item cấp 2 ngẫu nhiên").append("\b");
-                sb.append("7 sao đen: Mỗi giờ nhận được 2 thỏi vàng").append("\b");
-                sb.append("Các phần thường mỗi giờ đến gặp ta để nhận nhé");
+                sb.append("3 sao đen: Mỗi giờ nhận 2 thỏi vàng").append("\b");
+                sb.append("4 sao đen: +10% TNSM sư phụ và đệ tử cho cả ngày").append("\b");
+                sb.append("Các phần thưởng mỗi giờ đến gặp ta để nhận nhé");
                 service.openUISay(npc.templateId, sb.toString(), npc.avatar);
             }
             break;
@@ -5877,18 +5874,6 @@ public class Player {
                 if (!map.zones.isEmpty()) {
                     list.add(new KeyValue(MapName.HANH_TINH_MONMAASU, "Hành tinh Monmaasu", "Vũ trụ"));
                 }
-                map = MapManager.getInstance().getMap(MapName.HANH_TINH_RUDEEZE);
-                if (!map.zones.isEmpty()) {
-                    list.add(new KeyValue(MapName.HANH_TINH_RUDEEZE, "Hành tinh Rudeeze", "Vũ trụ"));
-                }
-                map = MapManager.getInstance().getMap(MapName.HANH_TINH_GELBO);
-                if (!map.zones.isEmpty()) {
-                    list.add(new KeyValue(MapName.HANH_TINH_GELBO, "Hành tinh Gelbo", "Vũ trụ"));
-                }
-                map = MapManager.getInstance().getMap(MapName.HANH_TINH_TIGERE);
-                if (!map.zones.isEmpty()) {
-                    list.add(new KeyValue(MapName.HANH_TINH_TIGERE, "Hành tinh Tigere", "Vũ trụ"));
-                }
                 listMapTransport = list;
                 setCommandTransport((byte) 1);
                 service.mapTransport(list);
@@ -5912,14 +5897,14 @@ public class Player {
                                                 String.format("%d sao\n%s", star, Utils.timeAgo(timeRemaining))));
                                     } else {
                                         int cmd = -1;
-                                        if (star == 5) {
+                                        if (star == 2) {
                                             cmd = CMDMenu.BLACK_DRAGONBALL_REWARD_5_STAR;
-                                        } else if (star == 6) {
+                                        } else if (star == 3) {
                                             cmd = CMDMenu.BLACK_DRAGONBALL_REWARD_6_STAR;
-                                        } else if (star == 7) {
-                                            cmd = CMDMenu.BLACK_DRAGONBALL_REWARD_7_STAR;
                                         }
-                                        menus.add(new KeyValue(cmd, String.format("Nhận\nthưởng\n%d sao", star)));
+                                        if (cmd != -1) {
+                                            menus.add(new KeyValue(cmd, String.format("Nhận\nthưởng\n%d sao", star)));
+                                        }
                                     }
                                 }
                             }
@@ -5980,17 +5965,20 @@ public class Player {
             // }
             // break;
             case CMDMenu.BLACK_DRAGONBALL_REWARD_5_STAR: {
+                // Nhận thưởng cho Ngọc Rồng Sao Đen 2 sao
                 if (clan != null) {
                     ClanMember mem = clan.getMember(this.id);
                     if (mem != null) {
-                        ClanReward r = mem.getClanReward(5);
+                        ClanReward r = mem.getClanReward(2);
                         if (r != null) {
                             long now = System.currentTimeMillis();
                             long t = now - r.getReceiveTime();
                             long timeDelay = r.getTimeDelay();
                             if (t >= timeDelay) {
-                                int itemID = Utils.isTrue(1, 3) ? ItemName.MANH_DOI_TRUONG_VANG_956
-                                        : Utils.nextInt(381, 384);
+                                int[] items = {ItemName.CUONG_NO, ItemName.BO_HUYET, ItemName.BO_KHI,
+                                        ItemName.GIAP_XEN_BO_HUNG, ItemName.AN_DANH, ItemName.CAPSULE_1_SAO,
+                                        ItemName.CUONG_NO_2, ItemName.BO_HUYET_2, ItemName.BO_KHI_2};
+                                int itemID = items[Utils.nextInt(items.length)];
                                 Item item = new Item(itemID);
                                 item.quantity = 1;
                                 item.setDefaultOptions();
@@ -6009,24 +5997,23 @@ public class Player {
             break;
 
             case CMDMenu.BLACK_DRAGONBALL_REWARD_6_STAR: {
+                // Nhận thưởng cho Ngọc Rồng Sao Đen 3 sao
                 if (clan != null) {
                     ClanMember mem = clan.getMember(this.id);
                     if (mem != null) {
-                        ClanReward r = mem.getClanReward(6);
+                        ClanReward r = mem.getClanReward(3);
                         if (r != null) {
                             long now = System.currentTimeMillis();
                             long t = now - r.getReceiveTime();
                             long timeDelay = r.getTimeDelay();
                             if (t >= timeDelay) {
-                                int itemID = Utils.nextInt(1021, 1023);
-                                Item item = new Item(itemID);
-                                item.quantity = 1;
+                                Item item = new Item(ItemName.THOI_VANG);
+                                item.quantity = 2;
                                 item.setDefaultOptions();
                                 if (addItem(item)) {
+                                    r.setReceiveTime(now);
                                     service.sendThongBao(
                                             String.format("Bạn nhận được %d %s", item.quantity, item.template.name));
-                                    r.setReceiveTime(now);
-
                                 } else {
                                     service.sendThongBao(Language.ME_BAG_FULL);
                                 }

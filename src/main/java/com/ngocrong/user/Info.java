@@ -660,15 +660,13 @@ public class Info {
                 for (ClanReward clanReward : mem.rewards) {
                     switch (clanReward.getStar()) {
                         case 1:
-                            this.damageFull += damageFull * 10 / 100;
-                            break;
-                        case 2:
-                            this.hpFullTemp += hpFullTemp * 10 / 100;
-                            break;
-                        case 3:
-                            this.mpFullTemp += mpFullTemp * 10 / 100;
+                            // +20% HP, KI và Sức đánh cho cả bang
+                            this.damageFull += damageFull * 20 / 100;
+                            this.hpFullTemp += hpFullTemp * 20 / 100;
+                            this.mpFullTemp += mpFullTemp * 20 / 100;
                             break;
                         case 4:
+                            // +10% TNSM sư phụ và đệ tử
                             options[101] += 10;
                             break;
 //                        case 5:

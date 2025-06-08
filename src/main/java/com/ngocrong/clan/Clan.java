@@ -128,8 +128,9 @@ public class Clan {
             if (mem != null) {
                 ClanReward r = new ClanReward();
                 r.setStar(star);
-                //star = 8,9,10 -> nrnm
-                r.setCanBeReceivedDirectly(star <= 4 || star == 8 || star == 9 || star == 10);
+                // Các sao nhận trực tiếp: 1 và 4, các sao còn lại phải đến NPC nhận
+                boolean direct = star == 1 || star == 4 || star == 8 || star == 9 || star == 10;
+                r.setCanBeReceivedDirectly(direct);
                 r.setNumberOfTimesReceived(24);
                 r.setTimeDelay(3600000);
                 r.setTimeStart(now);
