@@ -1,177 +1,239 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.ngocrong.bot.boss.BossDisciple;
 
 import com.ngocrong.bot.Boss;
-import com.ngocrong.consts.ItemName;
-import com.ngocrong.item.Item;
-import com.ngocrong.item.ItemMap;
-import com.ngocrong.item.ItemOption;
+import com.ngocrong.map.MapManager;
+import com.ngocrong.map.TMap;
 import com.ngocrong.map.tzone.Zone;
-import com.ngocrong.server.DropRateService;
-import com.ngocrong.server.SessionManager;
+import com.ngocrong.mob.Mob;
 import com.ngocrong.skill.Skill;
-import com.ngocrong.skill.SkillName;
 import com.ngocrong.skill.Skills;
 import com.ngocrong.user.Player;
 import com.ngocrong.util.Utils;
-import java.util.ArrayList;
-import java.util.List;
 import org.apache.log4j.Logger;
 
-/**
- *
- * @author Administrator
- */
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 public class SuperBroly extends Boss {
 
     private static final Logger logger = Logger.getLogger(SuperBroly.class);
 
+    public int level;
+    public Skill[] TTNL = new Skill[7];
+
     public SuperBroly() {
         super();
-        this.percentDame = 3;
-        setInfo(300_000_000, 1000000000, 10000, 100, 20);
-        // this.limitDame = this.info.originalHP / 100;
-        this.name = "Super Broly " + Utils.nextInt(100);
+        this.distanceToAddToList = 100;
+        this.limit = 500;
+        this.level = level;
+        setInfo(Utils.nextInt(500, 3000), 100000, 10, 100, 20);
+        this.name = "SuperBroly " + Utils.nextInt(100);
+        setDefaultPart();
+        this.waitingTimeToLeave = 5000;
+        this.sayTheLastWordBeforeDie = "Các ngươi hãy chờ đấy, ta sẽ quay lại sau";
         setTypePK((byte) 5);
-        this.limit = -1;
-        this.waitingTimeToLeave = 0;
+        point = 0;
+    }
+
+    public long getDameAttack(Player plAtt) {
+        long baseDame = this.info.hpFull / 10;
+        long dameCap;
+        long weakPlayerHpThreshold = 50000;
+        if (plAtt.info.hpFull < weakPlayerHpThreshold) {
+            dameCap = plAtt.info.hpFull / 10;
+        } else {
+            dameCap = plAtt.info.hpFull / Utils.nextInt(5, 50);
+        }
+        long dameAfterCap = Math.min(baseDame, dameCap);
+        double randomFactor = Utils.nextInt(90, 111) / 100.0;
+        long dameRandomized = (long) (dameAfterCap * randomFactor);
+        long finalDame = dameRandomized - plAtt.info.defenseFull;
+        if (finalDame <= 0) {
+            return 1;
+        }
+        return finalDame;
     }
 
     @Override
     public void initSkill() {
         try {
             skills = new ArrayList<>();
-
-            skills.add(Skills.getSkill((byte) SkillName.CHIEU_KAMEJOKO, (byte) 5).clone());
-            skills.add(Skills.getSkill((byte) SkillName.CHIEU_MASENKO, (byte) 5).clone());
-            skills.add(Skills.getSkill((byte) SkillName.CHIEU_ANTOMIC, (byte) 5).clone());
-
-            skills.add(Skills.getSkill((byte) SkillName.KHIEN_NANG_LUONG, (byte) 7).clone());
+            skills.add(Skills.getSkill((byte) 1, (byte) 7).clone());
+            skills.add(Skills.getSkill((byte) 5, (byte) 7).clone());
+            skills.add(Skills.getSkill((byte) 3, (byte) 7).clone());
+            skills.add(Skills.getSkill((byte) 4, (byte) 7).clone());
+            for (int i = 0; i < 7; i++) {
+                TTNL[i] = Skills.getSkill((byte) 8, (byte) (i + 1)).clone();
+                skills.add(TTNL[i]);
+            }
         } catch (Exception ex) {
             com.ngocrong.NQMP.UtilsNQMP.logError(ex);
             logger.error("init skill err");
-        }
-
-    }
-
-    @Override
-    public void killed(Object obj) {
-
-        Player player = (Player) obj;
-        if (player == null) {
-            return;
-        }
-        if (Utils.isTrue(1 * DropRateService.getMobRate(), 10)) {
-            ItemMap itemMap = new ItemMap(zone.autoIncrease++);
-            Item quatrung = new Item(ItemName.QUA_TRUNG);
-            quatrung.quantity = 1;
-            itemMap.item = quatrung;
-            itemMap.playerID = Math.abs(player.id);
-            itemMap.x = getX();
-            itemMap.y = zone.map.collisionLand(getX(), getY());
-            zone.addItemMap(itemMap);
-            zone.service.addItemMap(itemMap);
-        } else {
-            player.addGold(200_000_000);
-            player.service.sendThongBao("Bạn nhận được 200tr vàng");
         }
     }
 
     @Override
     public void sendNotificationWhenAppear(String map) {
-        SessionManager.chatVip(String.format("BOSS %s vừa xuất hiện tại %s", this.name, map));
-        logger.debug(String.format("BOSS %s vừa xuất hiện tại %s khu vực %d", this.name, map, zone.zoneID));
-    }
-
-    @Override
-    public void throwItem(Object obj) {
 
     }
 
     @Override
-    public void sendNotificationWhenDead(String name) {
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void setDefaultHead() {
-        setHead((short) 294);
-    }
-
-    @Override
-    public void setDefaultBody() {
-        setBody((short) 295);
-    }
-
-    @Override
-    public void setDefaultLeg() {
-        setLeg((short) 296);
-    }
-
-    @Override
-    public void startDie() {
-        super.startDie();
-        Utils.setTimeout(() -> {
-            int[] mapIDs = new int[] { 5, 7, 13, 10, 20, 19, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38 };
-            SuperBroly bl = new SuperBroly();
-            bl.setLocation(mapIDs[Utils.nextInt(mapIDs.length)], -1);
-        }, 15 * 60000);
+    public void sendNotificationWhenDead(String text) {
 
     }
 
     @Override
-    public Object targetDetect() {
-        List<Player> enemiesCanAttack = this.zone.players;
-        if (enemiesCanAttack.size() > 0) {
-            Player target = randomChar(enemiesCanAttack);
-            if (target != null && !target.isBoss()) {
-                return target;
+    public void addTargetToList() {
+    }
+
+    public void joinMap() {
+        Integer[] mapIdArray = new Integer[]{5, 7, 13, 10, 20, 19, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38};
+        List<Integer> mapList = new ArrayList<>(Arrays.asList(mapIdArray));
+        Collections.shuffle(mapList);
+        for (Integer mapId : mapList) {
+            TMap map = MapManager.getInstance().getMap(mapId);
+            if (map == null || map.zones.isEmpty()) {
+                continue;
             }
-        }
-        return null;
-    }
-
-    @Override
-    public void updateEveryHalfSeconds() {
-        super.updateEveryHalfSeconds();
-        if (!isDead()) {
-            if (isAttack() && meCanAttack()) {
-                if (!isRecoveryEnergy() && !isCharge()) {
-                    Object target = targetDetect();
-                    if (target != null) {
-                        attack(target);
-                    }
-                    useSkillNotFocus();
+            List<Zone> zoneList = new ArrayList<>(map.zones);
+            Collections.shuffle(zoneList);
+            for (Zone zone : zoneList) {
+                if (zone != null && zone.getBossInZone().isEmpty() && zone.zoneID >= 2) {
+                    this.setLocation(map.mapID, zone.zoneID);
+                    return; // Thoát khỏi phương thức vì đã tìm được chỗ
                 }
             }
         }
     }
 
     @Override
-    public void attack(Object obj) {
-        long now = System.currentTimeMillis();
-        if (now - lastTimeSkillShoot < 1000) {
+    public void startDie() {
+        Zone zone = this.zone;
+        listTarget.clear();
+        super.startDie();
+        long HP = info.hpFull;
+
+        Utils.setTimeout(() -> {
+            SuperBroly superbroly = new SuperBroly();
+            superbroly.setInfo(HP, Long.MAX_VALUE, 1000, id, id);
+            superbroly.setLocation(zone);
+        }, 15 *60000);
+    }
+
+    public void checkDie() {
+    }
+
+    @Override
+    public void throwItem(Object obj) {
+
+        if (obj == null || !(obj instanceof Player)) {
             return;
         }
-        Player target = (Player) obj;
-        Skill skill = selectSkillAttack();
-        if (skill != null) {
-            int d = Utils.getDistance(0, 0, skill.dx, skill.dy);
-            if (skill.template.id == SkillName.CHIEU_KAMEJOKO || skill.template.id == SkillName.CHIEU_MASENKO
-                    || skill.template.id == SkillName.CHIEU_ANTOMIC) {
-                lastTimeSkillShoot = now;
-            }
-            this.select = skill;
-            moveTo((short) (target.getX() + Utils.nextInt(-d, d)), target.getY());
-
-            zone.attackPlayer(this, target);
-
+        Player pl = (Player) obj;
+        if (pl.myDisciple == null) {
+            pl.createDisciple(0);
         }
+    }
+
+    @Override
+    public void addTarget(Player _c) {
+        if (_c != this) {
+            if (!listTarget.contains(_c)) {
+                this.listTarget.add(_c);
+                chat(String.format("Mi làm ta nổi giận rồi đó %s", _c.name));
+            }
+        }
+    }
+    public int currentStatus;
+    public long lastChangeStatus = 0;
+
+    @Override
+    public long injure(Player plAtt, Mob mob, long dameInput) {
+        if (plAtt != null) {
+            addTarget(plAtt);
+        }
+        return Math.min(dameInput, this.info.hpFull / 100);
+    }
+
+    public void usingTTNL() {
+        this.select = TTNL[Utils.nextInt(TTNL.length)];
+        startRecoveryEnery();
+    }
+
+    public void checkAttack() {
+        this.info.mp = this.info.mpFull = Long.MAX_VALUE;
+
+        if (System.currentTimeMillis() - lastChangeStatus >= 1000) {
+            lastChangeStatus = System.currentTimeMillis();
+            if (this.info.hp < info.hpFull && Utils.isTrue(1, 10)) {
+                int percentHP = (int) ((this.info.hp * 100) / info.hpFull);
+                if (percentHP > 80) {
+                    usingTTNL();
+                } else {
+                    upPoint();
+                    if (Utils.isTrue(1, 2)) {
+                        usingTTNL();
+                    }
+                }
+            }
+        }
+        if (System.currentTimeMillis() - lastUseRecoveryEnery >= 2000 && this.isRecoveryEnergy) {
+            stopRecoveryEnery();
+        }
+    }
+
+    @Override
+    public void update() {
+        checkAttack();
+        super.update();
+    }
+
+    public void upPoint() {
+        long hp = (long) (info.hpFull / (Utils.nextInt(25, 50)));
+
+        if (hp > 0) {
+            info.hp += hp;
+            info.hpFull += hp;
+            info.hp = Math.min(16070777, info.hp);
+            info.hpFull = Math.min(16070777, info.hpFull);
+            zone.service.playerLoadHP(this, (byte) 0);
+        }
+    }
+
+    @Override
+    public void updateEveryThirtySeconds() {
+        if (!isDead()) {
+            chat("Tránh xa ta ra, đừng làm ta nổi giận");
+        }
+    }
+
+    @Override
+    public void move() {
+        if (Utils.nextInt(3) == 0) {
+            super.move();
+        }
+    }
+
+    @Override
+    public void setDefaultHead() {
+
+        setHead((short) 294);
+
+    }
+
+    @Override
+    public void setDefaultBody() {
+
+        setBody((short) 295);
+
+    }
+
+    @Override
+    public void setDefaultLeg() {
+        setLeg((short) 296);
     }
 
 }

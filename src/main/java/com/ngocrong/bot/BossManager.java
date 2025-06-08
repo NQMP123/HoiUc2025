@@ -11,7 +11,8 @@ import com.ngocrong.bot.boss.Cell.SieuBoHung;
 import com.ngocrong.bot.boss.Cell.XenBoHung;
 import com.ngocrong.bot.boss.Cell.XenCon;
 import com.ngocrong.bot.boss.Chilled;
-import com.ngocrong.bot.boss.BossDisciple.SuperBroly;
+import com.ngocrong.bot.boss.BossDisciple.Broly;
+
 import com.ngocrong.bot.boss.BossDisciple.SuperMabu;
 import com.ngocrong.bot.boss.bill.Berus;
 import com.ngocrong.bot.boss.fide.*;
@@ -224,7 +225,7 @@ public class BossManager {
         MainUpdate.runTaskDayInWindow(() -> {
             GalaxySoldier gB = new GalaxySoldier();
             gB.next((byte) 0);
-        }, "06:00","12:00");
+        }, "06:00", "12:00");
     }
 
     public static void bossHaiTac() {
@@ -278,9 +279,9 @@ public class BossManager {
     public static void bossSuperBroly() {
         int[] mapIDs = new int[]{5, 7, 13, 10, 20, 19, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38};
         Utils.setTimeout(() -> {
-            for (int i = 0; i < 2; i++) {
-                SuperBroly broly = new SuperBroly();
-                broly.setLocation(mapIDs[Utils.nextInt(mapIDs.length)], -1);
+            for (int i = 0; i < 60; i++) {
+                Broly broly = new Broly();
+                broly.joinMap();
             }
             for (int i = 0; i < 2; i++) {
                 SuperMabu supermabu = new SuperMabu();

@@ -35,7 +35,6 @@ import java.util.ArrayList;
 //    - public static Manager getInstance()
 //    - public Player getPlayer(long playerId)
 //    - public void sendNotificationToAllPlayers(String message)
-
 public class OsinCheckInEvent {
 
     private static OsinCheckInRepository repo() {
@@ -43,19 +42,19 @@ public class OsinCheckInEvent {
     }
 
     // Các mốc điểm danh, sắp xếp từ cao đến thấp để dễ xử lý
-    private static final int[] MILESTONES = { 1000, 500, 400, 300, 200 };
+    private static final int[] MILESTONES = {1000, 500, 400, 300, 200};
 
     /**
-     * Lấy tổng số lượt điểm danh trong ngày hôm nay.
-     * Yêu cầu: OsinCheckInRepository.countToday() phải được triển khai.
+     * Lấy tổng số lượt điểm danh trong ngày hôm nay. Yêu cầu:
+     * OsinCheckInRepository.countToday() phải được triển khai.
      */
     public static int getTotalTodayCheckIns() {
         return repo().countToday();
     }
 
     /**
-     * Xử lý khi người chơi thực hiện điểm danh.
-     * Yêu cầu: OsinCheckInRepository.findTodayByPlayer(long) và
+     * Xử lý khi người chơi thực hiện điểm danh. Yêu cầu:
+     * OsinCheckInRepository.findTodayByPlayer(long) và
      * OsinCheckInRepository.save(OsinCheckInData) phải được triển khai.
      */
     public static void checkIn(Player player) {
@@ -103,9 +102,9 @@ public class OsinCheckInEvent {
     }
 
     /**
-     * Xử lý các mốc phần thưởng toàn cục khi có người mới điểm danh.
-     * Thông báo cho toàn server nếu đạt mốc mới.
-     * Phát quà cho những người chơi đủ điều kiện (đã điểm danh, chưa nhận quà).
+     * Xử lý các mốc phần thưởng toàn cục khi có người mới điểm danh. Thông báo
+     * cho toàn server nếu đạt mốc mới. Phát quà cho những người chơi đủ điều
+     * kiện (đã điểm danh, chưa nhận quà).
      */
     private static void processGlobalMilestoneRewards(int previousTotal, int currentTotal) {
         int currentHighestAchievedMilestone = getHighestAchievedMilestone(currentTotal);
@@ -138,10 +137,10 @@ public class OsinCheckInEvent {
 
     /**
      * Thử trao phần thưởng cho một người chơi dựa trên mốc hiện tại.
-     * 
-     * @param playerToReward   Người chơi cụ thể để thử trao quà (có thể null nếu
-     *                         chỉ có checkInData).
-     * @param checkInData      Dữ liệu điểm danh của người chơi.
+     *
+     * @param playerToReward Người chơi cụ thể để thử trao quà (có thể null nếu
+     * chỉ có checkInData).
+     * @param checkInData Dữ liệu điểm danh của người chơi.
      * @param currentMilestone Mốc cao nhất server đã đạt.
      */
     private static void tryGiveRewardToPlayer(Player playerToReward, OsinCheckInData checkInData,
@@ -222,15 +221,15 @@ public class OsinCheckInEvent {
             reward = new Item(ItemName.PHIEU_X2_TNSM);
             reward.quantity = 1;
         } else if (milestoneValue >= 400) {
-            int[] vt = { 342, 343, 344, 345 };
+            int[] vt = {342, 343, 344, 345};
             reward = new Item(vt[Utils.nextInt(vt.length)]);
             reward.quantity = 2;
         } else if (milestoneValue >= 300) {
-            int[] sp = { 441, 442, 443, 444, 445, 446, 447 };
+            int[] sp = {441, 442, 443, 444, 445, 446, 447};
             reward = new Item(sp[Utils.nextInt(sp.length)]);
             reward.quantity = 2;
         } else if (milestoneValue >= 200) {
-            int[] nr = { ItemName.NGOC_RONG_5_SAO, ItemName.NGOC_RONG_6_SAO, ItemName.NGOC_RONG_7_SAO };
+            int[] nr = {ItemName.NGOC_RONG_5_SAO, ItemName.NGOC_RONG_6_SAO, ItemName.NGOC_RONG_7_SAO};
             reward = new Item(nr[Utils.nextInt(nr.length)]);
             reward.quantity = 1;
         }

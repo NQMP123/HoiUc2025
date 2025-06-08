@@ -35,6 +35,7 @@ import com.ngocrong.NQMP.Whis.RewardWhis;
 import com.ngocrong.consts.ItemName;
 import com.ngocrong.data.VongQuayThuongDeData;
 import com.ngocrong.data.WhisData;
+import com.ngocrong.event.OsinCheckInEvent;
 import com.ngocrong.top.AutoReward.AutoReward;
 import lombok.Getter;
 import org.apache.log4j.Logger;

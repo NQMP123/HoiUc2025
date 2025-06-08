@@ -8,6 +8,7 @@ import com.ngocrong.lib.RandomCollection;
 import com.ngocrong.map.MapManager;
 import com.ngocrong.map.TMap;
 import com.ngocrong.map.tzone.Zone;
+import com.ngocrong.model.RandomItem;
 import com.ngocrong.network.FastDataOutputStream;
 import com.ngocrong.network.Message;
 import com.ngocrong.network.Service;

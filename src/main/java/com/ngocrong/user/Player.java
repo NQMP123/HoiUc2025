@@ -95,6 +95,7 @@ import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
+import com.ngocrong.bot.boss.BossDisciple.Broly;
 
 @Getter
 @Setter
@@ -250,7 +251,8 @@ public class Player {
     private boolean isChocolate, isStone;
     private boolean isSkillSpecial;
     private boolean isTrading;
-    private boolean isCharge, isRecoveryEnergy;
+    public boolean isCharge;
+    public boolean isRecoveryEnergy;
     private boolean isMonkey;
     private boolean isHaveEquipTeleport;
     private boolean isHaveEquipSelfExplosion;
@@ -2685,7 +2687,7 @@ public class Player {
                                             dame = _player.info.hpFull / 10;
                                         }
                                     }
-                                    dame = _player.injure(_player, null, dame);
+                                    dame = injure(_player, null, dame);
                                     _player.info.hp -= dame;
 
                                     zone.service.attackPlayer(_player, dame, false, (byte) -1);
@@ -2736,9 +2738,17 @@ public class Player {
     }
 
     public long injure(Player plAtt, Mob mob, long dameInput) {
+        if (plAtt instanceof Broly) {
+            Broly broly = (Broly) plAtt;
+            return broly.getDameAttack(this);
+        }
+        if (plAtt instanceof SuperBroly) {
+            SuperBroly broly = (SuperBroly) plAtt;
+            return broly.getDameAttack(this);
+        }
         return dameInput;
     }
-
+    
     public static short[] listTypeBody = new short[]{35, 36, 37};
 
     public void itemBagToPet(int index) {
@@ -3873,7 +3883,8 @@ public class Player {
                     case NpcName.ONG_PARAGUS:
                     case NpcName.ONG_MOORI:
                         menus.add(new KeyValue(6868, "Rút\nThỏi Vàng"));
-                        menus.add(new KeyValue(6869, "Nhận\nđệ tử"));
+//                        menus.add(new KeyValue(6869, "Nhận\nđệ tử"));
+                        menus.add(new KeyValue(6871, "Nhập\nGiftcode"));
                         menus.add(new KeyValue(6870, "Nhận\nngọc xanh"));
                         service.openUIConfirm(npc.templateId, "Con muốn ta giúp gì ", npc.avatar, menus);
                         break;
@@ -4424,7 +4435,7 @@ public class Player {
                             sb.append("- Lưu ý quan trọng: Phải tham gia 'Điểm danh' mới có thể 'Nhận quà'.\n");
                             sb.append("- Số người đã điểm danh: " + OsinCheckInEvent.getTotalTodayCheckIns());
 //                            if (OsinCheckInEvent.) {
-                                menus.add(new KeyValue(CMDMenu.OSIN_CHECKIN, "Điểm danh"));
+                            menus.add(new KeyValue(CMDMenu.OSIN_CHECKIN, "Điểm danh"));
 //                            } else if (OsinCheckInEvent.isRewardDay()) {
 //                                menus.add(new KeyValue(CMDMenu.OSIN_REWARD, "Nhận quà"));
 //                            }
@@ -5280,7 +5291,13 @@ public class Player {
                     return;
                 }
                 break;
-
+            case 6871: {
+                inputDlg = new InputDialog(CMDTextBox.GIFT_CODE, "Nhập Giftcode muốn dùng",
+                        new TextField("Nhập Giftcode"));
+                inputDlg.setService(service);
+                inputDlg.show();
+                break;
+            }
             case 455: {
                 BaseBabidi baseBabidi = MapManager.getInstance().baseBabidi;
                 if (baseBabidi != null) {
@@ -14055,7 +14072,7 @@ public class Player {
 
     public void stopRecoveryEnery() {
         this.isRecoveryEnergy = false;
-        if (zone != null) {
+        if (zone != null && !(this instanceof Broly) && !(this instanceof SuperBroly)) {
             zone.service.skillNotFocus(this, (byte) 3, null, null);
         }
     }

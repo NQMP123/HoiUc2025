@@ -6,6 +6,8 @@ import com.ngocrong.bot.Boss;
 import com.ngocrong.bot.MiniDisciple;
 import com.ngocrong.bot.Disciple;
 import com.ngocrong.bot.VirtualBot;
+import com.ngocrong.bot.boss.BossDisciple.SuperBroly;
+import com.ngocrong.bot.boss.BossDisciple.Broly;
 //import com.ngocrong.bot.boss.DuongTang;
 import com.ngocrong.bot.boss.barrack.GeneralWhite;
 import com.ngocrong.bot.boss.barrack.MajorMetallitron;
@@ -1024,8 +1026,12 @@ public class Zone extends Thread {
                 }
             }
             if (dame > 0) {
+                dame = target.injure(_player, null, dame);
                 long reactDame = Utils.percentOf(dame, target.info.options[97] + pPhanDonCanChien);
-                reactDame = _player.injure(target, null, reactDame);
+                if (!(_player instanceof Broly) && !(_player instanceof SuperBroly)) {
+                    reactDame = _player.injure(target, null, reactDame);
+
+                }
                 if (reactDame >= _player.info.hp) {
                     reactDame = _player.info.hp - 1;
                 }

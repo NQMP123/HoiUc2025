@@ -29,7 +29,7 @@ public class TieuDoiTruong extends Boss {
         setInfo(28000000, 1000000, 10000, 100, 5);
         this.willLeaveAtDeath = false;
         if (team.getType() == 0) {
-            setInfo(28000000, 1000000, 10000, 100, 5);
+            setInfo(50000000, 1000000, 10000, 100, 5);
             this.percentDame = 35;
         }
     }
@@ -40,7 +40,6 @@ public class TieuDoiTruong extends Boss {
             return Math.min(500000, dameInput);
         }
         return dameInput;
-
     }
 
     @Override

@@ -1,12 +1,10 @@
 package com.ngocrong.bot.boss.BossDisciple;
 
 import com.ngocrong.bot.Boss;
-import com.ngocrong.consts.ItemName;
-import com.ngocrong.item.Item;
-import com.ngocrong.item.ItemMap;
-import com.ngocrong.item.ItemOption;
+import com.ngocrong.map.MapManager;
+import com.ngocrong.map.TMap;
 import com.ngocrong.map.tzone.Zone;
-import com.ngocrong.server.SessionManager;
+import com.ngocrong.mob.Mob;
 import com.ngocrong.skill.Skill;
 import com.ngocrong.skill.Skills;
 import com.ngocrong.user.Player;
@@ -14,36 +12,49 @@ import com.ngocrong.util.Utils;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 public class Broly extends Boss {
 
     private static final Logger logger = Logger.getLogger(Broly.class);
 
     public int level;
+    public Skill[] TTNL = new Skill[7];
 
-    public Broly(int level) {
+    public Broly() {
         super();
         this.distanceToAddToList = 100;
         this.limit = 500;
         this.level = level;
-        if (level == 0) {
-            setInfo(Utils.nextInt(500, 3000), 100000, 10, 100, 20);
-            this.name = "Broly " + Utils.nextInt(100);
-        } else if (level == 1) {
-            setInfo(Utils.nextInt(1000, 1700) * 100000L, 100000, 10000, 100, 20);
-            this.name = "Super Broly " + Utils.nextInt(100);
-        } else if (level == 2) {
-            setInfo(Utils.nextInt(1000, 1700) * 2000000L, 100000, 100000, 3000, 20);
-            this.name = "Super Broly Legend" + Utils.nextInt(100);
-        }
+        setInfo(Utils.nextInt(100000, 500000), 100000, 10, 100, 20);
+        this.name = "Broly " + Utils.nextInt(100);
         setDefaultPart();
         this.waitingTimeToLeave = 5000;
         this.sayTheLastWordBeforeDie = "Các ngươi hãy chờ đấy, ta sẽ quay lại sau";
         setTypePK((byte) 5);
         point = 0;
-        if (level == 2) {
-            info.options[201] = 80;
+    }
+
+    public long getDameAttack(Player plAtt) {
+        long baseDame = this.info.hpFull / 10;
+        long dameCap;
+        long weakPlayerHpThreshold = 50000;
+        if (plAtt.info.hpFull < weakPlayerHpThreshold) {
+            dameCap = plAtt.info.hpFull / 10;
+        } else {
+            dameCap = plAtt.info.hpFull / 20;
         }
+        long dameAfterCap = Math.min(baseDame, dameCap);
+        double randomFactor = Utils.nextInt(90, 111) / 100.0;
+        long dameRandomized = (long) (dameAfterCap * randomFactor);
+        long finalDame = dameRandomized - plAtt.info.defenseFull;
+        if (finalDame <= 0) {
+            return 1;
+        }
+        return finalDame;
     }
 
     @Override
@@ -54,9 +65,10 @@ public class Broly extends Boss {
             skills.add(Skills.getSkill((byte) 5, (byte) 7).clone());
             skills.add(Skills.getSkill((byte) 3, (byte) 7).clone());
             skills.add(Skills.getSkill((byte) 4, (byte) 7).clone());
-            Skill skill = Skills.getSkill((byte) 8, (byte) 7).clone();
-            skill.coolDown = 10000;
-            skills.add(skill);
+            for (int i = 0; i < 7; i++) {
+                TTNL[i] = Skills.getSkill((byte) 8, (byte) (i + 1)).clone();
+                skills.add(TTNL[i]);
+            }
         } catch (Exception ex) {
             com.ngocrong.NQMP.UtilsNQMP.logError(ex);
             logger.error("init skill err");
@@ -65,10 +77,7 @@ public class Broly extends Boss {
 
     @Override
     public void sendNotificationWhenAppear(String map) {
-        if (level > 0) {
-            SessionManager.chatVip(String.format("BOSS %s vừa xuất hiện tại %s", this.name, map));
-            logger.debug(String.format("BOSS %s vừa xuất hiện tại %s khu vực %d", this.name, map, zone.zoneID));
-        }
+
     }
 
     @Override
@@ -77,128 +86,132 @@ public class Broly extends Boss {
     }
 
     @Override
+    public void addTargetToList() {
+    }
+
+    public void joinMap() {
+        Integer[] mapIdArray = new Integer[]{5, 7, 13, 10, 20, 19, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38};
+        List<Integer> mapList = new ArrayList<>(Arrays.asList(mapIdArray));
+        Collections.shuffle(mapList);
+        for (Integer mapId : mapList) {
+            TMap map = MapManager.getInstance().getMap(mapId);
+            if (map == null || map.zones.isEmpty()) {
+                continue;
+            }
+            List<Zone> zoneList = new ArrayList<>(map.zones);
+            Collections.shuffle(zoneList);
+            for (Zone zone : zoneList) {
+                if (zone != null && zone.getBossInZone().isEmpty() && zone.zoneID >= 2) {
+                    this.setLocation(map.mapID, zone.zoneID);
+                    return; // Thoát khỏi phương thức vì đã tìm được chỗ
+                }
+            }
+        }
+    }
+
+    @Override
     public void startDie() {
-        Zone z = zone;
+        Zone zone = this.zone;
         listTarget.clear();
         super.startDie();
-        if (level == 0) {
+        long HP = info.hpFull;
+        if (HP < 1000000) {
             Utils.setTimeout(() -> {
-                Broly broly = new Broly(1);
-                if (info.hpFull > 1000000) {
-                    broly.setInfo(info);
-                }
-                broly.setLocation(z.map.mapID, -1);
-            }, 10000);
-        } else if (level == 1) {
+                Broly broly = new Broly();
+                broly.setInfo(HP, Long.MAX_VALUE, 1000, id, id);
+                broly.joinMap();
+            }, 30000);
+        } else {
             Utils.setTimeout(() -> {
-                Broly broly = new Broly(2);
-                broly.setLocation(z.map.mapID, -1);
-            }, 10000);
-        } else if (level == 2) {
-            Utils.setTimeout(() -> {
-                Broly broly = new Broly(0);
-                broly.setLocation(z.map.mapID, -1);
-            }, 300000);
+                SuperBroly superbroly = new SuperBroly();
+                superbroly.setInfo(HP, Long.MAX_VALUE, 1000, id, id);
+                superbroly.setLocation(zone);
+            }, 30000);
         }
+    }
+
+    public void checkDie() {
     }
 
     @Override
     public void throwItem(Object obj) {
-        if (level < 2) {
-            return;
-        }
+
         if (obj == null) {
             return;
         }
-        Player c = (Player) obj;
-        if (Utils.nextInt(100) < 100) {
-            Item item = new Item(ItemName.MA_PHONG_BA);
-            item.setDefaultOptions();
-            item.addItemOption(new ItemOption(86, 0));
-            item.quantity = 1;
-            ItemMap itemMap = new ItemMap(zone.autoIncrease++);
-            itemMap.item = item;
-            itemMap.playerID = Math.abs(c.id);
-            itemMap.x = getX();
-            itemMap.y = zone.map.collisionLand(getX(), getY());
-            zone.addItemMap(itemMap);
-            zone.service.addItemMap(itemMap);
-        }
+
     }
 
-//    @Override
-//    public long formatDamageInjure(Object attacker, long dame) {
-//        if (level < 2) {
-//            return Math.min(dame, info.hpFull / 20);
-//        }
-//        return Math.min(dame, info.hpFull / 100);
-//    }
-//    @Override
-//    public void createPet(int type, int gender) {
-//        Pet pet = new Pet();
-//        pet.id = this.id + 1;
-//        pet.name = "Đệ tử";
-//        pet.itemBody = new Item[9];
-//        pet.type = type;
-//        if (type == 0) {
-//            pet.gender = pet.classId = (byte) Utils.nextInt(3);
-//        } else {
-//            pet.gender = pet.classId = (byte) gender;
-//        }
-//        pet.info = new Info(pet);
-//        pet.info.setChar(pet);
-//        pet.info.setStamina();
-//        pet.info.setPowerLimited();
-//        pet.info.applyCharLevelPercent();
-//        pet.skills = new ArrayList<>();
-//        pet.skillOpened = 0;
-//        pet.learnSkill();
-//        pet.setMaster(this);
-//        pet.petStatus = 0;
-//        pet.info.setInfo();
-//        pet.info.recovery(Info.ALL, 100, false);
-//        pet.service = new Service(pet);
-//        pet.setDefaultPart();
-//        myPet = pet;
-//        ArrayList<Item> bodys = new ArrayList<>();
-//        for (Item item : pet.itemBody) {
-//            if (item != null) {
-//                bodys.add(item);
-//            }
-//        }
-//        pet.followMaster();
-//        service.petInfo((byte) 1);
-//        if (zone != null) {
-//            zone.enter(myPet);
-//        }
-//    }
-//
-//    @Override
-//    public void addTarget(Player _c) {
-//        if (_c != myPet && _c != this) {
-//            if (!listTarget.contains(_c)) {
-//                this.listTarget.add(_c);
-//                chat(String.format("Mi làm ta nổi giận rồi đó %s", _c.name));
-//            }
-//        }
-//    }
     @Override
-    public void updateEveryThirtySeconds() {
-        if (!isDead()) {
-            long hp = (info.hpFull - info.hp) / 5;
-            if (hp > 0) {
-                info.hpFull += hp;
+    public void addTarget(Player _c) {
+        if (_c != this) {
+            if (!listTarget.contains(_c)) {
+                this.listTarget.add(_c);
+                chat(String.format("Mi làm ta nổi giận rồi đó %s", _c.name));
             }
-            chat("Tránh xa ta ra, đừng làm ta nổi giận");
+        }
+    }
+    public int currentStatus;
+    public long lastChangeStatus = 0;
+
+    @Override
+    public long injure(Player plAtt, Mob mob, long dameInput) {
+        if (plAtt != null) {
+            addTarget(plAtt);
+        }
+        return Math.min(dameInput, this.info.hpFull / 100);
+    }
+
+    public void usingTTNL() {
+        this.select = TTNL[Utils.nextInt(TTNL.length)];
+        startRecoveryEnery();
+    }
+
+    public void checkAttack() {
+        this.info.mp = this.info.mpFull = Long.MAX_VALUE;
+
+        if (System.currentTimeMillis() - lastChangeStatus >= 1000) {
+            lastChangeStatus = System.currentTimeMillis();
+            if (this.info.hp < info.hpFull && Utils.isTrue(1, 10)) {
+                int percentHP = (int) ((this.info.hp * 100) / info.hpFull);
+                if (percentHP > 80) {
+                    usingTTNL();
+                } else {
+                    upPoint();
+                    if (Utils.isTrue(1, 2)) {
+                        usingTTNL();
+                    }
+                }
+            }
+        }
+        if (System.currentTimeMillis() - lastUseRecoveryEnery >= 2000 && this.isRecoveryEnergy) {
+            stopRecoveryEnery();
         }
     }
 
     @Override
     public void update() {
-        if (info.hpFull > 160707770) {
-            info.hpFull = 160707770;
-        }
+        checkAttack();
         super.update();
+    }
+
+    public void upPoint() {
+        long hp = (long) (info.hpFull / (Utils.nextInt(25, 50)));
+
+        if (hp > 0) {
+            info.hp += hp;
+            info.hpFull += hp;
+            info.hp = Math.min(16070777, info.hp);
+            info.hpFull = Math.min(16070777, info.hpFull);
+            zone.service.playerLoadHP(this, (byte) 0);
+        }
+    }
+
+    @Override
+    public void updateEveryThirtySeconds() {
+        if (!isDead()) {
+            chat("Tránh xa ta ra, đừng làm ta nổi giận");
+        }
     }
 
     @Override
@@ -210,31 +223,21 @@ public class Broly extends Boss {
 
     @Override
     public void setDefaultHead() {
-        if (level == 2) {
-            setHead((short) 390);
-        } else if (level == 1) {
-            setHead((short) 294);
-        } else {
-            setHead((short) 291);
-        }
+
+        setHead((short) 291);
+
     }
 
     @Override
     public void setDefaultBody() {
-        if (level > 0) {
-            setBody((short) 295);
-        } else {
-            setBody((short) 292);
-        }
+
+        setBody((short) 292);
+
     }
 
     @Override
     public void setDefaultLeg() {
-        if (level > 0) {
-            setLeg((short) 296);
-        } else {
-            setLeg((short) 293);
-        }
+        setLeg((short) 293);
     }
 
 }
