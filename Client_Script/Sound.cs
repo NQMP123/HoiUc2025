@@ -3,11 +3,9 @@ using UnityEngine;
 
 public class Sound
 {
-        private const int INTERVAL = 5;
+	private const int INTERVAL = 5;
 
-        private const int MAXTIME = 100;
-
-        private static readonly AutoResetEvent operationEvent = new AutoResetEvent(false);
+	private const int MAXTIME = 100;
 
 	public static int status;
 
@@ -325,33 +323,36 @@ public class Sound
 			Cout.LogError("CANNOT LOAD AUDIO " + filename + " WHEN LOADING " + filenametemp);
 			return;
 		}
-                filenametemp = filename;
-                postem = pos;
-                operationEvent.Reset();
-                status = 2;
-                if (!operationEvent.WaitOne(INTERVAL * MAXTIME))
-                {
-                        Cout.LogError("TOO LONG FOR LOAD AUDIO " + filename);
-                        return;
-                }
-                Cout.Log("Load Audio " + filename + " done");
-        }
+		filenametemp = filename;
+		postem = pos;
+		status = 2;
+		int i;
+		for (i = 0; i < 100; i++)
+		{
+			Thread.Sleep(5);
+			if (status == 0)
+			{
+				break;
+			}
+		}
+		if (i == 100)
+		{
+			Cout.LogError("TOO LONG FOR LOAD AUDIO " + filename);
+			return;
+		}
+		Cout.Log("Load Audio " + filename + " done in " + i * 5 + "ms");
+	}
 
-        private static void __load(string filename, int pos)
-        {
-                try
-                {
-                        music[pos] = (AudioClip)Resources.Load(filename, typeof(AudioClip));
-                        GameObject.Find("Main Camera").AddComponent<AudioSource>();
-                        player[pos] = GameObject.Find("Main Camera");
-                }
-                catch { }
-                finally
-                {
-                        status = 0;
-                        operationEvent.Set();
-                }
-        }
+	private static void __load(string filename, int pos)
+	{
+		try
+		{
+			music[pos] = (AudioClip)Resources.Load(filename, typeof(AudioClip));
+			GameObject.Find("Main Camera").AddComponent<AudioSource>();
+			player[pos] = GameObject.Find("Main Camera");
+		}
+		catch { }
+	}
 
 	public static void start(float volume, int pos)
 	{
@@ -372,29 +373,35 @@ public class Sound
 			Debug.LogError("CANNOT START AUDIO WHEN STARTING");
 			return;
 		}
-                volumetem = volume;
-                postem = pos;
-                operationEvent.Reset();
-                status = 3;
-                if (!operationEvent.WaitOne(INTERVAL * MAXTIME))
-                {
-                        Debug.LogError("TOO LONG FOR START AUDIO");
-                }
-                else
-                {
-                        Debug.Log("Start Audio done");
-                }
-        }
+		volumetem = volume;
+		postem = pos;
+		status = 3;
+		int i;
+		for (i = 0; i < 100; i++)
+		{
+			Thread.Sleep(5);
+			if (status == 0)
+			{
+				break;
+			}
+		}
+		if (i == 100)
+		{
+			Debug.LogError("TOO LONG FOR START AUDIO");
+		}
+		else
+		{
+			Debug.Log("Start Audio done in " + i * 5 + "ms");
+		}
+	}
 
-        public static void __start(float volume, int pos)
-        {
-                if (!(player[pos] == null))
-                {
-                        player[pos].GetComponent<AudioSource>().PlayOneShot(music[pos], volume);
-                }
-                status = 0;
-                operationEvent.Set();
-        }
+	public static void __start(float volume, int pos)
+	{
+		if (!(player[pos] == null))
+		{
+			player[pos].GetComponent<AudioSource>().PlayOneShot(music[pos], volume);
+		}
+	}
 
 	public static void stop(int pos)
 	{
@@ -415,26 +422,32 @@ public class Sound
 			Debug.LogError("CANNOT STOP AUDIO WHEN STOPPING");
 			return;
 		}
-                postem = pos;
-                operationEvent.Reset();
-                status = 4;
-                if (!operationEvent.WaitOne(INTERVAL * MAXTIME))
-                {
-                        Debug.LogError("TOO LONG FOR STOP AUDIO");
-                }
-                else
-                {
-                        Debug.Log("Stop Audio done");
-                }
-        }
+		postem = pos;
+		status = 4;
+		int i;
+		for (i = 0; i < 100; i++)
+		{
+			Thread.Sleep(5);
+			if (status == 0)
+			{
+				break;
+			}
+		}
+		if (i == 100)
+		{
+			Debug.LogError("TOO LONG FOR STOP AUDIO");
+		}
+		else
+		{
+			Debug.Log("Stop Audio done in " + i * 5 + "ms");
+		}
+	}
 
-        public static void __stop(int pos)
-        {
-                if (player[pos] != null)
-                {
-                        player[pos].GetComponent<AudioSource>().Stop();
-                }
-                status = 0;
-                operationEvent.Set();
-        }
+	public static void __stop(int pos)
+	{
+		if (player[pos] != null)
+		{
+			player[pos].GetComponent<AudioSource>().Stop();
+		}
+	}
 }
