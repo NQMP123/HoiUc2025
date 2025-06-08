@@ -151,14 +151,12 @@ public class MainUpdate implements Runnable {
             int[] map = new int[]{105, 106, 107, 108, 109, 110};
             TMap map2 = MapManager.getInstance().getMap(map[Utils.nextInt(map.length)]);
             UtilsNQMP.createBotCold(1, map2.mapID);
-            System.err.println("init Botcold at map :" + map2.name);
         }
         if (System.currentTimeMillis() - initBot >= 5000 && VirtualBot.TotalBot < 250) {
             initBot = System.currentTimeMillis();
             int[] map = new int[]{0, 7, 14, 5};
             VirtualBot.TotalBot++;
             UtilsNQMP.createBot(1, map[Utils.nextInt(map.length)]);
-            System.err.println("init normal Bot");
         }
 
 //        System.err.println("Hour:"+now.getHour());

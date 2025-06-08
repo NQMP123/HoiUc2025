@@ -2426,7 +2426,7 @@ public class Player {
                 } else {
                     if (now - this.lastUpdates[TAI_TAO] >= 1000) {
                         this.lastUpdates[TAI_TAO] = now;
-                        this.info.recovery(Info.ALL, this.select.damage, true);
+                        this.info.recovery(Info.ALL, this.select == null ? 10 : this.select.damage, true);
                         this.isCritFirstHit = true;
                     }
                 }

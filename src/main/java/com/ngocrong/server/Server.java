@@ -1989,13 +1989,11 @@ public class Server {
                             int[] map = new int[]{105, 106, 107, 108, 109, 110};
                             TMap map2 = MapManager.getInstance().getMap(map[Utils.nextInt(map.length)]);
                             UtilsNQMP.createBotCold(1, map2.mapID);
-                            System.err.println("init Botcold at map :" + map2.name);
                         }
                         if (VirtualBot.TotalBot < 150) {
                             int[] map = new int[]{0, 7, 14, 5};
                             VirtualBot.TotalBot++;
                             UtilsNQMP.createBot(1, map[Utils.nextInt(map.length)]);
-                            System.err.println("init normal Bot");
                         }
                     }
                 }

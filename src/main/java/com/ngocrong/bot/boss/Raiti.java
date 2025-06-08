@@ -1,13 +1,15 @@
-cat <<'EOF' > src/main/java/com/ngocrong/bot/boss/Raiti.java
 package com.ngocrong.bot.boss;
 
 import com.ngocrong.bot.Boss;
 import com.ngocrong.item.Item;
 import com.ngocrong.item.ItemMap;
 import com.ngocrong.server.SessionManager;
+import com.ngocrong.skill.Skills;
 import com.ngocrong.user.Player;
 import com.ngocrong.util.Utils;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Raiti extends Boss {
 
@@ -19,11 +21,20 @@ public class Raiti extends Boss {
         setDefaultPart();
         setTypePK((byte) 5);
         this.limitDame = 10;
+        this.percentDame = 5;
     }
 
     @Override
     public void initSkill() {
-        this.skills = new ArrayList<>();
+        try {
+            this.skills = new ArrayList<>();
+            skills.add(Skills.getSkill((byte) 1, (byte) 7).clone());
+            skills.add(Skills.getSkill((byte) 5, (byte) 7).clone());
+            skills.add(Skills.getSkill((byte) 3, (byte) 7).clone());
+            skills.add(Skills.getSkill((byte) 4, (byte) 7).clone());
+        } catch (CloneNotSupportedException ex) {
+            Logger.getLogger(Raiti.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
@@ -38,7 +49,7 @@ public class Raiti extends Boss {
 
     @Override
     public long injure(Player plAtt, com.ngocrong.mob.Mob mob, long dameInput) {
-        if (plAtt == null || !plAtt.isNewMember()) {
+        if (plAtt == null || plAtt.getSession() == null || plAtt.getSession().user.getActivated() == 0) {
             return 0;
         }
         return Math.min(dameInput, this.limitDame);
@@ -65,7 +76,7 @@ public class Raiti extends Boss {
 
     @Override
     public void startDie() {
-        int[] mapIDs = new int[]{5,6,27,28,29,30,13,33,34,10,35,36,37,38,19,20};
+        int[] mapIDs = new int[]{5, 6, 27, 28, 29, 30, 13, 33, 34, 10, 35, 36, 37, 38, 19, 20};
         super.startDie();
         Utils.setTimeout(() -> {
             Raiti boss = new Raiti();

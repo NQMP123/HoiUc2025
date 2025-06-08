@@ -65,9 +65,9 @@ public class SuperBroly extends Boss {
             skills.add(Skills.getSkill((byte) 5, (byte) 7).clone());
             skills.add(Skills.getSkill((byte) 3, (byte) 7).clone());
             skills.add(Skills.getSkill((byte) 4, (byte) 7).clone());
+            TTNL = new Skill[7];
             for (int i = 0; i < 7; i++) {
                 TTNL[i] = Skills.getSkill((byte) 8, (byte) (i + 1)).clone();
-                skills.add(TTNL[i]);
             }
         } catch (Exception ex) {
             com.ngocrong.NQMP.UtilsNQMP.logError(ex);
@@ -120,7 +120,12 @@ public class SuperBroly extends Boss {
             SuperBroly superbroly = new SuperBroly();
             superbroly.setInfo(HP, Long.MAX_VALUE, 1000, id, id);
             superbroly.setLocation(zone);
-        }, 15 *60000);
+        }, 15 * 60000);
+    }
+
+    @Override
+    public void stopRecoveryEnery() {
+        this.isRecoveryEnergy = false;
     }
 
     public void checkDie() {

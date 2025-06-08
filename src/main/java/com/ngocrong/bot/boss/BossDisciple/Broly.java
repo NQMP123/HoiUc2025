@@ -65,9 +65,9 @@ public class Broly extends Boss {
             skills.add(Skills.getSkill((byte) 5, (byte) 7).clone());
             skills.add(Skills.getSkill((byte) 3, (byte) 7).clone());
             skills.add(Skills.getSkill((byte) 4, (byte) 7).clone());
+            TTNL = new Skill[7];
             for (int i = 0; i < 7; i++) {
                 TTNL[i] = Skills.getSkill((byte) 8, (byte) (i + 1)).clone();
-                skills.add(TTNL[i]);
             }
         } catch (Exception ex) {
             com.ngocrong.NQMP.UtilsNQMP.logError(ex);
@@ -126,7 +126,7 @@ public class Broly extends Boss {
                 SuperBroly superbroly = new SuperBroly();
                 superbroly.setInfo(HP, Long.MAX_VALUE, 1000, id, id);
                 superbroly.setLocation(zone);
-            }, 30000);
+            }, 5000);
         }
     }
 
@@ -162,14 +162,17 @@ public class Broly extends Boss {
         return Math.min(dameInput, this.info.hpFull / 100);
     }
 
+    public Skill oldSelect;
+
     public void usingTTNL() {
         this.select = TTNL[Utils.nextInt(TTNL.length)];
         startRecoveryEnery();
     }
 
     public void checkAttack() {
-        this.info.mp = this.info.mpFull = Long.MAX_VALUE;
-
+        if (this.info.hp > 0) {
+            this.info.mp = this.info.mpFull = Long.MAX_VALUE;
+        }
         if (System.currentTimeMillis() - lastChangeStatus >= 1000) {
             lastChangeStatus = System.currentTimeMillis();
             if (this.info.hp < info.hpFull && Utils.isTrue(1, 10)) {
@@ -196,7 +199,7 @@ public class Broly extends Boss {
     }
 
     public void upPoint() {
-        long hp = (long) (info.hpFull / (Utils.nextInt(25, 50)));
+        long hp = (long) (info.hpFull / (Utils.nextInt(25, 35)));
 
         if (hp > 0) {
             info.hp += hp;

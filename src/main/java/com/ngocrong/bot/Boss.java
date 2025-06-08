@@ -393,7 +393,7 @@ public abstract class Boss extends Player implements Bot {
         List<Player> enemiesCanAttack = getEnemiesClosest();
         if (enemiesCanAttack.size() > 0) {
             Player target = randomChar(enemiesCanAttack);
-            if (target != null) {
+            if (target != null && !target.isBoss()) {
                 return target;
             }
         }

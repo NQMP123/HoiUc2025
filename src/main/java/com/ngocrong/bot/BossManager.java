@@ -329,8 +329,10 @@ public class BossManager {
     private static void bossRaiti() {
         int[] mapIDs = new int[]{5, 6, 27, 28, 29, 30, 13, 33, 34, 10, 35, 36, 37, 38, 19, 20};
         Utils.setTimeout(() -> {
-            Raiti boss = new Raiti();
-            boss.setLocation(mapIDs[Utils.nextInt(mapIDs.length)], -1);
+            for (int i = 0; i < 10; i++) {
+                Raiti boss = new Raiti();
+                boss.setLocation(mapIDs[Utils.nextInt(mapIDs.length)], -1);
+            }
         }, 30000);
     }
 }
