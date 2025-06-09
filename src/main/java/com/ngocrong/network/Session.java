@@ -37,6 +37,7 @@ import com.ngocrong.data.VongQuayThuongDeData;
 import com.ngocrong.data.WhisData;
 import com.ngocrong.event.OsinCheckInEvent;
 import com.ngocrong.top.AutoReward.AutoReward;
+import com.ngocrong.user.func.BaiSu;
 import lombok.Getter;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
@@ -792,6 +793,7 @@ public class Session implements ISession {
             _player.info.setChar(this._player);
             _player.setStatusItemTime();
             _player.myDisciple = loadDisciple(-_player.id);
+            _player.baiSu_id = BaiSu.getBaisuId(_player.id);
         } catch (Exception ex) {
             com.ngocrong.NQMP.UtilsNQMP.logError(ex);
             logger.error("loadChar", ex);
