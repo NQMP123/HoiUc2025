@@ -3,6 +3,8 @@ package com.ngocrong.server;
 import lombok.Getter;
 import org.apache.log4j.Logger;
 
+import com.ngocrong.server.NioServer;
+
 import java.io.File;
 
 public class DragonBall {
@@ -16,7 +18,7 @@ public class DragonBall {
     private Server server;
 
     public void start() {
-        server = new Server();
+        server = new NioServer();
         try {
             logger.debug("Start server!");
             Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
