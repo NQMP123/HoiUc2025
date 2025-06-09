@@ -116,7 +116,6 @@ public abstract class Top {
                         }
                     }
 
-                    System.gc();
                     logger.info("Scheduled top update completed");
 
                 } catch (InterruptedException e) {
