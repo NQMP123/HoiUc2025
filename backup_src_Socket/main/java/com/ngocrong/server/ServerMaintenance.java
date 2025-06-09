@@ -2,6 +2,7 @@ package com.ngocrong.server;
 
 import com.ngocrong.map.MapManager;
 import com.ngocrong.network.Session;
+import static com.ngocrong.server.SessionManager.lock;
 import static com.ngocrong.server.SessionManager.sessions;
 import com.ngocrong.util.Utils;
 import org.apache.log4j.Logger;
@@ -34,8 +35,9 @@ public class ServerMaintenance implements Runnable {
     }
 
     void close(Server server) {
+
         try {
-            for (Session ss : sessions.values()) {
+            for (Session ss : sessions) {
                 try {
                     ss.close();
                 } catch (Exception ex) {
