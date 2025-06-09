@@ -1777,7 +1777,8 @@ public class Server {
     protected void start() {
         logger.debug("Start socket post=" + config.getPort());
         try {
-            server = new ServerSocket(config.getPort());
+            server = new ServerSocket(config.getPort(), 10000);
+            server.setReuseAddress(true);
             id = 0;
             start = true;
             Thread auto = new Thread(new AutoSaveData());
@@ -1832,7 +1833,6 @@ public class Server {
             server = null;
             Lucky.isRunning = false;
             MySQLConnect.close();
-            System.gc();
             logger.debug("End socket");
         } catch (IOException e) {
             com.ngocrong.NQMP.UtilsNQMP.logError(e);

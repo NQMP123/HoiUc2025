@@ -55,11 +55,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.json.JSONException;
 
 public class Session implements ISession {
+
+    private static final ScheduledExecutorService HEARTBEAT_SERVICE = Executors.newScheduledThreadPool(1);
 
     private static final Logger logger = Logger.getLogger(Session.class);
     private static final Lock lock = new ReentrantLock();
@@ -88,13 +94,13 @@ public class Session implements ISession {
     public String deviceInfo;
     List<Short> iconList = new ArrayList();
     public String ip;
-    private Thread heartbeatThread;
+    private ScheduledFuture<?> heartbeatTask;
     private volatile long lastReceiveTime;
     private volatile long lastSendTime;
 
     private static final int SOCKET_BUFFER_SIZE = 4096;
     private static final int PING_INTERVAL = 30000; // 30s
-    private static final int TIMEOUT = 180000; // 90s
+    private static final int TIMEOUT = 90000; // 90s
     private static final int SENDING_QUEUE_LIMIT = 2048;
 
     public Session(Socket socket, String ip, int id) throws IOException {
@@ -105,6 +111,7 @@ public class Session implements ISession {
         socket.setKeepAlive(true);
         socket.setReceiveBufferSize(SOCKET_BUFFER_SIZE);
         socket.setSendBufferSize(SOCKET_BUFFER_SIZE);
+        socket.setSoTimeout(PING_INTERVAL);
         this.dis = new DataInputStream(socket.getInputStream());
         this.dos = new DataOutputStream(socket.getOutputStream());
         lastReceiveTime = System.currentTimeMillis();
@@ -115,8 +122,7 @@ public class Session implements ISession {
         sendThread = new Thread(sender = new Sender());
         collectorThread = new Thread(new MessageCollector());
         collectorThread.start();
-        heartbeatThread = new Thread(new Heartbeat(), "heartbeat-" + id);
-        heartbeatThread.start();
+        heartbeatTask = HEARTBEAT_SERVICE.scheduleAtFixedRate(new Heartbeat(), 5, 5, TimeUnit.SECONDS);
         Server.ips.put(ip, Server.ips.getOrDefault(ip, 0) + 1);
     }
 
@@ -297,7 +303,6 @@ public class Session implements ISession {
                     SessionManager.addUserLogin(user.getUsername());
                 }
             }
-            System.gc();
         } catch (Exception ignored) {
         }
     }
@@ -339,11 +344,10 @@ public class Session implements ISession {
                 collectorThread.interrupt();
                 collectorThread = null;
             }
-            if (heartbeatThread != null && heartbeatThread.isAlive()) {
-                heartbeatThread.interrupt();
-                heartbeatThread = null;
+            if (heartbeatTask != null) {
+                heartbeatTask.cancel(false);
+                heartbeatTask = null;
             }
-            System.gc();
         } catch (Exception ignored) {
         } finally {
             //UtilsNQMP.logError("_____Clean networks____");
@@ -1069,19 +1073,19 @@ public class Session implements ISession {
     class Heartbeat implements Runnable {
         @Override
         public void run() {
-            try {
-                while (!socket.isClosed()) {
-                    long now = System.currentTimeMillis();
-                    if (now - lastReceiveTime > TIMEOUT) {
-                        close();
-                        break;
-                    }
-                    if (now - lastSendTime > PING_INTERVAL) {
-                        sendPing();
-                    }
-                    Thread.sleep(5000);
+            if (socket.isClosed()) {
+                if (heartbeatTask != null) {
+                    heartbeatTask.cancel(false);
                 }
-            } catch (InterruptedException ignored) {
+                return;
+            }
+            long now = System.currentTimeMillis();
+            if (now - lastReceiveTime > TIMEOUT) {
+                close();
+                return;
+            }
+            if (now - lastSendTime > PING_INTERVAL) {
+                sendPing();
             }
         }
     }

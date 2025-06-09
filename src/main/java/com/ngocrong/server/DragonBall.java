@@ -27,7 +27,6 @@ public class DragonBall {
                 }
             }));
             server.init();
-            System.gc();
             server.start();
         } catch (Exception ex) {
             com.ngocrong.NQMP.UtilsNQMP.logError(ex);
