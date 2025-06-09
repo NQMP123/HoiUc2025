@@ -51,6 +51,6 @@ public class BaiSu {
     }
 
     public static void insert(int id1, int id2) {
-        UtilsNQMP.ExcuteQuery(String.format("insert into nr_baisu value(%d,%d);", id1, id2));
+        UtilsNQMP.ExcuteQuery(String.format("INSERT INTO `nrobaby`.`nr_baisu` (`player1`, `player2`) VALUES (%d, %d);", id1, id2));
     }
 }

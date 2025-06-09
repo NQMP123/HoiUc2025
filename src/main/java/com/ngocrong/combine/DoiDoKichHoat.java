@@ -99,8 +99,7 @@ public class DoiDoKichHoat extends Combine {
             case 4:
                 temp = rd;
         }
-        int index = Utils.getParambyRandom(0, temp.length);
-        return temp[index];
+        return temp[0];
     }
     public static final int[][][] OPTIONS = {
         {

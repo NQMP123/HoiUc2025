@@ -127,7 +127,6 @@ public class SuperBojack extends TeamBojack {
                     Object target = targetDetect();
                     if (target != null) {
                         attack(target);
-                        System.err.println("Log4");
                     }
                     useSkillNotFocus();
                 }

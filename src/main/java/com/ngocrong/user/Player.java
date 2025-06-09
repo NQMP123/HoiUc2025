@@ -2748,7 +2748,7 @@ public class Player {
         }
         return dameInput;
     }
-    
+
     public static short[] listTypeBody = new short[]{35, 36, 37};
 
     public void itemBagToPet(int index) {
@@ -4146,8 +4146,8 @@ public class Player {
                             menus.add(new KeyValue(CMDMenu.PHA_LE_HOA, "Pha lê\nhóa trang bị"));
                             // menus.add(new KeyValue(CMDMenu.DOI_DO_HUY_DIET, "Đổi Đồ\nHủy Diệt"));
                             menus.add(new KeyValue(CMDMenu.DOI_DO_KICH_HOAT, "Đổi Đồ\nKích Hoạt"));
-                            menus.add(new KeyValue(1154, "Tách Vật phẩm SK"));
-                            menus.add(new KeyValue(1157, "Nâng cấp\nTrang bị\nĐệ tử"));
+//                            menus.add(new KeyValue(1154, "Tách Vật phẩm SK"));
+//                            menus.add(new KeyValue(1157, "Nâng cấp\nTrang bị\nĐệ tử"));
                             // menus.add(new KeyValue(CMDMenu.GHEP_DA, "Ghép đá\nnâng cấp"));
                             // menus.add(new KeyValue(CMDMenu.TACH_DO_THAN_LINH, "Tách đồ\nthần linh"));
                             // menus.add(new KeyValue(CMDMenu.TACH_DO_KICH_HOAT, "Tách đồ\nkích hoạt"));
@@ -5976,8 +5976,8 @@ public class Player {
                             long timeDelay = r.getTimeDelay();
                             if (t >= timeDelay) {
                                 int[] items = {ItemName.CUONG_NO, ItemName.BO_HUYET, ItemName.BO_KHI,
-                                        ItemName.GIAP_XEN_BO_HUNG, ItemName.AN_DANH, ItemName.CAPSULE_1_SAO,
-                                        ItemName.CUONG_NO_2, ItemName.BO_HUYET_2, ItemName.BO_KHI_2};
+                                    ItemName.GIAP_XEN_BO_HUNG, ItemName.AN_DANH, ItemName.CAPSULE_1_SAO,
+                                    ItemName.CUONG_NO_2, ItemName.BO_HUYET_2, ItemName.BO_KHI_2};
                                 int itemID = items[Utils.nextInt(items.length)];
                                 Item item = new Item(itemID);
                                 item.quantity = 1;
