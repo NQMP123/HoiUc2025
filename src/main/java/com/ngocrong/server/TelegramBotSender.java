@@ -28,7 +28,7 @@ public class TelegramBotSender {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         String formattedTime = LocalDateTime.now().format(formatter);
 
-        String text = "Ngọc Rồng Baby-Baby 01   -   " + formattedTime + "\n"
+        String text = "HOI_UC_NGOC_RONG-HUNR 01   -   " + formattedTime + "\n"
                 + "Tổng CCU : " + SessionManager.sessions.size() + " Session\n"
                 + "     -      " + SessionManager.getCountPlayer() + " Player Online";
         sendMessageTelegram(text);

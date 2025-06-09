@@ -132,7 +132,7 @@ public class Session implements ISession {
                 return;
             }
             if (!version.equals(Server.VERSION)) {
-                ((Service) this.service).dialogMessage("Vui lòng tải phiên bản mới tại ngocrongbaby.com");
+                ((Service) this.service).dialogMessage("Vui lòng tải phiên bản mới tại HOIUCNGOCRONG.COM");
                 return;
             }
             this.isSetClientInfo = true;

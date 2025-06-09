@@ -59,6 +59,9 @@ public class BaiSu {
         player1.baiSu_id = player2.id;
         player2.baiSu_id = player1.id;
         insert(player1.id, player2.id);
+        player1.service.dialogMessage(String.format("Bạn và %s đã trở thành sư đồ với nhau", player2.name));
+        player2.service.dialogMessage(String.format("Bạn và %s đã trở thành sư đồ với nhau", player1.name));
+
     }
 
     public static void insert(int id1, int id2) {

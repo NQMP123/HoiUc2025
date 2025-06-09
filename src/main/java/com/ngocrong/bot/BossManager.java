@@ -63,7 +63,7 @@ public class BossManager {
             Utils.setTimeout(() -> {
                 BaoCat baocat = new BaoCat();
                 baocat.joinMap();
-            }, 30000);
+            }, 5000);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -112,28 +112,28 @@ public class BossManager {
         Utils.setTimeout(() -> {
             Cooler cooler = new Cooler((byte) 0);
             cooler.setLocation(110, -1);
-        }, 30000);
+        }, 5000);
     }
 
     public static void bossFide() {
         Utils.setTimeout(() -> {
             Fide fide = new Fide((byte) 0);
             fide.setLocation(80, -1);
-        }, 30000);
+        }, 5000);
     }
 
     public static void bossXenBoHung() {
         Utils.setTimeout(() -> {
             XenBoHung xenBoHung = new XenBoHung((byte) 0);
             xenBoHung.setLocation(100, -1);
-        }, 30000);
+        }, 5000);
     }
 
     public static void bossSieuBoHung() {
         Utils.setTimeout(() -> {
             SieuBoHung sieuBoHung = new SieuBoHung(false);
             sieuBoHung.setLocation(103, -1);
-        }, 30000);
+        }, 5000);
     }
 
     public static void bossXenCon() {
@@ -141,7 +141,7 @@ public class BossManager {
             Utils.setTimeout(() -> {
                 XenCon xc = new XenCon();
                 xc.setLocation(103, -1);
-            }, 30000);
+            }, 5000);
         }
     }
 
@@ -151,7 +151,7 @@ public class BossManager {
             Utils.setTimeout(() -> {
                 KuKu kuKu = new KuKu();
                 kuKu.setLocation(mapIDs[Utils.nextInt(mapIDs.length)], -1);
-            }, 30000);
+            }, 5000);
         }
     }
 
@@ -161,7 +161,7 @@ public class BossManager {
             Utils.setTimeout(() -> {
                 MapDauDinh mapDauDinh = new MapDauDinh();
                 mapDauDinh.setLocation(69, -1);
-            }, 30000);
+            }, 5000);
         }
     }
 
@@ -171,7 +171,7 @@ public class BossManager {
             Utils.setTimeout(() -> {
                 RamBo ramBo = new RamBo();
                 ramBo.setLocation(mapIDs[Utils.nextInt(mapIDs.length)], -1);
-            }, 30000);
+            }, 5000);
         }
     }
 
@@ -195,7 +195,7 @@ public class BossManager {
             Utils.setTimeout(() -> {
                 BlackGoku bl = new BlackGoku(false);
                 bl.setLocation(mapIDs[Utils.nextInt(mapIDs.length)], -1);
-            }, 30000);
+            }, 5000);
         }
     }
 
@@ -203,7 +203,7 @@ public class BossManager {
         Utils.setTimeout(() -> {
             Chilled chilled = new Chilled(false);
             chilled.setLocation(160, -1);
-        }, 30000);
+        }, 5000);
     }
 
 //
@@ -219,7 +219,7 @@ public class BossManager {
             Utils.setTimeout(() -> {
                 Boss boss = new Berus();
                 boss.setLocation(MapName.HANH_TINH_BILL, -1);
-            }, 30000);
+            }, 5000);
         }
     }
 
@@ -250,32 +250,32 @@ public class BossManager {
         Utils.setTimeout(() -> {
             GinyuForce gB = new GinyuForce((byte) 0);
             gB.born();
-        }, 30000);
+        }, 5000);
         Utils.setTimeout(() -> {
             GinyuForce gB = new GinyuForce((byte) 1);
             gB.born();
-        }, 30000);
+        }, 5000);
     }
 
     public static void bossAndroid13() {
         Utils.setTimeout(() -> {
             TeamAndroid13 teamAndroid13 = new TeamAndroid13();
             teamAndroid13.born();
-        }, 30000);
+        }, 5000);
     }
 
     public static void bossAndroid19() {
         Utils.setTimeout(() -> {
             TeamAndroid19 teamAndroid19 = new TeamAndroid19();
             teamAndroid19.born();
-        }, 30000);
+        }, 5000);
     }
 
     public static void bossAndroid16() {
         Utils.setTimeout(() -> {
             TeamAndroid16 teamAndroid16 = new TeamAndroid16();
             teamAndroid16.born();
-        }, 30000);
+        }, 5000);
     }
 
     public static void bossSuperBroly() {
@@ -285,11 +285,11 @@ public class BossManager {
                 Broly broly = new Broly();
                 broly.joinMap();
             }
-            for (int i = 0; i < 2; i++) {
-                SuperMabu supermabu = new SuperMabu();
-                supermabu.setLocation(mapIDs[Utils.nextInt(mapIDs.length)], -1);
-            }
-        }, 32000);
+//            for (int i = 0; i < 2; i++) {
+//                SuperMabu supermabu = new SuperMabu();
+//                supermabu.setLocation(mapIDs[Utils.nextInt(mapIDs.length)], -1);
+//            }
+        }, 5000);
 
     }
 
@@ -300,7 +300,7 @@ public class BossManager {
                 NuThan boss = new NuThan();
                 boss.setLocation(177, -1);
             }
-        }, 30000);
+        }, 5000);
     }
 
     private static void bossTet2() {
@@ -309,7 +309,7 @@ public class BossManager {
             Utils.setTimeout(() -> {
                 BossTet1 boss = new BossTet1();
                 boss.setLocation(mapIDs[Utils.nextInt(mapIDs.length)], -1);
-            }, 30000);
+            }, 5000);
         }
         Utils.setTimeout(() -> {
             Boss_Tet boss = new Boss_Tet();
@@ -322,7 +322,7 @@ public class BossManager {
         Utils.setTimeout(() -> {
             Cumber boss = new Cumber(false);
             boss.setLocation(mapIDs[Utils.nextInt(mapIDs.length)], -1);
-        }, 30000);
+        }, 5000);
 
     }
 
@@ -333,6 +333,6 @@ public class BossManager {
                 Raiti boss = new Raiti();
                 boss.setLocation(mapIDs[Utils.nextInt(mapIDs.length)], -1);
             }
-        }, 30000);
+        }, 5000);
     }
 }

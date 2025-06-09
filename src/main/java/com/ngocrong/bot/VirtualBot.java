@@ -74,13 +74,13 @@ public class VirtualBot extends Boss {
                 byte[] bag = new byte[]{19, 20, 21, 22, 105, 106};
                 this.clanID = Utils.nextInt(0, 100);
                 this.setBag(bag[Utils.nextInt(bag.length)]);
-                this.name = "[BABY] " + this.name;
+                this.name = "[HUNR-2025] " + this.name;
             }
             if (!isTrain && Utils.nextInt(10) <= 7) {
                 byte[] bag = new byte[]{19, 20, 21, 22, 105, 106};
                 this.clanID = Utils.nextInt(0, 100);
                 this.setBag(bag[Utils.nextInt(bag.length)]);
-                this.name = "[BABY] " + this.name;
+                this.name = "[HUNR-2025] " + this.name;
             }
         }
     }

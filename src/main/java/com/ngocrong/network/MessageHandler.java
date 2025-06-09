@@ -53,7 +53,7 @@ public class MessageHandler implements IMessageHandler {
                         session.sendPing();
                         break;
                     case Cmd.LOGIN2:
-                        service.dialogMessage("Đăng ký tài khoản tại Ngọc Rồng Baby (ngocrongbaby.com)");
+                        service.dialogMessage("Đăng ký tài khoản tại Hồi Ức Ngọc Rồng (hoiucngocrong.com)");
                         break;
                     case Cmd.NOT_LOGIN:
                         messageNotLogin(mss);
@@ -561,7 +561,7 @@ public class MessageHandler implements IMessageHandler {
                         break;
 
                     case Cmd.INPUT_CARD:
-                        service.sendThongBao("Bạn hãy truy cập trang: ngocrongbaby.com để nạp tiền!");
+                        service.sendThongBao("Bạn hãy truy cập trang: HOIUCNGOCRONG.COM để nạp tiền!");
                         break;
 
                     default:

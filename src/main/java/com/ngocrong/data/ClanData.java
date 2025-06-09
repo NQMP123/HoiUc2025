@@ -67,8 +67,8 @@ public class ClanData {
         maxMember = 10;
         powerPoint = 0L;
         level = 1;
-        slogan = "Chào Mừng Bạn Đến Với Ngọc Rồng BaBy";
-        abbreviation = "BABY";
+        slogan = "Chào mừng bạn đến với Hồi Ức Ngọc Rông";
+        abbreviation = "HUNR-2025";
         itemBox = "[]";
         createTime = new Timestamp(System.currentTimeMillis());
     }
