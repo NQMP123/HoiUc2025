@@ -7,8 +7,12 @@ package com.ngocrong.user.func;
 import com.ngocrong.NQMP.UtilsNQMP;
 import com.ngocrong.consts.NpcName;
 import com.ngocrong.lib.KeyValue;
+import com.ngocrong.server.mysql.MySQLConnect;
 import com.ngocrong.user.Player;
 import com.ngocrong.util.Utils;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 /**
  *
@@ -18,6 +22,13 @@ public class BaiSu {
 
     public static void Action(Player player1, Player player2) {
         if (player1 == null || player2 == null) {
+            return;
+        }
+
+        boolean isFriend1 = player1.friends != null && player1.friends.stream().anyMatch(f -> f.id == player2.id);
+        boolean isFriend2 = player2.friends != null && player2.friends.stream().anyMatch(f -> f.id == player1.id);
+        if (!(isFriend1 && isFriend2)) {
+            player1.service.sendThongBao("Hai người chưa kết bạn với nhau");
             return;
         }
 
@@ -52,5 +63,28 @@ public class BaiSu {
 
     public static void insert(int id1, int id2) {
         UtilsNQMP.ExcuteQuery(String.format("INSERT INTO `nrobaby`.`nr_baisu` (`player1`, `player2`) VALUES (%d, %d);", id1, id2));
+    }
+
+    public static int getBaisuId(int playerId) {
+        try {
+            PreparedStatement ps = MySQLConnect.getConnection().prepareStatement(
+                    "SELECT player1, player2 FROM nr_baisu WHERE player1 = ? OR player2 = ?");
+            ps.setInt(1, playerId);
+            ps.setInt(2, playerId);
+            ResultSet rs = ps.executeQuery();
+            try {
+                if (rs.next()) {
+                    int p1 = rs.getInt("player1");
+                    int p2 = rs.getInt("player2");
+                    return p1 == playerId ? p2 : p1;
+                }
+            } finally {
+                rs.close();
+                ps.close();
+            }
+        } catch (Exception e) {
+            UtilsNQMP.logError(e);
+        }
+        return -1;
     }
 }
