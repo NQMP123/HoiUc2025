@@ -97,8 +97,8 @@ public class So4 extends Boss {
 
     @Override
     public void sendNotificationWhenAppear(String map) {
-        // PlayerManager.chatVip(String.format("BOSS %s vừa xuất hiện tại %s",
-        // this.name, map));
+         SessionManager.chatVip(String.format("BOSS %s vừa xuất hiện tại %s", this.name, map));
+         System.err.println(String.format("BOSS %s vừa xuất hiện tại %s", this.name, map));
     }
 
     @Override

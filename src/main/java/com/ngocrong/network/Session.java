@@ -26,7 +26,6 @@ import com.ngocrong.user.Player;
 import com.ngocrong.user.Info;
 import com.ngocrong.user.User;
 import com.ngocrong.util.Utils;
-import com.ngocrong.security.MatrixChallenge;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ngocrong.NQMP.DHVT_SH.DHVT_SH_Service;
@@ -95,11 +94,6 @@ public class Session implements ISession {
     public String deviceInfo;
     List<Short> iconList = new ArrayList();
     public String ip;
-    private long[][] challengeMatrix;
-    private boolean matrixVerified;
-    private byte[] matrixCipher;
-    private int matrixWIndex;
-    private int matrixRIndex;
     private ScheduledFuture<?> heartbeatTask;
     private volatile long lastReceiveTime;
     private volatile long lastSendTime;
@@ -107,27 +101,6 @@ public class Session implements ISession {
     private static final int SOCKET_BUFFER_SIZE = 4096;
     private static final int PING_INTERVAL = 150000, TIMEOUT = 150000; // 30s
     private static final int SENDING_QUEUE_LIMIT = 2048;
-
-    private long[][] secretKey = MatrixChallenge.defaultSecret();
-
-    private void sendMatrixChallenge() {
-        this.challengeMatrix = MatrixChallenge.randomMatrix();
-        ((Service) service).sendMatrixChallenge(challengeMatrix);
-    }
-
-    void handleMatrixResponse(Message ms) throws IOException {
-        long[][] resp = new long[MatrixChallenge.SIZE][MatrixChallenge.SIZE];
-        for (int i = 0; i < MatrixChallenge.SIZE; i++) {
-            for (int j = 0; j < MatrixChallenge.SIZE; j++) {
-                resp[i][j] = ms.reader().readLong();
-            }
-        }
-        matrixVerified = MatrixChallenge.verify(secretKey, challengeMatrix, resp);
-        if (matrixVerified) {
-            matrixCipher = MatrixChallenge.deriveKey(secretKey, challengeMatrix);
-            matrixWIndex = matrixRIndex = 0;
-        }
-    }
 
     public Session(Socket socket, String ip, int id) throws IOException {
         this.socket = socket;
@@ -172,7 +145,6 @@ public class Session implements ISession {
             sv.setLinkListServer();
             sv.setResource();
             sv.sendResVersion();
-            sendMatrixChallenge();
         }
     }
 
@@ -240,40 +212,35 @@ public class Session implements ISession {
         }
         byte[] data = m.getData();
         byte b = m.getCommand();
-        byte cmdToWrite = b;
         if (isConnected) {
-            cmdToWrite = writeKey(cmdToWrite);
+            dos.writeByte(writeKey(b));
+        } else {
+            dos.writeByte(b);
         }
-        cmdToWrite = matrixEncrypt(cmdToWrite);
-        dos.writeByte(cmdToWrite);
         if (data != null) {
             int size = data.length;
             if (isConnected) {
                 if (isSpecialMessage(b)) {
                     int numBits = 28; // Có thể thay đổi từ 24-32 bits
-
                     for (int i = 0; i < numBits; i += 8) {
                         int bitsToSend = Math.min(8, numBits - i);
                         byte value = (byte) ((size >> i & ((1 << bitsToSend) - 1)) - 128);
-                        value = writeKey(value);
-                        dos.writeByte(matrixEncrypt(value));
+                        dos.writeByte(writeKey(value));
                     }
                 } else {
-                    byte num2 = writeKey((byte) (size >> 8));
-                    dos.writeByte(matrixEncrypt(num2));
-                    byte num3 = writeKey((byte) (size & 255));
-                    dos.writeByte(matrixEncrypt(num3));
+                    int num2 = writeKey((byte) (size >> 8));
+                    dos.writeByte((byte) num2);
+                    int num3 = writeKey((byte) (size & 255));
+                    dos.writeByte((byte) num3);
                 }
             } else {
-                dos.writeByte(matrixEncrypt((byte) (size >> 8)));
-                dos.writeByte(matrixEncrypt((byte) (size & 255)));
+                dos.writeByte(size & 256);
+                dos.writeByte(size & 255);
             }
-            for (int i = 0; i < data.length; i++) {
-                byte val = data[i];
-                if (isConnected) {
-                    val = writeKey(val);
+            if (isConnected) {
+                for (int i = 0; i < data.length; i++) {
+                    data[i] = writeKey(data[i]);
                 }
-                data[i] = matrixEncrypt(val);
             }
             dos.write(data);
         }
@@ -299,28 +266,6 @@ public class Session implements ISession {
             curW = (byte) (curW % key.length);
         }
         return result;
-    }
-
-    private byte matrixEncrypt(byte b) {
-        if (matrixCipher == null) {
-            return b;
-        }
-        byte res = (byte) (b ^ matrixCipher[matrixWIndex++]);
-        if (matrixWIndex >= matrixCipher.length) {
-            matrixWIndex = 0;
-        }
-        return res;
-    }
-
-    private byte matrixDecrypt(byte b) {
-        if (matrixCipher == null) {
-            return b;
-        }
-        byte res = (byte) (b ^ matrixCipher[matrixRIndex++]);
-        if (matrixRIndex >= matrixCipher.length) {
-            matrixRIndex = 0;
-        }
-        return res;
     }
 
     @Override
@@ -937,10 +882,6 @@ public class Session implements ISession {
                 disconnect();
                 return;
             }
-            if (!matrixVerified) {
-                ((Service) service).dialogMessage("Xác thực thất bại");
-                return;
-            }
             /* String version = ms.reader().readUTF();
             if (!Server.VERSION.equals(version)) {
                 disconnect();
@@ -1098,17 +1039,14 @@ public class Session implements ISession {
             if (isConnected) {
                 cmd = readKey(cmd);
             }
-            cmd = matrixDecrypt(cmd);
             // read size of data
             int size;
             if (isConnected) {
-                byte b1 = matrixDecrypt(dis.readByte());
-                byte b2 = matrixDecrypt(dis.readByte());
+                byte b1 = dis.readByte();
+                byte b2 = dis.readByte();
                 size = (readKey(b1) & 0xff) << 8 | readKey(b2) & 0xff;
             } else {
-                byte b1 = matrixDecrypt(dis.readByte());
-                byte b2 = matrixDecrypt(dis.readByte());
-                size = ((b1 & 0xff) << 8) | (b2 & 0xff);
+                size = dis.readUnsignedShort();
             }
             lastReceiveTime = System.currentTimeMillis();
             byte data[] = new byte[size];
@@ -1120,12 +1058,10 @@ public class Session implements ISession {
                     byteRead += len;
                 }
             }
-            for (int i = 0; i < data.length; i++) {
-                byte val = data[i];
-                if (isConnected) {
-                    val = readKey(val);
+            if (isConnected) {
+                for (int i = 0; i < data.length; i++) {
+                    data[i] = readKey(data[i]);
                 }
-                data[i] = matrixDecrypt(val);
             }
             Message msg = new Message(cmd, data);
             return msg;

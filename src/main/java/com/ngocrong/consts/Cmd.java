@@ -289,7 +289,6 @@ public class Cmd {
     public static final byte SPEACIAL_SKILL = 112;
     public static final byte SERVER_EFFECT = 113;
     public static final byte INAPP = 114;
-    public static final byte MATRIX_CHALLENGE = 115;
     public static final byte LUCKY_ROUND = -127;
     public static final byte RADA_CARD = 127;
     public static final byte CHAR_EFFECT = -128;

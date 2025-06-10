@@ -57,6 +57,7 @@ public class BossManager {
         bossSuperBroly();
         bossRaiti();
         NuThan();
+        bossChilled();
 //        bossTet2();
 //        bossCumber();
         try {
