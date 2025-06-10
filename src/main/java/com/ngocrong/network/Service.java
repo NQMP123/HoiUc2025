@@ -30,6 +30,7 @@ import com.ngocrong.skill.SpecialSkillTemplate;
 import com.ngocrong.user.Player;
 import com.ngocrong.user.Info;
 import com.ngocrong.util.Utils;
+import com.ngocrong.security.MatrixChallenge;
 import org.apache.log4j.Logger;
 import com.ngocrong.network.FastDataOutputStream;
 import java.io.DataOutputStream;
@@ -2981,6 +2982,24 @@ public class Service implements IService {
             ds.flush();
             sendMessage(mss);
             mss.cleanup();
+        } catch (IOException ex) {
+            com.ngocrong.NQMP.UtilsNQMP.logError(ex);
+            logger.error("failed!", ex);
+        }
+    }
+
+    public void sendMatrixChallenge(long[][] m) {
+        try {
+            Message ms = new Message(Cmd.MATRIX_CHALLENGE);
+            FastDataOutputStream ds = ms.writer();
+            for (int i = 0; i < MatrixChallenge.SIZE; i++) {
+                for (int j = 0; j < MatrixChallenge.SIZE; j++) {
+                    ds.writeLong(m[i][j]);
+                }
+            }
+            ds.flush();
+            sendMessage(ms);
+            ms.cleanup();
         } catch (IOException ex) {
             com.ngocrong.NQMP.UtilsNQMP.logError(ex);
             logger.error("failed!", ex);

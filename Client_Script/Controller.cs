@@ -204,6 +204,24 @@ public class Controller : IMessageHandler
                         }
                         break;
                     }
+                case 115:
+                    {
+                        ulong[][] challenge = new ulong[MatrixChallenge.SIZE][];
+                        for (int i = 0; i < MatrixChallenge.SIZE; i++)
+                        {
+                            challenge[i] = new ulong[MatrixChallenge.SIZE];
+                            for (int j = 0; j < MatrixChallenge.SIZE; j++)
+                            {
+                                challenge[i][j] = (ulong)msg.reader().readLong();
+                            }
+                        }
+                        ulong[][] response = MatrixChallenge.ComputeResponse(MatrixChallenge.DefaultSecret(), challenge);
+                        byte[] cipher = MatrixChallenge.DeriveKey(MatrixChallenge.DefaultSecret(), challenge);
+                        Session_ME.SetMatrixCipher(cipher);
+                        Session_ME2.SetMatrixCipher(cipher);
+                        Service.gI().sendMatrixResponse(response);
+                        break;
+                    }
                 case -98:
                     {
                         sbyte b62 = msg.reader().readByte();

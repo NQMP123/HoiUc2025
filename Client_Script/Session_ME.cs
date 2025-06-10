@@ -292,6 +292,7 @@ public class Session_ME : ISession
                 try
                 {
                     b = dis.ReadSByte();
+                    b = matrixDecrypt(b);
                     if (getKeyComplete)
                     {
                         b = readKey(b);
@@ -314,14 +315,14 @@ public class Session_ME : ISession
                 {
                     if (getKeyComplete)
                     {
-                        sbyte b2 = dis.ReadSByte();
-                        sbyte b3 = dis.ReadSByte();
+                        sbyte b2 = matrixDecrypt(dis.ReadSByte());
+                        sbyte b3 = matrixDecrypt(dis.ReadSByte());
                         dataSize = ((readKey(b2) & 0xFF) << 8) | (readKey(b3) & 0xFF);
                     }
                     else
                     {
-                        sbyte b4 = dis.ReadSByte();
-                        sbyte b5 = dis.ReadSByte();
+                        sbyte b4 = matrixDecrypt(dis.ReadSByte());
+                        sbyte b5 = matrixDecrypt(dis.ReadSByte());
                         dataSize = (b4 & 0xFF) << 8 | (b5 & 0xFF);
                     }
                 }
@@ -361,13 +362,14 @@ public class Session_ME : ISession
                     int byteTotal = recvByteCount + sendByteCount;
                     strRecvByteCount = byteTotal / 1024 + "." + byteTotal % 1024 / 102 + "Kb";
 
-                    if (getKeyComplete)
+                    for (int i = 0; i < dataSize; i++)
                     {
-                        // Giải mã từng byte
-                        for (int i = 0; i < dataSize; i++)
+                        sbyte val = pooledArray[i];
+                        if (getKeyComplete)
                         {
-                            pooledArray[i] = readKey(pooledArray[i]);
+                            val = readKey(val);
                         }
+                        pooledArray[i] = matrixDecrypt(val);
                     }
 
                     // Tạo message mới với array từ pool
@@ -428,6 +430,10 @@ public class Session_ME : ISession
     private static sbyte curR;
 
     private static sbyte curW;
+
+    private static byte[] matrixCipher;
+    private static int matrixRIndex;
+    private static int matrixWIndex;
 
     private static int timeConnected;
 
@@ -630,16 +636,14 @@ public class Session_ME : ISession
         sbyte[] data = m.getData();
         try
         {
+            sbyte cmdVal = m.command;
             if (getKeyComplete)
             {
                 // Mã hóa và gửi command
-                sbyte value = writeKey(m.command);
-                dos.Write(value);
+                cmdVal = writeKey(cmdVal);
             }
-            else
-            {
-                dos.Write(m.command);
-            }
+            cmdVal = matrixEncrypt(cmdVal);
+            dos.Write(cmdVal);
 
             if (data != null)
             {
@@ -648,32 +652,25 @@ public class Session_ME : ISession
                 if (getKeyComplete)
                 {
                     // Mã hóa và gửi độ dài
-                    int num2 = writeKey((sbyte)(dataLength >> 8));
-                    dos.Write((sbyte)num2);
-                    int num3 = writeKey((sbyte)(dataLength & 0xFF));
-                    dos.Write((sbyte)num3);
+                    sbyte num2 = writeKey((sbyte)(dataLength >> 8));
+                    dos.Write(matrixEncrypt(num2));
+                    sbyte num3 = writeKey((sbyte)(dataLength & 0xFF));
+                    dos.Write(matrixEncrypt(num3));
                 }
                 else
                 {
-                    dos.Write((ushort)dataLength);
+                    dos.Write(matrixEncrypt((sbyte)(dataLength >> 8)));
+                    dos.Write(matrixEncrypt((sbyte)(dataLength & 0xFF)));
                 }
 
-                if (getKeyComplete)
+                for (int i = 0; i < data.Length; i++)
                 {
-                    // Gửi từng byte đã mã hóa
-                    for (int i = 0; i < data.Length; i++)
+                    sbyte val = data[i];
+                    if (getKeyComplete)
                     {
-                        sbyte value2 = writeKey(data[i]);
-                        dos.Write(value2);
+                        val = writeKey(val);
                     }
-                }
-                else
-                {
-                    // Gửi dữ liệu nguyên bản
-                    for (int i = 0; i < data.Length; i++)
-                    {
-                        dos.Write(data[i]);
-                    }
+                    dos.Write(matrixEncrypt(val));
                 }
 
                 sendByteCount += 5 + data.Length;
@@ -684,14 +681,15 @@ public class Session_ME : ISession
                 if (getKeyComplete)
                 {
                     int num4 = 0;
-                    int num5 = writeKey((sbyte)(num4 >> 8));
-                    dos.Write((sbyte)num5);
-                    int num6 = writeKey((sbyte)(num4 & 0xFF));
-                    dos.Write((sbyte)num6);
+                    sbyte num5 = writeKey((sbyte)(num4 >> 8));
+                    dos.Write(matrixEncrypt(num5));
+                    sbyte num6 = writeKey((sbyte)(num4 & 0xFF));
+                    dos.Write(matrixEncrypt(num6));
                 }
                 else
                 {
-                    dos.Write((ushort)0);
+                    dos.Write(matrixEncrypt(0));
+                    dos.Write(matrixEncrypt(0));
                 }
 
                 sendByteCount += 5;
@@ -731,6 +729,30 @@ public class Session_ME : ISession
             curW = (sbyte)(curW % (sbyte)key.Length);
         }
         return result;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static sbyte matrixEncrypt(sbyte b)
+    {
+        if (matrixCipher == null)
+            return b;
+        sbyte res = (sbyte)(b ^ matrixCipher[matrixWIndex]);
+        matrixWIndex++;
+        if (matrixWIndex >= matrixCipher.Length)
+            matrixWIndex = 0;
+        return res;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static sbyte matrixDecrypt(sbyte b)
+    {
+        if (matrixCipher == null)
+            return b;
+        sbyte res = (sbyte)(b ^ matrixCipher[matrixRIndex]);
+        matrixRIndex++;
+        if (matrixRIndex >= matrixCipher.Length)
+            matrixRIndex = 0;
+        return res;
     }
 
     public static void onRecieveMsg(Message msg)
@@ -895,5 +917,11 @@ public class Session_ME : ISession
         }
 
         return array;
+    }
+
+    public static void SetMatrixCipher(byte[] cipher)
+    {
+        matrixCipher = cipher;
+        matrixRIndex = matrixWIndex = 0;
     }
 }

@@ -244,7 +244,7 @@ public class Session_ME2 : ISession
                     return null;
                 }
 
-                sbyte b = dis.ReadSByte();
+                sbyte b = matrixDecrypt(dis.ReadSByte());
                 if (getKeyComplete)
                 {
                     b = readKey(b);
@@ -258,14 +258,14 @@ public class Session_ME2 : ISession
                 int num;
                 if (getKeyComplete)
                 {
-                    sbyte b2 = dis.ReadSByte();
-                    sbyte b3 = dis.ReadSByte();
+                    sbyte b2 = matrixDecrypt(dis.ReadSByte());
+                    sbyte b3 = matrixDecrypt(dis.ReadSByte());
                     num = ((readKey(b2) & 0xFF) << 8) | (readKey(b3) & 0xFF);
                 }
                 else
                 {
-                    sbyte b4 = dis.ReadSByte();
-                    sbyte b5 = dis.ReadSByte();
+                    sbyte b4 = matrixDecrypt(dis.ReadSByte());
+                    sbyte b5 = matrixDecrypt(dis.ReadSByte());
                     num = (b4 & 0xFF) << 8 | (b5 & 0xFF);
                 }
 
@@ -288,12 +288,14 @@ public class Session_ME2 : ISession
                     int num4 = recvByteCount + sendByteCount;
                     strRecvByteCount = num4 / 1024 + "." + num4 % 1024 / 102 + "Kb";
 
-                    if (getKeyComplete)
+                    for (int i = 0; i < num; i++)
                     {
-                        for (int i = 0; i < num; i++)
+                        sbyte val = array[i];
+                        if (getKeyComplete)
                         {
-                            array[i] = readKey(array[i]);
+                            val = readKey(val);
                         }
+                        array[i] = matrixDecrypt(val);
                     }
 
                     // Sử dụng constructor 3 tham số
@@ -351,6 +353,10 @@ public class Session_ME2 : ISession
     private static sbyte curR;
 
     private static sbyte curW;
+
+    private static byte[] matrixCipher;
+    private static int matrixRIndex;
+    private static int matrixWIndex;
 
     private static int timeConnected;
 
@@ -521,45 +527,37 @@ public class Session_ME2 : ISession
         sbyte[] data = m.getData();
         try
         {
+            sbyte cmdVal = m.command;
             if (getKeyComplete)
             {
-                sbyte value = writeKey(m.command);
-                dos.Write(value);
+                cmdVal = writeKey(cmdVal);
             }
-            else
-            {
-                dos.Write(m.command);
-            }
+            dos.Write(matrixEncrypt(cmdVal));
 
             if (data != null)
             {
                 int num = data.Length;
                 if (getKeyComplete)
                 {
-                    int num2 = writeKey((sbyte)(num >> 8));
-                    dos.Write((sbyte)num2);
-                    int num3 = writeKey((sbyte)(num & 0xFF));
-                    dos.Write((sbyte)num3);
+                    sbyte num2 = writeKey((sbyte)(num >> 8));
+                    dos.Write(matrixEncrypt(num2));
+                    sbyte num3 = writeKey((sbyte)(num & 0xFF));
+                    dos.Write(matrixEncrypt(num3));
                 }
                 else
                 {
-                    dos.Write((ushort)num);
+                    dos.Write(matrixEncrypt((sbyte)(num >> 8)));
+                    dos.Write(matrixEncrypt((sbyte)(num & 0xFF)));
                 }
 
-                if (getKeyComplete)
+                for (int i = 0; i < data.Length; i++)
                 {
-                    for (int i = 0; i < data.Length; i++)
+                    sbyte val = data[i];
+                    if (getKeyComplete)
                     {
-                        sbyte value2 = writeKey(data[i]);
-                        dos.Write(value2);
+                        val = writeKey(val);
                     }
-                }
-                else
-                {
-                    // Sử dụng BlockCopy để chuyển đổi
-                    byte[] byteData = new byte[data.Length];
-                    Buffer.BlockCopy(data, 0, byteData, 0, data.Length);
-                    dos.Write(byteData);
+                    dos.Write(matrixEncrypt(val));
                 }
 
                 sendByteCount += 5 + data.Length;
@@ -569,14 +567,15 @@ public class Session_ME2 : ISession
                 if (getKeyComplete)
                 {
                     int num4 = 0;
-                    int num5 = writeKey((sbyte)(num4 >> 8));
-                    dos.Write((sbyte)num5);
-                    int num6 = writeKey((sbyte)(num4 & 0xFF));
-                    dos.Write((sbyte)num6);
+                    sbyte num5 = writeKey((sbyte)(num4 >> 8));
+                    dos.Write(matrixEncrypt(num5));
+                    sbyte num6 = writeKey((sbyte)(num4 & 0xFF));
+                    dos.Write(matrixEncrypt(num6));
                 }
                 else
                 {
-                    dos.Write((ushort)0);
+                    dos.Write(matrixEncrypt(0));
+                    dos.Write(matrixEncrypt(0));
                 }
                 sendByteCount += 5;
             }
@@ -615,6 +614,30 @@ public class Session_ME2 : ISession
             curW = (sbyte)(curW % (sbyte)key.Length);
         }
         return result;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static sbyte matrixEncrypt(sbyte b)
+    {
+        if (matrixCipher == null)
+            return b;
+        sbyte res = (sbyte)(b ^ matrixCipher[matrixWIndex]);
+        matrixWIndex++;
+        if (matrixWIndex >= matrixCipher.Length)
+            matrixWIndex = 0;
+        return res;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static sbyte matrixDecrypt(sbyte b)
+    {
+        if (matrixCipher == null)
+            return b;
+        sbyte res = (sbyte)(b ^ matrixCipher[matrixRIndex]);
+        matrixRIndex++;
+        if (matrixRIndex >= matrixCipher.Length)
+            matrixRIndex = 0;
+        return res;
     }
 
     public static void onRecieveMsg(Message msg)
@@ -771,5 +794,11 @@ public class Session_ME2 : ISession
         }
 
         return array;
+    }
+
+    public static void SetMatrixCipher(byte[] cipher)
+    {
+        matrixCipher = cipher;
+        matrixRIndex = matrixWIndex = 0;
     }
 }
