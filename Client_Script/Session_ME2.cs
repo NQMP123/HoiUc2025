@@ -217,8 +217,23 @@ public class Session_ME2 : ISession
                         }
                     }
 
+                    byte[] raw = new byte[num4];
+                    Buffer.BlockCopy(array, 0, raw, 0, num4);
+                    sbyte[] decoded;
+                    try
+                    {
+                        string str = Encoding.ASCII.GetString(raw);
+                        byte[] d = Convert.FromBase64String(str);
+                        decoded = new sbyte[d.Length];
+                        Buffer.BlockCopy(d, 0, decoded, 0, d.Length);
+                    }
+                    catch (Exception)
+                    {
+                        decoded = array;
+                    }
+
                     // Sử dụng constructor 3 tham số
-                    return new Message(cmd, array, num4);
+                    return new Message(cmd, decoded, decoded.Length);
                 }
                 catch (Exception ex)
                 {
@@ -296,8 +311,23 @@ public class Session_ME2 : ISession
                         }
                     }
 
+                    byte[] raw = new byte[num];
+                    Buffer.BlockCopy(array, 0, raw, 0, num);
+                    sbyte[] decoded;
+                    try
+                    {
+                        string str = Encoding.ASCII.GetString(raw);
+                        byte[] d = Convert.FromBase64String(str);
+                        decoded = new sbyte[d.Length];
+                        Buffer.BlockCopy(d, 0, decoded, 0, d.Length);
+                    }
+                    catch (Exception)
+                    {
+                        decoded = array;
+                    }
+
                     // Sử dụng constructor 3 tham số
-                    return new Message(b, array, num);
+                    return new Message(b, decoded, decoded.Length);
                 }
                 catch (Exception ex)
                 {
@@ -519,6 +549,16 @@ public class Session_ME2 : ISession
     private static void doSendMessage(Message m)
     {
         sbyte[] data = m.getData();
+        if (data != null)
+        {
+            byte[] raw = new byte[data.Length];
+            Buffer.BlockCopy(data, 0, raw, 0, data.Length);
+            string encoded = Convert.ToBase64String(raw);
+            byte[] encBytes = Encoding.ASCII.GetBytes(encoded);
+            sbyte[] encSBytes = new sbyte[encBytes.Length];
+            Buffer.BlockCopy(encBytes, 0, encSBytes, 0, encBytes.Length);
+            data = encSBytes;
+        }
         try
         {
             if (getKeyComplete)

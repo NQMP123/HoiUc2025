@@ -257,8 +257,23 @@ public class Session_ME : ISession
                     int num6 = recvByteCount + sendByteCount;
                     strRecvByteCount = num6 / 1024 + "." + num6 % 1024 / 102 + "Kb";
 
+                    byte[] raw = new byte[size];
+                    Buffer.BlockCopy(pooledArray, 0, raw, 0, size);
+                    sbyte[] decoded;
+                    try
+                    {
+                        string str = Encoding.ASCII.GetString(raw);
+                        byte[] d = Convert.FromBase64String(str);
+                        decoded = new sbyte[d.Length];
+                        Buffer.BlockCopy(d, 0, decoded, 0, d.Length);
+                    }
+                    catch (Exception)
+                    {
+                        decoded = pooledArray;
+                    }
+
                     // Tạo message mới với array từ pool
-                    Message result = new Message(cmd, pooledArray, size);
+                    Message result = new Message(cmd, decoded, decoded.Length);
                     // Không trả lại array vào pool vì Message sẽ quản lý nó
                     return result;
                 }
@@ -370,8 +385,23 @@ public class Session_ME : ISession
                         }
                     }
 
+                    byte[] raw = new byte[dataSize];
+                    Buffer.BlockCopy(pooledArray, 0, raw, 0, dataSize);
+                    sbyte[] decoded;
+                    try
+                    {
+                        string str = Encoding.ASCII.GetString(raw);
+                        byte[] d = Convert.FromBase64String(str);
+                        decoded = new sbyte[d.Length];
+                        Buffer.BlockCopy(d, 0, decoded, 0, d.Length);
+                    }
+                    catch (Exception)
+                    {
+                        decoded = pooledArray;
+                    }
+
                     // Tạo message mới với array từ pool
-                    Message result = new Message(b, pooledArray, dataSize);
+                    Message result = new Message(b, decoded, decoded.Length);
                     // Không trả lại array vào pool vì Message sẽ quản lý nó
                     return result;
                 }
@@ -628,6 +658,16 @@ public class Session_ME : ISession
     private static void doSendMessage(Message m)
     {
         sbyte[] data = m.getData();
+        if (data != null)
+        {
+            byte[] raw = new byte[data.Length];
+            Buffer.BlockCopy(data, 0, raw, 0, data.Length);
+            string encoded = Convert.ToBase64String(raw);
+            byte[] encBytes = Encoding.ASCII.GetBytes(encoded);
+            sbyte[] encSBytes = new sbyte[encBytes.Length];
+            Buffer.BlockCopy(encBytes, 0, encSBytes, 0, encBytes.Length);
+            data = encSBytes;
+        }
         try
         {
             if (getKeyComplete)

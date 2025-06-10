@@ -211,6 +211,9 @@ public class Session implements ISession {
             return;
         }
         byte[] data = m.getData();
+        if (data != null) {
+            data = java.util.Base64.getEncoder().encode(data);
+        }
         byte b = m.getCommand();
         if (isConnected) {
             dos.writeByte(writeKey(b));
@@ -1061,6 +1064,12 @@ public class Session implements ISession {
             if (isConnected) {
                 for (int i = 0; i < data.length; i++) {
                     data[i] = readKey(data[i]);
+                }
+            }
+            if (data.length > 0) {
+                try {
+                    data = java.util.Base64.getDecoder().decode(data);
+                } catch (IllegalArgumentException ignored) {
                 }
             }
             Message msg = new Message(cmd, data);
