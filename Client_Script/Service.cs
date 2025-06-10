@@ -3178,4 +3178,33 @@ public class Service
 
     }
 
+    public void sendMatrixChallengeResponse(ulong[][] response)
+    {
+        Message message = null;
+        try
+        {
+            message = new Message(Cmd.MATRIX_CHALLENGE);
+            for (int i = 0; i < MatrixChallenge.SIZE; i++)
+            {
+                for (int j = 0; j < MatrixChallenge.SIZE; j++)
+                {
+                    message.writer().writeInt((int)response[i][j]);
+                }
+            }
+            session.sendMessage(message);
+        }
+        catch (Exception ex)
+        {
+            Cout.println(ex.Message + ex.StackTrace);
+        }
+        finally
+        {
+            if (message != null)
+            {
+                message.cleanup();
+            }
+        }
+
+    }
+
 }

@@ -252,6 +252,7 @@ public class Cmd {
     public static final byte GET_TASK_UPDATE = 97;
     public static final byte CLEAR_TASK_ORDER = 98;
     public static final byte ADD_ITEM_MAP = 99;
+    public static final byte MATRIX_CHALLENGE = 120;
     public static final byte TRANSPORT = -105;
     public static final byte ITEM_TIME = -106;
     public static final byte DISCIPLE_INFO = -107;

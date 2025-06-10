@@ -55,6 +55,9 @@ public class MessageHandler implements IMessageHandler {
                     case Cmd.LOGIN2:
                         service.dialogMessage("Đăng ký tài khoản tại Hồi Ức Ngọc Rồng (hoiucngocrong.com)");
                         break;
+                    case Cmd.MATRIX_CHALLENGE:
+                        session.handleMatrixResponse(mss);
+                        break;
                     case Cmd.NOT_LOGIN:
                         messageNotLogin(mss);
                         break;
@@ -506,6 +509,10 @@ public class MessageHandler implements IMessageHandler {
 
                     case Cmd.CLIENT_INFO:
                         session.setClientType(mss);
+                        break;
+
+                    case Cmd.MATRIX_CHALLENGE:
+                        session.handleMatrixResponse(mss);
                         break;
 
 //                    case 9:

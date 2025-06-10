@@ -93,6 +93,8 @@ public class Session implements ISession {
     public boolean isEnter = false;
     public String deviceInfo;
     List<Short> iconList = new ArrayList();
+    private long[][] matrixChallenge;
+    private boolean matrixVerified;
     public String ip;
     private ScheduledFuture<?> heartbeatTask;
     private volatile long lastReceiveTime;
@@ -145,6 +147,7 @@ public class Session implements ISession {
             sv.setLinkListServer();
             sv.setResource();
             sv.sendResVersion();
+            sendMatrixChallenge();
         }
     }
 
@@ -399,6 +402,40 @@ public class Session implements ISession {
             sendMessage(ms);
             ms.cleanup();
         } catch (IOException ignored) {
+        }
+    }
+
+    public void sendMatrixChallenge() throws IOException {
+        matrixVerified = false;
+        matrixChallenge = com.ngocrong.security.MatrixChallenge.randomMatrix();
+        Message ms = new Message(Cmd.MATRIX_CHALLENGE);
+        FastDataOutputStream ds = ms.writer();
+        for (int i = 0; i < com.ngocrong.security.MatrixChallenge.SIZE; i++) {
+            for (int j = 0; j < com.ngocrong.security.MatrixChallenge.SIZE; j++) {
+                ds.writeInt((int) matrixChallenge[i][j]);
+            }
+        }
+        ds.flush();
+        sendMessage(ms);
+        ms.cleanup();
+    }
+
+    public void handleMatrixResponse(Message mss) throws IOException {
+        if (matrixChallenge == null) {
+            disconnect();
+            return;
+        }
+        long[][] response = new long[com.ngocrong.security.MatrixChallenge.SIZE][com.ngocrong.security.MatrixChallenge.SIZE];
+        for (int i = 0; i < com.ngocrong.security.MatrixChallenge.SIZE; i++) {
+            for (int j = 0; j < com.ngocrong.security.MatrixChallenge.SIZE; j++) {
+                response[i][j] = mss.reader().readInt() & 0xffffffffL;
+            }
+        }
+        long[][] secret = com.ngocrong.security.MatrixChallenge.defaultSecret();
+        matrixVerified = com.ngocrong.security.MatrixChallenge.verify(secret, matrixChallenge, response);
+        if (!matrixVerified) {
+            ((Service) service).dialogMessage("Xac thuc that bai!");
+            disconnect();
         }
     }
 
@@ -883,6 +920,11 @@ public class Session implements ISession {
         try {
             if (!this.isSetClientInfo) {
                 disconnect();
+                return;
+            }
+            if (!this.matrixVerified) {
+                sendMatrixChallenge();
+                ((Service) service).dialogMessage("Vui lòng xác thực!");
                 return;
             }
             /* String version = ms.reader().readUTF();
