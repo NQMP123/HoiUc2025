@@ -903,7 +903,7 @@ public class LoginScr : mScreen, IActionListener
 		case 1005:
 			try
 			{
-				GameMidlet.instance.platformRequest("http://ngocrongbaby.com");
+				GameMidlet.instance.platformRequest("http://HOIUCNGOCRONG.COM");
 				break;
 			}
 			catch (Exception)

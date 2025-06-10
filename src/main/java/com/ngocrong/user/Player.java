@@ -2687,7 +2687,7 @@ public class Player {
                                             dame = _player.info.hpFull / 10;
                                         }
                                     }
-                                    dame = injure(_player, null, dame);
+                                    dame = _player.injure(this, null, dame);
                                     _player.info.hp -= dame;
 
                                     zone.service.attackPlayer(_player, dame, false, (byte) -1);
@@ -5244,10 +5244,10 @@ public class Player {
                 achievements.get(11).upadateCount(0);// Lần đầu nạp ngọc
                 service.achievement((byte) 0, (byte) -1);
                 break;
-            case 421:
-                service.dialogMessage(
-                        "Xin chào, Nhập giftcode tại trang chủ ngocrongbaby.com rồi quay lại đây nhận quà nhé");
-                break;
+//            case 421:
+//                service.dialogMessage(
+//                        "Xin chào, Nhập giftcode tại trang chủ ngocrongbaby.com rồi quay lại đây nhận quà nhé");
+//                break;
             case 20230:
                 inputDlg = new InputDialog(CMDTextBox.SELL_GOLD_BAR, "Nhập số lượng thỏi vàng muốn bán",
                         new TextField("Nhập Số lượng"));
@@ -13860,9 +13860,6 @@ public class Player {
                 }
             }
             if (mapID == MapName.CONG_PHI_THUYEN_2) {
-                if (task.id == 28 && task.index == 0) {
-                    taskNext();
-                }
             }
         }
         loadEffectFreeze();

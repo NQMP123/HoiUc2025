@@ -119,7 +119,7 @@ public class T3 : mResources
 		mResources.email = "Email";
 		mResources.acc = "Acc";
 		mResources.pwd = "Pwd";
-		mResources.goToWebForPassword = "Untuk me-recover password harap kunjungi website http://ngocrongbaby.com/matkhau";
+		mResources.goToWebForPassword = "Untuk me-recover password harap kunjungi website http://HOIUCNGOCRONG.COM/matkhau";
 		mResources.dragon_ball = "Dragon Ball";
 		mResources.character = "Karakter";
 		mResources.account = "Account";

@@ -225,8 +225,8 @@ public class User {
             data.clan = -1;
             data.shortcut = "[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]";
             data.magicTree = g.toJson(magicTree);
-            data.numberCellBag = 100;
-            data.numberCellBox = 100;
+            data.numberCellBag = 200;
+            data.numberCellBox = 200;
             data.friend = "[]";
             data.enemy = "[]";
             data.ship = 0;

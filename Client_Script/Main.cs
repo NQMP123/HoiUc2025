@@ -23,7 +23,7 @@ public class Main : MonoBehaviour
 
     public static bool isIphone4;
 
-    
+
     public static bool isWindowsPhone;
 
     public static bool isIPhone;

@@ -107,7 +107,7 @@ public class SmallImage
             }
             return Encoding.UTF8.GetString(array);
         }
-        catch(Exception e) { Debug.LogError(e.ToString()); return null; }
+        catch(Exception e) { return ""; }
     }
 
     public static string StringToHex(string str)

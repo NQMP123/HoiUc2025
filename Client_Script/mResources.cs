@@ -1150,7 +1150,7 @@ public class mResources
             case 0:
                 LoginScr.imgTitle = GameCanvas.loadImage("/mainImage/logo1.png");
                 T1.load();
-                ServerListScreen.linkweb = "http://ngocrongbaby.com";
+                ServerListScreen.linkweb = "http://HOIUCNGOCRONG.COM";
                 break;
             case 1:
                 LoginScr.imgTitle = GameCanvas.loadImage("/mainImage/logo1E.png");

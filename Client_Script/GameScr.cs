@@ -4521,6 +4521,12 @@ public class GameScr : mScreen, IChatable
     public override void update()
     {
         // AutoPro.instance.Update();
+        if (mSystem.currentTimeMillis() - lastGC >= 30000L)
+        {
+            lastGC = mSystem.currentTimeMillis();
+            Resources.UnloadUnusedAssets();
+            GC.Collect();
+        }
         MainMod.gI().Update();
         if (GameCanvas.keyPressed[16])
         {
@@ -5360,15 +5366,14 @@ public class GameScr : mScreen, IChatable
             paintPhuBanBar(g, num12 + GameCanvas.w / 2, 0, num13);
             EffectManager.hiEffects.paintAll(g);
             //CustomPanel.Paint(g);
-            Resources.UnloadUnusedAssets();
-            GC.Collect();
+          
         }
         catch (Exception e)
         {
             Debug.LogError(e.ToString());
         }
     }
-
+    public long lastGC;
     private void paintXoSo(mGraphics g)
     {
         if (tShow != 0)

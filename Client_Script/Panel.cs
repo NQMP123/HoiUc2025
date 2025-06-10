@@ -1731,16 +1731,7 @@ public class Panel : IActionListener, IChatable
             {
                 text += "\n|6|1|";
             }
-            if (item.template.type < 5)
-            {
-                text += "\n--\n";
-                text += !getDoneLevel(6) ? "|0|" : "|1|";
-                text += "(5 Món +6 trở lên) +2% Chỉ Số\n";
-                text += !getDoneLevel(7) ? "|0|" : "|1|";
-                text += "(5 Món +7 trở lên) +4% Chỉ Số\n";
-                text += !getDoneLevel(8) ? "|0|" : "|1|";
-                text += "(5 Món +8 trở lên) +6% Chỉ Số";
-            }
+           
             currItem.compare = getCompare(currItem);
             text += "\n--";
             text = text + "\n|6|" + item.template.description;
@@ -1763,7 +1754,7 @@ public class Panel : IActionListener, IChatable
         }
         catch (Exception ex)
         {
-            Res.outz("ex " + ex.StackTrace);
+            Debug.LogError(ex.ToString());
         }
     }
     public bool getLevelItem(int level)
@@ -1784,7 +1775,10 @@ public class Panel : IActionListener, IChatable
     public bool getDoneLevel(int level)
     {
         Item[] items = this.type == 0 ? Char.myCharz().arrItemBody : Char.myPetz().arrItemBody;
-
+        if (items == null)
+        {
+            return false;
+        }
         for (int i = 0; i < 5; i++)
         {
             Item item = items[i];

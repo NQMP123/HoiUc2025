@@ -65,7 +65,7 @@ public class ServerListScreen : mScreen, IActionListener
 
     public static bool stopDownload;
 
-    public static string linkweb = "http://ngocrongbaby.com";
+    public static string linkweb = "http://HOIUCNGOCRONG.COM";
 
     public static bool waitToLogin;
 

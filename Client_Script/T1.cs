@@ -114,7 +114,7 @@ public class T1 : mResources
         mResources.email = "Địa chỉ mail";
         mResources.acc = "TK";
         mResources.pwd = "MK";
-        mResources.goToWebForPassword = "Để lấy lại mật khẩu, xin vui lòng vào website http://ngocrongbaby.com/matkhau";
+        mResources.goToWebForPassword = "Để lấy lại mật khẩu, xin vui lòng vào website http://HOIUCNGOCRONG.COM/matkhau";
         mResources.dragon_ball = "Ngọc rồng";
         mResources.character = "Nhân vật";
         mResources.account = "Tài khoản";

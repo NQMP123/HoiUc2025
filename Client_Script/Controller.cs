@@ -115,7 +115,6 @@ public class Controller : IMessageHandler
         GameCanvas.debug("SA1", 2);
         try
         {
-            Debug.LogError("<<<Read cmd= " + msg.command);
             Char @char = null;
             Mob mob = null;
             MyVector myVector = new MyVector();
@@ -1857,7 +1856,7 @@ public class Controller : IMessageHandler
                         Res.outz("cAction= " + b26);
                         if (b26 == 0)
                         {
-                            int num47 = msg.reader().readUnsignedByte();
+                            int num47 = msg.reader().readByte();
                             Char.myCharz().arrItemBag = new Item[num47];
                             GameScr.hpPotion = 0;
                             Res.outz("numC=" + num47);
@@ -4685,8 +4684,6 @@ public class Controller : IMessageHandler
                 {
                 }
             }
-            Resources.UnloadUnusedAssets();
-            GC.Collect();
             GameCanvas.debug("SA75x5", 2);
             num = msg.reader().readByte();
             Mob.newMob.removeAllElements();
@@ -4979,8 +4976,6 @@ public class Controller : IMessageHandler
             loadCurrMap(teleport);
             Char.isLoadingMap = false;
             GameCanvas.debug("SA75x8", 2);
-            Resources.UnloadUnusedAssets();
-            GC.Collect();
             Debug.LogError("----------DA CHAY XONG LOAD INFO MAP");
         }
         catch (Exception ex)

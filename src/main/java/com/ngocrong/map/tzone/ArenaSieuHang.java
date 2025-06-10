@@ -266,36 +266,37 @@ public class ArenaSieuHang extends Zone {
         try {
             Optional<DiscipleData> discipleOptional = GameRepository.getInstance().disciple.findById(-clonePlayerId);
             if (discipleOptional.isPresent()) {
-            }
-            DiscipleData discipleData = discipleOptional.get();
-            deTu.typeDisciple = discipleData.type;
-            deTu.itemBody = new Item[10];
-            deTu.petBonus = discipleData.bonus;
-            JSONArray itemBody = new JSONArray(discipleData.itemBody);
-            int lent = itemBody.length();
-            for (int i = 0; i < lent; i++) {
-                Item item = new Item();
-                item.load(itemBody.getJSONObject(i));
-                int index = item.template.type;
-                if (index == 32) {
-                    index = 6;
-                } else if (index == 23 || index == 24) {
-                    index = 7;
-                } else if (index == 11) {
-                    index = 8;
-                } else if (index == 40) {
-                    index = 9;
+
+                DiscipleData discipleData = discipleOptional.get();
+                deTu.typeDisciple = discipleData.type;
+                deTu.itemBody = new Item[10];
+                deTu.petBonus = discipleData.bonus;
+                JSONArray itemBody = new JSONArray(discipleData.itemBody);
+                int lent = itemBody.length();
+                for (int i = 0; i < lent; i++) {
+                    Item item = new Item();
+                    item.load(itemBody.getJSONObject(i));
+                    int index = item.template.type;
+                    if (index == 32) {
+                        index = 6;
+                    } else if (index == 23 || index == 24) {
+                        index = 7;
+                    } else if (index == 11) {
+                        index = 8;
+                    } else if (index == 40) {
+                        index = 9;
+                    }
+                    if (index > 9) {
+                        index = 9;
+                    }
+                    deTu.itemBody[index] = item;
                 }
-                if (index > 9) {
-                    index = 9;
-                }
-                deTu.itemBody[index] = item;
+                deTu.info = gson.fromJson(discipleData.info, Info.class);
+                deTu.info.applyCharLevelPercent();
+                deTu.info.setPowerLimited();
+                deTu.info.setChar(deTu);
+                deTu.info.setInfo();
             }
-            deTu.info = gson.fromJson(discipleData.info, Info.class);
-            deTu.info.applyCharLevelPercent();
-            deTu.info.setPowerLimited();
-            deTu.info.setChar(deTu);
-            deTu.info.setInfo();
         } catch (Exception e) {
             com.ngocrong.NQMP.UtilsNQMP.logError(e);
 

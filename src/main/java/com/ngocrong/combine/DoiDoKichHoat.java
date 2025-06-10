@@ -46,7 +46,7 @@ public class DoiDoKichHoat extends Combine {
             player.service.dialogMessage("Vật phẩm không hợp lệ");
             return;
         }
-        String info = "Sau khi cường hóa, sẽ nhận được 1 trang bị kích hoạt ngẫu nhiên";
+        String info = "Sau khi cường hóa, sẽ nhận được 1 trang bị kích hoạt ngẫu nhiên (cần 500tr vàng)";
         player.menus.clear();
         if (item.template.type != 4) {
             player.menus.add(new KeyValue(CMDMenu.COMBINE, "Đồng ý\n500tr vàng", -1));

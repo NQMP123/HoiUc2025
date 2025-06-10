@@ -60,7 +60,7 @@ public class MainUpdate implements Runnable {
     public static LocalDateTime now;
 
     public static void updateMabu14H() {
-         Bu_Map.initBoss();
+        Bu_Map.initBoss();
         if (list != null && !list.isEmpty()) {
             // Iterate over a copy of the list to avoid ConcurrentModificationException
             // if bu.update() can modify the original list (e.g., remove boss upon death).
@@ -175,7 +175,7 @@ public class MainUpdate implements Runnable {
     }
 
     static void setMabu14h() {
-        MainUpdate.runTaskDay(() -> {
+        MainUpdate.runTaskDayInWindow(() -> {
             try {
                 logger.info("Attempting Mabu 14H event: Initializing bosses...");
                 Bu_Map.initBoss();
@@ -183,7 +183,7 @@ public class MainUpdate implements Runnable {
             } catch (Exception e) {
                 logger.error("Error during Mabu 14H initialization: ", e);
             }
-        }, "14:00");
+        }, "14:00","15:00");
     }
 
     @Override
@@ -191,7 +191,7 @@ public class MainUpdate implements Runnable {
         Server server = DragonBall.getInstance().getServer();
         setBaoTri();
         setRewardWhis();
-        setMabu14h(); 
+        setMabu14h();
         while (server.start) {
             try {
                 Thread.sleep(100);
@@ -322,32 +322,42 @@ public class MainUpdate implements Runnable {
             String[] timeParts = time.split(":");
             int hour = Integer.parseInt(timeParts[0]);
             int minute = Integer.parseInt(timeParts[1]);
-            LocalDateTime localNow = LocalDateTime.now();
-            ZoneId currentZone = ZoneId.of("Asia/Ho_Chi_Minh");
-            ZonedDateTime zonedNow = ZonedDateTime.of(localNow, currentZone);
-            ZonedDateTime nextRun = zonedNow.withHour(hour).withMinute(minute).withSecond(0);
-            if (zonedNow.compareTo(nextRun) > 0) {
+
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime nextRun = now.withHour(hour).withMinute(minute).withSecond(0).withNano(0);
+
+            // Nếu thời gian hôm nay đã qua, lên lịch cho ngày mai
+            if (now.isAfter(nextRun)) {
                 nextRun = nextRun.plusDays(1);
             }
-            Duration duration = Duration.between(zonedNow, nextRun);
+
+            Duration duration = Duration.between(now, nextRun);
             long initialDelay = duration.getSeconds();
+
             ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
             scheduler.scheduleAtFixedRate(task, initialDelay, 24 * 60 * 60, TimeUnit.SECONDS);
-            System.out.println("Đã lên lịch task " + callerMethodName + " chạy lúc " + time + " mỗi ngày");
+
+            System.out.printf("Đã lên lịch task '%s' chạy lúc %s mỗi ngày%n", callerMethodName, time);
+            System.out.printf("Lần chạy tiếp theo: %s (sau %d giây)%n", nextRun, initialDelay);
+
         } catch (Exception e) {
             String callerMethodName = Thread.currentThread().getStackTrace()[2].getMethodName();
-            System.err.println("Lỗi khi lên lịch task " + callerMethodName + ": " + e.getMessage());
+            System.err.printf("Lỗi khi lên lịch task '%s': %s%n", callerMethodName, e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    private static String getCallerMethodName() {
+        try {
+            return Thread.currentThread().getStackTrace()[3].getMethodName();
+        } catch (Exception e) {
+            return "UnnamedTask";
         }
     }
 
     public static void runTaskDayInWindow(Runnable task, String timeStart, String timeEnd) {
         try {
-            String callerMethodName = "UnnamedTaskInWindow";
-            try {
-                // Cố gắng lấy tên phương thức đã gọi để làm định danh cho task
-                callerMethodName = Thread.currentThread().getStackTrace()[2].getMethodName();
-            } catch (Exception ignored) {}
+            String callerMethodName = getCallerMethodName();
 
             String[] startParts = timeStart.split(":");
             int startHour = Integer.parseInt(startParts[0]);
@@ -357,72 +367,70 @@ public class MainUpdate implements Runnable {
             int endHour = Integer.parseInt(endParts[0]);
             int endMinute = Integer.parseInt(endParts[1]);
 
-            ZoneId currentZone = ZoneId.of("Asia/Ho_Chi_Minh");
-            ZonedDateTime zonedNow = ZonedDateTime.now(currentZone);
-            LocalTime localNow = zonedNow.toLocalTime();
+            LocalDateTime now = LocalDateTime.now();
+            LocalTime currentTime = now.toLocalTime();
+            LocalTime startTime = LocalTime.of(startHour, startMinute);
+            LocalTime endTime = LocalTime.of(endHour, endMinute);
 
-            LocalTime localTimeStart = LocalTime.of(startHour, startMinute);
-            LocalTime localTimeEnd = LocalTime.of(endHour, endMinute);
-
-            // --- Kiểm tra và thực thi ngay lập tức ---
-            if (localTimeStart.isAfter(localTimeEnd)) {
-                // Trường hợp timeStart sau timeEnd (ví dụ: 22:00 đến 02:00)
-                // Logic thực thi ngay có thể cần phức tạp hơn cho trường hợp qua đêm.
-                // Hiện tại, chỉ cảnh báo và không thực thi ngay theo logic đơn giản.
-                System.err.println("Cảnh báo cho task " + callerMethodName + ": timeStart (" + timeStart + 
-                                   ") sau timeEnd (" + timeEnd + 
-                                   "). Logic thực thi ngay lập tức có thể không hoạt động như mong đợi cho cửa sổ qua đêm.");
-                // Nếu muốn xử lý cửa sổ qua đêm cho thực thi ngay:
-                // if (!localNow.isBefore(localTimeStart) || localNow.isBefore(localTimeEnd)) {
-                //     System.out.println("Task " + callerMethodName + " (cửa sổ qua đêm) đang chạy ngay lập tức...");
-                //     task.run();
-                // }
-            } else {
-                // Trường hợp cửa sổ chuẩn trong ngày: thời_gian_hiện_tại >= timeStart VÀ thời_gian_hiện_tại < timeEnd
-                if (!localNow.isBefore(localTimeStart) && localNow.isBefore(localTimeEnd)) {
-                    System.out.println("Task " + callerMethodName + " đang chạy ngay lập tức (thời gian hiện tại " + 
-                                       localNow + " nằm trong khoảng " + timeStart + "-" + timeEnd + ")");
-                    try {
-                        task.run();
-                    } catch (Exception e) {
-                        System.err.println("Lỗi khi thực thi task " + callerMethodName + " ngay lập tức: " + e.getMessage());
-                        e.printStackTrace();
-                    }
-                }
+            // Kiểm tra và chạy ngay lập tức nếu trong khung thời gian
+            if (isTimeInWindow(currentTime, startTime, endTime)) {
+                System.out.printf("Task '%s' đang chạy ngay lập tức (thời gian hiện tại %s nằm trong khoảng %s-%s)%n",
+                        callerMethodName, currentTime, timeStart, timeEnd);
+                executeTaskSafely(task, callerMethodName);
             }
 
-            // --- Lên lịch chạy hàng ngày vào timeStart ---
-            ZonedDateTime nextScheduledRunAtStartTime = zonedNow.withHour(startHour).withMinute(startMinute).withSecond(0).withNano(0);
-
-            if (zonedNow.isAfter(nextScheduledRunAtStartTime)) {
-                // Nếu thời gian hiện tại đã qua timeStart của hôm nay, lên lịch cho timeStart ngày mai.
-                nextScheduledRunAtStartTime = nextScheduledRunAtStartTime.plusDays(1);
-            }
-            // Ngược lại, nó sẽ chạy vào timeStart của hôm nay.
-
-            Duration initialDelayDuration = Duration.between(zonedNow, nextScheduledRunAtStartTime);
-            long initialDelaySeconds = initialDelayDuration.getSeconds();
-
-            if (initialDelaySeconds < 0) { // Đảm bảo initialDelay không âm
-                initialDelaySeconds = 0;
-            }
-
-            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-            scheduler.scheduleAtFixedRate(task, initialDelaySeconds, 24 * 60 * 60, TimeUnit.SECONDS);
-
-            System.out.println("Đã lên lịch task '" + callerMethodName + "' để chạy hàng ngày vào lúc " + timeStart + ".");
-            System.out.println("Lần chạy theo lịch tiếp theo dự kiến vào: " + 
-                               nextScheduledRunAtStartTime.toString() + 
-                               " (sau khoảng " + initialDelaySeconds + " giây tính từ " + zonedNow.toString() + ")");
+            // Lên lịch chạy hàng ngày vào thời gian bắt đầu
+            scheduleDaily(task, now, startHour, startMinute, callerMethodName, timeStart);
 
         } catch (Exception e) {
-            String tempCallerName = "unknown_task_setup";
-            try {
-                tempCallerName = Thread.currentThread().getStackTrace()[2].getMethodName();
-            } catch (Exception ignored) {}
-            System.err.println("Lỗi nghiêm trọng khi thiết lập runTaskDayInWindow cho '" + tempCallerName + "': " + e.getMessage());
+            String callerMethodName = getCallerMethodName();
+            System.err.printf("Lỗi nghiêm trọng khi thiết lập runTaskDayInWindow cho '%s': %s%n",
+                    callerMethodName, e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    private static boolean isTimeInWindow(LocalTime currentTime, LocalTime startTime, LocalTime endTime) {
+        if (startTime.isAfter(endTime)) {
+            // Trường hợp qua đêm (ví dụ: 22:00 - 06:00)
+            return !currentTime.isBefore(startTime) || currentTime.isBefore(endTime);
+        } else {
+            // Trường hợp cùng ngày (ví dụ: 08:00 - 18:00)
+            return !currentTime.isBefore(startTime) && currentTime.isBefore(endTime);
+        }
+    }
+
+    /**
+     * Thực thi task một cách an toàn với xử lý lỗi
+     */
+    private static void executeTaskSafely(Runnable task, String taskName) {
+        try {
+            task.run();
+        } catch (Exception e) {
+            System.err.printf("Lỗi khi thực thi task '%s' ngay lập tức: %s%n", taskName, e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Lên lịch task chạy hàng ngày
+     */
+    private static void scheduleDaily(Runnable task, LocalDateTime now, int hour, int minute,
+            String taskName, String timeStart) {
+        LocalDateTime nextRun = now.withHour(hour).withMinute(minute).withSecond(0).withNano(0);
+
+        if (now.isAfter(nextRun)) {
+            nextRun = nextRun.plusDays(1);
+        }
+
+        Duration initialDelayDuration = Duration.between(now, nextRun);
+        long initialDelaySeconds = Math.max(0, initialDelayDuration.getSeconds());
+
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.scheduleAtFixedRate(task, initialDelaySeconds, 24 * 60 * 60, TimeUnit.SECONDS);
+
+        System.out.printf("Đã lên lịch task '%s' để chạy hàng ngày vào lúc %s%n", taskName, timeStart);
+        System.out.printf("Lần chạy theo lịch tiếp theo: %s (sau %d giây)%n", nextRun, initialDelaySeconds);
     }
 
 }

@@ -99,8 +99,7 @@ public class Session implements ISession {
     private volatile long lastSendTime;
 
     private static final int SOCKET_BUFFER_SIZE = 4096;
-    private static final int PING_INTERVAL = 30000; // 30s
-    private static final int TIMEOUT = 90000; // 90s
+    private static final int PING_INTERVAL = 150000, TIMEOUT = 150000; // 30s
     private static final int SENDING_QUEUE_LIMIT = 2048;
 
     public Session(Socket socket, String ip, int id) throws IOException {
@@ -1071,6 +1070,7 @@ public class Session implements ISession {
     }
 
     class Heartbeat implements Runnable {
+
         @Override
         public void run() {
             if (socket.isClosed()) {

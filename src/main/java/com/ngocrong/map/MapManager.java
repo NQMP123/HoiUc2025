@@ -1,5 +1,6 @@
 package com.ngocrong.map;
 
+import com.ngocrong.NQMP.MainUpdate;
 import com.ngocrong.map.expansion.blackdragon.MBlackDragonBall;
 import org.apache.log4j.Logger;
 
@@ -70,23 +71,10 @@ public class MapManager implements Runnable {
     }
 
     public void openBaseBabidi() {
-        LocalDateTime localNow = LocalDateTime.now();
-        ZoneId currentZone = ZoneId.of("Asia/Ho_Chi_Minh");
-        ZonedDateTime zonedNow = ZonedDateTime.of(localNow, currentZone);
-        ZonedDateTime zonedNext5 = zonedNow.withHour(12).withMinute(0).withSecond(0);//
-        if (zonedNow.compareTo(zonedNext5) > 0) {
-            zonedNext5 = zonedNext5.plusDays(1);
-        }
-        Duration duration = Duration.between(zonedNow, zonedNext5);
-        long initalDelay = duration.getSeconds();
-        Runnable runnable = new Runnable() {
-            public void run() {
-                baseBabidi = new BaseBabidi();
-                addObj(baseBabidi);
-            }
-        };
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(runnable, initalDelay, 1 * 24 * 60 * 60, TimeUnit.SECONDS);
+        MainUpdate.runTaskDayInWindow(() -> {
+            baseBabidi = new BaseBabidi();
+            addObj(baseBabidi);
+        }, "12:00", "13:00");
     }
 
     public void openBlackDragonBall() {

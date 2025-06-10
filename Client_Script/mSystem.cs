@@ -252,7 +252,7 @@ public class mSystem
 
 	public static void callHotlinePC()
 	{
-		Application.OpenURL("http://ngocrongbaby.com/");
+		Application.OpenURL("http://HOIUCNGOCRONG.COM/");
 	}
 
 	public static void callHotlineJava()
@@ -381,8 +381,7 @@ public class mSystem
 
 	public static void gcc()
 	{
-		Resources.UnloadUnusedAssets();
-		GC.Collect();
+		
 	}
 
 	public static mSystem gI()

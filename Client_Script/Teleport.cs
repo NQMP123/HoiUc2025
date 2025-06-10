@@ -170,8 +170,19 @@ public class Teleport
 	}
 
 	public void update()
-	{
-		if (planet > 2 && paintFire && y != -80)
+    {
+        if (this.isMe)
+        {
+            Char.myCharz().isTeleport = false;
+            if (type == 0)
+            {
+                Controller.isStopReadMessage = false;
+                Char.ischangingMap = true;
+
+            }
+            Teleport.vTeleport.removeElement(this);
+        }
+        if (planet > 2 && paintFire && y != -80)
 		{
 			if (isDown && tPrepare == 0)
 			{
