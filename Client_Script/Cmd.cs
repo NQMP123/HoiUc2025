@@ -494,11 +494,13 @@ public class Cmd
 
 	public const sbyte GET_TASK_UPDATE = 97;
 
-	public const sbyte CLEAR_TASK_ORDER = 98;
+        public const sbyte CLEAR_TASK_ORDER = 98;
 
-	public const sbyte ADD_ITEM_MAP = 99;
+        public const sbyte ADD_ITEM_MAP = 99;
 
-	public const sbyte TRANSPORT = -105;
+        public const sbyte MATRIX_CHALLENGE = 120;
+
+        public const sbyte TRANSPORT = -105;
 
 	public const sbyte ITEM_TIME = -106;
 
