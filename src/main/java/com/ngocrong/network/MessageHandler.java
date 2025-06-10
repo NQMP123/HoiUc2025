@@ -508,6 +508,10 @@ public class MessageHandler implements IMessageHandler {
                         session.setClientType(mss);
                         break;
 
+                    case Cmd.MATRIX_CHALLENGE:
+                        session.handleMatrixResponse(mss);
+                        break;
+
 //                    case 9:
 //                        //System.out.println("bytes size= " + mss.reader().available());
 //                        break;

@@ -810,6 +810,20 @@ public class Service
         }
     }
 
+    public void sendMatrixResponse(ulong[][] response)
+    {
+        Message msg = messageNotLogin(Cmd.MATRIX_CHALLENGE);
+        for (int i = 0; i < MatrixChallenge.SIZE; i++)
+        {
+            for (int j = 0; j < MatrixChallenge.SIZE; j++)
+            {
+                msg.writer().writeLong((long)response[i][j]);
+            }
+        }
+        session.sendMessage(msg);
+        msg.cleanup();
+    }
+
     public void requestRegister(string username, string pass, string usernameAo, string passAo, string version)
     {
         try
