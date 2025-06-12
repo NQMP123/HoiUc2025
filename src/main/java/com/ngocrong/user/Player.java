@@ -303,7 +303,7 @@ public class Player {
 
     private ArrayList<Card> cards;
     private ArrayList<AmbientEffect> ambientEffects;
-    private ArrayList<KeyValue> listMapTransport;
+    public ArrayList<KeyValue> listMapTransport;
     private ArrayList<MessageTime> messageTimes;
 
     // ARRAY ITEM
@@ -673,7 +673,7 @@ public class Player {
         return null;
     }
 
-    private void setListMap() {
+    public void setListMap() {
         ArrayList<KeyValue> list = new ArrayList<>();
         int mapID = zone.map.mapID;
         if (currMap != null) {

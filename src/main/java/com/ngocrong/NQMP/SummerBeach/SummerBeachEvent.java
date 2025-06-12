@@ -17,7 +17,7 @@ public class SummerBeachEvent {
             return;
         }
         if (Utils.isTrue(10, 100)) {
-            Item it = new Item(ItemName.SAO_BIEN);
+            Item it = new Item(ItemName._SAO_BIEN);
             it.setDefaultOptions();
             it.quantity = 1;
             ItemMap map = new ItemMap(player.zone.autoIncrease++);

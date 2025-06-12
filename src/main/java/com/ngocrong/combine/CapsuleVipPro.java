@@ -36,7 +36,7 @@ public class CapsuleVipPro extends Combine {
         for (byte idx : itemCombine) {
             Item itm = player.itemBag[idx];
             if (itm != null) {
-                if (itm.template.id == ItemName.SAO_BIEN) star = itm;
+                if (itm.template.id == ItemName._SAO_BIEN) star = itm;
                 if (itm.template.id == ItemName.MANH_CAPSULE_VIPPRO) frag = itm;
                 if (itm.template.id == ItemName.THOI_VANG) bar = itm;
             }
@@ -64,7 +64,7 @@ public class CapsuleVipPro extends Combine {
         for (byte idx : itemCombine) {
             Item itm = player.itemBag[idx];
             if (itm != null) {
-                if (itm.template.id == ItemName.SAO_BIEN) star = itm;
+                if (itm.template.id == ItemName._SAO_BIEN) star = itm;
                 if (itm.template.id == ItemName.MANH_CAPSULE_VIPPRO) frag = itm;
                 if (itm.template.id == ItemName.THOI_VANG) bar = itm;
             }
