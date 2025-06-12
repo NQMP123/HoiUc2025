@@ -1,6 +1,8 @@
 package com.ngocrong.combine;
 
 import com.ngocrong.NQMP.TamThangBa.TachVatPham;
+import com.ngocrong.combine.CapsuleVipPro;
+import com.ngocrong.combine.CapsuleVipProOption;
 import static com.ngocrong.combine.CombineType.KICH_HOAT;
 import static com.ngocrong.combine.CombineType.NANG_CAP;
 import static com.ngocrong.combine.CombineType.PHA_LE_HOA;
@@ -49,6 +51,10 @@ public class CombineFactory {
                 return new TachVatPham();
             case Nang_Item_De_Tu:
                 return new NangItemDeTu();
+            case CAPSULE_VIPPRO:
+                return new CapsuleVipPro();
+            case CAPSULE_VIPPRO_OPTION:
+                return new CapsuleVipProOption();
             default:
                 throw new IllegalArgumentException("This combine type is unsupported");
         }

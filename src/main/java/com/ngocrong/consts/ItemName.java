@@ -1131,4 +1131,10 @@ public class ItemName {
     public static final int DANH_HIEU_TOP_2_VONG_QUAY = 2187;
     public static final int DANH_HIEU_TOP_3_VONG_QUAY = 2188;
 
+    // Summer beach event items
+    public static final int SAO_BIEN = 2306;
+    public static final int DA_THACH_MA = 2307;
+    public static final int MANH_CAPSULE_VIPPRO = 2308;
+    public static final int CAPSULE_VIPPRO = 2309;
+
 }

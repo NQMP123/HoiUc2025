@@ -178,4 +178,7 @@ public class CMDMenu {
     public static final int HOP_QUA_TET = 2905;
     public static final int OSIN_CHECKIN = 2906;
     public static final int OSIN_REWARD = 2907;
+    // Summer beach event
+    public static final int CAPSULE_VIPPRO_COMBINE = 2908;
+    public static final int CAPSULE_VIPPRO_OPTION = 2909;
 }
