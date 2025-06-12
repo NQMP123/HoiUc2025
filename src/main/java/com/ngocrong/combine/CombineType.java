@@ -16,5 +16,7 @@ public enum CombineType {
     TACH_DO_KICH_HOAT,
     NANG_CAP_2,
     Tach_Vat_Pham,
-    Nang_Item_De_Tu
+    Nang_Item_De_Tu,
+    CAPSULE_VIPPRO,
+    CAPSULE_VIPPRO_OPTION
 }

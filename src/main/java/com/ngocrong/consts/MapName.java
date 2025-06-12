@@ -158,4 +158,7 @@ public class MapName {
     public static final int LANH_DIA_BANG_HOI = 153;
     public static final int HANH_TINH_BILL = 154;
     public static final int HANH_TINH_NGUC_TU = 155;
+
+    // Summer beach event map
+    public static final int BAI_BIEN_NGAY_HE = 181;
 }

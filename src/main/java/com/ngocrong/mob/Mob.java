@@ -3,6 +3,7 @@ package com.ngocrong.mob;
 import com.ngocrong.NQMP.DaNangCap.EventDaNangCap;
 import com.ngocrong.NQMP.TamThangBa.Event1;
 import com.ngocrong.NQMP.Tet2025.EventTet2025;
+import com.ngocrong.NQMP.SummerBeach.SummerBeachEvent;
 import com.ngocrong.NQMP.UtilsNQMP;
 import com.ngocrong.bot.BotCold;
 import com.ngocrong.bot.Disciple;
@@ -409,6 +410,7 @@ public class Mob {
 //        EventTet2025.mobReward(_c);
 //        EventDaNangCap.MobReward(_c);
         Event1.mobReward(_c);
+        SummerBeachEvent.mobReward(_c);
 //        else if (this.zone.map.isNormalMap()) {
         ////            int rd = Utils.nextInt(50);
 //            int rd = 0;

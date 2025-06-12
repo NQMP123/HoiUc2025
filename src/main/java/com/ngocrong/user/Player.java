@@ -62,6 +62,7 @@ import com.ngocrong.NQMP.KeoBuaBao;
 import com.ngocrong.NQMP.MainUpdate;
 import com.ngocrong.NQMP.TamThangBa.Event1;
 import com.ngocrong.NQMP.Tet2025.EventTet2025;
+import com.ngocrong.NQMP.SummerBeach.SummerBeachEvent;
 import com.ngocrong.NQMP.UtilsNQMP;
 import com.ngocrong.NQMP.Whis.WhisInSingleMap;
 import com.ngocrong.bot.Boss;
@@ -4161,6 +4162,8 @@ public class Player {
                             menus.add(new KeyValue(CMDMenu.PHA_LE_HOA, "Pha lê\nhóa trang bị"));
                             // menus.add(new KeyValue(CMDMenu.DOI_DO_HUY_DIET, "Đổi Đồ\nHủy Diệt"));
                             menus.add(new KeyValue(CMDMenu.DOI_DO_KICH_HOAT, "Đổi Đồ\nKích Hoạt"));
+                            menus.add(new KeyValue(CMDMenu.CAPSULE_VIPPRO_COMBINE, "Capsule\nVIP PRO"));
+                            menus.add(new KeyValue(CMDMenu.CAPSULE_VIPPRO_OPTION, "Mở chỉ số\nCapsule"));
 //                            menus.add(new KeyValue(1154, "Tách Vật phẩm SK"));
 //                            menus.add(new KeyValue(1157, "Nâng cấp\nTrang bị\nĐệ tử"));
                             // menus.add(new KeyValue(CMDMenu.GHEP_DA, "Ghép đá\nnâng cấp"));
@@ -4970,6 +4973,18 @@ public class Player {
                 break;
             case CMDMenu.DOI_DO_KICH_HOAT:
                 this.combine = CombineFactory.getCombine(CombineType.KICH_HOAT);
+                combine.setNpc(npc);
+                combine.setPlayer(this);
+                this.combine.showTab();
+                break;
+            case CMDMenu.CAPSULE_VIPPRO_COMBINE:
+                this.combine = CombineFactory.getCombine(CombineType.CAPSULE_VIPPRO);
+                combine.setNpc(npc);
+                combine.setPlayer(this);
+                this.combine.showTab();
+                break;
+            case CMDMenu.CAPSULE_VIPPRO_OPTION:
+                this.combine = CombineFactory.getCombine(CombineType.CAPSULE_VIPPRO_OPTION);
                 combine.setNpc(npc);
                 combine.setPlayer(this);
                 this.combine.showTab();
@@ -11035,6 +11050,9 @@ public class Player {
         if (item != null) {
             if (type == 0) {
                 if (Event1.useItem(this, item)) {
+                    return;
+                }
+                if (SummerBeachEvent.useItem(this, item)) {
                     return;
                 }
 
