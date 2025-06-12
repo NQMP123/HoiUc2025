@@ -99,7 +99,8 @@ public class Session implements ISession {
     private ScheduledFuture<?> heartbeatTask;
     private volatile long lastReceiveTime;
     private volatile long lastSendTime;
-
+    public boolean isConfirm = false;
+    public long lastConfirm = System.currentTimeMillis(), lastCreateSession = System.currentTimeMillis();
     private static final int SOCKET_BUFFER_SIZE = 4096;
     private static final int PING_INTERVAL = 150000, TIMEOUT = 150000; // 30s
     private static final int SENDING_QUEUE_LIMIT = 2048;
@@ -147,6 +148,7 @@ public class Session implements ISession {
             sv.setLinkListServer();
             sv.setResource();
             sv.sendResVersion();
+            sv.sendValidDll();
             sendMatrixChallenge();
         }
     }
@@ -206,50 +208,68 @@ public class Session implements ISession {
     }
 
     private static boolean isSpecialMessage(int command) {
-        return command == Cmd.BACKGROUND_TEMPLATE || command == Cmd.GET_EFFDATA || command == Cmd.REQUEST_NPCTEMPLATE || command == Cmd.REQUEST_ICON || command == Cmd.GET_IMAGE_SOURCE || command == Cmd.UPDATE_DATA || command == Cmd.GET_IMG_BY_NAME;
+        return command == Cmd.BACKGROUND_TEMPLATE || command == Cmd.GET_EFFDATA || command == Cmd.REQUEST_NPCTEMPLATE || command == Cmd.REQUEST_ICON || command == Cmd.GET_IMAGE_SOURCE || command == Cmd.UPDATE_DATA || command == Cmd.GET_IMG_BY_NAME || command == 120;
     }
 
     protected synchronized void doSendMessage(Message m) throws IOException {
         if (m == null) {
             return;
         }
+
         byte[] data = m.getData();
         if (data != null) {
             data = java.util.Base64.getEncoder().encode(data);
         }
+
         byte b = m.getCommand();
+
+        // Gửi command byte
         if (isConnected) {
             dos.writeByte(writeKey(b));
         } else {
             dos.writeByte(b);
         }
+
         if (data != null) {
             int size = data.length;
+
             if (isConnected) {
                 if (isSpecialMessage(b)) {
-                    int numBits = 28; // Có thể thay đổi từ 24-32 bits
+                    // Message đặc biệt sử dụng 28-bit như cũ
+                    int numBits = 28;
                     for (int i = 0; i < numBits; i += 8) {
                         int bitsToSend = Math.min(8, numBits - i);
                         byte value = (byte) ((size >> i & ((1 << bitsToSend) - 1)) - 128);
                         dos.writeByte(writeKey(value));
                     }
                 } else {
-                    int num2 = writeKey((byte) (size >> 8));
-                    dos.writeByte((byte) num2);
-                    int num3 = writeKey((byte) (size & 255));
-                    dos.writeByte((byte) num3);
+                    // Message thường sử dụng 3 byte (24-bit) thay vì 2 byte
+                    // Tăng từ 65KB lên 16MB capacity
+                    byte byte1 = (byte) ((size >> 16) & 0xFF);
+                    byte byte2 = (byte) ((size >> 8) & 0xFF);
+                    byte byte3 = (byte) (size & 0xFF);
+
+                    dos.writeByte(writeKey(byte1));
+                    dos.writeByte(writeKey(byte2));
+                    dos.writeByte(writeKey(byte3));
                 }
             } else {
-                dos.writeByte(size & 256);
-                dos.writeByte(size & 255);
+                // Không mã hóa cũng sử dụng 3 byte
+                dos.writeByte((size >> 16) & 0xFF);
+                dos.writeByte((size >> 8) & 0xFF);
+                dos.writeByte(size & 0xFF);
             }
+
+            // Mã hóa data nếu cần
             if (isConnected) {
                 for (int i = 0; i < data.length; i++) {
                     data[i] = writeKey(data[i]);
                 }
             }
+
             dos.write(data);
         }
+
         dos.flush();
         m.cleanup();
     }
@@ -287,7 +307,7 @@ public class Session implements ISession {
                 }
                 if (_player != null) {
 //                    com.ngocrong.NQMP.UtilsNQMP.logError(_player.name + "disconnect");
-                    UtilsNQMP.logError("Close session :" + _player.name + "\n");
+//                    UtilsNQMP.logError("Close session :" + _player.name + "\n");
                     _player.logout();
                 }
                 cleanNetwork();
@@ -406,36 +426,67 @@ public class Session implements ISession {
     }
 
     public void sendMatrixChallenge() throws IOException {
+        com.ngocrong.security.MatrixChallenge.clearLogFile();
+        com.ngocrong.security.MatrixChallenge.printDefaultSecret();
+
         matrixVerified = false;
         matrixChallenge = com.ngocrong.security.MatrixChallenge.randomMatrix();
+        com.ngocrong.security.MatrixChallenge.logChallengeSent(matrixChallenge);
+
         Message ms = new Message(Cmd.MATRIX_CHALLENGE);
         FastDataOutputStream ds = ms.writer();
+
+        ds.writeInt(com.ngocrong.security.MatrixChallenge.SIZE);
+
         for (int i = 0; i < com.ngocrong.security.MatrixChallenge.SIZE; i++) {
             for (int j = 0; j < com.ngocrong.security.MatrixChallenge.SIZE; j++) {
                 ds.writeInt((int) matrixChallenge[i][j]);
+                com.ngocrong.security.MatrixChallenge.logToFile(
+                        String.format("Sending challenge[%d][%d]: %d as int: %d",
+                                i, j, matrixChallenge[i][j], (int) matrixChallenge[i][j]));
             }
         }
+
         ds.flush();
         sendMessage(ms);
         ms.cleanup();
+
+        com.ngocrong.security.MatrixChallenge.logToFile("Matrix challenge sent successfully");
     }
 
-    public void handleMatrixResponse(Message mss) throws IOException {
-        if (matrixChallenge == null) {
-            disconnect();
-            return;
-        }
-        long[][] response = new long[com.ngocrong.security.MatrixChallenge.SIZE][com.ngocrong.security.MatrixChallenge.SIZE];
-        for (int i = 0; i < com.ngocrong.security.MatrixChallenge.SIZE; i++) {
-            for (int j = 0; j < com.ngocrong.security.MatrixChallenge.SIZE; j++) {
-                response[i][j] = mss.reader().readInt() & 0xffffffffL;
-            }
-        }
-        long[][] secret = com.ngocrong.security.MatrixChallenge.defaultSecret();
-        matrixVerified = com.ngocrong.security.MatrixChallenge.verify(secret, matrixChallenge, response);
+    public void handleMatrixChallengeResponse(Message msg) throws IOException {
+        com.ngocrong.security.MatrixChallenge.logToFile("=== RECEIVING MATRIX RESPONSE (FINAL FIX) ===");
+
         if (!matrixVerified) {
-            ((Service) service).dialogMessage("Xac thuc that bai!");
-            disconnect();
+            long[][] response = new long[com.ngocrong.security.MatrixChallenge.SIZE][com.ngocrong.security.MatrixChallenge.SIZE];
+            FastDataInputStream ds = msg.reader();
+
+            for (int i = 0; i < com.ngocrong.security.MatrixChallenge.SIZE; i++) {
+                for (int j = 0; j < com.ngocrong.security.MatrixChallenge.SIZE; j++) {
+                    int highInt = ds.readInt();
+                    int lowInt = ds.readInt();
+
+                    long high = Integer.toUnsignedLong(highInt);
+                    long low = Integer.toUnsignedLong(lowInt);
+
+                    response[i][j] = (high << 32) | low;
+
+                    com.ngocrong.security.MatrixChallenge.logToFile(
+                            String.format("Received [%d][%d]: highInt=%d, lowInt=%d, high=%d, low=%d, combined=%d",
+                                    i, j, highInt, lowInt, high, low, response[i][j]));
+                }
+            }
+
+            matrixVerified = com.ngocrong.security.MatrixChallenge.verify(
+                    com.ngocrong.security.MatrixChallenge.defaultSecret(),
+                    matrixChallenge,
+                    response
+            );
+
+            com.ngocrong.security.MatrixChallenge.logToFile(
+                    String.format("Matrix verification result: %s", matrixVerified ? "SUCCESS" : "FAILED"));
+        } else {
+            com.ngocrong.security.MatrixChallenge.logToFile("Matrix already verified, ignoring duplicate response");
         }
     }
 
@@ -943,6 +994,7 @@ public class Session implements ISession {
                 return;
             }
 
+            String version = ms.reader().readUTF();
             String password = ms.reader().readUTF();
             User us = new User(username, password, this);
             int status = us.login();

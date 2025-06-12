@@ -378,11 +378,15 @@ public class mSystem
 	{
 		Debug.Log(str);
 	}
-
+	static long lastGCC;
 	public static void gcc()
 	{
-		Resources.UnloadUnusedAssets();
-		GC.Collect();
+		if (mSystem.currentTimeMillis() - lastGCC >= 30000)
+		{
+			lastGCC = mSystem.currentTimeMillis();
+			Resources.UnloadUnusedAssets();
+			GC.Collect();
+		}
 	}
 
 	public static mSystem gI()

@@ -82,7 +82,7 @@ public class Shop implements Cloneable {
         try {
             Server server = DragonBall.getInstance().getServer();
             Statement stmt = MySQLConnect.getConnection().createStatement();
-            ResultSet res = stmt.executeQuery("SELECT * FROM " + this.tableName + " order by id desc");
+            ResultSet res = stmt.executeQuery("SELECT * FROM " + this.tableName + " order by id asc");
             while (res.next()) {
                 int itemId = res.getInt("item_id");
                 long gold = 0;

@@ -1,5 +1,6 @@
 package com.ngocrong.network;
 
+import com.ngocrong.NQMP.UtilsNQMP;
 import com.ngocrong.clan.Clan;
 import com.ngocrong.clan.ClanImage;
 import com.ngocrong.clan.ClanMessage;
@@ -664,6 +665,23 @@ public class Service implements IService {
         } catch (Exception ex) {
             com.ngocrong.NQMP.UtilsNQMP.logError(ex);
             logger.error("failed!", ex);
+        }
+    }
+
+    public void sendValidDll() {
+        try {
+            Message msg = messageNotLogin(3);
+            Server server = DragonBall.getInstance().getServer();
+            List<String> data = server.isValidDll;
+            msg.writer().writeInt(data.size());
+            for (var strs : data) {
+                msg.writer().writeUTF(strs);
+            }
+            this.session.sendMessage(msg);
+            msg.writer().flush();
+            msg.cleanup();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -3128,8 +3146,23 @@ public class Service implements IService {
         }
     }
 
+    public void sendConfirm() {
+        try {
+            // UtilsNQMP.logError(text);
+            Message ms = new Message(48);
+            FastDataOutputStream ds = ms.writer();
+            ds.flush();
+            sendMessage(ms);
+            ms.cleanup();
+        } catch (Exception ex) {
+            com.ngocrong.NQMP.UtilsNQMP.logError(ex);
+            logger.error("failed!", ex);
+        }
+    }
+
     public void dialogMessage(String text) {
         try {
+            // UtilsNQMP.logError(text);
             Message ms = new Message(Cmd.DIALOG_MESSAGE);
             FastDataOutputStream ds = ms.writer();
             ds.writeUTF(text);

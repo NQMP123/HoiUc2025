@@ -28,7 +28,7 @@ public class SplashScr : mScreen
 
 	public override void update()
 	{
-		if (splashScrStat == 30 && !isCheckConnect)
+		if (!isCheckConnect)
 		{
 			try
 			{

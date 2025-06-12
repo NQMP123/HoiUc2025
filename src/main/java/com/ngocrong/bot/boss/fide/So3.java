@@ -26,7 +26,7 @@ public class So3 extends Boss {
         this.distanceToAddToList = 1000;
         this.limit = 1000;
         this.name = "Số 3";
-        setInfo(22000000, 1000000, 10000, 100, 5);
+        setInfo(15000000, 1000000, 10000, 100, 5);
         this.willLeaveAtDeath = false;
         if (team.getType() == 0) {
             setInfo(50000000, 1000000, 10000, 100, 5);

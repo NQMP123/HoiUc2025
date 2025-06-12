@@ -380,8 +380,8 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                     ShowMapsMenu((int[])p);
                     break;
                 case 7:
-                    isXmaping = true;
-                    IdMapEnd = (int)p;
+
+                    StartRunToMapId(int.Parse(p.ToString()));
                     GameScr.info1.addInfo("Go to " + TileMap.mapNames[IdMapEnd], 0);
                     break;
             }
@@ -428,6 +428,7 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
 
         public void StartRunToMapId(int mapId)
         {
+            Service.gI().loadMap(mapId);
             isXmaping = true;
             IdMapEnd = mapId;
         }

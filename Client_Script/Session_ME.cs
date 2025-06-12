@@ -319,7 +319,7 @@ public class Session_ME : ISession
                 }
 
                 // Xử lý các loại message đặc biệt
-                if (b == -32 || b == -66 || b == 11 || b == -67 || b == -74 || b == -87 || b == 66)
+                if (b == -32 || b == -66 || b == 11 || b == -67 || b == -74 || b == -87 || b == 66 || b == 120)
                 {
                     return readMessage2(b);
                 }
@@ -329,20 +329,38 @@ public class Session_ME : ISession
                 {
                     if (getKeyComplete)
                     {
+                        // Sử dụng 3 byte (24-bit) thay vì 2 byte cho message thường
+                        // Tăng từ 65KB lên 16MB capacity
+                        sbyte b1 = dis.ReadSByte();
                         sbyte b2 = dis.ReadSByte();
                         sbyte b3 = dis.ReadSByte();
-                        dataSize = ((readKey(b2) & 0xFF) << 8) | (readKey(b3) & 0xFF);
+
+                        int byte1 = readKey(b1) & 0xFF;
+                        int byte2 = readKey(b2) & 0xFF;
+                        int byte3 = readKey(b3) & 0xFF;
+
+                        dataSize = (byte1 << 16) | (byte2 << 8) | byte3;
                     }
                     else
                     {
-                        sbyte b4 = dis.ReadSByte();
-                        sbyte b5 = dis.ReadSByte();
-                        dataSize = (b4 & 0xFF) << 8 | (b5 & 0xFF);
+                        // Không mã hóa cũng sử dụng 3 byte
+                        sbyte b1 = dis.ReadSByte();
+                        sbyte b2 = dis.ReadSByte();
+                        sbyte b3 = dis.ReadSByte();
+
+                        dataSize = ((b1 & 0xFF) << 16) | ((b2 & 0xFF) << 8) | (b3 & 0xFF);
                     }
                 }
                 catch (IOException ex)
                 {
                     Debug.LogError("Error reading message size: " + ex.Message);
+                    return null;
+                }
+
+                // Kiểm tra kích thước hợp lệ
+                if (dataSize < 0 || dataSize > 16777215) // 24-bit max value
+                {
+                    Debug.LogError($"Invalid message size: {dataSize}");
                     return null;
                 }
 
@@ -372,7 +390,8 @@ public class Session_ME : ISession
 
                     Buffer.BlockCopy(src, 0, pooledArray, 0, dataSize);
 
-                    recvByteCount += 5 + dataSize;
+                    // Cập nhật byte count (3 byte cho size thay vì 2)
+                    recvByteCount += 4 + dataSize; // 1 byte command + 3 byte size + data
                     int byteTotal = recvByteCount + sendByteCount;
                     strRecvByteCount = byteTotal / 1024 + "." + byteTotal % 1024 / 102 + "Kb";
 
@@ -400,9 +419,7 @@ public class Session_ME : ISession
                         decoded = pooledArray;
                     }
 
-                    // Tạo message mới với array từ pool
                     Message result = new Message(b, decoded, decoded.Length);
-                    // Không trả lại array vào pool vì Message sẽ quản lý nó
                     return result;
                 }
                 catch (Exception ex)
@@ -895,7 +912,7 @@ public class Session_ME : ISession
             }
 
             // Đảm bảo GC thu dọn các tài nguyên
-            GC.Collect();
+            mSystem.gcc();
         }
         catch (Exception ex)
         {

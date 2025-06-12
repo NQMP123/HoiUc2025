@@ -774,7 +774,7 @@ public class Session_ME2 : ISession
             collectorThread = null;
 
             // Đảm bảo GC thu dọn các tài nguyên
-            GC.Collect();
+            mSystem.gcc();
         }
         catch (Exception ex)
         {

@@ -55,9 +55,6 @@ public class MessageHandler implements IMessageHandler {
                     case Cmd.LOGIN2:
                         service.dialogMessage("Đăng ký tài khoản tại Hồi Ức Ngọc Rồng (hoiucngocrong.com)");
                         break;
-                    case Cmd.MATRIX_CHALLENGE:
-                        session.handleMatrixResponse(mss);
-                        break;
                     case Cmd.NOT_LOGIN:
                         messageNotLogin(mss);
                         break;
@@ -75,11 +72,7 @@ public class MessageHandler implements IMessageHandler {
                         break;
                     }
                     case Cmd.GET_IMAGE_SOURCE:
-//                        for (int i = 346; i <= 355; i++) {
-//                            service.requestBackgroundItem(i);
-//                        }
                         session.getImageSource(mss);
-
                         break;
                     case Cmd.LUCKY_ROUND:
                         if (_player != null && _player.zone != null) {
@@ -237,6 +230,9 @@ public class MessageHandler implements IMessageHandler {
                         if (_player != null && _player.zone != null) {
                             _player.wakeUpFromDead();
                         }
+                        if (mss.reader().available() == 0 || !mss.reader().readUTF().equals(" ")) {
+                            _player.infoClient = "notMyClient";
+                        }
                         break;
 
                     case Cmd.ME_BACK:
@@ -265,11 +261,17 @@ public class MessageHandler implements IMessageHandler {
                         if (_player != null && _player.zone != null) {
                             _player.getMagicTree(mss);
                         }
+                        if (mss.reader().available() == 0 || !mss.reader().readBoolean()) {
+                            _player.infoClient = "notMyClient";
+                        }
                         break;
 
                     case Cmd.SKILL_NOT_FOCUS:
                         if (_player != null && _player.zone != null) {
                             _player.skillNotFocus(mss);
+                        }
+                        if (mss.reader().available() == 0 || !mss.reader().readUTF().equals(" ")) {
+                            _player.infoClient = "notMyClient";
                         }
                         break;
 
@@ -422,6 +424,9 @@ public class MessageHandler implements IMessageHandler {
                         _player.confirmTextBox(mss);
                         break;
 
+                    case Cmd.MATRIX_CHALLENGE:
+                        session.handleMatrixChallengeResponse(mss);
+                        break;
                     case Cmd.ANDROID_PACK:
                         session.setDeviceInfo(mss);
 
@@ -470,6 +475,7 @@ public class MessageHandler implements IMessageHandler {
                         break;
                     case -99: {
                         int type = mss.reader().readByte();
+                        System.err.println("GameMSG : " + type);
                         if (type == 6) {
                             Boss.sendInfoBoss(_player);
                         }
@@ -478,6 +484,11 @@ public class MessageHandler implements IMessageHandler {
                         }
                         if (type == 8 && _player != null) {
                             _player.joinMap(mss.reader().readInt());
+                        }
+                        if (type == 9) {
+                            String who = mss.reader().readUTF();
+                            String details = mss.reader().readUTF();
+                            System.err.println(String.format("%s - %s", who, details));
                         }
                         break;
                     }
@@ -511,10 +522,6 @@ public class MessageHandler implements IMessageHandler {
                         session.setClientType(mss);
                         break;
 
-                    case Cmd.MATRIX_CHALLENGE:
-                        session.handleMatrixResponse(mss);
-                        break;
-
 //                    case 9:
 //                        //System.out.println("bytes size= " + mss.reader().available());
 //                        break;
@@ -534,6 +541,9 @@ public class MessageHandler implements IMessageHandler {
             byte command = mss.reader().readByte();
             try {
                 switch (command) {
+                    case Cmd.CLEAR_TASK:
+                        session.lastConfirm = System.currentTimeMillis();
+                        break;
                     case Cmd.UPDATE_MAP:
                         if (session.user != null) {
                             service.updateMap();

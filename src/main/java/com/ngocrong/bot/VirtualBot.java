@@ -103,6 +103,7 @@ public class VirtualBot extends Boss {
 
     @Override
     public void update() {
+        this.info.mp = this.info.mpFull = Long.MAX_VALUE;
         if (this.zone != null) {
             if (!isTrain) {
                 if (System.currentTimeMillis() - lastupdate >= Utils.nextInt(5000, 60000)) {

@@ -28,7 +28,7 @@ public class Android15 extends Boss {
         this.distanceToAddToList = 1000;
         this.limit = 1000;
         this.name = "Android 15";
-        setInfo(17000000, 1000000, 10000, 100, 5);
+        setInfo(10000000, 1000000, 10000, 100, 5);
         this.willLeaveAtDeath = false;
         point = 3;
     }

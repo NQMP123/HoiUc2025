@@ -28,7 +28,7 @@ public class Android20 extends Boss {
         this.distanceToAddToList = 1000;
         this.limit = 1000;
         this.name = "Android 20";
-        setInfo(21000000, 1000000, 10000, 100, 5);
+        setInfo(30000000, 1000000, 10000, 100, 5);
         this.willLeaveAtDeath = false;
         point = 3;
     }

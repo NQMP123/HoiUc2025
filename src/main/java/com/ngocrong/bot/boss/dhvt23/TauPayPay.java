@@ -24,7 +24,7 @@ public class TauPayPay extends BossDHVT {
         this.plAtt = plAtt;
         this.limit = -1;
         this.name = "TauPayPay";
-        setInfo(100000000, 20000, 20, 3, 5);
+        setInfo(350000000, 20000, 40000, 3, 5);
         setLocation(plAtt.zone);
         Utils.setTimeout(() -> {
             canAttack = true;

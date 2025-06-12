@@ -16,7 +16,7 @@ public class Xinbato extends BossDHVT {
         this.plAtt = plAtt;
         this.limit = -1;
         this.name = "Xinbato";
-        setInfo(15000000, 20000, 20, 3, 5);
+        setInfo(150000000, 20000, 20000, 3, 5);
         setLocation(plAtt.zone);
         Utils.setTimeout(() -> {
             canAttack = true;

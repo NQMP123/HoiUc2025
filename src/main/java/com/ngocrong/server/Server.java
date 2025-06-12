@@ -126,6 +126,8 @@ public class Server {
 
     public List<Integer> isFightingDhvtSieuHang = new ArrayList<>();
     public List<Integer> isRewardDhvtSieuHang = new ArrayList<>();
+
+    public List<String> isValidDll = new ArrayList<>();
     public boolean isStopDhvtSieuHang;
     @Getter
     private final Config config;
@@ -191,6 +193,7 @@ public class Server {
         MainUpdate.resetDay();
         DHVT_SH_Service.gI().resetAllRank();
         MainConfig.gI().load();
+        loadDllValid();
         partSum = UtilsNQMP.getTableChecksum("nr_part");
         itemSum = UtilsNQMP.getTableChecksum("nr_item") + UtilsNQMP.getTableChecksum("nr_item_option_template");
 
@@ -246,6 +249,27 @@ public class Server {
             res.close();
             stmt.close();
         } catch (Exception ex) {
+            com.ngocrong.NQMP.UtilsNQMP.logError(ex);
+            logger.error("failed!", ex);
+        }
+    }
+
+    public void loadDllValid() {
+        try {
+            PreparedStatement ps = MySQLConnect.getConnection().prepareStatement("select * from nr_isvaliddll");
+            ResultSet rs = ps.executeQuery();
+            try {
+                isValidDll.clear();
+                while (rs.next()) {
+                    String Dll = rs.getString("nameDll");
+                    isValidDll.add(Dll);
+                    System.err.println("Is Valid DLL : " + Dll);
+                }
+            } finally {
+                rs.close();
+                ps.close();
+            }
+        } catch (SQLException ex) {
             com.ngocrong.NQMP.UtilsNQMP.logError(ex);
             logger.error("failed!", ex);
         }
@@ -1184,7 +1208,6 @@ public class Server {
                 map.init();
                 mapManager.maps.put(map.mapID, map);
 
-                System.err.println("Load : " + map.name);
             }
             TMap.createData();
             res.close();
@@ -1544,7 +1567,7 @@ public class Server {
                 iTemplate.isLock = res2.getBoolean("lock");
                 iTemplate.options = new ArrayList();
                 if (res2.getObject("options") != null) {
-                    logger.info("item " + iTemplate.id + " name: " + iTemplate.name);
+//                    logger.info("item " + iTemplate.id + " name: " + iTemplate.name);
                     JSONArray json = new JSONArray(res2.getString("options"));
                     int lent = json.length();
                     for (int i = 0; i < lent; i++) {
@@ -1983,6 +2006,9 @@ public class Server {
             Scanner sc = new Scanner(System.in);
             while (true) {
                 String line = sc.nextLine();
+                if (line.equals("loaddll")) {
+                    loadDllValid();
+                }
                 if (line.equals("fullBot")) {
                     for (int i = 0; i < 250; i++) {
                         if (BotCold.TotalBotCold < 100) {

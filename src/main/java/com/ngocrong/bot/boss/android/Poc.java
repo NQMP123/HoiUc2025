@@ -26,7 +26,7 @@ public class Poc extends Boss {
         this.distanceToAddToList = 1000;
         this.limit = 1000;
         this.name = "Poc";
-        setInfo(26000000, 1000000, 10000, 100, 5);
+        setInfo(25000000, 1000000, 10000, 100, 5);
         this.willLeaveAtDeath = false;
         point = 3;
     }

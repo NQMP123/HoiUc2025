@@ -28,7 +28,7 @@ public class Pic extends Boss {
         this.distanceToAddToList = 1000;
         this.limit = 1000;
         this.name = "Pic";
-        setInfo(25000000, 1000000, 10000, 100, 5);
+        setInfo(20000000, 1000000, 10000, 100, 5);
         this.willLeaveAtDeath = false;
         point = 3;
     }

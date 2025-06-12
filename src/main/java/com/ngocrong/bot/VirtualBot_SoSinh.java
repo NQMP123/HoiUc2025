@@ -42,6 +42,8 @@ public class VirtualBot_SoSinh extends VirtualBot {
 
     @Override
     public void update() {
+        this.info.mp = this.info.mpFull = Long.MAX_VALUE;
+
         updateNextMap();
         if (zone != null) {
             if (this.zone.map.mapID != mapNext) {

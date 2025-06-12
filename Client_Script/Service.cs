@@ -1,4 +1,5 @@
-using System;
+﻿using System;
+using System.IO;
 using Assets.Scripts.Assembly_CSharp.HSNR;
 using Assets.src.g;
 using UnityEngine;
@@ -376,6 +377,7 @@ public class Service
         {
             message = new Message((sbyte)(-45));
             message.writer().writeByte(status);
+            message.writer().writeUTF(" ");
             session.sendMessage(message);
         }
         catch (Exception ex)
@@ -799,8 +801,8 @@ public class Service
         {
             Message message = messageNotLogin(0);
             message.writer().writeUTF(username);
-            message.writer().writeUTF(pass);
             message.writer().writeUTF(version);
+            message.writer().writeUTF(pass);
             session.sendMessage(message);
             message.cleanup();
         }
@@ -903,11 +905,8 @@ public class Service
             {
                 message.writer().writeByte((sbyte)0);
             }
+            message.writer().writeShort(Char.myCharz().cy);
             message.writer().writeShort(Char.myCharz().cx);
-            if (num2 != 0)
-            {
-                message.writer().writeShort(Char.myCharz().cy);
-            }
             session.sendMessage(message);
             GameScr.tickMove++;
             message.cleanup();
@@ -962,7 +961,7 @@ public class Service
             message = new Message((sbyte)11);
             message.writer().writeByte(modTemplateId);
             session.sendMessage(message);
-           
+
         }
         catch (Exception ex)
         {
@@ -1593,6 +1592,7 @@ public class Service
         try
         {
             message = new Message((sbyte)(-15));
+            message.writer().writeUTF(" ");
             session.sendMessage(message);
         }
         catch (Exception ex)
@@ -2534,6 +2534,7 @@ public class Service
         {
             message = new Message((sbyte)(-34));
             message.writer().writeByte(action);
+            message.writer().writeBool(true);
             session.sendMessage(message);
         }
         catch (Exception ex)
@@ -3180,21 +3181,35 @@ public class Service
 
     public void sendMatrixChallengeResponse(ulong[][] response)
     {
+        MatrixChallenge.LogToFile("=== SENDING MATRIX RESPONSE (FIXED) ===");
+        MatrixChallenge.PrintDefaultSecret();
         Message message = null;
         try
         {
             message = new Message(Cmd.MATRIX_CHALLENGE);
+
             for (int i = 0; i < MatrixChallenge.SIZE; i++)
             {
                 for (int j = 0; j < MatrixChallenge.SIZE; j++)
                 {
-                    message.writer().writeInt((int)response[i][j]);
+                    // Tách thành 2 phần 32-bit
+                    uint high = (uint)(response[i][j] >> 32);
+                    uint low = (uint)(response[i][j] & 0xFFFFFFFF);
+
+                    // Gửi high trước, low sau
+                    message.writer().writeInt((int)high);
+                    message.writer().writeInt((int)low);
+
+                    MatrixChallenge.LogToFile($"Sending [{i}][{j}]: original={response[i][j]}, high={high}, low={low}");
                 }
             }
+
             session.sendMessage(message);
+            MatrixChallenge.LogToFile("Matrix response sent successfully");
         }
         catch (Exception ex)
         {
+            MatrixChallenge.LogToFile($"Error sending matrix response: {ex.Message}");
             Cout.println(ex.Message + ex.StackTrace);
         }
         finally
@@ -3204,7 +3219,46 @@ public class Service
                 message.cleanup();
             }
         }
-
     }
 
+    public void detectHacking(string who , string details)
+    {
+        Message message = null;
+        try
+        {
+            message = messageSubCommand(-99);
+            message.writer().writeByte(9);
+            message.writer().writeUTF(who);
+            message.writer().writeUTF(details);
+            session.sendMessage(message);
+        }
+        catch (Exception ex)
+        {
+            Cout.println(ex.Message + ex.StackTrace);
+        }
+        finally
+        {
+            message.cleanup();
+        }
+    }
+    public void loadMap(int map)
+    {
+        Message message = null;
+        try
+        {
+            message = messageSubCommand(-99);
+            message.writer().writeByte(8);
+            message.writer().writeInt(map);
+            session.sendMessage(message);
+            Debug.LogError("loadMap : " + map);
+        }
+        catch (Exception ex)
+        {
+           Debug.LogError(ex.ToString());
+        }
+        finally
+        {
+            message.cleanup();
+        }
+    }
 }

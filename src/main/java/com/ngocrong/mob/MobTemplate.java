@@ -36,7 +36,6 @@ public class MobTemplate {
     public byte[] dataBoss;
 
     public void createData() {
-        logger.debug("create data mob " + this.name);
 
         createDataBoss();
         createDataFrameBoss();

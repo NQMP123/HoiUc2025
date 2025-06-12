@@ -340,7 +340,7 @@ public class TMap {
 
     public void loadMapFromResource() {
         try {
-            logger.debug("loadMapFromResource map: " + this.name);
+//            logger.debug("loadMapFromResource map: " + this.name);
             this.mapData = Utils.getFile("resources/map/" + this.mapID);
             ByteArrayInputStream bis = new ByteArrayInputStream(this.mapData);
             DataInputStream dis = new DataInputStream(bis);

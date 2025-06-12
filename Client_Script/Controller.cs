@@ -206,18 +206,45 @@ public class Controller : IMessageHandler
                     }
                 case 120:
                     {
-                        ulong[][] challenge = new ulong[MatrixChallenge.SIZE][];
-                        for (int i = 0; i < MatrixChallenge.SIZE; i++)
+                        MatrixChallenge.LogToFile("=== RECEIVING MATRIX CHALLENGE ===");
+                        try
                         {
-                            challenge[i] = new ulong[MatrixChallenge.SIZE];
-                            for (int j = 0; j < MatrixChallenge.SIZE; j++)
+                            // Đọc SIZE từ server
+                            int matrixSize = msg.reader().readInt();
+                            MatrixChallenge.LogToFile($"Received matrix size: {matrixSize}");
+
+                            if (matrixSize != MatrixChallenge.SIZE)
                             {
-                                challenge[i][j] = (uint)msg.reader().readInt();
+                                MatrixChallenge.LogToFile($"ERROR: Matrix size mismatch! Expected {MatrixChallenge.SIZE}, got {matrixSize}");
+                                return;
                             }
+
+                            ulong[][] challenge = new ulong[MatrixChallenge.SIZE][];
+                            for (int i = 0; i < MatrixChallenge.SIZE; i++)
+                            {
+                                challenge[i] = new ulong[MatrixChallenge.SIZE];
+                                for (int j = 0; j < MatrixChallenge.SIZE; j++)
+                                {
+                                    // Server gửi dưới dạng int, ta nhận và convert thành ulong
+                                    int rawValue = msg.reader().readInt();
+                                    challenge[i][j] = (ulong)((uint)rawValue); // Đảm bảo không có sign extension
+
+                                    MatrixChallenge.LogToFile($"Received challenge[{i}][{j}]: raw={rawValue}, converted={challenge[i][j]}");
+                                }
+                            }
+
+                            // Xử lý challenge và tính response
+                            ulong[][] secret = MatrixChallenge.DefaultSecret();
+                            ulong[][] response = MatrixChallenge.ComputeResponse(secret, challenge);
+
+                            // Gửi response về server
+                            Service.gI().sendMatrixChallengeResponse(response);
                         }
-                        ulong[][] secret = MatrixChallenge.DefaultSecret();
-                        ulong[][] resp = MatrixChallenge.ComputeResponse(secret, challenge);
-                        Service.gI().sendMatrixChallengeResponse(resp);
+                        catch (Exception e)
+                        {
+                            MatrixChallenge.LogToFile($"Error handling matrix challenge: {e.Message}");
+                            Debug.LogException(e);
+                        }
                         break;
                     }
                 case -98:
@@ -1544,6 +1571,9 @@ public class Controller : IMessageHandler
                         Res.outz("=>>>>>>>>>>>>>>>>>>>>>> -52  MY CLAN UPDSTE");
                         break;
                     }
+                case -48:
+                    Service.gI().getTask(-1, -1, -1);
+                    break;
                 case -50:
                     {
                         InfoDlg.hide();
@@ -1717,8 +1747,6 @@ public class Controller : IMessageHandler
 
                     Service.gI().delayPing = (mSystem.currentTimeMillis() - Service.gI().lastPing) / 2;
                     Service.gI().lastRequestPing = mSystem.currentTimeMillis();
-                    Debug.LogError("ping : " + Service.gI().delayPing);
-
                     break;
                 case -107:
                     {
@@ -4700,8 +4728,7 @@ public class Controller : IMessageHandler
                 {
                 }
             }
-            Resources.UnloadUnusedAssets();
-            GC.Collect();
+            mSystem.gcc();
             GameCanvas.debug("SA75x5", 2);
             num = msg.reader().readByte();
             Mob.newMob.removeAllElements();
@@ -4994,8 +5021,7 @@ public class Controller : IMessageHandler
             loadCurrMap(teleport);
             Char.isLoadingMap = false;
             GameCanvas.debug("SA75x8", 2);
-            Resources.UnloadUnusedAssets();
-            GC.Collect();
+            mSystem.gcc();
             Debug.LogError("----------DA CHAY XONG LOAD INFO MAP");
         }
         catch (Exception ex)
@@ -5340,6 +5366,22 @@ public class Controller : IMessageHandler
             Debug.LogError("---messageNotLogin : ");
             sbyte b = msg.reader().readByte();
 
+            if (b == 3)
+            {
+                //int lenghtDll = msg.reader().readInt();
+                //List<string> isValidDll = new List<string>();
+                //for (int i = 0; i < lenghtDll; i++)
+                //{
+                //    string name = msg.reader().readUTF();
+                //    if (!string.IsNullOrEmpty(name))
+                //        isValidDll.Add(name.ToLowerInvariant());
+                //    Debug.LogError("---valid DLL : " + name);
+
+                //}
+                //HackDetectorCore.UpdateWhiteList(isValidDll);
+                //HackDetectorPro.UpdateWhiteList(isValidDll);
+                return;
+            }
             if (b != 2)
             {
                 return;

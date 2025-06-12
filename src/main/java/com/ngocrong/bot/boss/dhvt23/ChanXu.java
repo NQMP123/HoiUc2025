@@ -16,7 +16,7 @@ public class ChanXu extends BossDHVT {
         this.plAtt = plAtt;
         this.limit = -1;
         this.name = "ChanXu";
-        setInfo(50000000, 20000, 20, 3, 5);
+        setInfo(300000000, 20000, 35000, 3, 5);
         setLocation(plAtt.zone);
         Utils.setTimeout(() -> {
             canAttack = true;

@@ -1,6 +1,7 @@
 package com.ngocrong.server;
 
 import com.ngocrong.network.Message;
+import com.ngocrong.network.Service;
 import com.ngocrong.network.Session;
 import com.ngocrong.user.Player;
 import com.ngocrong.user.User;
@@ -220,6 +221,20 @@ public class SessionManager {
             }
         }
 
+    }
+
+    public static boolean isValidSession(Session ss) {
+        return ss.isEnter && ss.socket != null && !ss.socket.isClosed() && ss._player != null;
+    }
+
+    public void update() {
+        for (Session ss : sessions.values()) {
+            if (isValidSession(ss) && System.currentTimeMillis() - ss.lastCreateSession >= 5 * 60000) {
+                ss.lastCreateSession = System.currentTimeMillis();
+                Service sv = (Service) ss.getService();
+                sv.sendConfirm();
+            }
+        }
     }
 
     public static void close() {

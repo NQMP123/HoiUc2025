@@ -16,7 +16,7 @@ public class JackyChun extends BossDHVT {
         this.plAtt = plAtt;
         this.limit = -1;
         this.name = "JackyChun";
-        setInfo(250000000, 20000, 20, 3, 5);
+        setInfo(450000000, 20000, 50000, 3, 5);
         setLocation(plAtt.zone);
         Utils.setTimeout(() -> {
             canAttack = true;

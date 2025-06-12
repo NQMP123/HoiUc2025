@@ -26,7 +26,7 @@ public class KingKong extends Boss {
         this.distanceToAddToList = 1000;
         this.limit = 1000;
         this.name = "King Kong";
-        setInfo(27000000, 1000000, 10000, 100, 5);
+        setInfo(30000000, 1000000, 10000, 100, 5);
         this.willLeaveAtDeath = false;
         point = 3;
     }

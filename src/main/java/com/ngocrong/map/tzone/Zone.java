@@ -110,7 +110,6 @@ public class Zone extends Thread {
             m.setTemplateId(templateID);
             m.setHpDefault(template.hp);
             if (mobCoordinate.getHpMax() != -1) {
-                System.err.println("Set mob :" + template.name + " - HP : " + mobCoordinate.getHpMax() + "-" + this.map.name);
                 m.setHPforMob(mobCoordinate.getHpMax());
             }
             m.setLevel(template.level);
@@ -979,12 +978,12 @@ public class Zone extends Thread {
                     dame /= 2;
                 }
                 if (_player.isSetKirin()) {
-                    dame += Utils.percentOf(dame, 120);
+                    dame += Utils.percentOf(dame, 100);
                 }
                 flag = true;
             } else if (skill.template.id == SkillName.LIEN_HOAN) {
                 if (_player.isSetOcTieu()) {
-                    dame += Utils.percentOf(dame, 120);
+                    dame += Utils.percentOf(dame, 100);
                 }
             }
             if (_player.info.options[111] > Utils.nextInt(100)) {
@@ -1311,7 +1310,7 @@ public class Zone extends Thread {
                 dame *= 2;
             }
             if ((skill.template.id == SkillName.CHIEU_DAM_GALICK && _player.isSetKakarot()) || (skill.template.id == SkillName.CHIEU_KAMEJOKO && _player.isSetSongoku())) {
-                dame *= 2;
+                dame *= 3;
             }
             if (_player.isDisciple()) {
                 Disciple disciple = (Disciple) _player;
@@ -1365,7 +1364,7 @@ public class Zone extends Thread {
                 }
             } else if (skill.template.id == SkillName.LIEN_HOAN) {
                 if (_player.isSetOcTieu()) {
-                    dame += dame / 2;
+                    dame += Utils.percentOf(dame, 100);
                 }
             }
             if (_player.info.options[111] > Utils.nextInt(100)) {

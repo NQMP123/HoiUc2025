@@ -567,7 +567,7 @@ public class Info {
             this.hpFullTemp += Utils.percentOf(this.hpFullTemp, 80);
         }
         if (_player.isSetPicolo()) {
-            this.mpFullTemp += Utils.percentOf(this.mpFullTemp, 100);
+            this.mpFullTemp += Utils.percentOf(this.mpFullTemp, 80);
         }
         if (_player.isSetHuyDiet()) {
             this.mpFullTemp += Utils.percentOf(this.mpFullTemp, 10);
@@ -580,9 +580,9 @@ public class Info {
             int skillLevel = _player.getSkill(13).point;
             this.damageFull += Utils.percentOf(this.damageFull, skillLevel * 5L);
             this.speed += 2;
-            if (_player.isSetCaDic()) {
-                this.hpFullTemp += Utils.percentOf(this.hpFullTemp, 20);
-            }
+//            if (_player.isSetCaDic()) {
+//                this.hpFullTemp += Utils.percentOf(this.hpFullTemp, 20);
+//            }
         }
         if (_player.isHuytSao()) {
             long hpAdd = Utils.percentOf(this.hpFullTemp, this._player.hpPercent);

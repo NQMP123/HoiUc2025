@@ -96,7 +96,7 @@ public class XenBoHung extends Boss {
             Utils.setTimeout(() -> {
                 XenBoHung xenBoHung = new XenBoHung((byte) 0);
                 xenBoHung.setLocation(100, -1);
-            }, 600000);
+            }, 15 *60000);
         }
     }
 

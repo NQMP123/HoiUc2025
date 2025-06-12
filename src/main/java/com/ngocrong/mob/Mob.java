@@ -258,9 +258,10 @@ public class Mob {
                 }
             }
         }
-        if (_c.isSetThanLinh() && (zone.map.isFuture() || zone.map.isCold())) {
+        if (_c.isSetThanLinh()) {
             int rd = Utils.nextInt(50);
-            if (rd == 0) {
+            if (rd < _c.getCountItemLevel((byte) 13)) // Count set thần linh
+            {
                 ItemMap food = new ItemMap(zone.autoIncrease++);
                 Item item = new Item(RandomItem.FOOD.next());
                 item.addItemOption(new ItemOption(30, 0));
@@ -720,7 +721,7 @@ public class Mob {
         long damageFull = _owner.info.damageFull;
         long dame = Utils.percentOf(damageFull, this.percentDamage);
         if (_owner.isSetPikkoroDaimao()) {
-            dame += Utils.percentOf(dame, 150);
+            dame += Utils.percentOf(dame, 100);
         }
         if (obj instanceof Player) {
             Player target = (Player) obj;

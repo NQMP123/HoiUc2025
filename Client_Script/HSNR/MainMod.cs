@@ -281,6 +281,7 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
         {
             Boss.gI().isShow = Rms.loadRMSInt("sanboss") == 1;
             ListChars.gI().isShow = Rms.loadRMSInt("showchar") == 1;
+            //HackInjectionDetector.init();
         }
         private void showMenu()
         {

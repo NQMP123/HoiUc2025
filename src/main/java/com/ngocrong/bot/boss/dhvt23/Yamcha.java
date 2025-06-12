@@ -16,7 +16,7 @@ public class Yamcha extends BossDHVT {
         this.plAtt = plAtt;
         this.limit = -1;
         this.name = "Yamcha";
-        setInfo(200000000, 20000, 20, 3, 5);
+        setInfo(400000000, 20000, 15000, 3, 5);
         setLocation(plAtt.zone);
         Utils.setTimeout(() -> {
             canAttack = true;

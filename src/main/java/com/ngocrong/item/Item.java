@@ -681,4 +681,8 @@ public class Item {
         }
         return -1;
     }
+
+    public boolean isThucAn() {
+        return this.template != null && this.template.id >= 663 && this.template.id <= 667;
+    }
 }

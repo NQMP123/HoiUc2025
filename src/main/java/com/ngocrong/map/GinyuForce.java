@@ -106,7 +106,7 @@ public class GinyuForce {
     private void end() {
         Utils.setTimeout(() -> {
             born();
-        }, type == 0 ? 15 * 60000 : 3 * 60000L);
+        }, type == 0 ? 15 * 60000 : 5 * 60000L);
     }
 
     public void spawnSolo(Boss boss) {

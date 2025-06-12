@@ -16,7 +16,7 @@ public class ODo extends BossDHVT {
         this.plAtt = plAtt;
         this.limit = -1;
         this.name = "Ở Dơ";
-        setInfo(10000000, 20000, 20, 3, 5);
+        setInfo(100000000, 20000, 10000, 3, 5);
         setLocation(plAtt.zone);
         Utils.setTimeout(() -> {
             canAttack = true;

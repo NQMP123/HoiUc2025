@@ -3773,8 +3773,6 @@ public class Panel : IActionListener, IChatable
         yMap = getYMap() + yScroll;
         xMapTask = getXMapTask() + xScroll;
         yMapTask = getYMapTask() + yScroll;
-        Resources.UnloadUnusedAssets();
-        GC.Collect();
     }
 
     private void setTabTask()
@@ -6018,7 +6016,7 @@ public class Panel : IActionListener, IChatable
         }
         if (type == 26 || type == 27)
         {
-            mFont.tahoma_7b_dark.drawString(g, "Ngọc Rồng Kame", startTabPos + TAB_W / 2, 59, mFont.CENTER);
+            mFont.tahoma_7b_dark.drawString(g, "HỒI ỨC NGỌC RỒNG", startTabPos + TAB_W / 2, 59, mFont.CENTER);
             g.setColor(13524492);
             g.fillRect(X + 1, 78, W - 2, 1);
             return;

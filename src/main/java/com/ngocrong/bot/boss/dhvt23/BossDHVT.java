@@ -42,9 +42,14 @@ public class BossDHVT extends Boss {
         }
     }
 
+    public long getDameAttack(Player target) {
+        long dame = this.info.originalDamage;
+        long dame2 = (target.info.hpFull * percentDame) / 100;
+        return Math.max(dame, dame2);
+    }
+
     public void setDame(int percentDame, Player player) {
-        this.info.damageFull = (player.info.hpFull * percentDame) / 100;
-        this.percentDame = 5;
+        this.percentDame = (byte) percentDame;
         this.waitingTimeToLeave = 0;
     }
 

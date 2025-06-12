@@ -27,13 +27,13 @@ public class Fide extends Boss {
         this.limit = -1;
         if (this.level == 0) {
             this.name = "Fide Đại Ca 1";
-            setInfo(30000000, 1000000, 15000, 1000, 50);
+            setInfo(40000000, 1000000, 15000, 1000, 50);
         } else if (this.level == 1) {
             this.name = "Fide Đại Ca 2";
-            setInfo(33000000, 1000000, 20000, 1000, 50);
+            setInfo(45000000, 1000000, 20000, 1000, 50);
         } else {
             this.name = "Fide Đại Ca 3";
-            setInfo(36000000, 1000000, 20000, 1000, 50);
+            setInfo(50000000, 1000000, 20000, 1000, 50);
         }
         this.waitingTimeToLeave = 0;
         setTypePK((byte) 5);
@@ -95,7 +95,7 @@ public class Fide extends Boss {
             Utils.setTimeout(() -> {
                 Fide fide = new Fide((byte) 0);
                 fide.setLocation(80, -1);
-            }, 300000);
+            }, 10 * 60000);
         }
     }
 

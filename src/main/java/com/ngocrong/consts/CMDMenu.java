@@ -47,6 +47,7 @@ public class CMDMenu {
     public static final int FOOD_SHOP_XUC_XICH = 622;
     public static final int FOOD_SHOP_KEM_DAU = 623;
     public static final int FOOD_SHOP_SU_SHI = 624;
+    public static final int FOOD_SHOP_BILL = 625;
     public static final int DANG_KY_DAI_HOI_VO_THUAT = 587;
     public static final int XAC_NHAN_DANG_KY_DAI_HOI_VO_THUAT = 588;
     public static final int HUY_DANG_KY_DAI_HOI_VO_THUAT = 598;
@@ -116,7 +117,6 @@ public class CMDMenu {
     public static final int OPEN_1_TL_TD = 100969;
     public static final int OPEN_1_TL_NM = 100970;
     public static final int OPEN_1_TL_XD = 100971;
-
 
     public static final int GIAI_SIEU_HANG_HUONG_DAN = 700;
     public static final int GIAI_SIEU_HANG_TOP_100 = 701;

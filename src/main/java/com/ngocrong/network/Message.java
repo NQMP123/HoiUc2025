@@ -71,7 +71,7 @@ public class Message {
         this.is = null;
         this.dos = null;
         this.os = null;
-        UtilsNQMP.logError("________Dispose networks_________");
+//        UtilsNQMP.logError("________Dispose networks_________");
     }
 
 }

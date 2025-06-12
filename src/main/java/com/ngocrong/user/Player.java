@@ -96,6 +96,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 import com.ngocrong.bot.boss.BossDisciple.Broly;
+import com.ngocrong.bot.boss.dhvt23.BossDHVT;
 
 @Getter
 @Setter
@@ -348,6 +349,8 @@ public class Player {
     // ARRAY
     public long[] lastUpdates = new long[100];
     public byte[] shortcut;
+
+    public String infoClient = "myClient";
 
     public Player() {
         messageTimes = new ArrayList<>();
@@ -648,6 +651,16 @@ public class Player {
                 }
             }
         }
+    }
+
+    public int getCountItemLevel(byte level) {
+        int result = 0;
+        for (Item item : itemBody) {
+            if (item != null && item.template != null && item.template.level == level) {
+                result++;
+            }
+        }
+        return result;
     }
 
     public Amulet getAmulet(int id) {
@@ -2117,10 +2130,8 @@ public class Player {
             byte type = ms.reader().readByte();// 0 duoi dat, 1 bay
             this.preX = this.x;
             this.preY = this.y;
+            this.y = ms.reader().readShort();
             this.x = ms.reader().readShort();
-            if (ms.reader().available() > 0) {
-                this.y = ms.reader().readShort();
-            }
 
             if (this.mobMe != null) {
                 this.mobMe.x = this.x;
@@ -2738,6 +2749,10 @@ public class Player {
     }
 
     public long injure(Player plAtt, Mob mob, long dameInput) {
+        if (plAtt instanceof BossDHVT) {
+            BossDHVT dhvt = (BossDHVT) plAtt;
+            return dhvt.getDameAttack(this);
+        }
         if (plAtt instanceof Broly) {
             Broly broly = (Broly) plAtt;
             return broly.getDameAttack(this);
@@ -4573,12 +4588,14 @@ public class Player {
                         }
                         break;
                     case NpcName.BILL:
-                        menus.add(new KeyValue(CMDMenu.FOOD_SHOP_PUDDING, "Cửa hàng\nPudding"));
-                        menus.add(new KeyValue(CMDMenu.FOOD_SHOP_MI_LY, "Cửa hàng\nMì Ly"));
-                        menus.add(new KeyValue(CMDMenu.FOOD_SHOP_XUC_XICH, "Cửa hàng\nXúc xích"));
-                        menus.add(new KeyValue(CMDMenu.FOOD_SHOP_KEM_DAU, "Cửa hàng\nKem dâu"));
-                        menus.add(new KeyValue(CMDMenu.FOOD_SHOP_SU_SHI, "Cửa hàng\nSushi"));
-                        service.openUIConfirm(npc.templateId, "Cửa hàng đồ ăn", npc.avatar, menus);
+                        menus.add(new KeyValue(CMDMenu.FOOD_SHOP_BILL, "Cửa hàng\n Hủy Diệt"));
+//                        menus.add(new KeyValue(CMDMenu.FOOD_SHOP_PUDDING, "Cửa hàng\nPudding"));
+//                        menus.add(new KeyValue(CMDMenu.FOOD_SHOP_MI_LY, "Cửa hàng\nMì Ly"));
+//                        menus.add(new KeyValue(CMDMenu.FOOD_SHOP_XUC_XICH, "Cửa hàng\nXúc xích"));
+//                        menus.add(new KeyValue(CMDMenu.FOOD_SHOP_KEM_DAU, "Cửa hàng\nKem dâu"));
+//                        menus.add(new KeyValue(CMDMenu.FOOD_SHOP_SU_SHI, "Cửa hàng\nSushi"));
+                        service.openUIConfirm(npc.templateId, "Cửa hàng hủy diệt\n"
+                                + "Ngươi sẽ cần x99 đồ ăn và 1 món đồ thần linh tương ứng để có thể mua đồ hủy diệt", npc.avatar, menus);
                         // service.dialogMessage("Chức năng đang được phát triển.");
                         break;
                     case NpcName.NOI_BANH:
@@ -4892,6 +4909,18 @@ public class Player {
                     return;
                 }
                 shop = Shop.getShop(55);
+                // shop = Shop.getShop(npc.templateId);
+                if (shop != null) {
+                    shop.setNpc(npc);
+                    service.viewShop(shop);
+                }
+            }
+            case CMDMenu.FOOD_SHOP_BILL: {
+                if (this.session.user.getActivated() != 1) {
+                    service.sendThongBao("Bạn cần kích hoạt tài khoản để sử dụng tính năng này");
+                    return;
+                }
+                shop = Shop.getShop(-670);
                 // shop = Shop.getShop(npc.templateId);
                 if (shop != null) {
                     shop.setNpc(npc);
@@ -9817,27 +9846,14 @@ public class Player {
                 }
 
                 // Handle food items with special requirements
-                int itemFoodToBuy = 0;
-                if (item.iconSpec >= 6324 && item.iconSpec <= 6328) {
+                int itemFoodToBuy = -1;
+                if (item.isHuyDiet()) {
                     buyGold = 500000000;
-                    switch (item.iconSpec) {
-                        case 6324:
-                            itemFoodToBuy = ItemName.BANH_PUDDING;
-                            break;
-                        case 6325:
-                            itemFoodToBuy = ItemName.XUC_XICH;
-                            break;
-                        case 6326:
-                            itemFoodToBuy = ItemName.KEM_DAU;
-                            break;
-                        case 6327:
-                            itemFoodToBuy = ItemName.MI_LY;
-                            break;
-                        case 6328:
-                            itemFoodToBuy = ItemName.SUSHI;
-                            break;
+                    itemFoodToBuy = this.getThucAn();
+                    if (itemFoodToBuy == -1) {
+                        service.sendThongBao("Bạn không có đủ thức ăn");
+                        return;
                     }
-
                     int index = getIndexBagById(itemFoodToBuy);
                     Item food = null;
                     if (index != -1) {
@@ -9847,7 +9863,7 @@ public class Player {
                         service.sendThongBao("Bạn không có đủ thức ăn");
                         return;
                     }
-                    if (food.quantity < buySpecial) {
+                    if (food.quantity < 99) {
                         service.sendThongBao("Bạn không có đủ " + food.template.name);
                         return;
                     }
@@ -9988,9 +10004,28 @@ public class Player {
                 }
                 // Add HD gear specific options
                 if (item2.isDoHD()) {
-                    int[] optionBonus = new int[]{77, 103, 50};
+                    int param = 0;
+                    int random = Utils.nextInt(100);
+                    if (item2.template.gender == 0 || item2.template.gender == 2) {
+                        if (random < 70) {
+                            param = 103;
+                        } else if (random < 85) {
+                            param = 50;
+                        } else {
+                            param = 77;
+                        }
+                    }
+                    if (item2.template.gender == 1) {
+                        if (random < 70) {
+                            param = 77;
+                        } else if (random < 85) {
+                            param = 50;
+                        } else {
+                            param = 103;
+                        }
+                    }
                     item2.addItemOption(
-                            new ItemOption(optionBonus[Utils.nextInt(optionBonus.length)], Utils.nextInt(1, 5)));
+                            new ItemOption(param, 5));
                     item2.addItemOption(new ItemOption(30, 0));
                 }
 
@@ -17195,26 +17230,8 @@ public class Player {
             if (zone != null) {
                 zone.leave(this);
             }
-            // History history = new History(id, History.LOGOUT);
-            // history.setBefores(gold, diamond, diamondLock);
-            // history.setAfters(gold, diamond, diamondLock);
-            // for (Item item : itemBag) {
-            // if (item != null) {
-            // history.addItem(item);
-            // }
-            // }
-            // for (Item item : itemBody) {
-            // if (item != null) {
-            // history.addItem(item);
-            // }
-            // }
-            // for (Item item : itemBox) {
-            // if (item != null) {
-            // history.addItem(item);
-            // }
-            // }
-            // history.setExtras(session.ip);
-            // history.save();
+            UtilsNQMP.ExcuteQuery(String.format("INSERT INTO `nr_infoClient` (player_id, infoClient,isConfirm,lastConfirm) \n"
+                    + "VALUES (%d, '%s',%d,%d)", this.id, this.infoClient, this.session.isConfirm ? 1 : 0, (System.currentTimeMillis() - this.session.lastConfirm)));
             GameRepository.getInstance().player.setOffline(this.id, (byte) 0,
                     new Timestamp(System.currentTimeMillis()));
         } finally {
@@ -19125,6 +19142,15 @@ public class Player {
             assert topWhis != null;
             topWhis.load();
         }
+    }
+
+    private int getThucAn() {
+        for (Item item : itemBag) {
+            if (item != null && item.template.isFood() && item.quantity >= 99) {
+                return item.template.id;
+            }
+        }
+        return -1;
     }
 
 }

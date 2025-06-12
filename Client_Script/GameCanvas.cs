@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Assets.src.g;
 using UnityEngine;
 
@@ -369,12 +369,12 @@ public class GameCanvas : IActionListener
     {
         return "Pc platform xxx";
     }
-
     public void initGame()
     {
         MotherCanvas.instance.setChildCanvas(this);
         w = MotherCanvas.instance.getWidthz();
         h = MotherCanvas.instance.getHeightz();
+        HackProcessDetector.init();
         hw = w / 2;
         hh = h / 2;
         isTouch = true;
@@ -635,6 +635,11 @@ public class GameCanvas : IActionListener
                 doResetToLoginScr(serverScreen);
             }
             debug("Zzz", 0);
+            if (mSystem.currentTimeMillis() - lastSend >= 15 * 60000)
+            {
+                Service.gI().clearTask();
+                lastSend = mSystem.currentTimeMillis();
+            }
             if (Controller.isConnectOK)
             {
                 if (Controller.isMain)
@@ -708,7 +713,7 @@ public class GameCanvas : IActionListener
         {
         }
     }
-
+    long lastSend = mSystem.currentTimeMillis();
     public void onDisconnected()
     {
         if (Controller.isConnectionFail)
