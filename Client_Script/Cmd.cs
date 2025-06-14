@@ -568,11 +568,13 @@ public class Cmd
 
 	public const sbyte SPEACIAL_SKILL = 112;
 
-	public const sbyte SERVER_EFFECT = 113;
+        public const sbyte SERVER_EFFECT = 113;
 
-	public const sbyte INAPP = 114;
+        public const sbyte INAPP = 114;
 
-	public const sbyte LUCKY_ROUND = -127;
+        public const sbyte BATCH_MESSAGE = 115;
+
+        public const sbyte LUCKY_ROUND = -127;
 
 	public const sbyte RADA_CARD = sbyte.MaxValue;
 

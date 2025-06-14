@@ -199,8 +199,22 @@ public class Controller : IMessageHandler
                                 }
                             }
                             GameCanvas.panel.tabName[25] = GameCanvas.panel.speacialTabName;
-                            GameCanvas.panel.setTypeSpeacialSkill();
-                            GameCanvas.panel.show();
+                        GameCanvas.panel.setTypeSpeacialSkill();
+                        GameCanvas.panel.show();
+                    }
+                    break;
+                }
+                case 115:
+                    {
+                        short countBatch = msg.reader().readShort();
+                        for (int i = 0; i < countBatch; i++)
+                        {
+                            sbyte cmd = msg.reader().readByte();
+                            int size = msg.reader().readInt();
+                            sbyte[] data = new sbyte[size];
+                            msg.reader().readFully(ref data);
+                            Message sub = new Message(cmd, data, size);
+                            onMessage(sub);
                         }
                         break;
                     }
