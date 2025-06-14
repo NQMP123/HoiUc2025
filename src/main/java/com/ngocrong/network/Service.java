@@ -2989,19 +2989,14 @@ public class Service implements IService {
         }
     }
 
-    Message buildResVersionMessage() throws IOException {
-        Server server = DragonBall.getInstance().getServer();
-        Message mss = new Message(Cmd.GET_IMAGE_SOURCE);
-        FastDataOutputStream ds = mss.writer();
-        ds.writeByte(0);
-        ds.writeInt(server.resVersion[session.zoomLevel - 1]);
-        ds.flush();
-        return mss;
-    }
-
     public void sendResVersion() {
         try {
-            Message mss = buildResVersionMessage();
+            Server server = DragonBall.getInstance().getServer();
+            Message mss = new Message(Cmd.GET_IMAGE_SOURCE);
+            FastDataOutputStream ds = mss.writer();
+            ds.writeByte(0);
+            ds.writeInt(server.resVersion[session.zoomLevel - 1]);
+            ds.flush();
             sendMessage(mss);
             mss.cleanup();
         } catch (IOException ex) {
@@ -3047,24 +3042,19 @@ public class Service implements IService {
         }
     }
 
-    Message buildDownloadMessage(String path) throws IOException {
-        String str = path.replace("\\", "/").replace("resources/data/" + session.zoomLevel, "");
-        str = Utils.cutPng(str);
-        Message mss = new Message(Cmd.GET_IMAGE_SOURCE);
-        FastDataOutputStream ds = mss.writer();
-        ds.writeByte(2);
-        ds.writeUTF(str);
-        byte[] raw = Utils.getFile(path);
-        byte[] ab = Utils.compress(raw);
-        ds.writeInt(raw.length);
-        ds.write(raw);
-        ds.flush();
-        return mss;
-    }
-
     public void download(String path) {
         try {
-            Message mss = buildDownloadMessage(path);
+            String str = path.replace("\\", "/").replace("resources/data/" + session.zoomLevel, "");
+            str = Utils.cutPng(str);
+            Message mss = new Message(Cmd.GET_IMAGE_SOURCE);
+            FastDataOutputStream ds = mss.writer();
+            ds.writeByte(2);
+            ds.writeUTF(str);
+            byte[] raw = Utils.getFile(path);
+            byte[] ab = Utils.compress(raw);
+            ds.writeInt(raw.length);
+            ds.write(raw);
+            ds.flush();
             sendMessage(mss);
             mss.cleanup();
         } catch (IOException ex) {
@@ -3073,18 +3063,14 @@ public class Service implements IService {
         }
     }
 
-    Message buildSizeMessage(int size) throws IOException {
-        Message mss = new Message(Cmd.GET_IMAGE_SOURCE);
-        FastDataOutputStream ds = mss.writer();
-        ds.writeByte(1);
-        ds.writeShort(size);
-        ds.flush();
-        return mss;
-    }
-
     public void size(int size) {
         try {
-            Message mss = buildSizeMessage(size);
+            System.err.println("Size : " + size);
+            Message mss = new Message(Cmd.GET_IMAGE_SOURCE);
+            FastDataOutputStream ds = mss.writer();
+            ds.writeByte(1);
+            ds.writeShort(size);
+            ds.flush();
             sendMessage(mss);
             mss.cleanup();
         } catch (IOException ex) {
@@ -3093,19 +3079,14 @@ public class Service implements IService {
         }
     }
 
-    Message buildDownloadOkMessage() throws IOException {
-        Server server = DragonBall.getInstance().getServer();
-        Message mss = new Message(Cmd.GET_IMAGE_SOURCE);
-        FastDataOutputStream ds = mss.writer();
-        ds.writeByte(3);
-        ds.writeInt(server.resVersion[session.zoomLevel - 1]);
-        ds.flush();
-        return mss;
-    }
-
     public void downloadOk() {
         try {
-            Message mss = buildDownloadOkMessage();
+            Server server = DragonBall.getInstance().getServer();
+            Message mss = new Message(Cmd.GET_IMAGE_SOURCE);
+            FastDataOutputStream ds = mss.writer();
+            ds.writeByte(3);
+            ds.writeInt(server.resVersion[session.zoomLevel - 1]);
+            ds.flush();
             sendMessage(mss);
             mss.cleanup();
         } catch (IOException ex) {
@@ -3122,35 +3103,6 @@ public class Service implements IService {
             ds.flush();
             sendMessage(ms);
             ms.cleanup();
-        } catch (Exception ex) {
-            com.ngocrong.NQMP.UtilsNQMP.logError(ex);
-            logger.error("failed!", ex);
-        }
-    }
-
-    public void sendBatchMessages(java.util.List<Message> messages) {
-        try {
-            Message batch = new Message(Cmd.BATCH_MESSAGE);
-            FastDataOutputStream out = batch.writer();
-            out.writeShort(messages.size());
-
-            for (Message ms : messages) {
-                out.writeByte(ms.getCommand());
-                byte[] data = ms.getData();
-                if (data == null) {
-                    out.writeInt(0);
-                } else {
-                    out.writeInt(data.length);
-                    out.write(data);
-                }
-            }
-
-            out.flush();
-            sendMessage(batch);
-            batch.cleanup();
-            for (Message ms : messages) {
-                ms.cleanup();
-            }
         } catch (Exception ex) {
             com.ngocrong.NQMP.UtilsNQMP.logError(ex);
             logger.error("failed!", ex);
@@ -3211,7 +3163,7 @@ public class Service implements IService {
 
     public void dialogMessage(String text) {
         try {
-            // UtilsNQMP.logError(text);
+            UtilsNQMP.logError(text);
             Message ms = new Message(Cmd.DIALOG_MESSAGE);
             FastDataOutputStream ds = ms.writer();
             ds.writeUTF(text);

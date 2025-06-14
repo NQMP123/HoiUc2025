@@ -81,17 +81,17 @@ public class EventTet2025 {
         if (player == null || item == null) {
             return false;
         }
-        if (player.getCountEmptyBag() == 0) {
-            player.service.dialogMessage("Hành trang đã đầy");
-            return false;
-        }
+
         if (item.template.id != 2194 && item.template.id != 2195 && item.template.id != 2196 && item.template.id != 2143) {
             return false;
         }
         int[] option = new int[]{221, 197, 196};
         int optionId = option[Utils.nextInt(option.length)];
         int random = Utils.nextInt(1000);
-
+        if (player.getCountEmptyBag() == 0) {
+            player.service.dialogMessage("Hành trang đã đầy");
+            return false;
+        }
         if (item.template.id == 2143) {
             long random2 = Utils.nextInt(1, 20);
             long gold = random2 * 50_000_000L;

@@ -283,7 +283,7 @@ public class BossManager {
 
     public static void bossTestServer() {
         Utils.setTimeout(() -> {
-            for (int i = 0; i < 150; i++) {
+            for (int i = 0; i < 50; i++) {
                 TestServerBoss boss = new TestServerBoss();
                 boss.setLocation(38, 5);
             }

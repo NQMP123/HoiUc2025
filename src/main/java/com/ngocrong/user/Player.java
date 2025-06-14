@@ -9876,9 +9876,8 @@ public class Player {
                         service.sendThongBao("Bạn không có đủ Hồng ngọc");
                         return;
                     }
-                    addDiamondLock(-(int)buySpecial);
+                    addDiamondLock(-(int) buySpecial);
                 }
-
 
                 // Handle food items with special requirements
                 int itemFoodToBuy = -1;
@@ -12474,10 +12473,9 @@ public class Player {
                     return;
                 }
                 Item ctTDB = new Item(ItemName.CAI_TRANG_THO_DAU_BAC);
-                ctTDB.addItemOption(new ItemOption(101, new Random().nextInt(191) + 10));
-                if (Utils.nextInt(10) != 0) {
-                    ctTDB.addItemOption(new ItemOption(93, 1));
-                }
+                ctTDB.addItemOption(new ItemOption(101, Utils.nextInt(30, 100)));
+                ctTDB.addItemOption(new ItemOption(93, Utils.nextInt(1, 7)));
+
                 this.addItem(ctTDB);
                 removeItem(item.indexUI, 1);
                 break;
@@ -18702,6 +18700,9 @@ public class Player {
             }
             case 2260: {
                 return new int[]{9138, 6};
+            }
+            case 2310: {
+                return new int[]{9140, 6};
             }
         }
         return new int[]{-1, 0};

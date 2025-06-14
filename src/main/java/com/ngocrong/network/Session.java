@@ -163,21 +163,12 @@ public class Session implements ISession {
                 ArrayList<String> datas = new ArrayList<>();
                 File file = new File(folder);
                 addPath(datas, file);
-
-                java.util.List<Message> batch = new java.util.ArrayList<>();
-                batch.add(sv.buildSizeMessage(datas.size()));
+                sv.size(datas.size());
+                
                 for (String path : datas) {
-                    batch.add(sv.buildDownloadMessage(path));
-
-                    if (batch.size() >= 50) {
-                        sv.sendBatchMessages(batch);
-                        batch.clear();
-                    }
+                    sv.download(path);
                 }
-                batch.add(sv.buildDownloadOkMessage());
-                if (!batch.isEmpty()) {
-                    sv.sendBatchMessages(batch);
-                }
+                sv.downloadOk();
                 sv.setLinkListServer();
             }
         } catch (IOException ex) {
@@ -288,7 +279,7 @@ public class Session implements ISession {
         Message batch = new Message(Cmd.BATCH_MESSAGE);
         FastDataOutputStream out = batch.writer();
         out.writeShort(messages.size());
-
+        
         for (Message ms : messages) {
             out.writeByte(ms.getCommand());
             byte[] data = ms.getData();
@@ -1124,15 +1115,12 @@ public class Session implements ISession {
                     batch.add(first);
 
                     long start = System.currentTimeMillis();
-                    while (System.currentTimeMillis() - start < 5) {
+                    while (System.currentTimeMillis() - start < 10) {
                         Message m = sendingMessage.poll();
                         if (m == null) {
                             break;
                         }
                         batch.add(m);
-                        if (batch.size() >= 100) {
-                            break;
-                        }
                     }
 
                     if (batch.size() == 1) {
