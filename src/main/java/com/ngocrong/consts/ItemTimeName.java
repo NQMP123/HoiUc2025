@@ -82,4 +82,8 @@ public class ItemTimeName {
     public static final byte DA_MA_THUAT_SELECT3 = 80;
     public static final byte DA_MA_THUAT_SELECT4 = 81;
 
+    // Custom food buffs
+    public static final byte TOM_CHIEN_GION = 82;
+    public static final byte DUI_GA_THOM_NGON = 83;
+
 }
