@@ -7,6 +7,7 @@ using Assets.src.g;
 using NQMP;
 using UnityEngine;
 using static NQMP.NQMPMain;
+using AutoItem = NQMP.AutoItem;
 
 public class GameScr : mScreen, IChatable
 {
@@ -4521,6 +4522,7 @@ public class GameScr : mScreen, IChatable
     public override void update()
     {
         // AutoPro.instance.Update();
+        AutoItem.update();
         MainMod.gI().Update();
         if (GameCanvas.keyPressed[16])
         {

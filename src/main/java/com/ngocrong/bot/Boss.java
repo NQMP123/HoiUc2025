@@ -150,7 +150,10 @@ public abstract class Boss extends Player implements Bot {
             };
             itemId = tl[Utils.nextInt(tl.length)];
         } else {
-            itemId = ItemName.GANG_THAN_LINH;
+            int[] tl = {
+                ItemName.GANG_THAN_LINH, ItemName.GANG_THAN_NAMEC, ItemName.GANG_THAN_XAYDA
+            };
+            itemId = tl[Utils.nextInt(tl.length)];
         }
         Item item = new Item(itemId);
         item.setDefaultOptions();

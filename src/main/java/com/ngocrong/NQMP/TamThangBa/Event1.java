@@ -767,14 +767,7 @@ public class Event1 {
             // Ngẫu nhiên loại vật phẩm (pet hoặc thú cưỡi)
             int randomValue = Utils.nextInt(100);
             Item rewardItem = null;
-
-            if (randomValue < 50) { // 50% cơ hội nhận pet
-                rewardItem = createRandomPet();
-            } else { // 50% cơ hội nhận thú cưỡi Hỏa Long
-                rewardItem = createRandomHoaLong();
-            }
-
-            // Thêm vật phẩm vào túi đồ
+            rewardItem = createRandomPet();
             player.addItemBag(rewardItem);
             player.service.sendThongBao("Bạn đã nhận được " + rewardItem.template.name);
 
@@ -820,65 +813,67 @@ public class Event1 {
                 pet = new Item(PET_BUNNY_BABY_ID);
                 pet.quantity = 1;
 
-                pet.options.add(new ItemOption(OPT_HP, 12 + Utils.nextInt(4))); // 12-15% HP
-                pet.options.add(new ItemOption(OPT_GIAP, 2 + Utils.nextInt(5))); // 2-6% giáp
-                pet.options.add(new ItemOption(OPT_NE_DON, 5 + Utils.nextInt(0, 5))); // 5-10% né đòn
+                pet.options.add(new ItemOption(OPT_HP, 2 + Utils.nextInt(8))); // 12-15% HP
+                pet.options.add(new ItemOption(OPT_KI, 2 + Utils.nextInt(8))); // 2-6% giáp
+                pet.options.add(new ItemOption(OPT_SD, 2 + Utils.nextInt(8))); // 5-10% né đòn
                 break;
 
             case 1: // Pet Baby Rồng Xanh: 12-15% Sức đánh, 2-6% SĐCM, 5-10% né đòn
                 pet = new Item(PET_BABY_RONG_XANH_ID);
                 pet.quantity = 1;
 
-                pet.options.add(new ItemOption(OPT_SD, 12 + Utils.nextInt(4))); // 12-15% Sức đánh
-                pet.options.add(new ItemOption(OPT_SDCM, 2 + Utils.nextInt(5))); // 2-6% SĐCM
-                pet.options.add(new ItemOption(OPT_NE_DON, 5 + Utils.nextInt(0, 5))); // 5-10% né đòn
+                pet.options.add(new ItemOption(OPT_HP, 2 + Utils.nextInt(8))); // 12-15% HP
+                pet.options.add(new ItemOption(OPT_KI, 2 + Utils.nextInt(8))); // 2-6% giáp
+                pet.options.add(new ItemOption(OPT_SD, 2 + Utils.nextInt(8))); // 5-10% né đòn
+                pet.options.add(new ItemOption(OPT_CM, 2 + Utils.nextInt(8)));
                 break;
 
             case 2: // Pet Panda Chan 1: 12-15% KI, 2-6% Sát thương Laze, 5-10% né đòn
                 pet = new Item(PET_PANDA_CHAN_1_ID);
                 pet.quantity = 1;
 
-                pet.options.add(new ItemOption(OPT_KI, 12 + Utils.nextInt(4))); // 12-15% KI
-                pet.options.add(new ItemOption(OPT_SAT_THUONG_LAZE, 2 + Utils.nextInt(5))); // 2-6% Sát thương Laze
-                pet.options.add(new ItemOption(OPT_NE_DON, 5 + Utils.nextInt(0, 5))); // 5-10% né đòn
+                pet.options.add(new ItemOption(OPT_HP, 2 + Utils.nextInt(8))); // 12-15% HP
+                pet.options.add(new ItemOption(OPT_KI, 2 + Utils.nextInt(8))); // 2-6% giáp
+                pet.options.add(new ItemOption(OPT_SD, 2 + Utils.nextInt(8)));
+                pet.options.add(new ItemOption(OPT_NE_DON, 2 + Utils.nextInt(8))); // 5-10% né đòn
                 break;
 
             case 3: // Pet Panda Chan 2: 12-15% HP, 2-6% Sát thương chiêu Tự Sát, 5-10% né đòn
                 pet = new Item(PET_PANDA_CHAN_2_ID);
                 pet.quantity = 1;
-                pet.options.add(new ItemOption(OPT_HP, 12 + Utils.nextInt(4))); // 12-15% HP
-                pet.options.add(new ItemOption(OPT_SAT_THUONG_TU_SAT, 2 + Utils.nextInt(5))); // 2-6% Sát thương chiêu Tự Sát
-                pet.options.add(new ItemOption(OPT_NE_DON, 5 + Utils.nextInt(0, 5))); // 5-10% né đòn
+                pet.options.add(new ItemOption(OPT_HP, 2 + Utils.nextInt(8))); // 12-15% HP
+                pet.options.add(new ItemOption(OPT_KI, 2 + Utils.nextInt(8))); // 2-6% giáp
+                pet.options.add(new ItemOption(OPT_SD, 2 + Utils.nextInt(8)));
+                pet.options.add(new ItemOption(95, 2 + Utils.nextInt(8)));
+                pet.options.add(new ItemOption(96, 2 + Utils.nextInt(8)));
                 break;
 
             case 4: // Pet Bunny Baby Secret: 15-18% HP, Sức đánh, 10% Sức đánh chí mạng, 5-10% Chí mạng
                 pet = new Item(PET_BUNNY_BABY_SECRET_ID);
                 pet.quantity = 1;
-                pet.options.add(new ItemOption(OPT_HP, 15 + Utils.nextInt(4))); // 15-18% HP
-                pet.options.add(new ItemOption(OPT_SD, 15 + Utils.nextInt(4))); // 15-18% Sức đánh
-                pet.options.add(new ItemOption(OPT_SDCM, 10)); // 10% Sức đánh chí mạng
-                pet.options.add(new ItemOption(OPT_CM, 5 + Utils.nextInt(0, 5))); // 5-10% Chí mạng
+                pet.options.add(new ItemOption(OPT_HP, 2 + Utils.nextInt(10))); // 12-15% HP
+                pet.options.add(new ItemOption(OPT_KI, 2 + Utils.nextInt(10))); // 2-6% giáp
+                pet.options.add(new ItemOption(OPT_SD, 2 + Utils.nextInt(10)));
+                pet.options.add(new ItemOption(OPT_SDCM, 2 + Utils.nextInt(10))); // 10% Sức đánh chí mạng
                 break;
 
             case 5: // Pet BearChu Secret: 15-18% Sức đánh, KI, 10% Sát thương chiêu Laze, 5-10% chí mạng
                 pet = new Item(PET_BEARCHU_SECRET_ID);
                 pet.quantity = 1;
-                pet.options.add(new ItemOption(OPT_SD, 15 + Utils.nextInt(4))); // 15-18% Sức đánh
-                pet.options.add(new ItemOption(OPT_KI, 15 + Utils.nextInt(4))); // 15-18% KI
-                pet.options.add(new ItemOption(OPT_SAT_THUONG_LAZE, 10)); // 10% Sát thương chiêu Laze
-                pet.options.add(new ItemOption(OPT_CM, 5 + Utils.nextInt(0, 5))); // 5-10% chí mạng
+                pet.options.add(new ItemOption(OPT_HP, 2 + Utils.nextInt(8))); // 12-15% HP
+                pet.options.add(new ItemOption(OPT_KI, 2 + Utils.nextInt(8))); // 2-6% giáp
+                pet.options.add(new ItemOption(OPT_SD, 2 + Utils.nextInt(8)));
+                pet.options.add(new ItemOption(OPT_SAT_THUONG_LAZE, 2 + Utils.nextInt(8))); // 10% Sát thương chiêu Laze
                 break;
 
             case 6: // Pet Baby Rồng Xanh Secret: 15-18% HP, 5% giáp, 10% Sát thương chiêu tự sát
                 pet = new Item(PET_BABY_RONG_XANH_SECRET_ID);
                 pet.quantity = 1;
-                pet.options.add(new ItemOption(OPT_HP, 15 + Utils.nextInt(4))); // 15-18% HP
-                pet.options.add(new ItemOption(OPT_GIAP, 5)); // 5% giáp
-                pet.options.add(new ItemOption(OPT_SAT_THUONG_TU_SAT, 10)); // 10% Sát thương chiêu tự sát
+                pet.options.add(new ItemOption(OPT_HP, 2 + Utils.nextInt(8))); // 12-15% HP
+                pet.options.add(new ItemOption(OPT_KI, 2 + Utils.nextInt(8))); // 2-6% giáp
+                pet.options.add(new ItemOption(OPT_SD, 2 + Utils.nextInt(8)));
+                pet.options.add(new ItemOption(OPT_SAT_THUONG_TU_SAT, 2 + Utils.nextInt(8))); // 10% Sát thương chiêu tự sát
                 break;
-        }
-        if (pet != null && pet.options != null && Utils.isTrue(9, 10)) {
-            pet.options.add(new ItemOption(93, Utils.isTrue(1, 2) ? 1 : 3)); // Option 93: số ngày HSD
         }
         return pet;
     }

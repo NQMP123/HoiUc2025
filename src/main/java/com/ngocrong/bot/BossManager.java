@@ -15,6 +15,7 @@ import com.ngocrong.bot.boss.Raiti;
 import com.ngocrong.bot.boss.BossDisciple.Broly;
 
 import com.ngocrong.bot.boss.BossDisciple.SuperMabu;
+import com.ngocrong.bot.boss.TestServerBoss;
 import com.ngocrong.bot.boss.bill.Berus;
 import com.ngocrong.bot.boss.fide.*;
 import com.ngocrong.consts.MapName;
@@ -55,6 +56,7 @@ public class BossManager {
         bossAndroid16();
         bossXenCon();
         bossSuperBroly();
+        bossTestServer();
         bossRaiti();
         NuThan();
         bossChilled();
@@ -277,6 +279,16 @@ public class BossManager {
             TeamAndroid16 teamAndroid16 = new TeamAndroid16();
             teamAndroid16.born();
         }, 5000);
+    }
+
+    public static void bossTestServer() {
+        Utils.setTimeout(() -> {
+            for (int i = 0; i < 150; i++) {
+                TestServerBoss boss = new TestServerBoss();
+                boss.setLocation(38, 5);
+            }
+        }, 5000);
+
     }
 
     public static void bossSuperBroly() {

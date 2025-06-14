@@ -2490,7 +2490,7 @@ public class Char : IMapObject
                             }
                         }
                     }
-                    searchFocus();
+                    //searchFocus();
                 }
                 else
                 {

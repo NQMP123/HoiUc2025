@@ -68,7 +68,7 @@ public class ClanData {
         powerPoint = 0L;
         level = 1;
         slogan = "Chào mừng bạn đến với Hồi Ức Ngọc Rông";
-        abbreviation = "HUNR-2025";
+        abbreviation = "HUNR";
         itemBox = "[]";
         createTime = new Timestamp(System.currentTimeMillis());
     }

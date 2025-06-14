@@ -4296,8 +4296,16 @@ public class Panel : IActionListener, IChatable
                 }
                 if (item.buySpec > 0)
                 {
-                    SmallImage.drawSmallImage(g, item.iconSpec, num2 + num4 - 7, num3 + 9, 0, 3);
-                    mFont.tahoma_7b_blue.drawString(g, Res.formatNumber(item.buySpec), num2 + num4 - 15, num3 + 1, mFont.RIGHT);
+                    if (item.iconSpec == 861)
+                    {
+                        g.drawImage(imgLuongKhoa, num2 + num4 - 7, num3 + 7, 3);
+                        mFont.tahoma_7b_blue.drawString(g, Res.formatNumber(item.buySpec), num2 + num4 - 15, num3 + 1, mFont.RIGHT);
+                    }
+                    else
+                    {
+                        SmallImage.drawSmallImage(g, item.iconSpec, num2 + num4 - 7, num3 + 9, 0, 3);
+                        mFont.tahoma_7b_blue.drawString(g, Res.formatNumber(item.buySpec), num2 + num4 - 15, num3 + 1, mFont.RIGHT);
+                    }
                 }
                 if (item.buyGold != 0 || item.buyDiamond != 0)
                 {
@@ -7968,6 +7976,7 @@ public class Panel : IActionListener, IChatable
     "|0|" +
     "A : Bật/Tắt tự động đánh",
     "\nC : Sử dụng Capsule bay",
+        "\nD : Đóng băng skill hiện tại",
     "\nE : Bật/Tắt auto hồi sinh",
     "\nF : Sử dụng Bông tai porata",
     "\nG : Giao dịch với nhân vật được chỉ định",

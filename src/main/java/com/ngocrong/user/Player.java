@@ -437,7 +437,7 @@ public class Player {
         String name = this.name;
         if (clan != null) {
             if (!Strings.isNullOrEmpty(clan.abbreviationName)) {
-                name = String.format("[%s] %s", clan.abbreviationName, this.name);
+                name = String.format("[%s] %s", Utils.getAbbre(clan.abbreviationName), this.name);
             }
         }
         return name;
@@ -9748,17 +9748,18 @@ public class Player {
                         boxCrackBall.removeAll(list);
                         viewBoxCrackBall();
                     }
-                } else if (this.zone.map.mapID == 21 + this.gender) {
-                    if (type == 0) {// nhận
-                        ItemCMS_Service.getItem(this, itemID);
-                    }
-                    if (type == 1) {// xóa
-                        ItemCMS_Service.deleteItem(this, itemID);
-                    }
-                    if (type == 2) {// nhận tất
-                        ItemCMS_Service.getAll(this);
-                    }
                 }
+//                else if (this.zone.map.mapID == 21 + this.gender) {
+//                    if (type == 0) {// nhận
+//                        ItemCMS_Service.getItem(this, itemID);
+//                    }
+//                    if (type == 1) {// xóa
+//                        ItemCMS_Service.deleteItem(this, itemID);
+//                    }
+//                    if (type == 2) {// nhận tất
+//                        ItemCMS_Service.getAll(this);
+//                    }
+//                }
             } else {
                 List<ItemTemplate> list = shop.getListItem(this);
                 ItemTemplate item = null;
@@ -9816,6 +9817,17 @@ public class Player {
                     return;
                 }
 
+                if (this.taskMain != null) {
+                    if (item.id == 379 && this.taskMain.id < 25) {
+                        service.dialogMessage("Bạn chưa thể mua lúc này , hãy tiếp tục hoàn thành nhiệm vụ");
+                        return;
+                    }
+                    if (item.id == 2268 && this.taskMain.id < 22) {
+                        service.dialogMessage("Bạn chưa thể mua lúc này , hãy tiếp tục hoàn thành nhiệm vụ");
+                        return;
+                    }
+                }
+
                 // Check special currency requirements
                 if (item.iconSpec == 7223) {
                     if (clan == null) {
@@ -9859,6 +9871,14 @@ public class Player {
                     }
                     subGold(buySpecial);
                 }
+                if (item.iconSpec == 861) {
+                    if (this.diamondLock < buySpecial) {
+                        service.sendThongBao("Bạn không có đủ Hồng ngọc");
+                        return;
+                    }
+                    addDiamondLock(-(int)buySpecial);
+                }
+
 
                 // Handle food items with special requirements
                 int itemFoodToBuy = -1;
@@ -9990,10 +10010,16 @@ public class Player {
                 } else if (itemID == 597) {
                     finalItemID = 523;
                     adjustedQuantity *= 30;
-                } else if (itemID == 934) {
-                    itemID = 934;
+                }
+                int quantity_ = -1;
+                for (ItemOption o : item.options) {
+                    if (o != null && o.optionTemplate.id == 31) {
+                        quantity_ = o.param;
+                    }
+                }
+                if (quantity_ != -1) {
                     item.options.clear();
-                    adjustedQuantity *= 99;
+                    adjustedQuantity *= 10;
                 }
                 // Create and setup new item
                 Item item2 = new Item(finalItemID);
@@ -11952,6 +11978,12 @@ public class Player {
             return;
         }
         switch (item.id) {
+            case ItemName.CAPSULE_HONG:
+                removeItem(item.indexUI, 1);
+                int diamondLock = Utils.nextInt(5, 15);
+                this.addDiamondLock(diamondLock);
+                service.serverMessage("Bạn nhận được " + diamondLock + " hồng ngọc");
+                break;
             case 2300:
                 if (getSlotNullInBag() < 7) {
                     service.serverMessage("Bạn cần ít nhất 6 ô trống trong hành trang ");

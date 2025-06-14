@@ -51,7 +51,7 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                     if (Index != -1)
                     {
                         Service.gI().openMenu(Npc);
-                        Service.gI().confirmMenu(0, (sbyte)Index);
+                        Service.gI().confirmMenu((short)Npc, (sbyte)Index);
                     }
                     else
                     {
@@ -305,7 +305,7 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                 return;
             }
             bool flag2 = true;
-            if (isFutureMap(IdMapEnd) || 1 == 0)
+            if (isFutureMap(IdMapEnd))
             {
                 if ((flag2 || 1 == 0) && TileMap.mapID == 27 && GameScr.findNPCInMap(38) == null && 0 == 0)
                 {

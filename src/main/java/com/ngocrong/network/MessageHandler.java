@@ -482,7 +482,7 @@ public class MessageHandler implements IMessageHandler {
                         if (type == 7) {
                             sendPing();
                         }
-                        if (type == 8 && _player != null) {
+                        if (type == 8 && _player != null && _player.getItemInBag(2309) != null) {
                             _player.joinMap(mss.reader().readInt());
                         }
                         if (type == 9) {

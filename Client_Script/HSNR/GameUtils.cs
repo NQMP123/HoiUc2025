@@ -35,6 +35,7 @@
                 if(item != null && item.template.id == id)
                 {
                     Service.gI().useItem(0, 1, (sbyte)(item.indexUI), -1);
+                    UnityEngine.Debug.Log("use");
                     break;
                 }
             }

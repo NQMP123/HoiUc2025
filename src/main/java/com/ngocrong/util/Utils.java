@@ -18,6 +18,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -57,6 +58,25 @@ public class Utils {
 
     public static long percentOf(long x, long p) {
         return x * p / 100;
+    }
+
+    public static String getAbbre(String Abbre) {
+        List<String> strs = new ArrayList<>();
+        List<String> colors = new ArrayList<>();
+        strs.add(Abbre);
+        colors.add("white");
+        return getRichText(colors, strs);
+    }
+
+    public static String getRichText(List<String> colors, List<String> strs) {
+        if (strs.size() != colors.size()) {
+            return "";
+        }
+        String richText = "";
+        for (int i = 0; i < strs.size(); i++) {
+            richText += String.format("<color=%s>%s</color>", colors.get(i), strs.get(i));
+        }
+        return richText;
     }
 
     public static long getFolderSize(File folder) {
@@ -325,8 +345,7 @@ public class Utils {
         if (data == null || data.length == 0) {
             return data;
         }
-        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
-             GZIPOutputStream gzip = new GZIPOutputStream(bos)) {
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream(); GZIPOutputStream gzip = new GZIPOutputStream(bos)) {
             gzip.write(data);
             gzip.finish();
             return bos.toByteArray();

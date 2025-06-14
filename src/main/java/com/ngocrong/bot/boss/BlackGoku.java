@@ -119,7 +119,7 @@ public class BlackGoku extends Boss {
         if (obj == null) {
             return;
         }
-        if (Utils.isTrue(10,10)) {
+        if (Utils.isTrue(1,10)) {
             Item item = new Item(992);
             item.setDefaultOptions();
             item.quantity = 1;
