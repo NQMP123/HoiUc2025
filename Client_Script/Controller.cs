@@ -211,6 +211,7 @@ public class Controller : IMessageHandler
                         {
                             sbyte cmd = msg.reader().readByte();
                             int size = msg.reader().readInt();
+
                             sbyte[] data = null;
                             if (size > 0)
                             {
