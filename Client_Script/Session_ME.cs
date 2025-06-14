@@ -805,6 +805,14 @@ public class Session_ME : ISession
         }
     }
 
+    public static void enqueueMessage(Message msg)
+    {
+        lock (recieveMsgLock)
+        {
+            recieveMsg.addElement(msg);
+        }
+    }
+
     public static void update()
     {
         int processLimit = 10; // Giới hạn số lượng message xử lý mỗi frame để tránh lag
