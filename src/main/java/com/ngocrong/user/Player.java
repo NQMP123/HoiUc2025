@@ -275,7 +275,8 @@ public class Player {
     public boolean[] sachdacbiet = new boolean[8];
 
     // VP SK TET
-    private boolean isXoai, isDudu, isMamTraiCay, isMangCau, isDuaXanh, isTraiSung;
+    private boolean isXoai, isDudu, isMamTraiCay, isMangCau, isDuaXanh, isTraiSung,
+            isTomChienGion, isDuiGaThomNgon;
     // ARRAY LIST
     public ArrayList<Skill> skills;
     public ArrayList<EffectChar> effects;
@@ -11441,6 +11442,12 @@ public class Player {
                     case ItemTimeName.QUA_HONG_DAO:
                         setQuaHongDao(true);
                         break;
+                    case ItemTimeName.TOM_CHIEN_GION:
+                        setTomChienGion(true);
+                        break;
+                    case ItemTimeName.DUI_GA_THOM_NGON:
+                        setDuiGaThomNgon(true);
+                        break;
                 }
             }
         }
@@ -11809,6 +11816,14 @@ public class Player {
                 break;
             case ItemName.QUA_HONG_DAO:
                 itemTime = new ItemTime(ItemTimeName.QUA_HONG_DAO, item.template.iconID, 30 * 60, true);
+                isUpdate = true;
+                break;
+            case ItemName.TOM_CHIEN_GION:
+                itemTime = new ItemTime(ItemTimeName.TOM_CHIEN_GION, item.template.iconID, 30 * 60, true);
+                isUpdate = true;
+                break;
+            case ItemName.DUI_GA_THOM_NGON:
+                itemTime = new ItemTime(ItemTimeName.DUI_GA_THOM_NGON, item.template.iconID, 10 * 60, true);
                 isUpdate = true;
                 break;
             case ItemName.SACH_DAC_BIET:
@@ -15272,6 +15287,22 @@ public class Player {
                                         zone.service.playerLoadBody(this);
                                     }
                                     break;
+                                case ItemTimeName.TOM_CHIEN_GION:
+                                    setTomChienGion(false);
+                                    info.setInfo();
+                                    service.loadPoint();
+                                    if (zone != null) {
+                                        zone.service.playerLoadBody(this);
+                                    }
+                                    break;
+                                case ItemTimeName.DUI_GA_THOM_NGON:
+                                    setDuiGaThomNgon(false);
+                                    info.setInfo();
+                                    service.loadPoint();
+                                    if (zone != null) {
+                                        zone.service.playerLoadBody(this);
+                                    }
+                                    break;
                             }
                             listRemove.add(item);
                         }
@@ -15340,6 +15371,9 @@ public class Player {
                 if (disciple.master.isPhieuX2TNSM) {
                     exp += Utils.percentOf(exp, 20);
                 }
+                if (disciple.master.isTomChienGion) {
+                    exp *= 2;
+                }
                 if (disciple.master.sachdacbiet[0]) {
                     exp += Utils.percentOf(exp, 100);
                 }
@@ -15398,6 +15432,12 @@ public class Player {
             }
             if (isPhieuX2TNSM) {
                 exp += Utils.percentOf(exp, 20);
+            }
+            if (isTomChienGion) {
+                exp *= 2;
+            }
+            if (isDuiGaThomNgon) {
+                exp *= 2;
             }
             if (isMamTraiCay) {
                 exp += Utils.percentOf(exp, 20);
