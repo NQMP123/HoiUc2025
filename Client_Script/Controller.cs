@@ -211,10 +211,15 @@ public class Controller : IMessageHandler
                         {
                             sbyte cmd = msg.reader().readByte();
                             int size = msg.reader().readInt();
-                            sbyte[] data = new sbyte[size];
-                            msg.reader().readFully(ref data);
+
+                            sbyte[] data = null;
+                            if (size > 0)
+                            {
+                                data = new sbyte[size];
+                                msg.reader().readFully(ref data);
+                            }
                             Message sub = new Message(cmd, data, size);
-                            onMessage(sub);
+                            Session_ME.enqueueMessage(sub);
                         }
                         break;
                     }
