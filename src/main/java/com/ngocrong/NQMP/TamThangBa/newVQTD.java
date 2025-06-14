@@ -8,6 +8,7 @@ import com.ngocrong.item.Item;
 import com.ngocrong.item.ItemOption;
 import com.ngocrong.user.Player;
 import com.ngocrong.util.Utils;
+import com.ngocrong.consts.ItemName;
 
 /**
  *
@@ -28,125 +29,107 @@ public class newVQTD {
 
         try {
             // Lựa chọn phần thưởng ngẫu nhiên theo tỉ lệ
-            int randomValue = Utils.nextInt(10300); // Sử dụng 10000 để có thể xử lý tỉ lệ nhỏ chính xác hơn
+            int randomValue = Utils.nextInt(10000);
             int cumulativeProbability = 0;
 
-            // 1. Sao pha lê - 5%
+            // 1. Đá nâng cấp 5 loại - 17%
+            cumulativeProbability += 1700;
+            if (randomValue < cumulativeProbability) {
+                Item item = createDNC();
+                player.boxCrackBall.add(item);
+                return true;
+            }
+
+            // 2. Tôm chiên giòn - 3%
+            cumulativeProbability += 300;
+            if (randomValue < cumulativeProbability) {
+                Item item = createTomChienGion();
+                player.boxCrackBall.add(item);
+                return true;
+            }
+
+            // 3. Cải trang Vegeta Hủy Diệt - 3%
+            cumulativeProbability += 300;
+            if (randomValue < cumulativeProbability) {
+                Item item = createCaiTrangVegeta();
+                player.boxCrackBall.add(item);
+                return true;
+            }
+
+            // 4. Rương cải trang - 5%
             cumulativeProbability += 500;
             if (randomValue < cumulativeProbability) {
-                Item spl = createSPL();
-                player.boxCrackBall.add(spl);
+                Item item = createRuongCaiTrang();
+                player.boxCrackBall.add(item);
                 return true;
             }
 
-            // 2. Ngọc Rồng 4-7 sao - 3%
+            // 5. Ngọc rồng 5-7 sao - 20%
+            cumulativeProbability += 2000;
+            if (randomValue < cumulativeProbability) {
+                Item item = createNR57();
+                player.boxCrackBall.add(item);
+                return true;
+            }
+
+            // 6. Đeo lưng - 3%
             cumulativeProbability += 300;
             if (randomValue < cumulativeProbability) {
-                Item nr = createNR();
-                player.boxCrackBall.add(nr);
+                Item item = createDeoLung();
+                player.boxCrackBall.add(item);
                 return true;
             }
 
-            // 3. Vàng 5-20tr - 67%
-            cumulativeProbability += 6700;
-            if (randomValue < cumulativeProbability) {
-                Item goldItem = new Item(190);
-                int gold = 5000000 + Utils.nextInt(15000001); // 5tr đến 20tr
-                goldItem.quantity = gold;
-                player.boxCrackBall.add(goldItem);
-                return true;
-            }
-
-            // 4. Cải trang Bạch Ngọc Tiên - 2%
-            cumulativeProbability += 200;
-            if (randomValue < cumulativeProbability) {
-                Item bachNgocTien = createBachNgocTien();
-                player.boxCrackBall.add(bachNgocTien);
-                return true;
-            }
-
-            // 5. Đá nâng cấp - 3%
+            // 7. Pet Mèo Hoàng Thượng - 3%
             cumulativeProbability += 300;
             if (randomValue < cumulativeProbability) {
-                Item dnc = createDNC();
-                player.boxCrackBall.add(dnc);
+                Item item = createPetMeoHoangThuong();
+                player.boxCrackBall.add(item);
                 return true;
             }
 
-            // 6. Cải trang Hắc Long Saiyan - 2%
-            cumulativeProbability += 200;
-            if (randomValue < cumulativeProbability) {
-                Item hacLongSaiyan = createHacLongSaiyan();
-                player.boxCrackBall.add(hacLongSaiyan);
-                return true;
-            }
-
-            // 7. Cải trang Thiên Tài Công Nghệ - 2%
-            cumulativeProbability += 200;
-            if (randomValue < cumulativeProbability) {
-                Item thienTaiCongNghe = createThienTaiCongNghe();
-                player.boxCrackBall.add(thienTaiCongNghe);
-                return true;
-            }
-
-            // 8. Thú cưỡi Hắc Kỳ Lân (Saiyan Cuồng Nộ) - 2%
-            cumulativeProbability += 200;
-            if (randomValue < cumulativeProbability) {
-                Item hacKyLan = createHacKyLan();
-                player.boxCrackBall.add(hacKyLan);
-                return true;
-            }
-
-            // 9. Pet Tiểu Xà Vương (Thần trả hủy diệt) - 4%
-            cumulativeProbability += 400;
-            if (randomValue < cumulativeProbability) {
-                Item tieuXaVuong = createTieuXaVuong();
-                player.boxCrackBall.add(tieuXaVuong);
-                return true;
-            }
-
-            // 10. Đeo lưng Cờ Ngọc Rồng 2 Sao - 3%
+            // 8. Đùi gà nướng - 3%
             cumulativeProbability += 300;
             if (randomValue < cumulativeProbability) {
-                Item coNgocRong = createCoNgocRong();
-                player.boxCrackBall.add(coNgocRong);
+                Item item = createDuiGaNuong();
+                player.boxCrackBall.add(item);
                 return true;
             }
 
-            // 11. Đeo lưng Khỉ con vui vẻ - 3%
-            cumulativeProbability += 300;
+            // 9. Mảnh sổ sưu tầm - 16%
+            cumulativeProbability += 1600;
             if (randomValue < cumulativeProbability) {
-                Item khiConVuiVe = createKhiConVuiVe();
-                player.boxCrackBall.add(khiConVuiVe);
+                Item item = createManhSuuTam();
+                player.boxCrackBall.add(item);
                 return true;
             }
 
-            // 12. Nước giải khát - 3%
+            // 10. Đá bảo vệ x1 - 3%
             cumulativeProbability += 300;
             if (randomValue < cumulativeProbability) {
-                Item nuocGiaiKhat = createNuocGiaiKhat();
-                player.boxCrackBall.add(nuocGiaiKhat);
-                return true;
-            }
-            cumulativeProbability += 300;
-            if (randomValue < cumulativeProbability) {
-                Item kemTraiCay = createKemTraiCay();
-                player.boxCrackBall.add(kemTraiCay);
-                return true;
-            }
-            // 14. Linh thú Tiểu Miêu Linh - 1%
-            cumulativeProbability += 100;
-            if (randomValue < cumulativeProbability) {
-                Item tieuMieuLinh = createTieuMieuLinh();
-                player.boxCrackBall.add(tieuMieuLinh);
+                Item item = createDaBaoVe();
+                player.boxCrackBall.add(item);
                 return true;
             }
 
-            // Trường hợp mặc định (nếu có lỗi trong tính toán tỉ lệ)
-            Item goldItem = new Item(190);
-            int gold = 5000000 + Utils.nextInt(15000001); // 5tr đến 20tr
-            goldItem.quantity = gold;
-            player.boxCrackBall.add(goldItem);
+            // 11. Cục vàng 5tr-20tr - 17%
+            cumulativeProbability += 1700;
+            if (randomValue < cumulativeProbability) {
+                Item item = createGold();
+                player.boxCrackBall.add(item);
+                return true;
+            }
+
+            // 12. Ngọc rồng 4 sao - 7%
+            cumulativeProbability += 700;
+            if (randomValue < cumulativeProbability) {
+                Item item = createNR4();
+                player.boxCrackBall.add(item);
+                return true;
+            }
+
+            // Trường hợp mặc định
+            player.boxCrackBall.add(createGold());
             return true;
 
         } catch (Exception e) {
@@ -325,8 +308,7 @@ public class newVQTD {
     }
 
     static int getDays() {
-        int[] days = new int[]{1, 3, 5};
-        return days[Utils.nextInt(days.length)];
+        return Utils.nextInt(1, 7);
     }
 
     /**
@@ -462,22 +444,129 @@ public class newVQTD {
     }
 
     private static Item createSPL() {
-        var itemID = Utils.nextInt(441, 447);
+        var itemID = Utils.nextInt(ItemName.SAO_PHA_LE_DAME_TO_HP, ItemName.SAO_PHA_LE_TNSM);
         Item item = new Item(itemID);
         item.setDefaultOptions();
         return item;
     }
 
     private static Item createNR() {
-        var itemID = Utils.nextInt(17, 20);
+        var itemID = Utils.nextInt(ItemName.NGOC_RONG_4_SAO, ItemName.NGOC_RONG_7_SAO);
         Item item = new Item(itemID);
         item.setDefaultOptions();
         return item;
     }
 
     private static Item createDNC() {
-        var itemID = Utils.nextInt(220, 224);
+        var itemID = Utils.nextInt(ItemName.DA_LUC_BAO, ItemName.DA_THACH_ANH_TIM);
         Item item = new Item(itemID);
+        item.setDefaultOptions();
+        return item;
+    }
+
+    // ---------- New reward items ----------
+
+    private static Item createTomChienGion() {
+        Item item = new Item(ItemName.TOM_CHIEN_GION);
+        item.quantity = 1;
+        return item;
+    }
+
+    private static Item createCaiTrangVegeta() {
+        Item item = new Item(ItemName.CAI_TRANG_VEGETA_HUY_DIET);
+        item.quantity = 1;
+        item.options.add(new ItemOption(77, Utils.nextInt(30, 35))); // HP 30-35%
+        item.options.add(new ItemOption(103, Utils.nextInt(30, 35))); // KI 30-35%
+        item.options.add(new ItemOption(50, Utils.nextInt(30, 35))); // SĐ 30-35%
+        item.options.add(new ItemOption(94, Utils.nextInt(15, 20))); // Giáp 15-20%
+        if (!Utils.isTrue(10, 100)) {
+            item.options.add(new ItemOption(93, getDays()));
+        }
+        return item;
+    }
+
+    private static Item createRuongCaiTrang() {
+        Item item = new Item(ItemName.RUONG_CAI_TRANG_THO_DAU_BAC);
+        item.quantity = 1;
+        item.options.add(new ItemOption(93, getDays()));
+        return item;
+    }
+
+    private static Item createNR57() {
+        var itemID = Utils.nextInt(ItemName.NGOC_RONG_5_SAO, ItemName.NGOC_RONG_7_SAO);
+        Item item = new Item(itemID);
+        item.setDefaultOptions();
+        return item;
+    }
+
+    private static Item createDeoLung() {
+        Item item = new Item(ItemName.LUOI_HAI_THAN_CHET);
+        item.quantity = 1;
+        item.options.add(new ItemOption(77, 10 + Utils.nextInt(6))); // HP 10-15%
+        item.options.add(new ItemOption(103, 10 + Utils.nextInt(6))); // KI 10-15%
+        item.options.add(new ItemOption(50, 10 + Utils.nextInt(6))); // SĐ 10-15%
+        item.options.add(new ItemOption(94, 5 + Utils.nextInt(6)));  // Giáp 5-10%
+        if (!Utils.isTrue(10, 100)) {
+            item.options.add(new ItemOption(93, getDays()));
+        }
+        return item;
+    }
+
+    private static Item createPetMeoHoangThuong() {
+        Item item = new Item(ItemName.PET_MEO_HOANG_THUONG);
+        item.quantity = 1;
+        item.options.add(new ItemOption(77, 10 + Utils.nextInt(6))); // HP 10-15%
+        item.options.add(new ItemOption(103, 10 + Utils.nextInt(6))); // KI 10-15%
+        item.options.add(new ItemOption(50, 10 + Utils.nextInt(6))); // SĐ 10-15%
+        if (!Utils.isTrue(10, 100)) {
+            item.options.add(new ItemOption(93, getDays()));
+        }
+        return item;
+    }
+
+    private static Item createDuiGaNuong() {
+        Item item = new Item(ItemName.DUI_GA_THOM_NGON);
+        item.quantity = 1;
+        return item;
+    }
+
+    private static Item createManhSuuTam() {
+        int[] ids = {
+            ItemName.MANH_KHUNG_LONG,
+            ItemName.MANH_LON_LOI,
+            ItemName.MANH_QUY_DAT,
+            ItemName.MANH_KHUNG_LONG_ME,
+            ItemName.MANH_LON_LOI_ME,
+            ItemName.MANH_QUY_DAT_ME,
+            ItemName.MANH_THAN_LAN_BAY,
+            ItemName.MANH_PHI_LONG,
+            ItemName.MANH_QUY_BAY,
+            ItemName.MANH_LINH_DOC_NHAN,
+            ItemName.MANH_LINH_DOC_NHAN2,
+            ItemName.MANH_SOI_XAM,
+            ItemName.MANH_TRUNG_UY_TRANG,
+            ItemName.MANH_NINJA_AO_TIM,
+            ItemName.MANH_TRUNG_UY_XANH_LO,
+            ItemName.MANH_DOC_NHAN
+        };
+        int id = ids[Utils.nextInt(ids.length)];
+        Item item = new Item(id);
+        item.setDefaultOptions();
+        return item;
+    }
+
+    private static Item createDaBaoVe() {
+        return new Item(ItemName.DA_BAO_VE_987);
+    }
+
+    private static Item createGold() {
+        Item item = new Item(ItemName.VANG);
+        item.quantity = 5_000_000 + Utils.nextInt(15_000_001);
+        return item;
+    }
+
+    private static Item createNR4() {
+        Item item = new Item(ItemName.NGOC_RONG_4_SAO);
         item.setDefaultOptions();
         return item;
     }
