@@ -163,11 +163,21 @@ public class Session implements ISession {
                 ArrayList<String> datas = new ArrayList<>();
                 File file = new File(folder);
                 addPath(datas, file);
-                sv.size(datas.size());
+
+                java.util.List<Message> batch = new java.util.ArrayList<>();
+                batch.add(sv.buildSizeMessage(datas.size()));
                 for (String path : datas) {
-                    sv.download(path);
+                    batch.add(sv.buildDownloadMessage(path));
+
+                    if (batch.size() >= 50) {
+                        sv.sendBatchMessages(batch);
+                        batch.clear();
+                    }
                 }
-                sv.downloadOk();
+                batch.add(sv.buildDownloadOkMessage());
+                if (!batch.isEmpty()) {
+                    sv.sendBatchMessages(batch);
+                }
                 sv.setLinkListServer();
             }
         } catch (IOException ex) {
@@ -272,6 +282,31 @@ public class Session implements ISession {
 
         dos.flush();
         m.cleanup();
+    }
+
+    private synchronized void doSendBatchMessage(List<Message> messages) throws IOException {
+        Message batch = new Message(Cmd.BATCH_MESSAGE);
+        FastDataOutputStream out = batch.writer();
+        out.writeShort(messages.size());
+
+        for (Message ms : messages) {
+            out.writeByte(ms.getCommand());
+            byte[] data = ms.getData();
+            if (data == null) {
+                out.writeInt(0);
+            } else {
+                out.writeInt(data.length);
+                out.write(data);
+            }
+        }
+        out.flush();
+
+        doSendMessage(batch);
+
+        batch.cleanup();
+        for (Message ms : messages) {
+            ms.cleanup();
+        }
     }
 
     private byte readKey(byte b) {
@@ -1083,8 +1118,28 @@ public class Session implements ISession {
         public void run() {
             try {
                 while (isConnected()) {
-                    Message m = sendingMessage.take();
-                    doSendMessage(m);
+                    Message first = sendingMessage.take();
+
+                    List<Message> batch = new ArrayList<>();
+                    batch.add(first);
+
+                    long start = System.currentTimeMillis();
+                    while (System.currentTimeMillis() - start < 5) {
+                        Message m = sendingMessage.poll();
+                        if (m == null) {
+                            break;
+                        }
+                        batch.add(m);
+                        if (batch.size() >= 100) {
+                            break;
+                        }
+                    }
+
+                    if (batch.size() == 1) {
+                        doSendMessage(first);
+                    } else {
+                        doSendBatchMessage(batch);
+                    }
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
