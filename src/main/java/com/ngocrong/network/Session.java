@@ -163,11 +163,21 @@ public class Session implements ISession {
                 ArrayList<String> datas = new ArrayList<>();
                 File file = new File(folder);
                 addPath(datas, file);
-                sv.size(datas.size());
+
+                java.util.List<Message> batch = new java.util.ArrayList<>();
+                batch.add(sv.buildSizeMessage(datas.size()));
                 for (String path : datas) {
-                    sv.download(path);
+                    batch.add(sv.buildDownloadMessage(path));
+
+                    if (batch.size() >= 50) {
+                        sv.sendBatchMessages(batch);
+                        batch.clear();
+                    }
                 }
-                sv.downloadOk();
+                batch.add(sv.buildDownloadOkMessage());
+                if (!batch.isEmpty()) {
+                    sv.sendBatchMessages(batch);
+                }
                 sv.setLinkListServer();
             }
         } catch (IOException ex) {
