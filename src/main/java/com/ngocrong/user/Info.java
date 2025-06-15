@@ -728,11 +728,11 @@ public class Info {
             this.damageFull += Utils.percentOf(this.damageFull, 5);
         }
         if (_player.isUocThienMenh2()) {
-            this.damageFull += Utils.percentOf(this.damageFull, 15);
+            this.damageFull += Utils.percentOf(this.damageFull, 10);
         }
         if (_player.isUocThienMenh4()) {
-            this.hpFullTemp += Utils.percentOf(this.hpFullTemp, 15);
-            this.mpFullTemp += Utils.percentOf(this.mpFullTemp, 15);
+            this.hpFullTemp += Utils.percentOf(this.hpFullTemp, 10);
+            this.mpFullTemp += Utils.percentOf(this.mpFullTemp, 10);
         }
         if (_player.sachdacbiet[2]) {
             this.damageFull += Utils.percentOf(this.damageFull, 5);

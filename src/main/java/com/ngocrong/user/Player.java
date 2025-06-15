@@ -275,7 +275,8 @@ public class Player {
     public boolean[] sachdacbiet = new boolean[8];
 
     // VP SK TET
-    private boolean isXoai, isDudu, isMamTraiCay, isMangCau, isDuaXanh, isTraiSung;
+    private boolean isXoai, isDudu, isMamTraiCay, isMangCau, isDuaXanh, isTraiSung,
+            isTomChienGion, isDuiGaThomNgon;
     // ARRAY LIST
     public ArrayList<Skill> skills;
     public ArrayList<EffectChar> effects;
@@ -5537,12 +5538,6 @@ public class Player {
                     menus.add(new KeyValue(CMDMenu.MOC_500_VQTD, "Phần thưởng\nmốc 500"));
                 } else if (rewardMoc < 1000) {
                     menus.add(new KeyValue(CMDMenu.MOC_1000_VQTD, "Phần thưởng\nmốc 1000"));
-                } else if (rewardMoc < 2000) {
-                    menus.add(new KeyValue(CMDMenu.MOC_2000_VQTD, "Phần thưởng\nmốc 2000"));
-                } else if (rewardMoc < 3000) {
-                    menus.add(new KeyValue(CMDMenu.MOC_3000_VQTD, "Phần thưởng\nmốc 3000"));
-                } else if (rewardMoc < 5000) {
-                    menus.add(new KeyValue(CMDMenu.MOC_5000_VQTD, "Phần thưởng\nmốc 5000"));
                 }
                 // else if (rewardMoc < 7000) {
                 // menus.add(new KeyValue(CMDMenu.MOC_7000_VQTD, "Phần thưởng\nmốc 7000"));
@@ -5588,27 +5583,6 @@ public class Player {
                     return;
                 }
                 getRewardMoc(1000);
-                break;
-            case CMDMenu.MOC_2000_VQTD:
-                if (rewardMoc >= 2000) {
-                    service.serverMessage(" Bạn đã nhận thưởng mốc này rồi ");
-                    return;
-                }
-                getRewardMoc(2000);
-                break;
-            case CMDMenu.MOC_3000_VQTD:
-                if (rewardMoc >= 3000) {
-                    service.serverMessage(" Bạn đã nhận thưởng mốc này rồi ");
-                    return;
-                }
-                getRewardMoc(3000);
-                break;
-            case CMDMenu.MOC_5000_VQTD:
-                if (rewardMoc >= 5000) {
-                    service.serverMessage(" Bạn đã nhận thưởng mốc này rồi ");
-                    return;
-                }
-                getRewardMoc(5000);
                 break;
             // case CMDMenu.MOC_7000_VQTD:
             // if (rewardMoc >= 7000) {
@@ -11441,6 +11415,12 @@ public class Player {
                     case ItemTimeName.QUA_HONG_DAO:
                         setQuaHongDao(true);
                         break;
+                    case ItemTimeName.TOM_CHIEN_GION:
+                        setTomChienGion(true);
+                        break;
+                    case ItemTimeName.DUI_GA_THOM_NGON:
+                        setDuiGaThomNgon(true);
+                        break;
                 }
             }
         }
@@ -11809,6 +11789,14 @@ public class Player {
                 break;
             case ItemName.QUA_HONG_DAO:
                 itemTime = new ItemTime(ItemTimeName.QUA_HONG_DAO, item.template.iconID, 30 * 60, true);
+                isUpdate = true;
+                break;
+            case ItemName.TOM_CHIEN_GION:
+                itemTime = new ItemTime(ItemTimeName.TOM_CHIEN_GION, item.template.iconID, 30 * 60, true);
+                isUpdate = true;
+                break;
+            case ItemName.DUI_GA_THOM_NGON:
+                itemTime = new ItemTime(ItemTimeName.DUI_GA_THOM_NGON, item.template.iconID, 10 * 60, true);
                 isUpdate = true;
                 break;
             case ItemName.SACH_DAC_BIET:
@@ -13228,15 +13216,11 @@ public class Player {
                     return;
                 }
                 menus.clear();
-                menus.add(new KeyValue(CMDMenu.UOC_RONG_THIEN_MENH_1, "Tăng\n100% TNSM\nSP + Đệ"));
-                menus.add(new KeyValue(CMDMenu.UOC_RONG_THIEN_MENH_2, "Tăng\n15%\nSức Đánh"));
-                menus.add(new KeyValue(CMDMenu.UOC_RONG_THIEN_MENH_3, "Ngẫu nhiên\n1-3\nĐá Bảo Vệ"));
-                menus.add(new KeyValue(CMDMenu.UOC_RONG_THIEN_MENH_4, "Tăng\n15%\nHP,KI"));
-                menus.add(new KeyValue(CMDMenu.UOC_RONG_THIEN_MENH_5, "Tăng\n10% HP,KI,SĐ\nĐệ Tử"));
-                menus.add(new KeyValue(CMDMenu.UOC_RONG_THIEN_MENH_6, "x1 Mảnh Đội Trưởng Vàng"));
+                menus.add(new KeyValue(CMDMenu.UOC_RONG_THIEN_MENH_1, "Tăng\n10% HP,KI\n30p"));
+                menus.add(new KeyValue(CMDMenu.UOC_RONG_THIEN_MENH_2, "Tăng\n10% SĐ\n30p"));
                 menus.add(new KeyValue(CMDMenu.CANCEL, "Đóng"));
                 service.openUIConfirm(NpcName.CON_MEO,
-                        "Hãy chọn điều ước bạn mong muốn\nMỗi điều ước sẽ có tác dụng trong 20 phút", getPetAvatar(),
+                        "Hãy chọn điều ước bạn mong muốn\nMỗi điều ước sẽ có tác dụng trong 30 phút", getPetAvatar(),
                         menus);
                 break;
             case ItemName.NGOC_RONG_LOC_PHAT_1_SAO:
@@ -15272,6 +15256,22 @@ public class Player {
                                         zone.service.playerLoadBody(this);
                                     }
                                     break;
+                                case ItemTimeName.TOM_CHIEN_GION:
+                                    setTomChienGion(false);
+                                    info.setInfo();
+                                    service.loadPoint();
+                                    if (zone != null) {
+                                        zone.service.playerLoadBody(this);
+                                    }
+                                    break;
+                                case ItemTimeName.DUI_GA_THOM_NGON:
+                                    setDuiGaThomNgon(false);
+                                    info.setInfo();
+                                    service.loadPoint();
+                                    if (zone != null) {
+                                        zone.service.playerLoadBody(this);
+                                    }
+                                    break;
                             }
                             listRemove.add(item);
                         }
@@ -15340,6 +15340,9 @@ public class Player {
                 if (disciple.master.isPhieuX2TNSM) {
                     exp += Utils.percentOf(exp, 20);
                 }
+                if (disciple.master.isTomChienGion) {
+                    exp *= 2;
+                }
                 if (disciple.master.sachdacbiet[0]) {
                     exp += Utils.percentOf(exp, 100);
                 }
@@ -15398,6 +15401,12 @@ public class Player {
             }
             if (isPhieuX2TNSM) {
                 exp += Utils.percentOf(exp, 20);
+            }
+            if (isTomChienGion) {
+                exp *= 2;
+            }
+            if (isDuiGaThomNgon) {
+                exp *= 2;
             }
             if (isMamTraiCay) {
                 exp += Utils.percentOf(exp, 20);
@@ -17630,32 +17639,39 @@ public class Player {
 
                 rewardMoc = 100;
 
-                // Cải trang Ác Thần Huỷ Diệt 24% HP,KI,SĐ vĩnh viễn
-                item = new Item(2255); // Ác thần hủy diệt
+                // 3 Sao pha lê mỗi loại
+                for (int id = ItemName.SAO_PHA_LE_DAME_TO_HP; id <= ItemName.SAO_PHA_LE_TNSM; id++) {
+                    item = new Item(id);
+                    item.quantity = 3;
+                    item.setDefaultOptions();
+                    addItem(item);
+                }
+
+                // 5 thức ăn mỗi loại
+                int[] foods = {ItemName.DUA_XANH, ItemName.DU_DU, ItemName.MANG_CAU,
+                        ItemName.TRAI_SUNG, ItemName.MAM_TRAI_CAY, ItemName.XOAI_CHIN};
+                for (int f : foods) {
+                    item = new Item(f);
+                    item.quantity = 5;
+                    item.setDefaultOptions();
+                    addItem(item);
+                }
+
+                // Các vật phẩm hỗ trợ
+                item = new Item(ItemName.CUONG_NO);
                 item.quantity = 1;
-                item.options.add(new ItemOption(77, 24)); // 24% HP
-                item.options.add(new ItemOption(103, 24)); // 24% KI
-                item.options.add(new ItemOption(50, 24)); // 24% SĐ
                 addItem(item);
 
-                // x3 item cuồng nộ
-                item = new Item(384);
-                item.quantity = 3;
+                item = new Item(ItemName.BO_HUYET);
+                item.quantity = 1;
                 addItem(item);
 
-                // x3 item bổ huyết
-                item = new Item(381);
-                item.quantity = 3;
+                item = new Item(ItemName.BO_KHI);
+                item.quantity = 1;
                 addItem(item);
 
-                // x3 item giáp xên
-                item = new Item(382);
-                item.quantity = 3;
-                addItem(item);
-
-                // x3 item bổ khí
-                item = new Item(383);
-                item.quantity = 3;
+                item = new Item(ItemName.GIAP_XEN_BO_HUNG);
+                item.quantity = 1;
                 addItem(item);
 
                 this.service
@@ -17680,18 +17696,24 @@ public class Player {
 
                 rewardMoc = 200;
 
-                // Thú cưỡi xe ngựa lộng lẫy 10% HP,KI,SĐ hsd 3 ngày
-                item = new Item(2257); // Xe ngựa lộng lẫy
+                // Cá mập siêu việt 8% HP KI SĐ
+                item = new Item(ItemName.CA_MAP_SIEU_VIET);
                 item.quantity = 1;
-                item.options.add(new ItemOption(77, 10)); // 10% HP
-                item.options.add(new ItemOption(103, 10)); // 10% KI
-                item.options.add(new ItemOption(50, 10)); // 10% SĐ
-                item.options.add(new ItemOption(93, 3)); // HSD 3 ngày
+                item.options.add(new ItemOption(77, 8));
+                item.options.add(new ItemOption(103, 8));
+                item.options.add(new ItemOption(50, 8));
                 addItem(item);
 
-                // x2 Nước Ma Thuật
-                item = new Item(2243); // Nước Ma Thuật
-                item.quantity = 2;
+                item = new Item(ItemName.CUONG_NO_2);
+                item.quantity = 1;
+                addItem(item);
+
+                item = new Item(ItemName.BO_HUYET_2);
+                item.quantity = 1;
+                addItem(item);
+
+                item = new Item(ItemName.BO_KHI_2);
+                item.quantity = 1;
                 addItem(item);
 
                 this.service
@@ -17716,31 +17738,23 @@ public class Player {
 
                 rewardMoc = 500;
 
-                // Đeo Lưng Trượng Huyết Nguyệt 12% HP,KI,SĐ 15% chí mạng
-                item = new Item(2245); // Trượng Huyết Nguyệt
+                // Danh hiệu Thần thoại 8% HP KI SĐ
+                item = new Item(ItemName.DANH_HIEU_THAN_THOAI);
                 item.quantity = 1;
-                item.options.add(new ItemOption(77, 12)); // 12% HP
-                item.options.add(new ItemOption(103, 12)); // 12% KI
-                item.options.add(new ItemOption(50, 12)); // 12% SĐ
-                item.options.add(new ItemOption(14, 15)); // 15% chí mạng
+                item.options.add(new ItemOption(77, 8));
+                item.options.add(new ItemOption(103, 8));
+                item.options.add(new ItemOption(50, 8));
                 addItem(item);
 
-                // x4 Nước Ma Thuật
-                item = new Item(2243); // Nước Ma Thuật
-                item.quantity = 4;
-                addItem(item);
-
-                // Cải trang Bill Bé Nhỏ 30% HP,KI,SĐ 15% Sát thương laze,Tự Sát, SĐCM 3 ngày
-                item = new Item(2244); // Bill Bé Nhỏ
-                item.quantity = 1;
-                item.options.add(new ItemOption(77, 30)); // 30% HP
-                item.options.add(new ItemOption(103, 30)); // 30% KI
-                item.options.add(new ItemOption(50, 30)); // 30% SĐ
-                item.options.add(new ItemOption(197, 15)); // 15% Sát thương laze
-                item.options.add(new ItemOption(196, 15)); // 15% Sát thương tự sát
-                item.options.add(new ItemOption(5, 15)); // 15% SĐCM
-                item.options.add(new ItemOption(93, 3)); // HSD 3 ngày
-                addItem(item);
+                // 3 bộ ngọc rồng Thiên mệnh
+                for (int i = 0; i < 3; i++) {
+                    for (int id = ItemName.NGOC_RONG_THIEN_MENH_1_SAO; id <= ItemName.NGOC_RONG_THIEN_MENH_7_SAO; id++) {
+                        item = new Item(id);
+                        item.quantity = 1;
+                        item.setDefaultOptions();
+                        addItem(item);
+                    }
+                }
 
                 this.service
                         .serverMessage("Bạn vừa nhận được phần thưởng từ mốc 500, hãy kiểm tra hành trang của mình");
@@ -17764,159 +17778,44 @@ public class Player {
 
                 rewardMoc = 1000;
 
-                // Danh hiệu Bất Bại 5% HP,KI,SĐ
-                item = new Item(2260); // Danh hiệu Bất Bại
+                // Cải trang Siêu Thần
+                item = new Item(ItemName.CAI_TRANG_SIEU_THAN);
                 item.quantity = 1;
-                item.options.add(new ItemOption(77, 5)); // 5% HP
-                item.options.add(new ItemOption(103, 5)); // 5% KI
-                item.options.add(new ItemOption(50, 5)); // 5% SĐ
+                item.options.add(new ItemOption(77, 20));
+                item.options.add(new ItemOption(103, 20));
+                item.options.add(new ItemOption(50, 20));
+                item.options.add(new ItemOption(47, 450));
+                item.options.add(new ItemOption(33, 0));
                 addItem(item);
 
-                // Ngọc Bội 5% HP,KI,SĐ
-                item = new Item(2151); // Ngọc Bội
+                // Danh hiệu Thần thoại 8% HP KI SĐ
+                item = new Item(ItemName.DANH_HIEU_THAN_THOAI);
                 item.quantity = 1;
-                item.options.add(new ItemOption(77, 5)); // 5% HP
-                item.options.add(new ItemOption(103, 5)); // 5% KI
-                item.options.add(new ItemOption(50, 5)); // 5% SĐ
+                item.options.add(new ItemOption(77, 8));
+                item.options.add(new ItemOption(103, 8));
+                item.options.add(new ItemOption(50, 8));
                 addItem(item);
 
-                // x5 Nước Ma Thuật
-                item = new Item(2243); // Nước Ma Thuật
-                item.quantity = 5;
+                // 7 bộ Ngọc Rồng Thần Long
+                for (int i = 0; i < 7; i++) {
+                    item = new Item(ItemName.NGOC_THAN_LONG);
+                    item.quantity = 1;
+                    item.setDefaultOptions();
+                    addItem(item);
+                }
+
+                // Hào quang 3% HP KI SĐ
+                item = new Item(ItemName.HAO_QUANG_2230);
+                item.quantity = 1;
+                item.options.add(new ItemOption(77, 3));
+                item.options.add(new ItemOption(103, 3));
+                item.options.add(new ItemOption(50, 3));
                 addItem(item);
 
                 this.service
                         .serverMessage("Bạn vừa nhận được phần thưởng từ mốc 1000, hãy kiểm tra hành trang của mình");
                 break;
 
-            case 2000:
-                if (numberVongQuay < 2000) {
-                    this.service.serverMessage(
-                            "Bạn còn thiếu " + (2000 - numberVongQuay) + " lượt để nhận thưởng mốc này\n");
-                    return;
-                }
-
-                try {
-                    GameRepository.getInstance().eventVQTD.setReward(this.id, 2000);
-                } catch (Exception e) {
-                    com.ngocrong.NQMP.UtilsNQMP.logError(e);
-                    this.service.serverMessage("Có lỗi khi nhận quà, vui lòng liên hệ admin để được hỗ trợ");
-                    logger.error("nhan thuong loi " + this.name, e);
-                    return;
-                }
-
-                rewardMoc = 2000;
-
-                // Thú cưỡi Cá chép thần kỳ 8% HP,KI,SĐ
-                item = new Item(2256); // Cá Chép Thần Kỳ
-                item.quantity = 1;
-                item.options.add(new ItemOption(77, 8)); // 8% HP
-                item.options.add(new ItemOption(103, 8)); // 8% KI
-                item.options.add(new ItemOption(50, 8)); // 8% SĐ
-                addItem(item);
-
-                // Cải trang Saiyan Cuồng Nộ : 30% HP,KI,SĐ, 15% giáp
-                item = new Item(2253); // Saiyan Cuồng Nộ
-                item.quantity = 1;
-                item.options.add(new ItemOption(77, 30)); // 30% HP
-                item.options.add(new ItemOption(103, 30)); // 30% KI
-                item.options.add(new ItemOption(50, 30)); // 30% SĐ
-                item.options.add(new ItemOption(94, 15)); // 15% giáp
-                addItem(item);
-
-                this.service
-                        .serverMessage("Bạn vừa nhận được phần thưởng từ mốc 2000, hãy kiểm tra hành trang của mình");
-                break;
-
-            case 3000:
-                if (numberVongQuay < 3000) {
-                    this.service.serverMessage(
-                            "Bạn còn thiếu " + (3000 - numberVongQuay) + " lượt để nhận thưởng mốc này\n");
-                    return;
-                }
-
-                try {
-                    GameRepository.getInstance().eventVQTD.setReward(this.id, 3000);
-                } catch (Exception e) {
-                    com.ngocrong.NQMP.UtilsNQMP.logError(e);
-                    this.service.serverMessage("Có lỗi khi nhận quà, vui lòng liên hệ admin để được hỗ trợ");
-                    logger.error("nhan thuong loi " + this.name, e);
-                    return;
-                }
-
-                rewardMoc = 3000;
-
-                // Cải trang Thần Lửa Huỷ Diệt 30% HP,KI,SĐ, 15% Laze, Tự Sát, SĐCM
-                item = new Item(2254); // Thần lửa hủy diệt
-                item.quantity = 1;
-                item.options.add(new ItemOption(77, 35)); // 30% HP
-                item.options.add(new ItemOption(103, 35)); // 30% KI
-                item.options.add(new ItemOption(50, 35)); // 30% SĐ
-                item.options.add(new ItemOption(197, 20)); // 15% Sát thương laze
-                item.options.add(new ItemOption(196, 20)); // 15% Sát thương tự sát
-                item.options.add(new ItemOption(5, 20)); // 15% SĐCM
-                addItem(item);
-
-                // x10 nước ma thuật
-                item = new Item(2243); // Nước Ma Thuật
-                item.quantity = 10;
-                addItem(item);
-
-                this.service
-                        .serverMessage("Bạn vừa nhận được phần thưởng từ mốc 3000, hãy kiểm tra hành trang của mình");
-                break;
-
-            case 5000:
-                if (numberVongQuay < 5000) {
-                    this.service.serverMessage(
-                            "Bạn còn thiếu " + (5000 - numberVongQuay) + " lượt để nhận thưởng mốc này\n");
-                    return;
-                }
-
-                try {
-                    GameRepository.getInstance().eventVQTD.setReward(this.id, 5000);
-                } catch (Exception e) {
-                    com.ngocrong.NQMP.UtilsNQMP.logError(e);
-                    this.service.serverMessage("Có lỗi khi nhận quà, vui lòng liên hệ admin để được hỗ trợ");
-                    logger.error("nhan thuong loi " + this.name, e);
-                    return;
-                }
-
-                rewardMoc = 5000;
-
-                // Linh thú 15% HP,KI,SĐ 3% Giáp, SĐCM, Laze, Sát thương tự sát
-                item = new Item(2258); // Tiểu miêu linh
-                item.quantity = 1;
-                item.options.add(new ItemOption(77, 15)); // 15% HP
-                item.options.add(new ItemOption(103, 15)); // 15% KI
-                item.options.add(new ItemOption(50, 15)); // 15% SĐ
-                item.options.add(new ItemOption(94, 3)); // 3% Giáp
-                item.options.add(new ItemOption(5, 3)); // 3% SĐCM
-                item.options.add(new ItemOption(197, 3)); // 3% Sát thương laze
-                item.options.add(new ItemOption(196, 3)); // 3% Sát thương tự sát
-                addItem(item);
-
-                // x30 item cấp 2 (giả sử là vật phẩm tiêu thụ cấp 2)
-                item = new Item(1021); // Giả sử ID vật phẩm tiêu thụ cấp 2 là 385
-                item.quantity = 30;
-                addItem(item);
-
-                item = new Item(1022); // Giả sử ID vật phẩm tiêu thụ cấp 2 là 385
-                item.quantity = 30;
-                addItem(item);
-
-                item = new Item(1023); // Giả sử ID vật phẩm tiêu thụ cấp 2 là 385
-                item.quantity = 30;
-                addItem(item);
-
-                // x30 nước ma thuật
-                item = new Item(2243); // Nước Ma Thuật
-                item.quantity = 30;
-                addItem(item);
-
-                this.service
-                        .serverMessage("Bạn vừa nhận được phần thưởng từ mốc 5000, hãy kiểm tra hành trang của mình");
-                break;
 
             default:
                 this.service.serverMessage("Bạn chưa đủ lượt quay để nhận thưởng");
@@ -18709,43 +18608,19 @@ public class Player {
     }
 
     public void uocRongThienMenh(int type) {
-        if (this.isBagFull() && (type == 3 || type == 6)) {
-            this.service.serverMessage(Language.ME_BAG_FULL);
-            return;
-        }
         ItemTime item = null;
-        Item it = null;
         switch (type) {
             case 1:
-                isUocThienMenh1 = true;
-                item = new ItemTime(ItemTimeName.UOC_THIEN_MENH_1, 15256, 1200, true);
+                isUocThienMenh4 = true;
+                item = new ItemTime(ItemTimeName.UOC_THIEN_MENH_4, 15259, 1800, true);
                 break;
             case 2:
                 isUocThienMenh2 = true;
-                item = new ItemTime(ItemTimeName.UOC_THIEN_MENH_2, 15257, 1200, true);
-                break;
-            case 3:
-                it = new Item(ItemName.DA_BAO_VE_987);
-                it.quantity = Utils.nextInt(1, 3);
-                break;
-            case 4:
-                isUocThienMenh4 = true;
-                item = new ItemTime(ItemTimeName.UOC_THIEN_MENH_4, 15259, 1200, true);
-                break;
-            case 5:
-                if (this.myDisciple == null) {
-                    this.service.sendThongBao("Bạn chưa có đệ tử");
-                    return;
-                }
-                isUocThienMenh5 = true;
-                item = new ItemTime(ItemTimeName.UOC_THIEN_MENH_5, 15260, 1200, true);
-                break;
-            case 6:
-                it = new Item(ItemName.MANH_DOI_TRUONG_VANG_956);
-                it.quantity = 1;
+                item = new ItemTime(ItemTimeName.UOC_THIEN_MENH_2, 15257, 1800, true);
                 break;
             default:
                 this.service.sendThongBao("Có lỗi xảy ra, vui lòng thử lại sau");
+                return;
         }
         this.removeItem(getIndexBagById(ItemName.NGOC_RONG_THIEN_MENH_1_SAO), 1);
         this.removeItem(getIndexBagById(ItemName.NGOC_RONG_THIEN_MENH_2_SAO), 1);
@@ -18754,18 +18629,13 @@ public class Player {
         this.removeItem(getIndexBagById(ItemName.NGOC_RONG_THIEN_MENH_5_SAO), 1);
         this.removeItem(getIndexBagById(ItemName.NGOC_RONG_THIEN_MENH_6_SAO), 1);
         this.removeItem(getIndexBagById(ItemName.NGOC_RONG_THIEN_MENH_7_SAO), 1);
-        if (type == 3 || type == 6) {
-            addItem(it);
-            this.service.sendThongBao("Bạn vừa nhận được x " + it.quantity + " " + it.template.name);
-        } else {
-            addItemTime(item);
-            if (myDisciple != null) {
-                myDisciple.info.setInfo();
-            }
-            info.setInfo();
-            service.loadPoint();
-            this.service.sendThongBao("Điều ước của ngươi đã thành hiện thực.");
+        addItemTime(item);
+        if (myDisciple != null) {
+            myDisciple.info.setInfo();
         }
+        info.setInfo();
+        service.loadPoint();
+        this.service.sendThongBao("Điều ước của ngươi đã thành hiện thực.");
     }
 
     public void uocRongLocPhat(int type) {
