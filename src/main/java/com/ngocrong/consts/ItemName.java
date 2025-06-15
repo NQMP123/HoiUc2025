@@ -1144,5 +1144,5 @@ public class ItemName {
     public static final int DUI_GA_THOM_NGON = 2314;
     public static final int CA_MAP_SIEU_VIET = 2315;
     public static final int DANH_HIEU_THAN_THOAI = 2316;
-
+    public static final int HAO_QUANG_2230 = 2230;
 }
