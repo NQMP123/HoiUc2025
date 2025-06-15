@@ -52,6 +52,10 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                     {
                         Service.gI().openMenu(Npc);
                         Service.gI().confirmMenu((short)Npc, (sbyte)Index);
+                        if (Npc == 38)
+                        {
+                            Service.gI().transportNow();
+                        }
                     }
                     else
                     {
@@ -65,6 +69,7 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                             currIndex++;
                             currTime = num;
                             Service.gI().openMenu(Npc);
+
                         }
                         else
                         {

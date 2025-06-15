@@ -15,6 +15,7 @@ public class Controller : IMessageHandler
     public Message messWait;
 
     public static bool isLoadingData;
+    public static int count_Batch , max_Batch;
 
     public static bool isConnectOK;
 
@@ -206,6 +207,7 @@ public class Controller : IMessageHandler
                 }
                 case 115:
                     {
+                        
                         short countBatch = msg.reader().readShort();
                         for (int i = 0; i < countBatch; i++)
                         {
@@ -219,7 +221,7 @@ public class Controller : IMessageHandler
                                 msg.reader().readFully(ref data);
                             }
                             Message sub = new Message(cmd, data, size);
-                            Session_ME.enqueueMessage(sub);
+                            onMessage(sub);
                         }
                         break;
                     }
@@ -1231,7 +1233,7 @@ public class Controller : IMessageHandler
                         }
                         bool flag5 = true;
                         sbyte b25 = msg.reader().readByte();
-                        Res.outz("action = " + b25);
+                        Debug.LogError("action = " + b25);
                         if (b25 == 0)
                         {
                             int num42 = msg.reader().readInt();

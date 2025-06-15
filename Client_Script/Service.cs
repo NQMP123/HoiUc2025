@@ -2569,7 +2569,7 @@ public class Service
 
     public void getResource(sbyte action, MyVector vResourceIndex)
     {
-        Res.outz("request resource action= " + action);
+       Debug.LogError("request resource action= " + action);
         Message message = null;
         try
         {
