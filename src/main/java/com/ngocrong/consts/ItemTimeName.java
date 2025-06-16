@@ -85,5 +85,8 @@ public class ItemTimeName {
     // Custom food buffs
     public static final byte TOM_CHIEN_GION = 82;
     public static final byte DUI_GA_THOM_NGON = 83;
-
+    // 
+    public static final byte CUA_RANG_ME = 84;
+    public static final byte BACH_TUOC_NUONG = 85;
+    public static final byte TOM_TAM_BOT_CHIEN_XU = 86;
 }

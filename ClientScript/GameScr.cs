@@ -4865,7 +4865,7 @@ public class GameScr : mScreen, IChatable
             GameCanvas.debug("PA1", 1);
             if (isFreez || (isUseFreez && ChatPopup.currChatPopup == null))
             {
-                dem++;
+                dem+=3;
                 if ((dem < 30 && dem >= 0 && GameCanvas.gameTick % 4 == 0) || (dem >= 30 && dem <= 50 && GameCanvas.gameTick % 3 == 0) || dem > 50)
                 {
                     g.setColor(16777215);
@@ -5205,7 +5205,7 @@ public class GameScr : mScreen, IChatable
                         g.setColor(16777215);
                         g.fillRect(0, 0, GameCanvas.w, GameCanvas.h);
                     }
-                    if (Char.myCharz().tFusion >= 100)
+                    if (Char.myCharz().tFusion >= 20)
                     {
                         Char.myCharz().fusionComplete();
                     }
@@ -5228,7 +5228,7 @@ public class GameScr : mScreen, IChatable
                             g.setColor(16777215);
                             g.fillRect(0, 0, GameCanvas.w, GameCanvas.h);
                         }
-                        if (char6.tFusion >= 100)
+                        if (char6.tFusion >= 20)
                         {
                             char6.fusionComplete();
                         }

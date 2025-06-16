@@ -628,10 +628,13 @@ public class Info {
                 this.damageFull += Utils.percentOf(this.damageFull, 10);
             }
             if (this._player.exitsItemTime(ItemTimeName.BANH_DONUT)) {
+                this.mpFullTemp += Utils.percentOf(this.mpFullTemp, 5);
+            }
+            if (this._player.exitsItemTime(ItemTimeName.BANH_KEM_NHO)) {
                 this.hpFullTemp += Utils.percentOf(this.hpFullTemp, 5);
             }
-            if (this._player.exitsItemTime(ItemTimeName.BANH_KEM_CHOCOLATE)) {
-                this.mpFullTemp += Utils.percentOf(this.mpFullTemp, 5);
+            if (this._player.exitsItemTime(ItemTimeName.BANH_TRAI_CAY)) {
+                this.options[94] += 5;
             }
             if (this._player.exitsItemTime(ItemTimeName.BANH_SEN_HONG)) {
                 this.hpFullTemp += Utils.percentOf(this.hpFullTemp, 10);
@@ -653,6 +656,16 @@ public class Info {
                 this.options[224] += 3;
                 this.options[225] += 3;
             }
+            if (this._player.exitsItemTime(ItemTimeName.CUA_RANG_ME)) {
+                this.damageFull += Utils.percentOf(this.damageFull, 10);
+            }
+            if (this._player.exitsItemTime(ItemTimeName.BACH_TUOC_NUONG)) {
+                this.hpFullTemp += Utils.percentOf(this.hpFullTemp, 10);
+            }
+            if (this._player.exitsItemTime(ItemTimeName.TOM_TAM_BOT_CHIEN_XU)) {
+                this.mpFullTemp += Utils.percentOf(this.mpFullTemp, 10);
+            }
+
         }
         if (_player.clan != null) {
             ClanMember mem = _player.clan.getMember(_player.id);

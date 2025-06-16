@@ -920,6 +920,7 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                     if ((wayPointMapLeft[0] != 0 || 1 == 0) && (wayPointMapLeft[1] != 0 || 1 == 0))
                     {
                         TeleportTo(wayPointMapLeft[0], wayPointMapLeft[1]);
+                        Service.gI().requestChangeMap();
                     }
                     else
                     {
@@ -930,7 +931,8 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                     if ((wayPointMapRight[0] != 0 || 1 == 0) && (wayPointMapRight[1] != 0 || 1 == 0))
                     {
                         TeleportTo(wayPointMapRight[0], wayPointMapRight[1]);
-                        
+                        Service.gI().requestChangeMap();
+
                     }
                     else
                     {
@@ -947,6 +949,7 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                             Service.gI().getMapOffline();
                             return;
                         }
+                        Service.gI().requestChangeMap();
                     }
                     else
                     {
@@ -954,7 +957,7 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                     }
                     break;
             }
-            Service.gI().requestChangeMap();
+           
         }
 
         public bool method_33()

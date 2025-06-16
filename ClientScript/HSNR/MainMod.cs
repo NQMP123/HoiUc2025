@@ -208,7 +208,7 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                     for (int i = 0; i < Char.myCharz().arrItemBag.Length; i++)
                     {
                         Item item = Char.myCharz().arrItemBag[i];
-                        if (item != null && (item.template.id == 194 || item.template.id == 193))
+                        if (item != null && (item.template.id == 194 || item.template.id == 193 || item.template.id == 2309))
                         {
                             Service.gI().useItem(0, 1, (sbyte)item.indexUI, -1);
                             break;
@@ -259,12 +259,20 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                         Char @char = (Char)GameScr.vCharInMap.elementAt(j);
                         if (!@char.cName.Equals("") && isBoss(@char) && (Char.myCharz().charFocus == null || (Char.myCharz().charFocus != null && Char.myCharz().charFocus.cName != @char.cName)))
                         {
+                            resetFocus();
                             Char.myCharz().charFocus = @char;
                             break;
                         }
                     }
                     break;
             }
+        }
+        public static void resetFocus()
+        {
+            Char.myCharz().mobFocus = null;
+            Char.myCharz().npcFocus = null;
+            Char.myCharz().itemFocus = null;
+            Char.myCharz().charFocus = null;
         }
         public static bool isBoss(Char ch)
         {

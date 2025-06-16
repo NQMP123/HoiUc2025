@@ -409,7 +409,7 @@ public class Mob {
         }
 //        EventTet2025.mobReward(_c);
 //        EventDaNangCap.MobReward(_c);
-        Event1.mobReward(_c);
+//        Event1.mobReward(_c);
         SummerBeachEvent.mobReward(_c);
 //        else if (this.zone.map.isNormalMap()) {
         ////            int rd = Utils.nextInt(50);
@@ -463,7 +463,7 @@ public class Mob {
             }
             if (zone.map.mapID == 156 || zone.map.mapID == 157 || zone.map.mapID == 158) {
                 int rd = Utils.nextInt(100);
-                if (rd == 0 || (_c.exitsItemTime(ItemTimeName.KEO_MUT_XOAN) && rd < 3)) {
+                if (rd == 0) {
                     ItemMap food = new ItemMap(zone.autoIncrease++);
                     item = new Item(ItemName.MANH_VO_BONG_TAI);
                     item.addItemOption(new ItemOption(30, 0));

@@ -771,6 +771,11 @@ public class Player {
                 list.add(new KeyValue(MapName.SIEU_THI, "Siêu Thị", "Xay da"));
             }
         }
+        if (mapID != MapName.HANH_TINH_BILL) {
+            if (checkCanEnter(MapName.HANH_TINH_BILL)) {
+                list.add(new KeyValue(MapName.HANH_TINH_BILL, "Hành tinh Bill", "Hành tinh Bill"));
+            }
+        }
         listMapTransport = list;
         setCommandTransport((byte) 0);
     }
@@ -3849,13 +3854,14 @@ public class Player {
                 switch (npcId) {
 
                     case NpcName.DAISHINKAN:
-                        if (zone.map.mapID == 178 || zone.map.mapID == 179 || zone.map.mapID == 180) {
+//                        if (zone.map.mapID == 178 || zone.map.mapID == 179 || zone.map.mapID == 180) {
+                        if (false) {
                             menus.add(new KeyValue(1163, "Shop hỗ trợ"));
                             menus.add(new KeyValue(1164, "Về Đảo Kame"));
                         } else {
-                            menus.add(new KeyValue(1158, "Thiên Đường Mộng Mơ "));
+//                            menus.add(new KeyValue(1158, "Thiên Đường Mộng Mơ "));
                             menus.add(new KeyValue(1161, "Hành Tinh Bill"));
-                            menus.add(new KeyValue(1156, "Di chuyển\ntới Map\nsự kiện"));
+//                            menus.add(new KeyValue(1156, "Di chuyển\ntới Map\nsự kiện"));
 
                         }
                         service.openUIConfirm(npc.templateId, "Ta có thể giúp gì cho ngươi? \n " // + "Bạn có thể thu
@@ -3884,9 +3890,9 @@ public class Player {
                         // menus.add(new KeyValue(1145, "Đổi bình nước"));
                         // menus.add(new KeyValue(1139, "Đổi Hộp Quà 2025"));
                         // menus.add(new KeyValue(1140, "Vòng quay tết 2025"));
-                        menus.add(new KeyValue(1152, "Đổi Bó hoa sắc màu"));
-                        menus.add(new KeyValue(1153, "Đổi Bó hoa sum vầy"));
-                        menus.add(new KeyValue(1155, "Đổi Hộp Mù Bé Ba"));
+//                        menus.add(new KeyValue(1152, "Đổi Bó hoa sắc màu"));
+//                        menus.add(new KeyValue(1153, "Đổi Bó hoa sum vầy"));
+//                        menus.add(new KeyValue(1155, "Đổi Hộp Mù Bé Ba"));
 
                         service.openUIConfirm(npc.templateId, "Ta có thể giúp gì cho ngươi? \n " // + "Bạn có thể thu
                                 // thập x99 bình nước
@@ -4051,7 +4057,7 @@ public class Player {
                         break;
 
                     case NpcName.QUY_LAO_KAME:
-                        menus.add(new KeyValue(1127, "Đổi mảnh\ntổng hợp"));
+//                        menus.add(new KeyValue(1127, "Đổi mảnh\ntổng hợp"));
                         menus.add(new KeyValue(605, "Top 100\nSức mạnh"));
                         menus.add(new KeyValue(1210, "Úp Bông tai Cấp 2"));
                         if (clan != null) {
@@ -9800,6 +9806,12 @@ public class Player {
                         service.dialogMessage("Bạn chưa thể mua lúc này , hãy tiếp tục hoàn thành nhiệm vụ");
                         return;
                     }
+                    if (item.id == 880 || item.id == 881 || item.id == 882) {
+                        if (this.taskMain.id < 26) {
+                            service.dialogMessage("Bạn chưa thể mua lúc này , hãy tiếp tục hoàn thành nhiệm vụ");
+                        }
+                        return;
+                    }
                 }
 
                 // Check special currency requirements
@@ -11655,6 +11667,19 @@ public class Player {
         ItemTime itemTime = null;
         boolean isUpdate = false;
         switch (item.id) {
+            case ItemName.CUA_RANG_ME:
+                itemTime = new ItemTime(ItemTimeName.CUA_RANG_ME, item.template.iconID, 10 * 60, true);
+                isUpdate = true;
+                break;
+            case ItemName.BACH_TUOC_NUONG:
+                itemTime = new ItemTime(ItemTimeName.BACH_TUOC_NUONG, item.template.iconID, 10 * 60, true);
+                isUpdate = true;
+                break;
+            case ItemName.TOM_TAM_BOT_CHIEN_XU:
+                itemTime = new ItemTime(ItemTimeName.TOM_TAM_BOT_CHIEN_XU, item.template.iconID, 10 * 60, true);
+                isUpdate = true;
+                break;
+
             case ItemName.CUONG_NO:
                 if (this.isCuongNo2) {
                     service.serverMessage("Bạn đang sử dụng vật phẩm cùng loại");
@@ -13446,7 +13471,7 @@ public class Player {
             int cmd = getCommandTransport();
             if (cmd == 0) {
                 Item item = itemBag[capsule];
-                if (item != null && (item.id == 193 || item.id == 194)) {
+                if (item != null && (item.id == 193 || item.id == 194 || item.id == 2309)) {
                     if (item.id == 193) {
                         removeItem(capsule, 1);
                     }
@@ -13678,7 +13703,7 @@ public class Player {
                         return;
                     }
                     long delay = 12;
-                    if (sachdacbiet[7] || exitsItemTime(ItemTimeName.BANH_TRAI_CAY)) {
+                    if (sachdacbiet[7] || exitsItemTime(ItemTimeName.KEO_MUT_XOAN)) {
                         delay = 5;
                     }
                     long now = System.currentTimeMillis();
@@ -15387,8 +15412,8 @@ public class Player {
             if (exitsItemTime(ItemTimeName.BANH_SU_KEM)) {
                 exp += Utils.percentOf(exp, 30);
             }
-            if (exitsItemTime(ItemTimeName.BANH_KEM_NHO)) {
-                exp += Utils.percentOf(exp, 15);
+            if (exitsItemTime(ItemTimeName.BANH_KEM_CHOCOLATE)) {
+                exp += Utils.percentOf(exp, 20);
             }
             if (isRewardTNSMDragonNamek) {
                 exp += Utils.percentOf(exp, 10);
@@ -17649,7 +17674,7 @@ public class Player {
 
                 // 5 thức ăn mỗi loại
                 int[] foods = {ItemName.DUA_XANH, ItemName.DU_DU, ItemName.MANG_CAU,
-                        ItemName.TRAI_SUNG, ItemName.MAM_TRAI_CAY, ItemName.XOAI_CHIN};
+                    ItemName.TRAI_SUNG, ItemName.MAM_TRAI_CAY, ItemName.XOAI_CHIN};
                 for (int f : foods) {
                     item = new Item(f);
                     item.quantity = 5;
@@ -17815,7 +17840,6 @@ public class Player {
                 this.service
                         .serverMessage("Bạn vừa nhận được phần thưởng từ mốc 1000, hãy kiểm tra hành trang của mình");
                 break;
-
 
             default:
                 this.service.serverMessage("Bạn chưa đủ lượt quay để nhận thưởng");

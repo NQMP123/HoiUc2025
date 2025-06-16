@@ -3163,7 +3163,7 @@ public class Service implements IService {
 
     public void dialogMessage(String text) {
         try {
-            UtilsNQMP.logError(text);
+//            UtilsNQMP.logError(text);
             Message ms = new Message(Cmd.DIALOG_MESSAGE);
             FastDataOutputStream ds = ms.writer();
             ds.writeUTF(text);

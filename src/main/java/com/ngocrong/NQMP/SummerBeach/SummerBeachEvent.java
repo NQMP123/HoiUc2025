@@ -48,7 +48,7 @@ public class SummerBeachEvent {
         if (item.template.id == ItemName.CAPSULE_VIPPRO) {
             player.setListMap();
             player.listMapTransport.add(new KeyValue(MapName.BAI_BIEN_NGAY_HE, "Bãi biển", "Sự kiện"));
-            player.listMapTransport.add(new KeyValue(MapName.VO_DAI_XEN_BO_HUNG, "Võ đài SBH", "Sự kiện"));
+            player.listMapTransport.add(new KeyValue(MapName.VO_DAI_XEN_BO_HUNG, "Võ đài Siêu Bọ Hung", "Sự kiện"));
             player.listMapTransport.add(new KeyValue(MapName.HANG_BANG, "Hang Băng", "Sự kiện"));
             player.capsule = item.indexUI;
             player.service.mapTransport(player.listMapTransport);
