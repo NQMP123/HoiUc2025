@@ -32,6 +32,12 @@ public class ChatTextField : IActionListener
 
     public Command cmdChat2;
 
+    public Command cmdVoiceRecord;
+
+    private bool isRecordingVoice = false;
+
+    private VoiceMessageType currentChatType = VoiceMessageType.WORLD_CHAT;
+
     public int yBegin;
 
     public int yUp;
@@ -73,7 +79,8 @@ public class ChatTextField : IActionListener
     {
         left = new Command(mResources.OK, this, 8000, null, 1, GameCanvas.h - mScreen.cmdH + 1);
         right = new Command(mResources.DELETE, this, 8001, null, GameCanvas.w - 70, GameCanvas.h - mScreen.cmdH + 1);
-        center = null;
+        center = new Command("MIC", this, 8003, null, GameCanvas.w / 2 - 34, GameCanvas.h - mScreen.cmdH + 1);
+        cmdVoiceRecord = center;
         w = tfChat.width + 20;
         h = tfChat.height + 26;
         x = GameCanvas.w / 2 - w / 2;
@@ -82,17 +89,20 @@ public class ChatTextField : IActionListener
         {
             w = 320;
         }
-        left.x = x;
-        right.x = x + w - 68;
+        left.x = x-68;
+        center.x = x + w - 68;
+        right.x = center.x + w - 68;
         if (GameCanvas.isTouch)
         {
             tfChat.y -= 5;
             y -= 20;
             h += 30;
-            left.x = GameCanvas.w / 2 - 68 - 5;
-            right.x = GameCanvas.w / 2 + 5;
+            left.x = GameCanvas.w / 2 - 120 - 5;
+            right.x = GameCanvas.w / 2 + 50;
+            center.x = GameCanvas.w / 2 - 35;
             left.y = GameCanvas.h - 30;
             right.y = GameCanvas.h - 30;
+            center.y = GameCanvas.h - 30;
         }
         cmdChat = new Command();
         ActionChat actionChat = delegate (string str)
@@ -184,6 +194,8 @@ public class ChatTextField : IActionListener
     {
         right.caption = mResources.CLOSE;
         this.to = to;
+        currentChatType = (string.IsNullOrEmpty(to) || to.Equals("")) ? VoiceMessageType.WORLD_CHAT : VoiceMessageType.PRIVATE_CHAT;
+        
         if (Main.isWindowsPhone)
         {
             tfChat.showSubTextField = false;
@@ -205,6 +217,8 @@ public class ChatTextField : IActionListener
         tfChat.setText(string.Empty);
         tfChat.clearAll();
         isPublic = false;
+        
+        UpdateVoiceButtonText();
     }
 
     public void startChat2(IChatable parentScreen, string to)
@@ -212,6 +226,8 @@ public class ChatTextField : IActionListener
         tfChat.setFocusWithKb(isFocus: true);
         this.to = to;
         this.parentScreen = parentScreen;
+        currentChatType = (string.IsNullOrEmpty(to) || to.Equals("")) ? VoiceMessageType.WORLD_CHAT : VoiceMessageType.PRIVATE_CHAT;
+        
         if (Main.isWindowsPhone)
         {
             tfChat.showSubTextField = false;
@@ -232,6 +248,8 @@ public class ChatTextField : IActionListener
         tfChat.setText(string.Empty);
         tfChat.clearAll();
         isPublic = false;
+        
+        UpdateVoiceButtonText();
     }
 
     public void updateKey()
@@ -244,6 +262,14 @@ public class ChatTextField : IActionListener
         {
             return;
         }
+        
+        // Update voice recording
+        if (isRecordingVoice)
+        {
+            VoiceRecorder.gI().Update();
+            UpdateVoiceButtonText();
+        }
+        
         tfChat.update();
         if (Main.isWindowsPhone)
         {
@@ -334,6 +360,133 @@ public class ChatTextField : IActionListener
                 break;
             case 8002:
                 break;
+            case 8003:
+                HandleVoiceRecordAction();
+                break;
+        }
+    }
+
+    private void HandleVoiceRecordAction()
+    {
+        if (!VoiceRecorder.gI().HasMicrophone())
+        {
+            // Show microphone permission message
+            ChatPopup.addChatPopup("Microphone not available or permission denied", 3000, null);
+            return;
+        }
+
+        if (!isRecordingVoice)
+        {
+            // Start recording
+            if (VoiceRecorder.gI().StartRecording())
+            {
+                isRecordingVoice = true;
+                UpdateVoiceButtonText();
+                UnityEngine.Debug.Log($"Started voice recording for {currentChatType}");
+            }
+            else
+            {
+                ChatPopup.addChatPopup("Failed to start voice recording", 2000, null);
+            }
+        }
+        else
+        {
+            // Stop recording and send
+            byte[] audioData = VoiceRecorder.gI().StopRecording();
+            isRecordingVoice = false;
+            UpdateVoiceButtonText();
+
+            if (audioData != null && audioData.Length > 0)
+            {
+                float duration = VoiceRecorder.gI().RecordingTime;
+                SendVoiceMessage(audioData, duration);
+            }
+            else
+            {
+                ChatPopup.addChatPopup("Voice recording failed", 2000, null);
+            }
+        }
+    }
+
+    private void SendVoiceMessage(byte[] audioData, float duration)
+    {
+        if (parentScreen == null) return;
+
+        try
+        {
+            // Create voice message
+            VoiceMessage voiceMsg = new VoiceMessage(
+                audioData,
+                Char.myCharz().cName,
+                currentChatType == VoiceMessageType.PRIVATE_CHAT ? to : null,
+                duration,
+                currentChatType
+            );
+
+            // Add to local storage
+            VoiceMessageManager.gI().AddVoiceMessage(voiceMsg);
+
+            // Send to server
+            SendVoiceMessageToServer(voiceMsg);
+
+            // Show confirmation
+            string chatType = currentChatType == VoiceMessageType.WORLD_CHAT ? "World Chat" : "Private Chat";
+            ChatPopup.addChatPopup($"Voice message sent ({duration:F1}s) - {chatType}", 2000, null);
+
+            UnityEngine.Debug.Log($"Voice message sent: {voiceMsg}");
+        }
+        catch (System.Exception e)
+        {
+            UnityEngine.Debug.LogError("Error sending voice message: " + e.Message);
+            ChatPopup.addChatPopup("Failed to send voice message", 2000, null);
+        }
+    }
+
+    private void SendVoiceMessageToServer(VoiceMessage voiceMsg)
+    {
+        try
+        {
+            Message msg;
+            msg = new Message(-58);
+            if (voiceMsg.IsWorldChat())
+            {
+                msg.writer().writeByte(0);
+            }
+            else
+            {
+                msg.writer().writeByte(1);
+                msg.writer().writeUTF(voiceMsg.receiverName);
+            }
+
+            msg.writer().writeUTF(voiceMsg.senderName);
+            msg.writer().writeFloat(voiceMsg.duration);
+            msg.writer().writeLong(voiceMsg.timestamp);
+            msg.writer().writeInt(voiceMsg.audioData.Length);
+            msg.writer().write(voiceMsg.audioData);
+
+            Session_ME.gI().sendMessage(msg);
+            msg.cleanup();
+        }
+        catch (System.Exception e)
+        {
+            UnityEngine.Debug.LogError("Error sending voice message to server: " + e.Message);
+        }
+    }
+
+    private void UpdateVoiceButtonText()
+    {
+        if (cmdVoiceRecord != null)
+        {
+            if (isRecordingVoice)
+            {
+                float recordTime = VoiceRecorder.gI().RecordingTime;
+                cmdVoiceRecord.caption = $"REC {recordTime:F1}s";
+            }
+            else
+            {
+                string chatTypePrefix = currentChatType == VoiceMessageType.WORLD_CHAT ? "🌍" : "💬";
+                cmdVoiceRecord.caption = $"{chatTypePrefix}MIC";
+            }
         }
     }
 }

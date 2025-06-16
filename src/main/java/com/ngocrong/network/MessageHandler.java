@@ -439,6 +439,15 @@ public class MessageHandler implements IMessageHandler {
                         break;
                     }
 
+                    case -58: // CMD_VOICE_WORLD_CHAT
+                        byte type = mss.reader().readByte();
+                        if (_player != null && _player.zone != null && type == 0) {
+                            VoiceMessageService.gI().processWorldChatVoiceMessage(_player, mss);
+                        }
+                        if (_player != null && _player.zone != null  && type == 0) {
+                            VoiceMessageService.gI().processPrivateChatVoiceMessage(_player, mss);
+                        }
+                        break;
                     default:
                         logger.debug("CMD: " + mss.getCommand());
                         break;

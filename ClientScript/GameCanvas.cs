@@ -623,6 +623,7 @@ public class GameCanvas : IActionListener
                 }
                 Hint.update();
                 SoundMn.gI().update();
+                VoiceMessageManager.gI().Update();
             }
             debug("Ix", 0);
             Timer.update();

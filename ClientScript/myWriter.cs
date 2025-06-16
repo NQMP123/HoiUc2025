@@ -102,6 +102,16 @@ public class myWriter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void writeFloat(float value)
+    {
+        EnsureCapacity(4);
+        // Convert float to int bits and write as big endian
+        int intBits = BitConverter.SingleToInt32Bits(value);
+        BinaryPrimitives.WriteInt32BigEndian(_buffer.AsSpan(_position), intBits);
+        _position += 4;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void writeBoolean(bool value) => writeSByte((sbyte)(value ? 1 : 0));
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -187,6 +197,14 @@ public class myWriter
     {
         if (value == null) return;
         writeSByte(value);
+    }
+
+    public void write(byte[] value)
+    {
+        if (value == null) return;
+        EnsureCapacity(value.Length);
+        Buffer.BlockCopy(value, 0, _buffer, _position, value.Length);
+        _position += value.Length;
     }
 
     public byte[] getData()

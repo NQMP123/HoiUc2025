@@ -79,6 +79,16 @@ public class SessionManager {
         }
         return userList;
     }
+      public static Player _findPlayer(String name) {
+        for (Session ss : sessions.values()) {
+            if (ss.socket != null && !ss.socket.isClosed() && ss.user != null) {
+                if (ss._player != null && ss._player.name.equals(name)) {
+                    return ss._player;
+                }
+            }
+        }
+        return null;
+    }
 
     public static void checkValidPlayer(Player player) {
         if (player == null) {

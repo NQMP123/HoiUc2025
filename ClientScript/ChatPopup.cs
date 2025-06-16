@@ -204,6 +204,16 @@ public class ChatPopup : Effect2, IActionListener
 		chatPopup.says = mFont.tahoma_7_red.splitFontArray(chat, chatPopup.sayWidth - 10);
 		chatPopup.delay = howLong;
 		chatPopup.c = c;
+		
+		// Check if this is a voice message
+		if (chat.Contains("Voice (") || chat.Contains("Voice message ("))
+		{
+			// This is a voice message popup - make it clickable
+			chatPopup.cmdMsg1 = new Command("PLAY", chatPopup, 9000, null);
+			chatPopup.cmdMsg1.x = GameCanvas.w / 2 - 35;
+			chatPopup.cmdMsg1.y = GameCanvas.h - 35;
+		}
+		
 		Char.chatPopup = chatPopup;
 		chatPopup.ch = 15 - chatPopup.sayRun + chatPopup.says.Length * 12 + 10;
 		if (chatPopup.ch > GameCanvas.h - 80)
@@ -738,6 +748,12 @@ public class ChatPopup : Effect2, IActionListener
 				GameScr.info1.info.info.speed = 10;
 			}
 		}
+		if (idAction == 9000)
+		{
+			// Handle voice message play
+			HandleVoiceMessagePlay();
+			return;
+		}
 		if (idAction != 8000 || performDelay > 0)
 		{
 			return;
@@ -780,6 +796,103 @@ public class ChatPopup : Effect2, IActionListener
 			chatPopup.lines = currChatPopup.lines;
 			chatPopup.cmdNextLine = currChatPopup.cmdNextLine;
 			currChatPopup = chatPopup;
+		}
+	}
+
+	private void HandleVoiceMessagePlay()
+	{
+		try
+		{
+			// Extract sender name from the voice message text
+			string senderName = null;
+			VoiceMessageType messageType = VoiceMessageType.WORLD_CHAT;
+			
+			foreach (string say in says)
+			{
+				if (say.Contains("[Thế Giới]"))
+				{
+					// Extract sender name from world chat format: "🎤 [Thế Giới] SenderName: Voice (2.3s)"
+					string[] parts = say.Split(':');
+					if (parts.Length >= 2)
+					{
+						string senderPart = parts[0];
+						int startIndex = senderPart.LastIndexOf("] ") + 2;
+						if (startIndex >= 2 && startIndex < senderPart.Length)
+						{
+							senderName = senderPart.Substring(startIndex).Trim();
+						}
+					}
+					messageType = VoiceMessageType.WORLD_CHAT;
+					break;
+				}
+				else if (say.Contains("Voice message ("))
+				{
+					// Private message format: "🎤 Voice message (2.3s)"
+					messageType = VoiceMessageType.PRIVATE_CHAT;
+					// For private messages, we need to find the most recent private voice message
+					break;
+				}
+			}
+			
+			// Find and play the voice message
+			VoiceMessage targetMessage = null;
+			VoiceMessageManager manager = VoiceMessageManager.gI();
+			
+			if (messageType == VoiceMessageType.WORLD_CHAT && senderName != null)
+			{
+				// Find world chat message from this sender
+				MyVector worldMessages = manager.GetWorldChatVoiceMessages();
+				for (int i = worldMessages.size() - 1; i >= 0; i--) // Search from newest
+				{
+					VoiceMessage msg = (VoiceMessage)worldMessages.elementAt(i);
+					if (msg.senderName.Equals(senderName))
+					{
+						targetMessage = msg;
+						break;
+					}
+				}
+			}
+			else if (messageType == VoiceMessageType.PRIVATE_CHAT)
+			{
+				// Find most recent private voice message
+				int totalMessages = manager.GetVoiceMessageCount();
+				for (int i = totalMessages - 1; i >= 0; i--) // Search from newest
+				{
+					VoiceMessage msg = manager.GetVoiceMessage(i);
+					if (msg != null && msg.IsPrivateChat())
+					{
+						targetMessage = msg;
+						break;
+					}
+				}
+			}
+			
+			if (targetMessage != null)
+			{
+				// Stop any currently playing voice message
+				manager.StopAllVoiceMessages();
+				
+				// Play the voice message
+				targetMessage.Play();
+				
+				// Update button text to show playing status
+				if (cmdMsg1 != null)
+				{
+					cmdMsg1.caption = "PLAYING...";
+				}
+				
+				UnityEngine.Debug.Log("Playing voice message: " + targetMessage.ToString());
+			}
+			else
+			{
+				UnityEngine.Debug.LogWarning("Voice message not found for playback");
+				ChatPopup.addChatPopup("Voice message not found", 2000, null);
+			}
+		}
+		catch (System.Exception e)
+		{
+			UnityEngine.Debug.LogError("Error playing voice message: " + e.Message);
+			ChatPopup.addChatPopup("Error playing voice message", 2000, null);
 		}
 	}
 }

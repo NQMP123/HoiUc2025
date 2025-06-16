@@ -129,6 +129,19 @@ public class myReader
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public float readFloat()
+    {
+        // Kiểm tra xem có đủ dữ liệu không
+        if (posRead + 4 > buffer.Length)
+            throw new Exception("Không đủ dữ liệu để đọc float");
+
+        // Read as int and convert to float
+        int intBits = BinaryPrimitives.ReadInt32BigEndian(GetByteSpan().Slice(posRead));
+        posRead += 4;
+        return BitConverter.Int32BitsToSingle(intBits);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool readBool()
     {
         return readSByte() > 0;

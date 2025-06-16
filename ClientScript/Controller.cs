@@ -4392,6 +4392,9 @@ public class Controller : IMessageHandler
                     Char.myCharz().countKill = msg.reader().readUnsignedShort();
                     Char.myCharz().countKillMax = msg.reader().readUnsignedShort();
                     break;
+                case -58: // CMD_VOICE_RECEIVE (202 as sbyte)
+                    handleVoiceMessageReceive(msg);
+                    break;
             }
             GameCanvas.debug("SA92", 2);
         }
@@ -4402,6 +4405,75 @@ public class Controller : IMessageHandler
         finally
         {
             msg?.cleanup();
+        }
+    }
+
+    private void handleVoiceMessageReceive(Message msg)
+    {
+        try
+        {
+            GameCanvas.debug("Receiving voice message", 2);
+            
+            // Read voice message data
+            sbyte messageType = msg.reader().readByte();
+            string senderName = msg.reader().readUTF();
+            string receiverName = msg.reader().readUTF();
+            float duration = msg.reader().readFloat();
+            long timestamp = msg.reader().readLong();
+            int audioDataLength = msg.reader().readInt();
+            
+            if (audioDataLength <= 0 || audioDataLength > 1024 * 1024) // Max 1MB
+            {
+                Res.outz("Invalid voice message data length: " + audioDataLength);
+                return;
+            }
+            
+            sbyte[] audioDataSigned = new sbyte[audioDataLength];
+            msg.reader().readFully(ref audioDataSigned);
+            
+            // Convert sbyte[] to byte[]
+            byte[] audioData = new byte[audioDataLength];
+            for (int i = 0; i < audioDataLength; i++)
+            {
+                audioData[i] = (byte)audioDataSigned[i];
+            }
+            
+            VoiceMessageType voiceType = (VoiceMessageType)messageType;
+            
+            // Create voice message object
+            VoiceMessage voiceMsg = new VoiceMessage(
+                audioData, 
+                senderName, 
+                receiverName.Equals("") ? null : receiverName, 
+                duration, 
+                voiceType
+            );
+            voiceMsg.timestamp = timestamp;
+            
+            // Add to voice message manager
+            VoiceMessageManager.gI().AddVoiceMessage(voiceMsg);
+            
+            // Show notification in chat
+            string displayText = voiceMsg.GetDisplayText();
+            if (voiceType == VoiceMessageType.WORLD_CHAT)
+            {
+                // Show in world chat area
+                ChatPopup.addChatPopup(displayText, 10000, null);
+            }
+            else
+            {
+                // Show in private chat area  
+                ChatPopup.addChatPopup($"[Private] {displayText}", 10000, null);
+            }
+            
+            Res.outz("Voice message received: " + voiceMsg.ToString());
+            UnityEngine.Debug.Log("Voice message received: " + voiceMsg.ToString());
+            
+        }
+        catch (Exception ex)
+        {
+            Res.outz("Error handling voice message: " + ex.Message);
+            UnityEngine.Debug.LogError("Error handling voice message: " + ex.Message);
         }
     }
 
