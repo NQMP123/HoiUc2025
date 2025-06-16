@@ -5136,16 +5136,30 @@ public class Panel : IActionListener, IChatable
             Part part = GameScr.parts[infoItem.charInfo.head];
             SmallImage.drawSmallImage(g, part.pi[Char.CharInfo[0][0][0]].id, num + part.pi[Char.CharInfo[0][0][0]].dx, num2 + part.pi[Char.CharInfo[0][0][0]].dy, 0, 0);
             g.setClip(xScroll, yScroll + cmy, wScroll, hScroll);
-            mFont tahoma_7b_dark = mFont.tahoma_7b_dark;
-            tahoma_7b_dark = mFont.tahoma_7b_green2;
-            tahoma_7b_dark.drawString(g, infoItem.charInfo.cName, num4 + 5, num5, 0);
+            mFont nameFont = mFont.tahoma_7b_green2;
+            nameFont.drawString(g, infoItem.charInfo.cName, num4 + 5, num5, 0);
+
+            string drawMsg = infoItem.s;
+            if (infoItem.s.Contains("|"))
+            {
+                string[] parts = Res.split(infoItem.s, "|", 0);
+                if (parts.Length > 2)
+                {
+                    drawMsg = parts[2];
+                }
+                else
+                {
+                    drawMsg = parts[parts.Length - 1];
+                }
+            }
+
             if (!infoItem.isChatServer)
             {
-                mFont.tahoma_7_blue.drawString(g, Res.split(infoItem.s, "|", 0)[2], num4 + 5, num5 + 11, 0);
+                mFont.tahoma_7_blue.drawString(g, drawMsg, num4 + 5, num5 + 11, 0);
             }
             else
             {
-                mFont.tahoma_7_red.drawString(g, Res.split(infoItem.s, "|", 0)[2], num4 + 5, num5 + 11, 0);
+                mFont.tahoma_7_red.drawString(g, drawMsg, num4 + 5, num5 + 11, 0);
             }
         }
         paintScrollArrow(g);
