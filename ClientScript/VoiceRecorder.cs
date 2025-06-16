@@ -246,6 +246,7 @@ public class VoiceRecorder
                     float s = samples[i] * playbackGain;
                     samples[i] = Mathf.Clamp(s, -1f, 1f);
                 }
+
             }
             
             AudioClip clip = AudioClip.Create("VoiceMessage", samples.Length, 1, SAMPLE_RATE, false);

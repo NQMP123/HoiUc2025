@@ -4575,7 +4575,12 @@ public class Panel : IActionListener, IChatable
             }
             g.setColor((i != selected) ? 15196114 : 16383818);
             g.fillRect(num, num2, num3, h, 4);
-            mFont.tahoma_7b_dark.drawString(g, strTool[i], xScroll + wScroll / 2, num2 + 6, mFont.CENTER);
+            string toolText = strTool[i];
+            if (strTool[i] == mResources.voice_volume)
+            {
+                toolText = mResources.voice_volume + ": " + VoiceRecorder.playbackGain.ToString("0.0") + "x";
+            }
+            mFont.tahoma_7b_dark.drawString(g, toolText, xScroll + wScroll / 2, num2 + 6, mFont.CENTER);
             if (!strTool[i].Equals(mResources.gameInfo))
             {
                 continue;
