@@ -444,7 +444,7 @@ public class MessageHandler implements IMessageHandler {
                         if (_player != null && _player.zone != null && type == 0) {
                             VoiceMessageService.gI().processWorldChatVoiceMessage(_player, mss);
                         }
-                        if (_player != null && _player.zone != null  && type == 0) {
+                        if (_player != null && _player.zone != null && type == 1) {
                             VoiceMessageService.gI().processPrivateChatVoiceMessage(_player, mss);
                         }
                         break;

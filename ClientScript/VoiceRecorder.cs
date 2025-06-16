@@ -13,6 +13,8 @@ public class VoiceRecorder
     private float recordingTime = 0f;
     private const int SAMPLE_RATE = 16000;
     private const int MAX_RECORDING_TIME = 30; // 30 seconds max
+    private const float NOISE_GATE_THRESHOLD = 0.02f; // filter quiet background noise
+    public static float playbackGain = 1.5f; // amplify playback volume, configurable
     
     public bool IsRecording => isRecording;
     public bool IsPlaying => isPlaying;
@@ -164,7 +166,7 @@ public class VoiceRecorder
     {
         if (isRecording)
         {
-            recordingTime += Time.deltaTime;
+            recordingTime += Time.deltaTime / Time.timeScale;
             
             // Auto stop if max time reached
             if (recordingTime >= MAX_RECORDING_TIME)
@@ -180,6 +182,15 @@ public class VoiceRecorder
         
         float[] samples = new float[clip.samples * clip.channels];
         clip.GetData(samples, 0);
+
+        // Simple noise gate filter
+        for (int i = 0; i < samples.Length; i++)
+        {
+            if (Mathf.Abs(samples[i]) < NOISE_GATE_THRESHOLD)
+            {
+                samples[i] = 0f;
+            }
+        }
         
         // Convert float samples to 16-bit PCM
         byte[] audioData = new byte[samples.Length * 2];
@@ -204,7 +215,8 @@ public class VoiceRecorder
             for (int i = 0; i < samples.Length; i++)
             {
                 short sample = (short)((decompressedData[i * 2 + 1] << 8) | decompressedData[i * 2]);
-                samples[i] = sample / 32767f;
+                float s = sample / 32767f * playbackGain;
+                samples[i] = Mathf.Clamp(s, -1f, 1f);
             }
             
             AudioClip clip = AudioClip.Create("VoiceMessage", samples.Length, 1, SAMPLE_RATE, false);
@@ -272,8 +284,10 @@ public class VoiceRecorder
             GameObject audioObj = new GameObject("VoiceMessagePlayer");
             audioSource = audioObj.AddComponent<AudioSource>();
             audioSource.playOnAwake = false;
-            audioSource.volume = 1.0f;
         }
+
+        // ensure maximum volume
+        audioSource.volume = 1.0f;
         return audioSource;
     }
     

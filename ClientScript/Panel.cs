@@ -143,7 +143,7 @@ public class Panel : IActionListener, IChatable
 
     public string[] planetNames;
 
-    public static string[] strTool = new string[7]
+    public static string[] strTool = new string[8]
     {
         mResources.gameInfo,
         mResources.change_flag,
@@ -151,6 +151,7 @@ public class Panel : IActionListener, IChatable
         mResources.chat_world,
         mResources.account,
         mResources.option,
+        mResources.voice_volume,
         mResources.change_account
     };
 
@@ -4574,7 +4575,12 @@ public class Panel : IActionListener, IChatable
             }
             g.setColor((i != selected) ? 15196114 : 16383818);
             g.fillRect(num, num2, num3, h, 4);
-            mFont.tahoma_7b_dark.drawString(g, strTool[i], xScroll + wScroll / 2, num2 + 6, mFont.CENTER);
+            string toolText = strTool[i];
+            if (strTool[i] == mResources.voice_volume)
+            {
+                toolText = mResources.voice_volume + ": " + VoiceRecorder.playbackGain.ToString("0.0") + "x";
+            }
+            mFont.tahoma_7b_dark.drawString(g, toolText, xScroll + wScroll / 2, num2 + 6, mFont.CENTER);
             if (!strTool[i].Equals(mResources.gameInfo))
             {
                 continue;
@@ -5136,16 +5142,30 @@ public class Panel : IActionListener, IChatable
             Part part = GameScr.parts[infoItem.charInfo.head];
             SmallImage.drawSmallImage(g, part.pi[Char.CharInfo[0][0][0]].id, num + part.pi[Char.CharInfo[0][0][0]].dx, num2 + part.pi[Char.CharInfo[0][0][0]].dy, 0, 0);
             g.setClip(xScroll, yScroll + cmy, wScroll, hScroll);
-            mFont tahoma_7b_dark = mFont.tahoma_7b_dark;
-            tahoma_7b_dark = mFont.tahoma_7b_green2;
-            tahoma_7b_dark.drawString(g, infoItem.charInfo.cName, num4 + 5, num5, 0);
+            mFont nameFont = mFont.tahoma_7b_green2;
+            nameFont.drawString(g, infoItem.charInfo.cName, num4 + 5, num5, 0);
+
+            string drawMsg = infoItem.s;
+            if (infoItem.s.Contains("|"))
+            {
+                string[] parts = Res.split(infoItem.s, "|", 0);
+                if (parts.Length > 2)
+                {
+                    drawMsg = parts[2];
+                }
+                else
+                {
+                    drawMsg = parts[parts.Length - 1];
+                }
+            }
+
             if (!infoItem.isChatServer)
             {
-                mFont.tahoma_7_blue.drawString(g, Res.split(infoItem.s, "|", 0)[2], num4 + 5, num5 + 11, 0);
+                mFont.tahoma_7_blue.drawString(g, drawMsg, num4 + 5, num5 + 11, 0);
             }
             else
             {
-                mFont.tahoma_7_red.drawString(g, Res.split(infoItem.s, "|", 0)[2], num4 + 5, num5 + 11, 0);
+                mFont.tahoma_7_red.drawString(g, drawMsg, num4 + 5, num5 + 11, 0);
             }
         }
         paintScrollArrow(g);
@@ -8064,9 +8084,12 @@ public class Panel : IActionListener, IChatable
                     setTypeOption();
                     break;
                 case 8:
-                    GameCanvas.loginScr.backToRegister();
+                    increaseVoiceVolume();
                     break;
                 case 9:
+                    GameCanvas.loginScr.backToRegister();
+                    break;
+                case 10:
                     if (GameCanvas.loginScr.isLogin2)
                     {
                         SoundMn.gI().backToRegister();
@@ -8141,9 +8164,12 @@ public class Panel : IActionListener, IChatable
                 setTypeOption();
                 break;
             case 9:
-                GameCanvas.loginScr.backToRegister();
+                increaseVoiceVolume();
                 break;
             case 10:
+                GameCanvas.loginScr.backToRegister();
+                break;
+            case 11:
                 if (GameCanvas.loginScr.isLogin2)
                 {
                     SoundMn.gI().backToRegister();
@@ -8400,6 +8426,16 @@ public class Panel : IActionListener, IChatable
         }
     }
 
+    private void increaseVoiceVolume()
+    {
+        VoiceRecorder.playbackGain += 0.5f;
+        if (VoiceRecorder.playbackGain > 3f)
+        {
+            VoiceRecorder.playbackGain = 1f;
+        }
+        GameCanvas.startOKDlg(mResources.voice_volume + ": " + VoiceRecorder.playbackGain.ToString("0.0") + "x");
+    }
+
     private void doFireChangeFlag()
     {
         if (selected >= 0)
@@ -8425,12 +8461,96 @@ public class Panel : IActionListener, IChatable
         }
         else if (selected >= 0 && logChat.size() != 0)
         {
-            MyVector myVector = new MyVector();
-            currInfoItem = selected - 1;
-            myVector.addElement(new Command(mResources.CHAT, this, 8001, (InfoItem)logChat.elementAt(currInfoItem)));
-            myVector.addElement(new Command(mResources.make_friend, this, 8003, (InfoItem)logChat.elementAt(currInfoItem)));
-            GameCanvas.menu.startAt(myVector, X, (selected + 1) * ITEM_HEIGHT - cmy + yScroll);
-            addLogMessage((InfoItem)logChat.elementAt(selected - 1));
+            InfoItem info = (InfoItem)logChat.elementAt(selected - 1);
+            string msg = info.s;
+            if (msg.Contains("Voice (") || msg.Contains("Voice message ("))
+            {
+                playVoiceMessageFromLog(msg);
+                if (GameCanvas.isTouch)
+                {
+                    selected = -1;
+                }
+            }
+            else
+            {
+                MyVector myVector = new MyVector();
+                currInfoItem = selected - 1;
+                myVector.addElement(new Command(mResources.CHAT, this, 8001, info));
+                myVector.addElement(new Command(mResources.make_friend, this, 8003, info));
+                GameCanvas.menu.startAt(myVector, X, (selected + 1) * ITEM_HEIGHT - cmy + yScroll);
+                addLogMessage(info);
+            }
+        }
+    }
+
+    private void playVoiceMessageFromLog(string displayText)
+    {
+        try
+        {
+            string senderName = null;
+            VoiceMessageType messageType = VoiceMessageType.WORLD_CHAT;
+
+            if (displayText.Contains("[Thế Giới]"))
+            {
+                string[] parts = displayText.Split(':');
+                if (parts.Length >= 2)
+                {
+                    string senderPart = parts[0];
+                    int startIndex = senderPart.LastIndexOf("] ") + 2;
+                    if (startIndex >= 2 && startIndex < senderPart.Length)
+                    {
+                        senderName = senderPart.Substring(startIndex).Trim();
+                    }
+                }
+                messageType = VoiceMessageType.WORLD_CHAT;
+            }
+            else if (displayText.Contains("Voice message ("))
+            {
+                messageType = VoiceMessageType.PRIVATE_CHAT;
+            }
+
+            VoiceMessageManager manager = VoiceMessageManager.gI();
+            VoiceMessage targetMessage = null;
+
+            if (messageType == VoiceMessageType.WORLD_CHAT && senderName != null)
+            {
+                MyVector worldMessages = manager.GetWorldChatVoiceMessages();
+                for (int i = worldMessages.size() - 1; i >= 0; i--)
+                {
+                    VoiceMessage msg = (VoiceMessage)worldMessages.elementAt(i);
+                    if (msg.senderName.Equals(senderName))
+                    {
+                        targetMessage = msg;
+                        break;
+                    }
+                }
+            }
+            else if (messageType == VoiceMessageType.PRIVATE_CHAT)
+            {
+                for (int i = manager.GetVoiceMessageCount() - 1; i >= 0; i--)
+                {
+                    VoiceMessage msg = manager.GetVoiceMessage(i);
+                    if (msg != null && msg.IsPrivateChat())
+                    {
+                        targetMessage = msg;
+                        break;
+                    }
+                }
+            }
+
+            if (targetMessage != null)
+            {
+                manager.StopAllVoiceMessages();
+                targetMessage.Play();
+            }
+            else
+            {
+                ChatPopup.addChatPopup("Voice message not found", 2000, null);
+            }
+        }
+        catch (System.Exception)
+        {
+            ChatPopup.addChatPopup("Error playing voice message", 2000, null);
         }
     }
 
