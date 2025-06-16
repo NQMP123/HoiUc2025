@@ -306,8 +306,10 @@ public class T2 : mResources
 		mResources.medium = "Medium";
 		mResources.low = "Low";
             mResources.increase_vga = "Increase resolution (strong devices)";
-            mResources.voice_volume = "Increase voice volume";
-		mResources.decrease_vga = "Decrease resolution (weak devices)";
+            mResources.voice_chat_config = "VoiceChat settings";
+            mResources.voice_volume = "VoiceChat volume";
+            mResources.voice_autoplay = "Auto play VoiceChat";
+            mResources.decrease_vga = "Decrease resolution (weak devices)";
 		mResources.serverchat_off = "Server notice";
 		mResources.serverchat_on = "Server notice";
 		mResources.aura_on = "Special aura";

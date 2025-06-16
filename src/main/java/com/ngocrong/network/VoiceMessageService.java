@@ -144,6 +144,8 @@ public class VoiceMessageService {
 
             byte[] audioData = new byte[audioDataLength];
             message.reader().readFully(audioData);
+            // Filter noise on the server side as an extra safeguard
+            audioData = Utils.applyNoiseGate(audioData, 0.02f);
 
             VoiceMessage voiceMsg = new VoiceMessage(audioData, senderName, receiverName, duration, type);
             voiceMsg.setTimestamp(timestamp);

@@ -8,7 +8,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 import java.util.zip.GZIPOutputStream;
+import java.util.zip.GZIPInputStream;
 import java.nio.file.Files;
 import java.sql.Timestamp;
 import java.text.Normalizer;
@@ -352,6 +354,56 @@ public class Utils {
         } catch (IOException ex) {
             com.ngocrong.NQMP.UtilsNQMP.logError(ex);
             return data;
+        }
+    }
+
+    public static byte[] decompress(byte[] data) {
+        if (data == null || data.length == 0) {
+            return data;
+        }
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(data);
+             GZIPInputStream gzip = new GZIPInputStream(bis);
+             ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = gzip.read(buffer)) != -1) {
+                bos.write(buffer, 0, len);
+            }
+            return bos.toByteArray();
+        } catch (IOException ex) {
+            com.ngocrong.NQMP.UtilsNQMP.logError(ex);
+            return data;
+        }
+    }
+
+    public static byte[] applyNoiseGate(byte[] compressedData, float minThreshold) {
+        try {
+            byte[] raw = decompress(compressedData);
+            int sampleCount = raw.length / 2;
+            float sum = 0f;
+            for (int i = 0; i < sampleCount; i++) {
+                int low = raw[i * 2] & 0xFF;
+                int high = raw[i * 2 + 1];
+                short sample = (short) ((high << 8) | low);
+                sum += Math.abs(sample) / 32767f;
+            }
+            float avg = sum / sampleCount;
+            float threshold = Math.max(minThreshold, avg * 0.5f);
+            for (int i = 0; i < sampleCount; i++) {
+                int low = raw[i * 2] & 0xFF;
+                int high = raw[i * 2 + 1];
+                short sample = (short) ((high << 8) | low);
+                float f = sample / 32767f;
+                if (Math.abs(f) < threshold) {
+                    sample = 0;
+                }
+                raw[i * 2] = (byte) (sample & 0xFF);
+                raw[i * 2 + 1] = (byte) ((sample >> 8) & 0xFF);
+            }
+            return compress(raw);
+        } catch (Exception ex) {
+            com.ngocrong.NQMP.UtilsNQMP.logError(ex);
+            return compressedData;
         }
     }
 

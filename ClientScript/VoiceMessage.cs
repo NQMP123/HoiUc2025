@@ -114,6 +114,7 @@ public class VoiceMessageManager
     private MyVector voiceMessages;
     private const int MAX_VOICE_MESSAGES = 50;
     private const int MAX_MESSAGE_AGE_SECONDS = 300; // 5 minutes
+    public static bool AutoPlay = false;
     
     public static VoiceMessageManager gI()
     {
@@ -128,7 +129,7 @@ public class VoiceMessageManager
     public void AddVoiceMessage(VoiceMessage voiceMsg)
     {
         if (voiceMsg == null) return;
-        
+
         voiceMessages.addElement(voiceMsg);
         
         // Clean old messages
@@ -141,6 +142,11 @@ public class VoiceMessageManager
         }
         
         UnityEngine.Debug.Log($"Added voice message: {voiceMsg}");
+        if (AutoPlay)
+        {
+            StopAllVoiceMessages();
+            voiceMsg.Play();
+        }
     }
     
     public VoiceMessage GetVoiceMessage(int index)

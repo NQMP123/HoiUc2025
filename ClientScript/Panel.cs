@@ -151,7 +151,7 @@ public class Panel : IActionListener, IChatable
         mResources.chat_world,
         mResources.account,
         mResources.option,
-        mResources.voice_volume,
+        mResources.voice_chat_config,
         mResources.change_account
     };
 
@@ -8084,7 +8084,7 @@ public class Panel : IActionListener, IChatable
                     setTypeOption();
                     break;
                 case 8:
-                    increaseVoiceVolume();
+                    openVoiceChatConfigMenu();
                     break;
                 case 9:
                     GameCanvas.loginScr.backToRegister();
@@ -8164,7 +8164,7 @@ public class Panel : IActionListener, IChatable
                 setTypeOption();
                 break;
             case 9:
-                increaseVoiceVolume();
+                openVoiceChatConfigMenu();
                 break;
             case 10:
                 GameCanvas.loginScr.backToRegister();
@@ -8426,14 +8426,13 @@ public class Panel : IActionListener, IChatable
         }
     }
 
-    private void increaseVoiceVolume()
+    private void openVoiceChatConfigMenu()
     {
-        VoiceRecorder.playbackGain += 0.5f;
-        if (VoiceRecorder.playbackGain > 3f)
-        {
-            VoiceRecorder.playbackGain = 1f;
-        }
-        GameCanvas.startOKDlg(mResources.voice_volume + ": " + VoiceRecorder.playbackGain.ToString("0.0") + "x");
+        MyVector menu = new MyVector();
+        menu.addElement(new Command(mResources.voice_volume + ": " + VoiceRecorder.playbackGain.ToString("0.0"), this, 29001, null));
+        string autoText = mResources.voice_autoplay + ": " + (VoiceMessageManager.AutoPlay ? mResources.ON : mResources.OFF);
+        menu.addElement(new Command(autoText, this, 29002, null));
+        GameCanvas.menu.startAt(menu, X, (selected + 1) * ITEM_HEIGHT - cmy + yScroll);
     }
 
     private void doFireChangeFlag()
@@ -9898,6 +9897,20 @@ public class Panel : IActionListener, IChatable
         if (idAction == 10031)
         {
             Session_ME.gI().close();
+        }
+        if (idAction == 29001)
+        {
+            VoiceRecorder.playbackGain += 0.5f;
+            if (VoiceRecorder.playbackGain > 3f)
+            {
+                VoiceRecorder.playbackGain = 1f;
+            }
+            openVoiceChatConfigMenu();
+        }
+        if (idAction == 29002)
+        {
+            VoiceMessageManager.AutoPlay = !VoiceMessageManager.AutoPlay;
+            openVoiceChatConfigMenu();
         }
         if (idAction == 11000)
         {
