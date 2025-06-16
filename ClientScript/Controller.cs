@@ -4453,17 +4453,15 @@ public class Controller : IMessageHandler
             // Add to voice message manager
             VoiceMessageManager.gI().AddVoiceMessage(voiceMsg);
             
-            // Show notification in chat
+            // Show notification in chat log instead of popup
             string displayText = voiceMsg.GetDisplayText();
-            if (voiceType == VoiceMessageType.WORLD_CHAT)
+            Char charInfo = new Char();
+            charInfo.cName = senderName;
+            charInfo.charID = -1;
+            GameScr.info2.addInfoWithChar(displayText, charInfo, voiceType == VoiceMessageType.WORLD_CHAT);
+            if (GameCanvas.panel.isShow && GameCanvas.panel.type == 8)
             {
-                // Show in world chat area
-                ChatPopup.addChatPopup(displayText, 10000, null);
-            }
-            else
-            {
-                // Show in private chat area  
-                ChatPopup.addChatPopup($"[Private] {displayText}", 10000, null);
+                GameCanvas.panel.initLogMessage();
             }
             
             Res.outz("Voice message received: " + voiceMsg.ToString());
