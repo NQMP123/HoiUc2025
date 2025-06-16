@@ -8425,12 +8425,96 @@ public class Panel : IActionListener, IChatable
         }
         else if (selected >= 0 && logChat.size() != 0)
         {
-            MyVector myVector = new MyVector();
-            currInfoItem = selected - 1;
-            myVector.addElement(new Command(mResources.CHAT, this, 8001, (InfoItem)logChat.elementAt(currInfoItem)));
-            myVector.addElement(new Command(mResources.make_friend, this, 8003, (InfoItem)logChat.elementAt(currInfoItem)));
-            GameCanvas.menu.startAt(myVector, X, (selected + 1) * ITEM_HEIGHT - cmy + yScroll);
-            addLogMessage((InfoItem)logChat.elementAt(selected - 1));
+            InfoItem info = (InfoItem)logChat.elementAt(selected - 1);
+            string msg = info.s;
+            if (msg.Contains("Voice (") || msg.Contains("Voice message ("))
+            {
+                playVoiceMessageFromLog(msg);
+                if (GameCanvas.isTouch)
+                {
+                    selected = -1;
+                }
+            }
+            else
+            {
+                MyVector myVector = new MyVector();
+                currInfoItem = selected - 1;
+                myVector.addElement(new Command(mResources.CHAT, this, 8001, info));
+                myVector.addElement(new Command(mResources.make_friend, this, 8003, info));
+                GameCanvas.menu.startAt(myVector, X, (selected + 1) * ITEM_HEIGHT - cmy + yScroll);
+                addLogMessage(info);
+            }
+        }
+    }
+
+    private void playVoiceMessageFromLog(string displayText)
+    {
+        try
+        {
+            string senderName = null;
+            VoiceMessageType messageType = VoiceMessageType.WORLD_CHAT;
+
+            if (displayText.Contains("[Thế Giới]"))
+            {
+                string[] parts = displayText.Split(':');
+                if (parts.Length >= 2)
+                {
+                    string senderPart = parts[0];
+                    int startIndex = senderPart.LastIndexOf("] ") + 2;
+                    if (startIndex >= 2 && startIndex < senderPart.Length)
+                    {
+                        senderName = senderPart.Substring(startIndex).Trim();
+                    }
+                }
+                messageType = VoiceMessageType.WORLD_CHAT;
+            }
+            else if (displayText.Contains("Voice message ("))
+            {
+                messageType = VoiceMessageType.PRIVATE_CHAT;
+            }
+
+            VoiceMessageManager manager = VoiceMessageManager.gI();
+            VoiceMessage targetMessage = null;
+
+            if (messageType == VoiceMessageType.WORLD_CHAT && senderName != null)
+            {
+                MyVector worldMessages = manager.GetWorldChatVoiceMessages();
+                for (int i = worldMessages.size() - 1; i >= 0; i--)
+                {
+                    VoiceMessage msg = (VoiceMessage)worldMessages.elementAt(i);
+                    if (msg.senderName.Equals(senderName))
+                    {
+                        targetMessage = msg;
+                        break;
+                    }
+                }
+            }
+            else if (messageType == VoiceMessageType.PRIVATE_CHAT)
+            {
+                for (int i = manager.GetVoiceMessageCount() - 1; i >= 0; i--)
+                {
+                    VoiceMessage msg = manager.GetVoiceMessage(i);
+                    if (msg != null && msg.IsPrivateChat())
+                    {
+                        targetMessage = msg;
+                        break;
+                    }
+                }
+            }
+
+            if (targetMessage != null)
+            {
+                manager.StopAllVoiceMessages();
+                targetMessage.Play();
+            }
+            else
+            {
+                ChatPopup.addChatPopup("Voice message not found", 2000, null);
+            }
+        }
+        catch (System.Exception)
+        {
+            ChatPopup.addChatPopup("Error playing voice message", 2000, null);
         }
     }
 
