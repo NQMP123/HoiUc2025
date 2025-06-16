@@ -143,7 +143,7 @@ public class Panel : IActionListener, IChatable
 
     public string[] planetNames;
 
-    public static string[] strTool = new string[7]
+    public static string[] strTool = new string[8]
     {
         mResources.gameInfo,
         mResources.change_flag,
@@ -151,6 +151,7 @@ public class Panel : IActionListener, IChatable
         mResources.chat_world,
         mResources.account,
         mResources.option,
+        mResources.voice_volume,
         mResources.change_account
     };
 
@@ -4574,7 +4575,12 @@ public class Panel : IActionListener, IChatable
             }
             g.setColor((i != selected) ? 15196114 : 16383818);
             g.fillRect(num, num2, num3, h, 4);
-            mFont.tahoma_7b_dark.drawString(g, strTool[i], xScroll + wScroll / 2, num2 + 6, mFont.CENTER);
+            string toolText = strTool[i];
+            if (strTool[i] == mResources.voice_volume)
+            {
+                toolText = mResources.voice_volume + ": " + VoiceRecorder.playbackGain.ToString("0.0") + "x";
+            }
+            mFont.tahoma_7b_dark.drawString(g, toolText, xScroll + wScroll / 2, num2 + 6, mFont.CENTER);
             if (!strTool[i].Equals(mResources.gameInfo))
             {
                 continue;
@@ -8078,9 +8084,12 @@ public class Panel : IActionListener, IChatable
                     setTypeOption();
                     break;
                 case 8:
-                    GameCanvas.loginScr.backToRegister();
+                    increaseVoiceVolume();
                     break;
                 case 9:
+                    GameCanvas.loginScr.backToRegister();
+                    break;
+                case 10:
                     if (GameCanvas.loginScr.isLogin2)
                     {
                         SoundMn.gI().backToRegister();
@@ -8155,9 +8164,12 @@ public class Panel : IActionListener, IChatable
                 setTypeOption();
                 break;
             case 9:
-                GameCanvas.loginScr.backToRegister();
+                increaseVoiceVolume();
                 break;
             case 10:
+                GameCanvas.loginScr.backToRegister();
+                break;
+            case 11:
                 if (GameCanvas.loginScr.isLogin2)
                 {
                     SoundMn.gI().backToRegister();
@@ -8412,6 +8424,16 @@ public class Panel : IActionListener, IChatable
             GameCanvas.menu.startAt(myVector, X, (selected + 1) * ITEM_HEIGHT - cmy + yScroll);
             addFriend((InfoItem)vFriend.elementAt(selected));
         }
+    }
+
+    private void increaseVoiceVolume()
+    {
+        VoiceRecorder.playbackGain += 0.5f;
+        if (VoiceRecorder.playbackGain > 3f)
+        {
+            VoiceRecorder.playbackGain = 1f;
+        }
+        GameCanvas.startOKDlg(mResources.voice_volume + ": " + VoiceRecorder.playbackGain.ToString("0.0") + "x");
     }
 
     private void doFireChangeFlag()

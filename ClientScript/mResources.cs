@@ -535,6 +535,7 @@ public class mResources
     public static string increase_vga = string.Empty;
 
     public static string decrease_vga = string.Empty;
+    public static string voice_volume = string.Empty;
 
     public static string serverchat_off = string.Empty;
 

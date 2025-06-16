@@ -276,6 +276,7 @@ public class T1 : mResources
         mResources.medium = "Vừa";
         mResources.low = "Thấp";
         mResources.increase_vga = "Tăng đồ họa (cho máy mạnh)";
+        mResources.voice_volume = "Tăng âm voice";
         mResources.decrease_vga = "Giảm đồ họa (cho máy yếu)";
         mResources.serverchat_off = "Thông báo từ máy chủ";
         mResources.serverchat_on = "Thông báo từ máy chủ";

@@ -301,7 +301,8 @@ public class T3 : mResources
 		mResources.high = "Tinggi";
 		mResources.medium = "Sedang";
 		mResources.low = "Rendah";
-		mResources.increase_vga = "Naikkan resolusi (device kuat)";
+            mResources.increase_vga = "Naikkan resolusi (device kuat)";
+            mResources.voice_volume = "Tingkatkan volume suara";
 		mResources.decrease_vga = "Turunkan resolusi (device lemah)";
 		mResources.serverchat_off = "Kabar Server";
 		mResources.serverchat_on = "Kabar Server";

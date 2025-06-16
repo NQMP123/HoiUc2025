@@ -160,6 +160,7 @@ public class SoundMn
                 mResources.chat_world,
                 mResources.account,
                 mResources.option,
+                mResources.voice_volume,
                 mResources.change_account,
                 mResources.REGISTOPROTECT
             };
@@ -177,6 +178,7 @@ public class SoundMn
                     mResources.chat_world,
                     mResources.account,
                     mResources.option,
+                    mResources.voice_volume,
                     mResources.change_account,
                     mResources.REGISTOPROTECT
                 };
@@ -195,6 +197,7 @@ public class SoundMn
                 mResources.chat_world,
                 mResources.account,
                 mResources.option,
+                mResources.voice_volume,
                 mResources.change_account
             };
             if (Char.myCharz().havePet)
@@ -211,6 +214,7 @@ public class SoundMn
                     mResources.chat_world,
                     mResources.account,
                     mResources.option,
+                    mResources.voice_volume,
                     mResources.change_account
                 };
             }

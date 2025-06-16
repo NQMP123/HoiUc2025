@@ -305,7 +305,8 @@ public class T2 : mResources
 		mResources.high = "High";
 		mResources.medium = "Medium";
 		mResources.low = "Low";
-		mResources.increase_vga = "Increase resolution (strong devices)";
+            mResources.increase_vga = "Increase resolution (strong devices)";
+            mResources.voice_volume = "Increase voice volume";
 		mResources.decrease_vga = "Decrease resolution (weak devices)";
 		mResources.serverchat_off = "Server notice";
 		mResources.serverchat_on = "Server notice";

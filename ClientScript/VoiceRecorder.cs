@@ -14,7 +14,7 @@ public class VoiceRecorder
     private const int SAMPLE_RATE = 16000;
     private const int MAX_RECORDING_TIME = 30; // 30 seconds max
     private const float NOISE_GATE_THRESHOLD = 0.02f; // filter quiet background noise
-    private const float PLAYBACK_GAIN = 1.5f; // amplify playback volume
+    public static float playbackGain = 1.5f; // amplify playback volume, configurable
     
     public bool IsRecording => isRecording;
     public bool IsPlaying => isPlaying;
@@ -166,7 +166,7 @@ public class VoiceRecorder
     {
         if (isRecording)
         {
-            recordingTime += Time.deltaTime;
+            recordingTime += Time.deltaTime / Time.timeScale;
             
             // Auto stop if max time reached
             if (recordingTime >= MAX_RECORDING_TIME)
@@ -215,7 +215,7 @@ public class VoiceRecorder
             for (int i = 0; i < samples.Length; i++)
             {
                 short sample = (short)((decompressedData[i * 2 + 1] << 8) | decompressedData[i * 2]);
-                float s = sample / 32767f * PLAYBACK_GAIN;
+                float s = sample / 32767f * playbackGain;
                 samples[i] = Mathf.Clamp(s, -1f, 1f);
             }
             
