@@ -8464,11 +8464,12 @@ public class Panel : IActionListener, IChatable
             string msg = info.s;
             if (msg.Contains("Voice (") || msg.Contains("Voice message ("))
             {
-                playVoiceMessageFromLog(msg);
-                if (GameCanvas.isTouch)
-                {
-                    selected = -1;
-                }
+                MyVector myVector = new MyVector();
+                currInfoItem = selected - 1;
+                myVector.addElement(new Command("Lắng nghe", this, 8005, info));
+                myVector.addElement(new Command(mResources.make_friend, this, 8003, info));
+                GameCanvas.menu.startAt(myVector, X, (selected + 1) * ITEM_HEIGHT - cmy + yScroll);
+                addLogMessage(info);
             }
             else
             {
@@ -9477,6 +9478,11 @@ public class Panel : IActionListener, IChatable
         {
             InfoItem infoItem3 = (InfoItem)p;
             Service.gI().gotoPlayer(infoItem3.charInfo.charID);
+        }
+        if (idAction == 8005)
+        {
+            InfoItem infoItem3 = (InfoItem)p;
+            playVoiceMessageFromLog(infoItem3.s);
         }
         if (idAction == 8001)
         {

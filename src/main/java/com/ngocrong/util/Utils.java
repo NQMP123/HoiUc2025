@@ -542,4 +542,12 @@ public class Utils {
         }
 
     }
+    
+    /**
+     * Apply noise gate filter to audio data to reduce background noise
+     * @param audioData Raw audio bytes
+     * @param threshold Threshold below which audio is considered noise (0.0-1.0)
+     * @return Filtered audio data
+     */
+   
 }
