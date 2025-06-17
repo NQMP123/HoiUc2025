@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Net.Sockets;
 using System.Threading;
+using System.Collections.Concurrent;
 
 public class VoiceSession : ISession
 {
@@ -10,6 +11,10 @@ public class VoiceSession : ISession
     private NetworkStream stream;
     private IMessageHandler messageHandler;
     private Thread receiver;
+    private Thread sender;
+    private readonly ConcurrentQueue<Message> sendQueue = new ConcurrentQueue<Message>();
+    private readonly AutoResetEvent sendEvent = new AutoResetEvent(false);
+    private volatile bool running;
     private bool handshake;
 
     public static VoiceSession gI()
@@ -33,9 +38,13 @@ public class VoiceSession : ISession
         client = new TcpClient();
         client.Connect(host, port);
         stream = client.GetStream();
+        running = true;
         receiver = new Thread(run);
         receiver.IsBackground = true;
         receiver.Start();
+        sender = new Thread(runSender);
+        sender.IsBackground = true;
+        sender.Start();
     }
 
     private void run()
@@ -55,6 +64,31 @@ public class VoiceSession : ISession
         catch { }
         close();
     }
+
+    private void runSender()
+    {
+        try
+        {
+            while (running)
+            {
+                sendEvent.WaitOne();
+                while (sendQueue.TryDequeue(out Message msg))
+                {
+                    try
+                    {
+                        writeMessage(msg);
+                    }
+                    finally
+                    {
+                        msg.cleanup();
+                    }
+                }
+            }
+        }
+        catch { }
+        close();
+    }
+
 
     private Message readMessage()
     {
@@ -87,6 +121,12 @@ public class VoiceSession : ISession
     public void sendMessage(Message message)
     {
         if (!isConnected()) return;
+        sendQueue.Enqueue(message);
+        sendEvent.Set();
+    }
+
+    private void writeMessage(Message message)
+    {
         sbyte[] data = message.getData();
         stream.WriteByte((byte)message.command);
         int len = data != null ? data.Length : 0;
@@ -114,6 +154,7 @@ public class VoiceSession : ISession
 
     public void close()
     {
-        try { client?.Close(); } catch { }
+        running = false;
+        try { sendEvent.Set(); } catch { }
     }
 }
