@@ -131,6 +131,7 @@ public class Server {
     public boolean isStopDhvtSieuHang;
     @Getter
     private final Config config;
+    private com.ngocrong.server.voice.VoiceServer voiceServer;
 
     public Server() {
         config = new Config();
@@ -1802,6 +1803,8 @@ public class Server {
         try {
             server = new ServerSocket(config.getPort(), 10000);
             server.setReuseAddress(true);
+            voiceServer = new com.ngocrong.server.voice.VoiceServer(config.getVoicePort());
+            voiceServer.start();
             id = 0;
             start = true;
             Thread auto = new Thread(new AutoSaveData());
@@ -1854,6 +1857,9 @@ public class Server {
         try {
             server.close();
             server = null;
+            if (voiceServer != null) {
+                voiceServer.stop();
+            }
             Lucky.isRunning = false;
             MySQLConnect.close();
             logger.debug("End socket");

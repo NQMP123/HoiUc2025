@@ -8430,8 +8430,10 @@ public class Panel : IActionListener, IChatable
     {
         MyVector menu = new MyVector();
         menu.addElement(new Command("Âm lượng" + ": " + VoiceRecorder.playbackGain.ToString("0.0"), this, 29001, null));
-        string autoText = mResources.voice_autoplay + ": " + (VoiceMessageManager.AutoPlay ? mResources.ON : mResources.OFF);
-        menu.addElement(new Command(autoText, this, 29002, null));
+        string autoWorld = mResources.voice_autoplay_world + ": " + (VoiceMessageManager.AutoPlayWorld ? mResources.ON : mResources.OFF);
+        string autoPrivate = mResources.voice_autoplay_private + ": " + (VoiceMessageManager.AutoPlayPrivate ? mResources.ON : mResources.OFF);
+        menu.addElement(new Command(autoWorld, this, 29002, null));
+        menu.addElement(new Command(autoPrivate, this, 29003, null));
         GameCanvas.menu.startAt(menu, X, (selected + 1) * ITEM_HEIGHT - cmy + yScroll);
     }
 
@@ -9925,7 +9927,12 @@ public class Panel : IActionListener, IChatable
         }
         if (idAction == 29002)
         {
-            VoiceMessageManager.AutoPlay = !VoiceMessageManager.AutoPlay;
+            VoiceMessageManager.AutoPlayWorld = !VoiceMessageManager.AutoPlayWorld;
+            openVoiceChatConfigMenu();
+        }
+        if (idAction == 29003)
+        {
+            VoiceMessageManager.AutoPlayPrivate = !VoiceMessageManager.AutoPlayPrivate;
             openVoiceChatConfigMenu();
         }
         if (idAction == 11000)

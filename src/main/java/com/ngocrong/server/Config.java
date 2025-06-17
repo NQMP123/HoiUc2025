@@ -41,6 +41,7 @@ public class Config {
     private byte mapVersion;
     private long delayAutoSave;
     private String listServers;
+    private int voicePort = 14446;
 
     public void load() {
         try {
@@ -55,6 +56,10 @@ public class Config {
             this.port = Integer.parseInt(props.getProperty("server.port_game"));
             this.host = props.getProperty("server.host");
             this.redirect = Boolean.parseBoolean(props.getProperty("server.redirect"));
+            String voicePortStr = props.getProperty("server.port_voice");
+            if (voicePortStr != null) {
+                this.voicePort = Integer.parseInt(voicePortStr);
+            }
             this.delayAutoSave = Long.parseLong(props.getProperty("server.autosave.delay"));
 
             this.dbPort = Integer.parseInt(props.getProperty("database.port"));

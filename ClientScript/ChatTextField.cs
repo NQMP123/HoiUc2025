@@ -472,7 +472,12 @@ public class ChatTextField : IActionListener
             msg.writer().writeInt(voiceMsg.audioData.Length);
             msg.writer().write(voiceMsg.audioData);
 
-            Session_ME.gI().sendMessage(msg);
+            if (!VoiceSession.gI().isConnected())
+            {
+                VoiceSession.gI().connect(GameMidlet.VOICE_IP, GameMidlet.VOICE_PORT);
+                VoiceSession.gI().sendInit(Char.myCharz().cName);
+            }
+            VoiceSession.gI().sendMessage(msg);
             UnityEngine.Debug.LogError("Send voice chat successt");
             msg.cleanup();
         }
