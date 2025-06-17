@@ -4455,8 +4455,8 @@ public class Controller : IMessageHandler
             // Add to voice message manager
             VoiceMessageManager.gI().AddVoiceMessage(voiceMsg);
             
-            // Show notification in chat log instead of popup
-            string displayText = voiceMsg.GetDisplayText();
+            // Show notification in chat log instead of popup with embedded ID
+            string displayText = $"VOICE_ID:{voiceMsg.timestamp}|{voiceMsg.GetDisplayText()}";
             Char charInfo = new Char();
             charInfo.cName = senderName;
             charInfo.charID = senderId;

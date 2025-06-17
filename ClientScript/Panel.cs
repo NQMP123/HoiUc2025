@@ -8464,7 +8464,7 @@ public class Panel : IActionListener, IChatable
             string msg = info.s;
             if (msg.Contains("Voice (") || msg.Contains("Voice message ("))
             {
-                playVoiceMessageFromLog(msg);
+                playVoiceMessageFromLog(info);
                 if (GameCanvas.isTouch)
                 {
                     selected = -1;
@@ -8482,10 +8482,11 @@ public class Panel : IActionListener, IChatable
         }
     }
 
-    private void playVoiceMessageFromLog(string displayText)
+    private void playVoiceMessageFromLog(InfoItem info)
     {
         try
         {
+            string displayText = info.s;
             string senderName = null;
             VoiceMessageType messageType = VoiceMessageType.WORLD_CHAT;
 
@@ -8511,28 +8512,37 @@ public class Panel : IActionListener, IChatable
             VoiceMessageManager manager = VoiceMessageManager.gI();
             VoiceMessage targetMessage = null;
 
-            if (messageType == VoiceMessageType.WORLD_CHAT && senderName != null)
+            // Prefer lookup by embedded voice ID
+            if (info.voiceId > 0)
             {
-                MyVector worldMessages = manager.GetWorldChatVoiceMessages();
-                for (int i = worldMessages.size() - 1; i >= 0; i--)
+                targetMessage = manager.FindByTimestamp(info.voiceId);
+            }
+
+            if (targetMessage == null)
+            {
+                if (messageType == VoiceMessageType.WORLD_CHAT && senderName != null)
                 {
-                    VoiceMessage msg = (VoiceMessage)worldMessages.elementAt(i);
-                    if (msg.senderName.Equals(senderName))
+                    MyVector worldMessages = manager.GetWorldChatVoiceMessages();
+                    for (int i = worldMessages.size() - 1; i >= 0; i--)
                     {
-                        targetMessage = msg;
-                        break;
+                        VoiceMessage msg = (VoiceMessage)worldMessages.elementAt(i);
+                        if (msg.senderName.Equals(senderName))
+                        {
+                            targetMessage = msg;
+                            break;
+                        }
                     }
                 }
-            }
-            else if (messageType == VoiceMessageType.PRIVATE_CHAT)
-            {
-                for (int i = manager.GetVoiceMessageCount() - 1; i >= 0; i--)
+                else if (messageType == VoiceMessageType.PRIVATE_CHAT)
                 {
-                    VoiceMessage msg = manager.GetVoiceMessage(i);
-                    if (msg != null && msg.IsPrivateChat())
+                    for (int i = manager.GetVoiceMessageCount() - 1; i >= 0; i--)
                     {
-                        targetMessage = msg;
-                        break;
+                        VoiceMessage msg = manager.GetVoiceMessage(i);
+                        if (msg != null && msg.IsPrivateChat())
+                        {
+                            targetMessage = msg;
+                            break;
+                        }
                     }
                 }
             }

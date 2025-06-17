@@ -1,6 +1,9 @@
 public class InfoItem
 {
-	public string s;
+        public string s;
+
+        // Unique ID for associated voice message, if any
+        public long voiceId = -1;
 
 	private mFont f;
 

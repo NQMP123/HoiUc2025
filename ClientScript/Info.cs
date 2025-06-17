@@ -272,7 +272,24 @@ public class Info : IActionListener
 		if (infoWaitToShow.size() <= 0 || s.Equals(((InfoItem)infoWaitToShow.lastElement()).s))
 		{
 		}
-		InfoItem infoItem = new InfoItem(s);
+                InfoItem infoItem = new InfoItem(s);
+
+                // Check for embedded voice ID and strip it from display text
+                if (s.StartsWith("VOICE_ID:"))
+                {
+                        int sepIndex = s.IndexOf('|');
+                        if (sepIndex > 0)
+                        {
+                                string idPart = s.Substring(9, sepIndex - 9);
+                                long parsedId;
+                                if (long.TryParse(idPart, out parsedId))
+                                {
+                                        infoItem.voiceId = parsedId;
+                                }
+                                s = s.Substring(sepIndex + 1);
+                                infoItem.s = s;
+                        }
+                }
 		if (type == 0)
 		{
 			infoItem.speed = s.Length;

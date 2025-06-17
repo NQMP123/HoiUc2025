@@ -164,6 +164,19 @@ public class VoiceMessageManager
     {
         return voiceMessages.size();
     }
+
+    public VoiceMessage FindByTimestamp(long timestamp)
+    {
+        for (int i = voiceMessages.size() - 1; i >= 0; i--)
+        {
+            VoiceMessage msg = (VoiceMessage)voiceMessages.elementAt(i);
+            if (msg.timestamp == timestamp)
+            {
+                return msg;
+            }
+        }
+        return null;
+    }
     
     public MyVector GetWorldChatVoiceMessages()
     {
