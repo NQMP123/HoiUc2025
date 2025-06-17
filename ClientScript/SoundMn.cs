@@ -149,7 +149,7 @@ public class SoundMn
     {
         if (GameCanvas.loginScr.isLogin2 && Char.myCharz().taskMaint != null && Char.myCharz().taskMaint.taskId >= 2)
         {
-            Panel.strTool = new string[11]
+            Panel.strTool = new string[12]
             {
                 "Chức Năng",
                 mResources.radaCard,
@@ -166,7 +166,7 @@ public class SoundMn
             };
             if (Char.myCharz().havePet)
             {
-                Panel.strTool = new string[12]
+                Panel.strTool = new string[13]
                 {
                      "Chức Năng",
                     mResources.radaCard,
@@ -186,7 +186,7 @@ public class SoundMn
         }
         else
         {
-            Panel.strTool = new string[10]
+            Panel.strTool = new string[11]
             {
                 "Chức Năng",
                 mResources.radaCard,
@@ -202,7 +202,7 @@ public class SoundMn
             };
             if (Char.myCharz().havePet)
             {
-                Panel.strTool = new string[11]
+                Panel.strTool = new string[12]
                 {
                     "Chức Năng",
                     mResources.radaCard,

@@ -277,7 +277,6 @@ public class T1 : mResources
         mResources.low = "Thấp";
         mResources.increase_vga = "Tăng đồ họa (cho máy mạnh)";
         mResources.voice_chat_config = "Cấu hình VoiceChat";
-        mResources.voice_volume = "Âm lượng VoiceChat";
         mResources.voice_autoplay = "Tự động nghe VoiceChat";
         mResources.decrease_vga = "Giảm đồ họa (cho máy yếu)";
         mResources.serverchat_off = "Thông báo từ máy chủ";

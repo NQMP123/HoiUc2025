@@ -431,14 +431,14 @@ public class ChatTextField : IActionListener
 
             // Show confirmation
             string chatType = currentChatType == VoiceMessageType.WORLD_CHAT ? "World Chat" : "Private Chat";
-            ChatPopup.addChatPopup($"Voice message sent ({duration:F1}s) - {chatType}", 2000, null);
+            //ChatPopup.addChatPopup($"Voice message sent ({duration:F1}s) - {chatType}", 2000, null);
 
             UnityEngine.Debug.Log($"Voice message sent: {voiceMsg}");
         }
         catch (System.Exception e)
         {
             UnityEngine.Debug.LogError("Error sending voice message: " + e.Message);
-            ChatPopup.addChatPopup("Failed to send voice message", 2000, null);
+            //ChatPopup.addChatPopup("Failed to send voice message", 2000, null);
         }
     }
 

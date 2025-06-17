@@ -4576,10 +4576,10 @@ public class Panel : IActionListener, IChatable
             g.setColor((i != selected) ? 15196114 : 16383818);
             g.fillRect(num, num2, num3, h, 4);
             string toolText = strTool[i];
-            if (strTool[i] == mResources.voice_volume)
-            {
-                toolText = mResources.voice_volume + ": " + VoiceRecorder.playbackGain.ToString("0.0") + "x";
-            }
+            //if (strTool[i] == mResources.voice_volume)
+            //{
+            //    toolText = mResources.voice_volume + ": " + VoiceRecorder.playbackGain.ToString("0.0") + "x";
+            //}
             mFont.tahoma_7b_dark.drawString(g, toolText, xScroll + wScroll / 2, num2 + 6, mFont.CENTER);
             if (!strTool[i].Equals(mResources.gameInfo))
             {
@@ -8429,7 +8429,7 @@ public class Panel : IActionListener, IChatable
     private void openVoiceChatConfigMenu()
     {
         MyVector menu = new MyVector();
-        menu.addElement(new Command(mResources.voice_volume + ": " + VoiceRecorder.playbackGain.ToString("0.0"), this, 29001, null));
+        menu.addElement(new Command("Âm lượng" + ": " + VoiceRecorder.playbackGain.ToString("0.0"), this, 29001, null));
         string autoText = mResources.voice_autoplay + ": " + (VoiceMessageManager.AutoPlay ? mResources.ON : mResources.OFF);
         menu.addElement(new Command(autoText, this, 29002, null));
         GameCanvas.menu.startAt(menu, X, (selected + 1) * ITEM_HEIGHT - cmy + yScroll);

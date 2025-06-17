@@ -14,7 +14,7 @@ public class VoiceRecorder
     private const int SAMPLE_RATE = 16000;
     private const int MAX_RECORDING_TIME = 30; // 30 seconds max
     private const float NOISE_GATE_THRESHOLD = 0.02f; // minimum gate threshold
-    private const float DYNAMIC_THRESHOLD_FACTOR = 0.5f; // factor of average amplitude
+    private const float DYNAMIC_THRESHOLD_FACTOR = 0.002f; // factor of average amplitude
     public static float playbackGain = 1.5f; // amplify playback volume, configurable
     
     public bool IsRecording => isRecording;

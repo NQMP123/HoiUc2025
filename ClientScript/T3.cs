@@ -303,7 +303,6 @@ public class T3 : mResources
 		mResources.low = "Rendah";
             mResources.increase_vga = "Naikkan resolusi (device kuat)";
             mResources.voice_chat_config = "Pengaturan VoiceChat";
-            mResources.voice_volume = "Volume VoiceChat";
             mResources.voice_autoplay = "Putar otomatis VoiceChat";
             mResources.decrease_vga = "Turunkan resolusi (device lemah)";
 		mResources.serverchat_off = "Kabar Server";
