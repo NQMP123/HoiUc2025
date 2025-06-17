@@ -697,14 +697,14 @@ public class Session_ME : ISession
             {
                 dos.Write(m.command);
             }
-
             if (data != null)
             {
                 int dataLength = data.Length;
-
                 if (getKeyComplete)
                 {
-                    // Mã hóa và gửi độ dài
+                    // Mã hóa và gửi độ dài 24-bit (3 bytes)
+                    int num1 = writeKey((sbyte)(dataLength >> 16));
+                    dos.Write((sbyte)num1);
                     int num2 = writeKey((sbyte)(dataLength >> 8));
                     dos.Write((sbyte)num2);
                     int num3 = writeKey((sbyte)(dataLength & 0xFF));
@@ -712,9 +712,11 @@ public class Session_ME : ISession
                 }
                 else
                 {
-                    dos.Write((ushort)dataLength);
+                    // Gửi độ dài 24-bit (3 bytes) không mã hóa
+                    dos.Write((byte)(dataLength >> 16));
+                    dos.Write((byte)(dataLength >> 8));
+                    dos.Write((byte)(dataLength & 0xFF));
                 }
-
                 if (getKeyComplete)
                 {
                     // Gửi từng byte đã mã hóa
@@ -732,35 +734,35 @@ public class Session_ME : ISession
                         dos.Write(data[i]);
                     }
                 }
-
-                sendByteCount += 5 + data.Length;
+                sendByteCount += 4 + data.Length; // 1 byte command + 3 bytes length + data
             }
             else
             {
-                // Gửi độ dài 0 nếu không có dữ liệu
+                // Gửi độ dài 0 nếu không có dữ liệu (24-bit)
                 if (getKeyComplete)
                 {
                     int num4 = 0;
-                    int num5 = writeKey((sbyte)(num4 >> 8));
+                    int num5 = writeKey((sbyte)(num4 >> 16));
                     dos.Write((sbyte)num5);
-                    int num6 = writeKey((sbyte)(num4 & 0xFF));
+                    int num6 = writeKey((sbyte)(num4 >> 8));
                     dos.Write((sbyte)num6);
+                    int num7 = writeKey((sbyte)(num4 & 0xFF));
+                    dos.Write((sbyte)num7);
                 }
                 else
                 {
-                    dos.Write((ushort)0);
+                    dos.Write((byte)0);
+                    dos.Write((byte)0);
+                    dos.Write((byte)0);
                 }
-
-                sendByteCount += 5;
+                sendByteCount += 4; // 1 byte command + 3 bytes length
             }
-
             // Đảm bảo dữ liệu được gửi ngay lập tức
             dos.Flush();
         }
         catch (Exception ex)
         {
             Debug.LogError("doSendMessage error: " + ex.ToString());
-
             // Nếu xảy ra lỗi khi gửi, đánh dấu mất kết nối
             connected = false;
         }

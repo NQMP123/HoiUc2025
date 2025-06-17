@@ -439,14 +439,6 @@ public class GameCanvas : IActionListener
         GameScr.isPaintChatVip = Rms.loadRMSInt("serverchat") != 1;
         Char.isPaintAura = Rms.loadRMSInt("isPaintAura") == 1;
         Char.isPaintAura2 = Rms.loadRMSInt("isPaintAura2") == 1;
-        VoiceRecorder.playbackGain = Rms.loadRMSInt("voiceGain") / 10f;
-        if (VoiceRecorder.playbackGain <= 0f)
-        {
-            VoiceRecorder.playbackGain = 1f;
-        }
-        VoiceMessageManager.AutoPlay = Rms.loadRMSInt("voiceAutoPlay") == 1;
-        int mapVal = Rms.loadRMSInt("voiceMap");
-        VoiceMessageManager.EnableMapVoice = mapVal != 0 && mapVal != -1;
         Res.init();
         SmallImage.loadBigImage();
         Panel.WIDTH_PANEL = 186;

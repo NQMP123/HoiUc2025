@@ -4445,9 +4445,9 @@ public class Controller : IMessageHandler
             VoiceMessage voiceMsg = new VoiceMessage(
                 audioData,
                 senderId,
-                senderName,
-                receiverName.Equals("") ? null : receiverName,
-                duration,
+                senderName, 
+                receiverName.Equals("") ? null : receiverName, 
+                duration, 
                 voiceType
             );
             voiceMsg.timestamp = timestamp;

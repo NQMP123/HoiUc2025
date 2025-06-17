@@ -60,6 +60,7 @@ public class TransportScr : mScreen, IActionListener
 		{
 			instance = new TransportScr();
 		}
+		//Service.gI().transportNow();
 		return instance;
 	}
 

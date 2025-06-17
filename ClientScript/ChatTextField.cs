@@ -194,14 +194,7 @@ public class ChatTextField : IActionListener
     {
         right.caption = mResources.CLOSE;
         this.to = to;
-        if (string.IsNullOrEmpty(to) || to.Equals(""))
-        {
-            currentChatType = (parentScreen == GameScr.gI()) ? VoiceMessageType.MAP_CHAT : VoiceMessageType.WORLD_CHAT;
-        }
-        else
-        {
-            currentChatType = VoiceMessageType.PRIVATE_CHAT;
-        }
+        currentChatType = (string.IsNullOrEmpty(to) || to.Equals("")) ? VoiceMessageType.WORLD_CHAT : VoiceMessageType.PRIVATE_CHAT;
         
         if (Main.isWindowsPhone)
         {
@@ -233,14 +226,7 @@ public class ChatTextField : IActionListener
         tfChat.setFocusWithKb(isFocus: true);
         this.to = to;
         this.parentScreen = parentScreen;
-        if (string.IsNullOrEmpty(to) || to.Equals(""))
-        {
-            currentChatType = (parentScreen == GameScr.gI()) ? VoiceMessageType.MAP_CHAT : VoiceMessageType.WORLD_CHAT;
-        }
-        else
-        {
-            currentChatType = VoiceMessageType.PRIVATE_CHAT;
-        }
+        currentChatType = (string.IsNullOrEmpty(to) || to.Equals("")) ? VoiceMessageType.WORLD_CHAT : VoiceMessageType.PRIVATE_CHAT;
         
         if (Main.isWindowsPhone)
         {
@@ -463,14 +449,14 @@ public class ChatTextField : IActionListener
         {
             Message msg;
             msg = new Message(-58);
-            msg.writer().writeByte((sbyte)voiceMsg.messageType);
-            if (voiceMsg.IsPrivateChat())
+            if (voiceMsg.IsWorldChat())
             {
-                msg.writer().writeUTF(voiceMsg.receiverName);
+                msg.writer().writeByte(0);
             }
             else
             {
-                msg.writer().writeUTF("");
+                msg.writer().writeByte(1);
+                msg.writer().writeUTF(voiceMsg.receiverName);
             }
 
             msg.writer().writeUTF(voiceMsg.senderName);

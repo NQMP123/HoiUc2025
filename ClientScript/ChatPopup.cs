@@ -809,8 +809,8 @@ public class ChatPopup : Effect2, IActionListener
 			
 			foreach (string say in says)
 			{
-                                if (say.Contains("[Thế Giới]"))
-                                {
+				if (say.Contains("[Thế Giới]"))
+				{
 					// Extract sender name from world chat format: "🎤 [Thế Giới] SenderName: Voice (2.3s)"
 					string[] parts = say.Split(':');
 					if (parts.Length >= 2)
@@ -824,26 +824,11 @@ public class ChatPopup : Effect2, IActionListener
 					}
 					messageType = VoiceMessageType.WORLD_CHAT;
 					break;
-                                }
-                                else if (say.Contains("[Map]"))
-                                {
-                                        string[] parts = say.Split(':');
-                                        if (parts.Length >= 2)
-                                        {
-                                                string senderPart = parts[0];
-                                                int startIndex = senderPart.LastIndexOf("] ") + 2;
-                                                if (startIndex >= 2 && startIndex < senderPart.Length)
-                                                {
-                                                        senderName = senderPart.Substring(startIndex).Trim();
-                                                }
-                                        }
-                                        messageType = VoiceMessageType.MAP_CHAT;
-                                        break;
-                                }
-                                else if (say.Contains("Voice message ("))
-                                {
-                                        // Private message format: "🎤 Voice message (2.3s)"
-                                        messageType = VoiceMessageType.PRIVATE_CHAT;
+				}
+				else if (say.Contains("Voice message ("))
+				{
+					// Private message format: "🎤 Voice message (2.3s)"
+					messageType = VoiceMessageType.PRIVATE_CHAT;
 					// For private messages, we need to find the most recent private voice message
 					break;
 				}
@@ -853,8 +838,8 @@ public class ChatPopup : Effect2, IActionListener
 			VoiceMessage targetMessage = null;
 			VoiceMessageManager manager = VoiceMessageManager.gI();
 			
-                        if (messageType == VoiceMessageType.WORLD_CHAT && senderName != null)
-                        {
+			if (messageType == VoiceMessageType.WORLD_CHAT && senderName != null)
+			{
 				// Find world chat message from this sender
 				MyVector worldMessages = manager.GetWorldChatVoiceMessages();
 				for (int i = worldMessages.size() - 1; i >= 0; i--) // Search from newest
@@ -866,21 +851,9 @@ public class ChatPopup : Effect2, IActionListener
 						break;
 					}
 				}
-                        }
-                        else if (messageType == VoiceMessageType.MAP_CHAT && senderName != null)
-                        {
-                                for (int i = manager.GetVoiceMessageCount() - 1; i >= 0; i--)
-                                {
-                                        VoiceMessage msg = manager.GetVoiceMessage(i);
-                                        if (msg != null && msg.messageType == VoiceMessageType.MAP_CHAT && msg.senderName.Equals(senderName))
-                                        {
-                                                targetMessage = msg;
-                                                break;
-                                        }
-                                }
-                        }
-                        else if (messageType == VoiceMessageType.PRIVATE_CHAT)
-                        {
+			}
+			else if (messageType == VoiceMessageType.PRIVATE_CHAT)
+			{
 				// Find most recent private voice message
 				int totalMessages = manager.GetVoiceMessageCount();
 				for (int i = totalMessages - 1; i >= 0; i--) // Search from newest

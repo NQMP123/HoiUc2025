@@ -47,13 +47,9 @@ public class VoiceMessage
         {
             return $"{icon} [Thế Giới] {senderName}: Voice ({durationText})";
         }
-        else if (IsPrivateChat())
-        {
-            return $"{icon} Voice message ({durationText})";
-        }
         else
         {
-            return $"{icon} [Map] {senderName}: Voice ({durationText})";
+            return $"{icon} Voice message ({durationText})";
         }
     }
     
@@ -111,8 +107,7 @@ public class VoiceMessage
 public enum VoiceMessageType
 {
     WORLD_CHAT = 0,
-    PRIVATE_CHAT = 1,
-    MAP_CHAT = 2
+    PRIVATE_CHAT = 1
 }
 
 public class VoiceMessageManager
@@ -122,7 +117,6 @@ public class VoiceMessageManager
     private const int MAX_VOICE_MESSAGES = 50;
     private const int MAX_MESSAGE_AGE_SECONDS = 300; // 5 minutes
     public static bool AutoPlay = false;
-    public static bool EnableMapVoice = true;
     
     public static VoiceMessageManager gI()
     {
@@ -137,11 +131,6 @@ public class VoiceMessageManager
     public void AddVoiceMessage(VoiceMessage voiceMsg)
     {
         if (voiceMsg == null) return;
-
-        if (voiceMsg.messageType == VoiceMessageType.MAP_CHAT && !EnableMapVoice)
-        {
-            return;
-        }
 
         voiceMessages.addElement(voiceMsg);
         

@@ -537,7 +537,6 @@ public class mResources
     public static string decrease_vga = string.Empty;
     public static string voice_chat_config = string.Empty;
     public static string voice_autoplay = string.Empty;
-    public static string voice_map_listen = string.Empty;
 
     public static string serverchat_off = string.Empty;
 

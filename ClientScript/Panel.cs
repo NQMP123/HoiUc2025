@@ -8432,8 +8432,6 @@ public class Panel : IActionListener, IChatable
         menu.addElement(new Command("Âm lượng" + ": " + VoiceRecorder.playbackGain.ToString("0.0"), this, 29001, null));
         string autoText = mResources.voice_autoplay + ": " + (VoiceMessageManager.AutoPlay ? mResources.ON : mResources.OFF);
         menu.addElement(new Command(autoText, this, 29002, null));
-        string mapText = mResources.voice_map_listen + ": " + (VoiceMessageManager.EnableMapVoice ? mResources.ON : mResources.OFF);
-        menu.addElement(new Command(mapText, this, 29003, null));
         GameCanvas.menu.startAt(menu, X, (selected + 1) * ITEM_HEIGHT - cmy + yScroll);
     }
 
@@ -8466,12 +8464,11 @@ public class Panel : IActionListener, IChatable
             string msg = info.s;
             if (msg.Contains("Voice (") || msg.Contains("Voice message ("))
             {
-                MyVector myVector = new MyVector();
-                currInfoItem = selected - 1;
-                myVector.addElement(new Command("Lắng nghe", this, 8005, info));
-                myVector.addElement(new Command(mResources.make_friend, this, 8003, info));
-                GameCanvas.menu.startAt(myVector, X, (selected + 1) * ITEM_HEIGHT - cmy + yScroll);
-                addLogMessage(info);
+                playVoiceMessageFromLog(msg);
+                if (GameCanvas.isTouch)
+                {
+                    selected = -1;
+                }
             }
             else
             {
@@ -8506,20 +8503,6 @@ public class Panel : IActionListener, IChatable
                 }
                 messageType = VoiceMessageType.WORLD_CHAT;
             }
-            else if (displayText.Contains("[Map]"))
-            {
-                string[] parts = displayText.Split(':');
-                if (parts.Length >= 2)
-                {
-                    string senderPart = parts[0];
-                    int startIndex = senderPart.LastIndexOf("] ") + 2;
-                    if (startIndex >= 2 && startIndex < senderPart.Length)
-                    {
-                        senderName = senderPart.Substring(startIndex).Trim();
-                    }
-                }
-                messageType = VoiceMessageType.MAP_CHAT;
-            }
             else if (displayText.Contains("Voice message ("))
             {
                 messageType = VoiceMessageType.PRIVATE_CHAT;
@@ -8535,18 +8518,6 @@ public class Panel : IActionListener, IChatable
                 {
                     VoiceMessage msg = (VoiceMessage)worldMessages.elementAt(i);
                     if (msg.senderName.Equals(senderName))
-                    {
-                        targetMessage = msg;
-                        break;
-                    }
-                }
-            }
-            else if (messageType == VoiceMessageType.MAP_CHAT && senderName != null)
-            {
-                for (int i = manager.GetVoiceMessageCount() - 1; i >= 0; i--)
-                {
-                    VoiceMessage msg = manager.GetVoiceMessage(i);
-                    if (msg != null && msg.messageType == VoiceMessageType.MAP_CHAT && msg.senderName.Equals(senderName))
                     {
                         targetMessage = msg;
                         break;
@@ -9507,11 +9478,6 @@ public class Panel : IActionListener, IChatable
             InfoItem infoItem3 = (InfoItem)p;
             Service.gI().gotoPlayer(infoItem3.charInfo.charID);
         }
-        if (idAction == 8005)
-        {
-            InfoItem infoItem3 = (InfoItem)p;
-            playVoiceMessageFromLog(infoItem3.s);
-        }
         if (idAction == 8001)
         {
             Res.outz("chat player");
@@ -9939,19 +9905,11 @@ public class Panel : IActionListener, IChatable
             {
                 VoiceRecorder.playbackGain = 1f;
             }
-            Rms.saveRMSInt("voiceGain", (int)(VoiceRecorder.playbackGain * 10f));
             openVoiceChatConfigMenu();
         }
         if (idAction == 29002)
         {
             VoiceMessageManager.AutoPlay = !VoiceMessageManager.AutoPlay;
-            Rms.saveRMSInt("voiceAutoPlay", VoiceMessageManager.AutoPlay ? 1 : 0);
-            openVoiceChatConfigMenu();
-        }
-        if (idAction == 29003)
-        {
-            VoiceMessageManager.EnableMapVoice = !VoiceMessageManager.EnableMapVoice;
-            Rms.saveRMSInt("voiceMap", VoiceMessageManager.EnableMapVoice ? 1 : 0);
             openVoiceChatConfigMenu();
         }
         if (idAction == 11000)

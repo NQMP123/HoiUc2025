@@ -164,7 +164,7 @@ public class Session implements ISession {
                 File file = new File(folder);
                 addPath(datas, file);
                 sv.size(datas.size());
-                
+
                 for (String path : datas) {
                     sv.download(path);
                 }
@@ -279,7 +279,7 @@ public class Session implements ISession {
         Message batch = new Message(Cmd.BATCH_MESSAGE);
         FastDataOutputStream out = batch.writer();
         out.writeShort(messages.size());
-        
+
         for (Message ms : messages) {
             out.writeByte(ms.getCommand());
             byte[] data = ms.getData();
@@ -1174,20 +1174,26 @@ public class Session implements ISession {
 
         private Message readMessage() throws IOException {
             // read message command
-
             byte cmd = dis.readByte();
             if (isConnected) {
                 cmd = readKey(cmd);
             }
-            // read size of data
+
+            // read size of data (24-bit instead of 16-bit)
             int size;
             if (isConnected) {
                 byte b1 = dis.readByte();
                 byte b2 = dis.readByte();
-                size = (readKey(b1) & 0xff) << 8 | readKey(b2) & 0xff;
+                byte b3 = dis.readByte();
+                size = (readKey(b1) & 0xff) << 16 | (readKey(b2) & 0xff) << 8 | readKey(b3) & 0xff;
             } else {
-                size = dis.readUnsignedShort();
+                // Read 3 bytes for 24-bit size
+                byte b1 = dis.readByte();
+                byte b2 = dis.readByte();
+                byte b3 = dis.readByte();
+                size = (b1 & 0xff) << 16 | (b2 & 0xff) << 8 | (b3 & 0xff);
             }
+
             lastReceiveTime = System.currentTimeMillis();
             byte data[] = new byte[size];
             int len = 0;
