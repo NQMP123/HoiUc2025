@@ -116,7 +116,8 @@ public class VoiceMessageManager
     private MyVector voiceMessages;
     private const int MAX_VOICE_MESSAGES = 50;
     private const int MAX_MESSAGE_AGE_SECONDS = 300; // 5 minutes
-    public static bool AutoPlay = false;
+    public static bool AutoPlayWorld = false;
+    public static bool AutoPlayPrivate = false;
     
     public static VoiceMessageManager gI()
     {
@@ -144,7 +145,9 @@ public class VoiceMessageManager
         }
         
         UnityEngine.Debug.Log($"Added voice message: {voiceMsg}");
-        if (AutoPlay)
+        bool autoPlay = (voiceMsg.IsWorldChat() && AutoPlayWorld) ||
+                        (voiceMsg.IsPrivateChat() && AutoPlayPrivate);
+        if (autoPlay)
         {
             StopAllVoiceMessages();
             voiceMsg.Play();
