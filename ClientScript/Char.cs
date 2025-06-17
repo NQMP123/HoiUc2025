@@ -1378,7 +1378,15 @@ public class Char : IMapObject
 
     public string getStrLevel()
     {
-        return strLevel[clevel] + "+" + cLevelPercent / 100 + "." + cLevelPercent % 100 + "%";
+        try
+        {
+            return strLevel[clevel] + "+" + cLevelPercent / 100 + "." + cLevelPercent % 100 + "%";
+        }
+        catch
+        {
+            return "";
+
+        }
     }
 
     public int avatarz()

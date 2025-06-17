@@ -16,7 +16,14 @@ public class VoiceRecorder
     private const float NOISE_GATE_THRESHOLD = 0.002f; // minimum gate threshold
     private const float DYNAMIC_THRESHOLD_FACTOR = 0.0001f; // factor of average amplitude
     public static float playbackGain = 1.5f; // amplify playback volume, configurable
-    public static float minimumValue = 0.03f; // minimum volume threshold for noise filtering, configurable
+    public static float minimumValue = 0.005f; // minimum volume threshold for noise filtering, configurable
+    public static float noiseReductionStrength = 0.7f; // strength of noise reduction (0.0 - 1.0)
+    public static float speechThreshold = 0.02f; // threshold to detect speech vs silence
+
+    // Adaptive noise reduction parameters
+    private float[] noiseProfile = null;
+    private const int NOISE_PROFILE_SAMPLES = 1024; // samples for noise profiling
+    private const float SMOOTH_FACTOR = 0.1f; // smoothing factor for gating
 
     public bool IsRecording => isRecording;
     public bool IsPlaying => isPlaying;
@@ -185,8 +192,8 @@ public class VoiceRecorder
         float[] samples = new float[clip.samples * clip.channels];
         clip.GetData(samples, 0);
 
-        // Apply noise filtering with configurable minimumValue
-        ApplyNoiseFilter(samples);
+        // Apply advanced noise reduction
+        ApplyAdvancedNoiseReduction(samples);
 
         // Convert float samples to 16-bit PCM
         byte[] audioData = new byte[samples.Length * 2];
@@ -215,8 +222,9 @@ public class VoiceRecorder
                 samples[i] = Mathf.Clamp(s, -1f, 1f);
             }
 
-            // Apply noise filtering and amplification
-            ApplyNoiseFilterAndAmplify(samples);
+            // Apply advanced noise reduction and amplification
+            ApplyAdvancedNoiseReduction(samples);
+            ApplyAmplification(samples);
 
             AudioClip clip = AudioClip.Create("VoiceMessage", samples.Length, 1, SAMPLE_RATE, false);
             clip.SetData(samples, 0);
@@ -231,51 +239,169 @@ public class VoiceRecorder
     }
 
     /// <summary>
-    /// Apply noise filtering using configurable minimumValue threshold
+    /// Advanced noise reduction with adaptive noise profiling and smooth gating
     /// </summary>
-    /// <param name="samples">Audio samples to filter</param>
-    private void ApplyNoiseFilter(float[] samples)
+    /// <param name="samples">Audio samples to process</param>
+    private void ApplyAdvancedNoiseReduction(float[] samples)
     {
-        // Use configurable minimumValue as primary threshold
-        float threshold = minimumValue;
+        // Step 1: Build noise profile from quiet sections
+        BuildNoiseProfile(samples);
 
-        // Optional: combine with dynamic threshold for better filtering
-        float sum = 0f;
-        for (int i = 0; i < samples.Length; i++)
+        // Step 2: Apply windowed analysis and noise reduction
+        int windowSize = 512;
+        float[] smoothGate = new float[samples.Length];
+
+        for (int i = 0; i < samples.Length; i += windowSize)
         {
-            sum += Mathf.Abs(samples[i]);
+            int endIdx = Mathf.Min(i + windowSize, samples.Length);
+
+            // Analyze current window
+            float windowEnergy = 0f;
+            for (int j = i; j < endIdx; j++)
+            {
+                windowEnergy += samples[j] * samples[j];
+            }
+            windowEnergy = Mathf.Sqrt(windowEnergy / (endIdx - i));
+
+            // Determine if this window contains speech
+            bool isSpeech = windowEnergy > speechThreshold;
+
+            // Calculate noise reduction factor for this window
+            float reductionFactor = CalculateNoiseReduction(windowEnergy, isSpeech);
+
+            // Apply smooth gating
+            for (int j = i; j < endIdx; j++)
+            {
+                smoothGate[j] = reductionFactor;
+            }
         }
-        float avg = sum / samples.Length;
-        float dynamicThreshold = Mathf.Max(NOISE_GATE_THRESHOLD, avg * DYNAMIC_THRESHOLD_FACTOR);
 
-        // Use the higher of the two thresholds for better noise filtering
-        float finalThreshold = Mathf.Max(threshold, dynamicThreshold);
+        // Step 3: Smooth the gating envelope to avoid artifacts
+        SmoothGatingEnvelope(smoothGate);
 
-        // Apply noise filtering
+        // Step 4: Apply noise reduction with smooth gating
         for (int i = 0; i < samples.Length; i++)
         {
-            if (Mathf.Abs(samples[i]) < finalThreshold)
+            // Apply noise reduction based on smooth gate
+            float originalSample = samples[i];
+            float noiseReduced = ApplySpectralSubtraction(originalSample, i);
+
+            // Blend between original and noise-reduced based on gate
+            samples[i] = Mathf.Lerp(noiseReduced, originalSample, smoothGate[i]);
+
+            // Final hard threshold for very low signals
+            if (Mathf.Abs(samples[i]) < minimumValue)
             {
                 samples[i] = 0f;
             }
         }
 
-        UnityEngine.Debug.Log($"Applied noise filter with threshold: {finalThreshold:F4} (minimumValue: {minimumValue:F4}, dynamic: {dynamicThreshold:F4})");
+        UnityEngine.Debug.Log($"Applied advanced noise reduction (strength: {noiseReductionStrength:F2})");
     }
 
     /// <summary>
-    /// Apply noise filtering and amplification for playback
+    /// Build noise profile from quiet sections of audio
     /// </summary>
-    /// <param name="samples">Audio samples to process</param>
-    private void ApplyNoiseFilterAndAmplify(float[] samples)
+    /// <param name="samples">Audio samples</param>
+    private void BuildNoiseProfile(float[] samples)
     {
-        // First apply noise filtering
-        ApplyNoiseFilter(samples);
+        if (noiseProfile == null)
+        {
+            noiseProfile = new float[NOISE_PROFILE_SAMPLES];
+        }
 
-        // Then amplify remaining samples
+        // Find quiet sections (first 10% of audio or sections below speech threshold)
+        int quietSamples = 0;
+        int maxQuietSamples = Mathf.Min(samples.Length / 10, NOISE_PROFILE_SAMPLES);
+
+        for (int i = 0; i < samples.Length && quietSamples < maxQuietSamples; i++)
+        {
+            if (Mathf.Abs(samples[i]) < speechThreshold * 0.5f)
+            {
+                noiseProfile[quietSamples] = samples[i];
+                quietSamples++;
+            }
+        }
+
+        // If not enough quiet samples, use beginning of audio
+        if (quietSamples < maxQuietSamples / 2)
+        {
+            int beginSamples = Mathf.Min(samples.Length, NOISE_PROFILE_SAMPLES);
+            for (int i = 0; i < beginSamples; i++)
+            {
+                noiseProfile[i] = samples[i];
+            }
+        }
+    }
+
+    /// <summary>
+    /// Calculate noise reduction factor based on signal characteristics
+    /// </summary>
+    /// <param name="energy">Window energy</param>
+    /// <param name="isSpeech">Whether window contains speech</param>
+    /// <returns>Noise reduction factor (0 = full reduction, 1 = no reduction)</returns>
+    private float CalculateNoiseReduction(float energy, bool isSpeech)
+    {
+        if (isSpeech)
+        {
+            // During speech: reduce noise but preserve speech
+            float speechRatio = Mathf.Clamp01((energy - speechThreshold) / speechThreshold);
+            return Mathf.Lerp(1f - noiseReductionStrength * 0.5f, 1f, speechRatio);
+        }
+        else
+        {
+            // During silence: aggressive noise reduction
+            return 1f - noiseReductionStrength;
+        }
+    }
+
+    /// <summary>
+    /// Apply spectral subtraction for noise reduction
+    /// </summary>
+    /// <param name="sample">Input sample</param>
+    /// <param name="index">Sample index</param>
+    /// <returns>Noise reduced sample</returns>
+    private float ApplySpectralSubtraction(float sample, int index)
+    {
+        if (noiseProfile == null) return sample;
+
+        // Simple spectral subtraction approximation
+        int profileIndex = index % noiseProfile.Length;
+        float estimatedNoise = noiseProfile[profileIndex];
+
+        // Subtract estimated noise
+        float cleaned = sample - estimatedNoise * noiseReductionStrength;
+
+        // Prevent over-subtraction artifacts
+        if (Mathf.Sign(cleaned) != Mathf.Sign(sample))
+        {
+            cleaned = sample * 0.1f; // Reduce but don't flip phase
+        }
+
+        return cleaned;
+    }
+
+    /// <summary>
+    /// Smooth gating envelope to reduce artifacts
+    /// </summary>
+    /// <param name="envelope">Gating envelope to smooth</param>
+    private void SmoothGatingEnvelope(float[] envelope)
+    {
+        for (int i = 1; i < envelope.Length; i++)
+        {
+            envelope[i] = Mathf.Lerp(envelope[i - 1], envelope[i], SMOOTH_FACTOR);
+        }
+    }
+
+    /// <summary>
+    /// Apply amplification to processed samples
+    /// </summary>
+    /// <param name="samples">Samples to amplify</param>
+    private void ApplyAmplification(float[] samples)
+    {
         for (int i = 0; i < samples.Length; i++)
         {
-            if (samples[i] != 0f) // Only amplify non-filtered samples
+            if (samples[i] != 0f) // Only amplify non-silenced samples
             {
                 float amplified = samples[i] * playbackGain;
                 samples[i] = Mathf.Clamp(amplified, -1f, 1f);
@@ -364,6 +490,26 @@ public class VoiceRecorder
     {
         minimumValue = Mathf.Clamp(value, 0f, 1f);
         UnityEngine.Debug.Log($"Noise filter minimum value set to: {minimumValue:F4}");
+    }
+
+    /// <summary>
+    /// Set noise reduction strength
+    /// </summary>
+    /// <param name="strength">Strength value (0.0 to 1.0)</param>
+    public static void SetNoiseReductionStrength(float strength)
+    {
+        noiseReductionStrength = Mathf.Clamp(strength, 0f, 1f);
+        UnityEngine.Debug.Log($"Noise reduction strength set to: {noiseReductionStrength:F2}");
+    }
+
+    /// <summary>
+    /// Set speech detection threshold
+    /// </summary>
+    /// <param name="threshold">Threshold value (0.0 to 1.0)</param>
+    public static void SetSpeechThreshold(float threshold)
+    {
+        speechThreshold = Mathf.Clamp(threshold, 0f, 1f);
+        UnityEngine.Debug.Log($"Speech threshold set to: {speechThreshold:F4}");
     }
 
     /// <summary>

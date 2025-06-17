@@ -273,7 +273,7 @@ public class VoiceMessageService {
 
     private void sendPrivateChatVoiceMessage(VoiceMessage voiceMsg, Player receiver) {
         try {
-            Message msg = new Message(-54); // CMD_VOICE_RECEIVE
+            Message msg = new Message(-58); // CMD_VOICE_RECEIVE
             writeVoiceMessageToMessage(msg, voiceMsg);
 
             // Send to specific player

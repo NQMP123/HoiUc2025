@@ -466,6 +466,7 @@ public class ChatTextField : IActionListener
             msg.writer().write(voiceMsg.audioData);
 
             Session_ME.gI().sendMessage(msg);
+            UnityEngine.Debug.LogError("Send voice chat success");
             msg.cleanup();
         }
         catch (System.Exception e)

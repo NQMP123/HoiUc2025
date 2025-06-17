@@ -1732,7 +1732,7 @@ public class Panel : IActionListener, IChatable
             {
                 text += "\n|6|1|";
             }
-           
+
             currItem.compare = getCompare(currItem);
             text += "\n--";
             text = text + "\n|6|" + item.template.description;
@@ -8462,23 +8462,16 @@ public class Panel : IActionListener, IChatable
         {
             InfoItem info = (InfoItem)logChat.elementAt(selected - 1);
             string msg = info.s;
+            MyVector myVector = new MyVector();
+            currInfoItem = selected - 1;
             if (msg.Contains("Voice (") || msg.Contains("Voice message ("))
             {
-                playVoiceMessageFromLog(info);
-                if (GameCanvas.isTouch)
-                {
-                    selected = -1;
-                }
+                myVector.addElement(new Command("Lắng Nghe", this, 8005, info));
             }
-            else
-            {
-                MyVector myVector = new MyVector();
-                currInfoItem = selected - 1;
-                myVector.addElement(new Command(mResources.CHAT, this, 8001, info));
-                myVector.addElement(new Command(mResources.make_friend, this, 8003, info));
-                GameCanvas.menu.startAt(myVector, X, (selected + 1) * ITEM_HEIGHT - cmy + yScroll);
-                addLogMessage(info);
-            }
+            myVector.addElement(new Command(mResources.CHAT, this, 8001, info));
+            myVector.addElement(new Command(mResources.make_friend, this, 8003, info));
+            GameCanvas.menu.startAt(myVector, X, (selected + 1) * ITEM_HEIGHT - cmy + yScroll);
+            addLogMessage(info);
         }
     }
 
@@ -9477,16 +9470,28 @@ public class Panel : IActionListener, IChatable
             if (type != 8)
             {
             }
+            Debug.LogError("fiend : " + infoItem.charInfo.charID);
         }
         if (idAction == 8002)
         {
+
             InfoItem infoItem2 = (InfoItem)p;
             Service.gI().friend(2, infoItem2.charInfo.charID);
+           
         }
         if (idAction == 8004)
         {
             InfoItem infoItem3 = (InfoItem)p;
             Service.gI().gotoPlayer(infoItem3.charInfo.charID);
+        }
+        if (idAction == 8005)
+        {
+            InfoItem info = (InfoItem)p;
+            playVoiceMessageFromLog(info);
+            if (GameCanvas.isTouch)
+            {
+                selected = -1;
+            }
         }
         if (idAction == 8001)
         {

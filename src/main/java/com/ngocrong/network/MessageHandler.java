@@ -440,6 +440,7 @@ public class MessageHandler implements IMessageHandler {
                     }
 
                     case -58: // CMD_VOICE_WORLD_CHAT
+                        System.err.println("Read VoiceChat");
                         byte type = mss.reader().readByte();
                         if (_player != null && _player.zone != null && type == 0) {
                             VoiceMessageService.gI().processWorldChatVoiceMessage(_player, mss);
