@@ -89,6 +89,7 @@ public class VoiceSession : ISession
         close();
     }
 
+
     private Message readMessage()
     {
         try
@@ -155,6 +156,5 @@ public class VoiceSession : ISession
     {
         running = false;
         try { sendEvent.Set(); } catch { }
-        try { client?.Close(); } catch { }
     }
 }
