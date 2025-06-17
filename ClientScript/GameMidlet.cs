@@ -10,6 +10,9 @@ public class GameMidlet
 
     public static int PORT2;
 
+    public static string VOICE_IP;
+    public static int VOICE_PORT = 14446;
+
     public static sbyte PROVIDER;
 
     public static string VERSION = "0.0.3";
@@ -33,7 +36,9 @@ public class GameMidlet
         MotherCanvas.instance = new MotherCanvas();
         Session_ME.gI().setHandler(Controller.gI());
         Session_ME2.gI().setHandler(Controller.gI());
+        VoiceSession.gI().setHandler(Controller.gI());
         Session_ME2.isMainSession = false;
+        VOICE_IP = IP;
         instance = this;
         gameCanvas = new GameCanvas();
         gameCanvas.start();

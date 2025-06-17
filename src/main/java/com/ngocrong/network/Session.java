@@ -432,6 +432,7 @@ public class Session implements ISession {
         ds.writeUTF(config.getHost());
         ds.writeInt(config.getPort());
         ds.writeBoolean(config.isRedirect());
+        ds.writeInt(config.getVoicePort());
         ds.flush();
         doSendMessage(ms);
         ms.cleanup();

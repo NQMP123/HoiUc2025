@@ -4,6 +4,7 @@ import com.ngocrong.NQMP.UtilsNQMP;
 import com.ngocrong.model.VoiceMessage;
 import com.ngocrong.model.VoiceMessageType;
 import com.ngocrong.user.Player;
+import com.ngocrong.server.voice.VoiceSessionManager;
 import com.ngocrong.server.SessionManager;
 import com.ngocrong.util.Utils;
 import com.ngocrong.map.tzone.Zone;
@@ -248,8 +249,8 @@ public class VoiceMessageService {
             Message msg = new Message(-58); // CMD_VOICE_RECEIVE
             writeVoiceMessageToMessage(msg, voiceMsg);
 
-            // Broadcast to all players
-            SessionManager.sendMessage(msg);
+            // Broadcast to all players via voice channel
+            com.ngocrong.server.voice.VoiceSessionManager.sendMessage(msg);
 
             msg.cleanup();
 
@@ -263,7 +264,9 @@ public class VoiceMessageService {
             Message msg = new Message(-58); // CMD_VOICE_RECEIVE
             writeVoiceMessageToMessage(msg, voiceMsg);
 
-            zone.service.sendMessage(msg, null);
+            for (Player p : zone.getPlayers()) {
+                com.ngocrong.server.voice.VoiceSessionManager.sendMessage(p, msg);
+            }
 
             msg.cleanup();
         } catch (Exception e) {
@@ -276,9 +279,8 @@ public class VoiceMessageService {
             Message msg = new Message(-58); // CMD_VOICE_RECEIVE
             writeVoiceMessageToMessage(msg, voiceMsg);
 
-            // Send to specific player
-            sender.getSession().sendMessage(msg);
-            receiver.getSession().sendMessage(msg);
+            com.ngocrong.server.voice.VoiceSessionManager.sendMessage(sender, msg);
+            com.ngocrong.server.voice.VoiceSessionManager.sendMessage(receiver, msg);
 
             msg.cleanup();
 
