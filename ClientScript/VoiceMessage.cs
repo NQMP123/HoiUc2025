@@ -7,6 +7,7 @@ public class VoiceMessage
     public string receiverName; // null for world chat
     public float duration;
     public long timestamp;
+    public int senderId;
     public VoiceMessageType messageType;
     public bool isPlaying = false;
     public bool hasPlayed = false;
@@ -16,9 +17,10 @@ public class VoiceMessage
         timestamp = mSystem.currentTimeMillis();
     }
     
-    public VoiceMessage(byte[] audioData, string senderName, string receiverName, float duration, VoiceMessageType type)
+    public VoiceMessage(byte[] audioData, int senderId, string senderName, string receiverName, float duration, VoiceMessageType type)
     {
         this.audioData = audioData;
+        this.senderId = senderId;
         this.senderName = senderName;
         this.receiverName = receiverName;
         this.duration = duration;

@@ -9,15 +9,17 @@ public class VoiceMessage {
     private String receiverName; // null for world chat
     private float duration;
     private long timestamp;
+    private int senderId;
     private VoiceMessageType messageType;
     
     public VoiceMessage() {
         this.timestamp = System.currentTimeMillis();
     }
     
-    public VoiceMessage(byte[] audioData, String senderName, String receiverName, 
+    public VoiceMessage(byte[] audioData, int senderId, String senderName, String receiverName,
                        float duration, VoiceMessageType messageType) {
         this.audioData = audioData;
+        this.senderId = senderId;
         this.senderName = senderName;
         this.receiverName = receiverName;
         this.duration = duration;
@@ -63,6 +65,14 @@ public class VoiceMessage {
     
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public int getSenderId() {
+        return senderId;
+    }
+
+    public void setSenderId(int senderId) {
+        this.senderId = senderId;
     }
     
     public VoiceMessageType getMessageType() {

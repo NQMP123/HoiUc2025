@@ -55,6 +55,7 @@ public class VoiceMessageService_Case92 {
             }
             
             voiceMsg.setSenderName(sender.name);
+            voiceMsg.setSenderId(sender.id);
             
             if (!validateVoiceMessage(voiceMsg, sender)) {
                 return;
@@ -87,6 +88,7 @@ public class VoiceMessageService_Case92 {
             }
             
             voiceMsg.setSenderName(sender.name);
+            voiceMsg.setSenderId(sender.id);
             
             if (!validateVoiceMessage(voiceMsg, sender)) {
                 return;
@@ -167,6 +169,7 @@ public class VoiceMessageService_Case92 {
             voiceDataMsg.writer().writeUTF(voiceId); // Unique ID
             voiceDataMsg.writer().writeByte(voiceMsg.getMessageType().getValue());
             voiceDataMsg.writer().writeUTF(voiceMsg.getSenderName());
+            voiceDataMsg.writer().writeInt(voiceMsg.getSenderId());
             voiceDataMsg.writer().writeUTF(voiceMsg.getReceiverName() != null ? voiceMsg.getReceiverName() : "");
             voiceDataMsg.writer().writeFloat(voiceMsg.getDuration());
             voiceDataMsg.writer().writeLong(voiceMsg.getTimestamp());
@@ -210,7 +213,7 @@ public class VoiceMessageService_Case92 {
             byte[] audioData = new byte[audioDataLength];
             message.reader().readFully(audioData);
             
-            VoiceMessage voiceMsg = new VoiceMessage(audioData, senderName, receiverName, duration, type);
+            VoiceMessage voiceMsg = new VoiceMessage(audioData, 0, senderName, receiverName, duration, type);
             voiceMsg.setTimestamp(timestamp);
             
             return voiceMsg;
