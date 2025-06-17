@@ -2,7 +2,8 @@ package com.ngocrong.model;
 
 public enum VoiceMessageType {
     WORLD_CHAT(0),
-    PRIVATE_CHAT(1);
+    PRIVATE_CHAT(1),
+    MAP_CHAT(2);
     
     private final int value;
     

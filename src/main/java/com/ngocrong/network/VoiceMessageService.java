@@ -6,6 +6,7 @@ import com.ngocrong.model.VoiceMessageType;
 import com.ngocrong.user.Player;
 import com.ngocrong.server.SessionManager;
 import com.ngocrong.util.Utils;
+import com.ngocrong.map.tzone.Zone;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -127,6 +128,34 @@ public class VoiceMessageService {
         }
     }
 
+    public void processMapChatVoiceMessage(Player sender, Message message) {
+        try {
+            VoiceMessage voiceMsg = parseVoiceMessage(message, VoiceMessageType.MAP_CHAT);
+            if (voiceMsg == null) {
+                return;
+            }
+
+            voiceMsg.setSenderName(sender.name);
+            voiceMsg.setSenderId(sender.id);
+
+            if (!validateVoiceMessage(voiceMsg, sender)) {
+                return;
+            }
+
+            totalVoiceMessagesSent.incrementAndGet();
+            totalAudioDataProcessed.addAndGet(voiceMsg.getDataSize());
+            addToRecentMessages(voiceMsg);
+
+            broadcastMapVoiceMessage(voiceMsg, sender.zone);
+
+            System.err.println(String.format("Map chat voice message processed: %s", voiceMsg));
+
+        } catch (Exception e) {
+            UtilsNQMP.logError(e);
+            sendErrorMessage(sender, "Failed to process voice message");
+        }
+    }
+
     private VoiceMessage parseVoiceMessage(Message message, VoiceMessageType type) {
         try {
             String receiverName = null;
@@ -224,6 +253,19 @@ public class VoiceMessageService {
 
             msg.cleanup();
 
+        } catch (Exception e) {
+            UtilsNQMP.logError(e);
+        }
+    }
+
+    private void broadcastMapVoiceMessage(VoiceMessage voiceMsg, Zone zone) {
+        try {
+            Message msg = new Message(-58); // CMD_VOICE_RECEIVE
+            writeVoiceMessageToMessage(msg, voiceMsg);
+
+            zone.service.sendMessage(msg, null);
+
+            msg.cleanup();
         } catch (Exception e) {
             UtilsNQMP.logError(e);
         }
