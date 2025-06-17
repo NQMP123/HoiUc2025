@@ -9495,7 +9495,7 @@ public class Panel : IActionListener, IChatable
         }
         if (idAction == 8001)
         {
-            Res.outz("chat player");
+            Debug.LogError("chat player");
             InfoItem infoItem4 = (InfoItem)p;
             if (chatTField == null)
             {
@@ -9509,6 +9509,7 @@ public class Panel : IActionListener, IChatable
             chatTField.to = string.Empty;
             chatTField.isShow = true;
             chatTField.tfChat.isFocus = true;
+            chatTField.to = infoItem4.charInfo.cName;
             chatTField.tfChat.setIputType(TField.INPUT_TYPE_ANY);
             if (Main.isWindowsPhone)
             {
@@ -9516,7 +9517,7 @@ public class Panel : IActionListener, IChatable
             }
             if (!Main.isPC)
             {
-                chatTField.startChat2(this, string.Empty);
+                chatTField.startChat2(this, infoItem4.charInfo.cName);
             }
         }
         if (idAction == 1000)

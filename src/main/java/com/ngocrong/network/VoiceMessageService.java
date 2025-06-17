@@ -118,7 +118,7 @@ public class VoiceMessageService {
             addToRecentMessages(voiceMsg);
 
             // Send to receiver
-            sendPrivateChatVoiceMessage(voiceMsg, receiver);
+            sendPrivateChatVoiceMessage(voiceMsg,sender, receiver);
 
             System.err.println(String.format("Private chat voice message processed: %s", voiceMsg));
 
@@ -271,12 +271,13 @@ public class VoiceMessageService {
         }
     }
 
-    private void sendPrivateChatVoiceMessage(VoiceMessage voiceMsg, Player receiver) {
+    private void sendPrivateChatVoiceMessage(VoiceMessage voiceMsg,Player sender, Player receiver) {
         try {
             Message msg = new Message(-58); // CMD_VOICE_RECEIVE
             writeVoiceMessageToMessage(msg, voiceMsg);
 
             // Send to specific player
+            sender.getSession().sendMessage(msg);
             receiver.getSession().sendMessage(msg);
 
             msg.cleanup();

@@ -3370,6 +3370,93 @@ public class Player {
         }
     }
 
+    public Item findItemInList2(Item[] items, Item itPut) {
+        for (Item it : items) {
+            if (it == null || it.template.id != itPut.template.id) {
+                continue;
+            }
+
+            // Nếu cả 2 đều không có options -> có thể stack
+            if (it.options == null && itPut.options == null) {
+                return it;
+            }
+
+            // Nếu chỉ 1 bên có options -> không thể stack
+            if (it.options == null || itPut.options == null) {
+                continue;
+            }
+
+            // Kiểm tra tất cả options có giống nhau không
+            boolean optionsMatch = true;
+
+            // Kiểm tra độ dài options
+            if (it.options.size() != itPut.options.size()) {
+                continue;
+            }
+
+            // Kiểm tra từng option
+            for (ItemOption putOption : itPut.options) {
+                if (putOption == null) {
+                    continue;
+                }
+
+                boolean foundMatch = false;
+                for (ItemOption itOption : it.options) {
+                    if (itOption != null
+                            && itOption.optionTemplate.id == putOption.optionTemplate.id
+                            && itOption.param == putOption.param) { // Thêm check param nếu cần
+                        foundMatch = true;
+                        break;
+                    }
+                }
+
+                if (!foundMatch) {
+                    optionsMatch = false;
+                    break;
+                }
+            }
+
+            if (optionsMatch) {
+                return it;
+            }
+        }
+        return null;
+    }
+
+    public Item findItemInList2(List<Item> items, Item itPut) {
+        for (Item it : items) {
+            if (it == null || it.template.id != itPut.template.id) {
+                continue;
+            }
+            if (it.options == null || itPut.options == null) {
+                continue;
+            }
+            if (it.options.isEmpty() || itPut.options.isEmpty()) {
+                continue;
+            }
+            boolean hasIncompatibleOption = false;
+            for (ItemOption op : it.options) {
+                if (op != null && itPut.findOptions(op.optionTemplate.id) != -1) {
+                    hasIncompatibleOption = true;
+                    break;
+                }
+            }
+            if (hasIncompatibleOption) {
+                continue;
+            }
+            for (ItemOption op : itPut.options) {
+                if (op != null && it.findOptions(op.optionTemplate.id) != -1) {
+                    hasIncompatibleOption = true;
+                    break;
+                }
+            }
+            if (!hasIncompatibleOption) {
+                return it;
+            }
+        }
+        return null;
+    }
+
     public int getIndexBagById(int id) {
 
         for (int i = 0; i < this.itemBag.length; i++) {
@@ -10390,6 +10477,8 @@ public class Player {
         if (item.template.id == 457) {
             writeLog(item, (byte) 0);
         }
+
+        // Xử lý các loại item đặc biệt
         if (item.template.type == Item.TYPE_GOLD) {
             addGold(item.quantity);
             return true;
@@ -10414,27 +10503,58 @@ public class Player {
             }
             return true;
         }
+
         if (item.template.isUpToUp()) {
             int maxQuantity = Server.getMaxQuantityItem();
+
+            // Tìm item có thể stack quantity (cùng template và options)
+            Item existingItem = findItemInList2(this.itemBag, item);
+            if (existingItem != null) {
+                if (existingItem.quantity + item.quantity > maxQuantity && maxQuantity != 0) {
+                    int add = maxQuantity - existingItem.quantity;
+                    existingItem.quantity = maxQuantity;
+                    item.quantity -= add;
+                } else {
+                    existingItem.quantity += item.quantity;
+                }
+                service.setItemBag();
+                return true;
+            } else {
+                for (int i = 0; i < itemBag.length; i++) {
+                    if (itemBag[i] == null) {
+                        itemBag[i] = item;
+                        item.indexUI = i;
+                        service.setItemBag();
+                        return true;
+                    }
+                }
+            }
+
+            // Tìm item cùng id để cộng options (logic gốc của bạn)
             int index = getIndexBagById(item.id);
             if (index != -1) {
                 Item item2 = this.itemBag[index];
                 boolean flag = false;
-                for (ItemOption o : item2.options) {
-                    if (o.optionTemplate.id == 1 || o.optionTemplate.id == 31 || o.optionTemplate.id == 11
-                            || o.optionTemplate.id == 12 || o.optionTemplate.id == 13) {
-                        for (ItemOption o2 : item.options) {
-                            if (o.optionTemplate.id == o2.optionTemplate.id) {
-                                o.param += o2.param;
-                                service.setItemBag();
-                                flag = true;
+
+                if (item2.options != null && item.options != null) {
+                    for (ItemOption o : item2.options) {
+                        if (o.optionTemplate.id == 1 || o.optionTemplate.id == 31 || o.optionTemplate.id == 11
+                                || o.optionTemplate.id == 12 || o.optionTemplate.id == 13) {
+                            for (ItemOption o2 : item.options) {
+                                if (o.optionTemplate.id == o2.optionTemplate.id) {
+                                    o.param += o2.param;
+                                    service.setItemBag();
+                                    flag = true;
+                                }
                             }
                         }
                     }
                 }
+
                 if (flag) {
                     return true;
                 }
+
                 if (item2.quantity + item.quantity > maxQuantity) {
                     return false;
                 }
@@ -10450,11 +10570,12 @@ public class Player {
                     service.setItemBag();
                 } else {
                     service.updateBag(index, item2.quantity);
-
                 }
                 return true;
             }
         }
+
+        // Tìm slot trống
         for (int i = 0; i < itemBag.length; i++) {
             if (itemBag[i] == null) {
                 itemBag[i] = item;

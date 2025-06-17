@@ -224,7 +224,7 @@ public class ChatTextField : IActionListener
     public void startChat2(IChatable parentScreen, string to)
     {
         tfChat.setFocusWithKb(isFocus: true);
-        this.to = to;
+    //    this.to = to;
         this.parentScreen = parentScreen;
         currentChatType = (string.IsNullOrEmpty(to) || to.Equals("")) ? VoiceMessageType.WORLD_CHAT : VoiceMessageType.PRIVATE_CHAT;
         
@@ -374,7 +374,14 @@ public class ChatTextField : IActionListener
             ChatPopup.addChatPopup("Microphone not available or permission denied", 3000, null);
             return;
         }
-
+        if (strChat.Equals(mResources.world_channel_5_luong))
+        {
+            currentChatType = VoiceMessageType.WORLD_CHAT;
+        }
+        else if (strChat.Equals(mResources.chat_player))
+        {
+            currentChatType = VoiceMessageType.PRIVATE_CHAT;
+        }
         if (!isRecordingVoice)
         {
             // Start recording
@@ -466,7 +473,7 @@ public class ChatTextField : IActionListener
             msg.writer().write(voiceMsg.audioData);
 
             Session_ME.gI().sendMessage(msg);
-            UnityEngine.Debug.LogError("Send voice chat success");
+            UnityEngine.Debug.LogError("Send voice chat successt");
             msg.cleanup();
         }
         catch (System.Exception e)
