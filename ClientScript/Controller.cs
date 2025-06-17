@@ -4417,6 +4417,7 @@ public class Controller : IMessageHandler
             // Read voice message data
             sbyte messageType = msg.reader().readByte();
             string senderName = msg.reader().readUTF();
+            int senderId = msg.reader().readInt();
             string receiverName = msg.reader().readUTF();
             float duration = msg.reader().readFloat();
             long timestamp = msg.reader().readLong();
@@ -4442,10 +4443,11 @@ public class Controller : IMessageHandler
             
             // Create voice message object
             VoiceMessage voiceMsg = new VoiceMessage(
-                audioData, 
-                senderName, 
-                receiverName.Equals("") ? null : receiverName, 
-                duration, 
+                audioData,
+                senderId,
+                senderName,
+                receiverName.Equals("") ? null : receiverName,
+                duration,
                 voiceType
             );
             voiceMsg.timestamp = timestamp;
@@ -4457,7 +4459,7 @@ public class Controller : IMessageHandler
             string displayText = voiceMsg.GetDisplayText();
             Char charInfo = new Char();
             charInfo.cName = senderName;
-            charInfo.charID = -1;
+            charInfo.charID = senderId;
             GameScr.info2.addInfoWithChar(displayText, charInfo, voiceType == VoiceMessageType.WORLD_CHAT);
             if (GameCanvas.panel.isShow && GameCanvas.panel.type == 8)
             {

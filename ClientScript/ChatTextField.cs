@@ -417,6 +417,7 @@ public class ChatTextField : IActionListener
             // Create voice message
             VoiceMessage voiceMsg = new VoiceMessage(
                 audioData,
+                Char.myCharz().charID,
                 Char.myCharz().cName,
                 currentChatType == VoiceMessageType.PRIVATE_CHAT ? to : null,
                 duration,

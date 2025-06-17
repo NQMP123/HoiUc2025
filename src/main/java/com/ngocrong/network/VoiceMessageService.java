@@ -57,6 +57,7 @@ public class VoiceMessageService {
             }
 
             voiceMsg.setSenderName(sender.name);
+            voiceMsg.setSenderId(sender.id);
 
             if (!validateVoiceMessage(voiceMsg, sender)) {
                 return;
@@ -89,6 +90,7 @@ public class VoiceMessageService {
             }
 
             voiceMsg.setSenderName(sender.name);
+            voiceMsg.setSenderId(sender.id);
 
             if (!validateVoiceMessage(voiceMsg, sender)) {
                 return;
@@ -147,7 +149,7 @@ public class VoiceMessageService {
             // Filter noise on the server side as an extra safeguard
             audioData = Utils.applyNoiseGate(audioData, 0.02f);
 
-            VoiceMessage voiceMsg = new VoiceMessage(audioData, senderName, receiverName, duration, type);
+            VoiceMessage voiceMsg = new VoiceMessage(audioData, 0, senderName, receiverName, duration, type);
             voiceMsg.setTimestamp(timestamp);
 
             return voiceMsg;
@@ -245,6 +247,7 @@ public class VoiceMessageService {
     private void writeVoiceMessageToMessage(Message msg, VoiceMessage voiceMsg) throws IOException {
         msg.writer().writeByte(voiceMsg.getMessageType().getValue());
         msg.writer().writeUTF(voiceMsg.getSenderName());
+        msg.writer().writeInt(voiceMsg.getSenderId());
 
         if (voiceMsg.getReceiverName() != null) {
             msg.writer().writeUTF(voiceMsg.getReceiverName());
