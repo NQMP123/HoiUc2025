@@ -20,48 +20,25 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ArrayList;
 
-// LƯU Ý QUAN TRỌNG CHO NGƯỜI DÙNG:
-// Các lỗi linter bạn thấy sau khi áp dụng thay đổi này có thể là do các phần sau CHƯA được triển khai
-// hoặc không thể truy cập được từ file này. Vui lòng kiểm tra và hoàn thiện chúng:
-// 1. Trong OsinCheckInRepository:
-//    - public [return_type] save(OsinCheckInData data) // Phải hỗ trợ cả insert và update
-//    - public int countToday()
-//    - public Optional<OsinCheckInData> findTodayByPlayer(long playerId)
-//    - public List<OsinCheckInData> findAllTodayUnrewarded() // Lấy các record có checkinDate là hôm nay và rewarded = 0
-// 2. Trong Player:
-//    - public boolean isOnline()
-//    - public boolean addItem(Item item)
-// 3. Trong com.ngocrong.server.Manager (hoặc lớp quản lý người chơi/server tương đương):
-//    - public static Manager getInstance()
-//    - public Player getPlayer(long playerId)
-//    - public void sendNotificationToAllPlayers(String message)
 public class OsinCheckInEvent {
 
     private static OsinCheckInRepository repo() {
         return GameRepository.getInstance().osinCheckInRepository;
     }
+    private static final int[] MILESTONES = {2000, 1000, 500, 400, 300, 200};
 
-    // Các mốc điểm danh, sắp xếp từ cao đến thấp để dễ xử lý
-    private static final int[] MILESTONES = {1000, 500, 400, 300, 200};
-
-    /**
-     * Lấy tổng số lượt điểm danh trong ngày hôm nay. Yêu cầu:
-     * OsinCheckInRepository.countToday() phải được triển khai.
-     */
     public static int getTotalTodayCheckIns() {
         return repo().countToday();
     }
 
-    /**
-     * Xử lý khi người chơi thực hiện điểm danh. Yêu cầu:
-     * OsinCheckInRepository.findTodayByPlayer(long) và
-     * OsinCheckInRepository.save(OsinCheckInData) phải được triển khai.
-     */
     public static void checkIn(Player player) {
         if (player == null) {
             return;
         }
-
+        if (player.getSession().user.getActivated() == 0) {
+            player.service.sendThongBao("Bạn cần kích hoạt thành viên để tham gia tính năng này");
+            return;
+        }
         Optional<OsinCheckInData> existingCheckInOpt = repo().findTodayByPlayer(player.id);
 
         if (existingCheckInOpt.isPresent()) {
@@ -71,22 +48,19 @@ public class OsinCheckInEvent {
             } else {
                 player.service.sendThongBao("Bạn đã điểm danh hôm nay. Chờ đạt mốc để nhận quà.");
             }
-            if (existingCheckInData.getRewarded() == null || existingCheckInData.getRewarded() == 0) {
-                int currentTotal = getTotalTodayCheckIns();
-                int currentMilestone = getHighestAchievedMilestone(currentTotal);
-                if (currentMilestone > 0) {
-                    tryGiveRewardToPlayer(player, existingCheckInData, currentMilestone);
-                }
-            }
             return;
         }
 
         int totalBeforeThisCheckIn = getTotalTodayCheckIns();
-
+        if (totalBeforeThisCheckIn >= MILESTONES[0]) {
+            player.service.sendThongBao("Hoạt động đã kết thúc");
+            return;
+        }
         OsinCheckInData newData = new OsinCheckInData();
         newData.setPlayerId(player.id);
         newData.setCheckinDate(Instant.now());
-        newData.setRewarded((byte) 0); // Mặc định là chưa nhận thưởng
+        newData.setRewarded((byte) 0);
+        newData.setIs_rewarded(0); // Mặc định là chưa nhận thưởng
 
         repo().save(newData); // Phương thức này phải có khả năng insert/update.
 
@@ -101,11 +75,6 @@ public class OsinCheckInEvent {
         }
     }
 
-    /**
-     * Xử lý các mốc phần thưởng toàn cục khi có người mới điểm danh. Thông báo
-     * cho toàn server nếu đạt mốc mới. Phát quà cho những người chơi đủ điều
-     * kiện (đã điểm danh, chưa nhận quà).
-     */
     private static void processGlobalMilestoneRewards(int previousTotal, int currentTotal) {
         int currentHighestAchievedMilestone = getHighestAchievedMilestone(currentTotal);
         if (currentHighestAchievedMilestone == 0) {
@@ -116,36 +85,23 @@ public class OsinCheckInEvent {
 
         // 1. Thông báo nếu đạt một mốc MỚI (server vừa vượt qua mốc này)
         if (currentHighestAchievedMilestone > previousHighestAchievedMilestone) {
-            Item rewardDetails = getRewardItemForMilestoneValue(currentHighestAchievedMilestone);
-            if (rewardDetails != null) {
-                String announcement = String.format("Chúc mừng! Mốc điểm danh %d người đã đạt! Phần thưởng: %s (x%d).",
-                        currentHighestAchievedMilestone,
-                        rewardDetails.template.name,
-                        rewardDetails.quantity);
-                SessionManager.addBigMessage(announcement);
-            }
+
+            String announcement = String.format("Chúc mừng! Mốc điểm danh %d người đã đạt! Hãy tham gia điểm danh ngay", currentHighestAchievedMilestone);
+            SessionManager.addThongBaoAll(announcement);
+
         }
 
         // 2. Sau khi có khả năng đạt mốc mới (hoặc mốc cũ nhưng có người mới điểm
         // danh),
         // quét tất cả những người đã điểm danh hôm nay mà chưa nhận quà.
-        List<OsinCheckInData> candidates = repo().findAllTodayUnrewarded();
+        List<OsinCheckInData> candidates = repo().findAllTodayUnrewarded(currentHighestAchievedMilestone);
         for (OsinCheckInData checkInData : candidates) {
             tryGiveRewardToPlayer(null, checkInData, currentHighestAchievedMilestone);
         }
     }
 
-    /**
-     * Thử trao phần thưởng cho một người chơi dựa trên mốc hiện tại.
-     *
-     * @param playerToReward Người chơi cụ thể để thử trao quà (có thể null nếu
-     * chỉ có checkInData).
-     * @param checkInData Dữ liệu điểm danh của người chơi.
-     * @param currentMilestone Mốc cao nhất server đã đạt.
-     */
-    private static void tryGiveRewardToPlayer(Player playerToReward, OsinCheckInData checkInData,
-            int currentMilestone) {
-        if (checkInData.getRewarded() != null && checkInData.getRewarded() == 1) {
+    private static void tryGiveRewardToPlayer(Player playerToReward, OsinCheckInData checkInData, int currentMilestone) {
+        if (checkInData.getRewarded() != null && checkInData.getIs_rewarded() >= currentMilestone) {
             return; // Đã nhận quà rồi
         }
 
@@ -156,18 +112,22 @@ public class OsinCheckInEvent {
             p = SessionManager.findChar(checkInData.getPlayerId());
         }
 
-        boolean isX2 = currentMilestone >= 500;
+        boolean isX2 = currentMilestone >= 5;
 
         if (p != null) {
             if (isX2) {
                 Item base = new Item(ItemName.PHIEU_X2_TNSM);
-                p.setItemTime(ItemTimeName.PHIEU_X2_TNSM, base.template.iconID, true, 24 * 60 * 60);
+                p.setItemTime(ItemTimeName.PHIEU_X2_TNSM, base.template.iconID, true, Utils.getSecondsUntilEndOfDay());
                 p.service.sendThongBao(String.format("Bạn nhận được x2 TNSM trong ngày từ mốc %d người điểm danh.", currentMilestone));
                 checkInData.setRewarded((byte) 1);
+                checkInData.setIs_rewarded(currentMilestone);
                 repo().save(checkInData);
-                return;
             }
-
+            if (currentMilestone == 5) {
+                Item reward = new Item(Utils.nextInt(1021, 1023));
+                reward.quantity = 1;
+                p.addItem(reward);
+            }
             if (rewardItem == null) {
                 return;
             }
@@ -178,22 +138,12 @@ public class OsinCheckInEvent {
                         currentMilestone,
                         rewardToGive.template.name, rewardToGive.quantity));
                 checkInData.setRewarded((byte) 1);
+                checkInData.setIs_rewarded(currentMilestone);
                 repo().save(checkInData);
             } else if (playerToReward != null && p.id == playerToReward.id) {
                 p.service.sendThongBao(String.format("Hành trang không đủ chỗ trống để nhận quà điểm danh mốc %d.",
                         currentMilestone));
             }
-        } else {
-            // người chơi offline
-            if (isX2) {
-                Item base = new Item(ItemName.PHIEU_X2_TNSM);
-                storeItemTimeOffline(checkInData.getPlayerId(),
-                        new ItemTime(ItemTimeName.PHIEU_X2_TNSM, base.template.iconID, 24 * 60 * 60, true));
-            } else if (rewardItem != null) {
-                storeItemOffline(checkInData.getPlayerId(), rewardItem.clone());
-            }
-            checkInData.setRewarded((byte) 1);
-            repo().save(checkInData);
         }
     }
 
@@ -214,24 +164,25 @@ public class OsinCheckInEvent {
      */
     private static Item getRewardItemForMilestoneValue(int milestoneValue) {
         Item reward = null;
-        if (milestoneValue >= 1000) {
+        if (milestoneValue >= 6) {
             reward = new Item(ItemName.THOI_VANG);
             reward.quantity = 5;
-        } else if (milestoneValue >= 500) {
-            reward = new Item(ItemName.PHIEU_X2_TNSM);
-            reward.quantity = 1;
-        } else if (milestoneValue >= 400) {
+        }
+        if (milestoneValue >= 5) {
+
+        } else if (milestoneValue >= 4) {
+            reward = new Item(ItemName.VANG_190);
+            reward.quantity = 1_000_000_000;
+        } else if (milestoneValue >= 3) {
             int[] vt = {342, 343, 344, 345};
             reward = new Item(vt[Utils.nextInt(vt.length)]);
-            reward.quantity = 2;
-        } else if (milestoneValue >= 300) {
-            int[] sp = {441, 442, 443, 444, 445, 446, 447};
-            reward = new Item(sp[Utils.nextInt(sp.length)]);
-            reward.quantity = 2;
-        } else if (milestoneValue >= 200) {
-            int[] nr = {ItemName.NGOC_RONG_5_SAO, ItemName.NGOC_RONG_6_SAO, ItemName.NGOC_RONG_7_SAO};
-            reward = new Item(nr[Utils.nextInt(nr.length)]);
-            reward.quantity = 1;
+            reward.quantity = 3;
+        } else if (milestoneValue >= 2) {
+            reward = new Item(ItemName.VANG_190);
+            reward.quantity = 500_000_000;
+        } else if (milestoneValue >= 1) {
+            reward = new Item(ItemName.VANG_190);
+            reward.quantity = 500_000_000;
         }
 
         if (reward != null) {
@@ -240,79 +191,20 @@ public class OsinCheckInEvent {
         return reward;
     }
 
-    private static void storeItemOffline(int playerId, Item item) {
-        if (item == null) {
-            return;
-        }
-        PlayerDataRepository pr = GameRepository.getInstance().player;
-        Optional<PlayerData> opt = pr.findById(playerId);
-        if (opt.isEmpty()) {
-            return;
-        }
-        PlayerData data = opt.get();
-        Gson g = new Gson();
-        List<Item> list;
-        try {
-            list = g.fromJson(data.boxCrackBall, new TypeToken<List<Item>>() {
-            }.getType());
-        } catch (Exception e) {
-            list = new ArrayList<>();
-        }
-        if (list == null) {
-            list = new ArrayList<>();
-        }
-        list.add(item);
-        data.boxCrackBall = g.toJson(list);
-        pr.save(data);
-    }
-
-    private static void storeItemTimeOffline(int playerId, ItemTime itemTime) {
-        PlayerDataRepository pr = GameRepository.getInstance().player;
-        Optional<PlayerData> opt = pr.findById(playerId);
-        if (opt.isEmpty()) {
-            return;
-        }
-        PlayerData data = opt.get();
-        Gson g = new Gson();
-        List<ItemTime> list;
-        try {
-            list = g.fromJson(data.itemTime, new TypeToken<List<ItemTime>>() {
-            }.getType());
-        } catch (Exception e) {
-            list = new ArrayList<>();
-        }
-        if (list == null) {
-            list = new ArrayList<>();
-        }
-        boolean found = false;
-        for (ItemTime it : list) {
-            if (it.id == itemTime.id) {
-                it.seconds += itemTime.seconds;
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            list.add(itemTime);
-        }
-        data.itemTime = g.toJson(list);
-        pr.save(data);
-    }
-
     public static void checkPendingReward(Player player) {
-        if (player == null) {
+        if (player == null || player.itemTimes == null || player.itemTimes.isEmpty()) {
             return;
         }
-        Optional<OsinCheckInData> opt = repo().findTodayByPlayer(player.id);
-        if (opt.isPresent()) {
-            OsinCheckInData data = opt.get();
-            if (data.getRewarded() == null || data.getRewarded() == 0) {
-                int milestone = getHighestAchievedMilestone(getTotalTodayCheckIns());
-                if (milestone > 0) {
-                    tryGiveRewardToPlayer(player, data, milestone);
+        Utils.setTimeout(() -> {
+            var itemTime = player.getItemTime(ItemTimeName.PHIEU_X2_TNSM);
+            if (itemTime != null) {
+                if (getTotalTodayCheckIns() >= 5) {
+                    player.setTimeForItemtime(ItemTimeName.PHIEU_X2_TNSM, Utils.getSecondsUntilEndOfDay());
+                } else {
+                    player.setTimeForItemtime(ItemTimeName.PHIEU_X2_TNSM, 1);
                 }
             }
-        }
+        }, 5000);
     }
 
     // Các phương thức cũ isCheckInDay(), isRewardDay(), today(),

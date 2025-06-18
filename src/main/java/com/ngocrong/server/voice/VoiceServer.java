@@ -23,8 +23,10 @@ public class VoiceServer implements Runnable {
             server = new ServerSocket(port);
             server.setReuseAddress(true);
             running = true;
+            System.err.println("Active VoiceServer at port :" + port);
             while (running) {
                 Socket socket = server.accept();
+                System.err.println("Avalible session voice");
                 new VoiceSession(socket);
             }
         } catch (Exception ignored) {

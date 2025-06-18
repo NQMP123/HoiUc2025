@@ -863,7 +863,7 @@ public class Event1 {
                 pet.options.add(new ItemOption(OPT_HP, 2 + Utils.nextInt(8))); // 12-15% HP
                 pet.options.add(new ItemOption(OPT_KI, 2 + Utils.nextInt(8))); // 2-6% giáp
                 pet.options.add(new ItemOption(OPT_SD, 2 + Utils.nextInt(8)));
-                pet.options.add(new ItemOption(OPT_SAT_THUONG_LAZE, 2 + Utils.nextInt(8))); // 10% Sát thương chiêu Laze
+                pet.options.add(new ItemOption(OPT_SAT_THUONG_LAZE, 2)); // 10% Sát thương chiêu Laze
                 break;
 
             case 6: // Pet Baby Rồng Xanh Secret: 15-18% HP, 5% giáp, 10% Sát thương chiêu tự sát
@@ -872,7 +872,7 @@ public class Event1 {
                 pet.options.add(new ItemOption(OPT_HP, 2 + Utils.nextInt(8))); // 12-15% HP
                 pet.options.add(new ItemOption(OPT_KI, 2 + Utils.nextInt(8))); // 2-6% giáp
                 pet.options.add(new ItemOption(OPT_SD, 2 + Utils.nextInt(8)));
-                pet.options.add(new ItemOption(OPT_SAT_THUONG_TU_SAT, 2 + Utils.nextInt(8))); // 10% Sát thương chiêu tự sát
+                pet.options.add(new ItemOption(OPT_SAT_THUONG_TU_SAT, 2)); // 10% Sát thương chiêu tự sát
                 break;
         }
         return pet;

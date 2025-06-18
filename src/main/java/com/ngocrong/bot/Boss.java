@@ -40,7 +40,7 @@ public abstract class Boss extends Player implements Bot {
     public int point;
     public boolean isShow = true;
     public byte percentDame = -1;
-
+   
     public static List<Boss> listBoss = new ArrayList<>();
 
     public static String strBoss(Player player) {
@@ -135,12 +135,8 @@ public abstract class Boss extends Player implements Bot {
     protected void dropGroupC(Player player) {
         int percent = Utils.nextInt(100);
         int itemId;
-        if (percent < 40) {
-            itemId = ItemName.NGOC_RONG_3_SAO;
-        } else if (percent < 80) {
-            itemId = ItemName.NGOC_RONG_4_SAO;
-        } else if (percent < 90) {
-            itemId = RandomItem.DO_CUOI.next();
+        if (percent < 90) {
+            itemId = 190;
         } else if (percent < 97) {
             int[] tl = {
                 ItemName.AO_THAN_LINH, ItemName.AO_THAN_NAMEC, ItemName.AO_THAN_XAYDA,

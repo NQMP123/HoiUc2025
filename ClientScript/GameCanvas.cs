@@ -403,6 +403,11 @@ public class GameCanvas : IActionListener
         initPaint();
         loadDust();
         loadWaterSplash();
+        if (!VoiceSession.gI().isConnected())
+        {
+            VoiceSession.gI().connect(GameMidlet.VOICE_IP, GameMidlet.VOICE_PORT);
+            VoiceSession.gI().sendInit(Char.myCharz().cName);
+        }
         panel = new Panel();
         imgShuriken = loadImage("/mainImage/myTexture2df.png");
         int num = Rms.loadRMSInt("clienttype");
@@ -1827,12 +1832,14 @@ public class GameCanvas : IActionListener
 
     public void keyPressedz(int keyCode)
     {
+       // Debug.LogError("key : " + keyCode);
         lastTimePress = mSystem.currentTimeMillis();
         if ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 65 && keyCode <= 122) || keyCode == 10 || keyCode == 8 || keyCode == 13 || keyCode == 32 || keyCode == 31)
         {
             keyAsciiPress = keyCode;
         }
         mapKeyPress(keyCode);
+      //  Debug.LogError("key2: " + keyCode);
     }
 
     public void mapKeyPress(int keyCode)
@@ -2378,6 +2385,8 @@ public class GameCanvas : IActionListener
     {
         closeKeyBoard();
         Char.isLoadingMap = true;
+        Debug.LogError("Settrue4");
+
     }
 
     public void openWeb(string strLeft, string strRight, string url, string str)

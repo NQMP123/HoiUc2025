@@ -1029,7 +1029,9 @@ public class Zone extends Thread {
                 long reactDame = Utils.percentOf(dame, target.info.options[97] + pPhanDonCanChien);
                 if (!(_player instanceof Broly) && !(_player instanceof SuperBroly)) {
                     reactDame = _player.injure(target, null, reactDame);
-
+                }
+                if (!_player.canReactDame) {
+                    reactDame = -1;
                 }
                 if (reactDame >= _player.info.hp) {
                     reactDame = _player.info.hp - 1;

@@ -3841,9 +3841,9 @@ public class Panel : IActionListener, IChatable
                 isChangeZone = false;
                 if (Char.myCharz().cHP > 0 && Char.myCharz().statusMe != 14)
                 {
-                    InfoDlg.showWait();
                     if (type == 3)
                     {
+                        Debug.LogError("Change zone 3");
                         if (GameScr.gI().numPlayer[selected] < GameScr.gI().maxPlayer[selected] || TileMap.zoneID == selected)
                         {
                             InfoDlg.showWait();
@@ -3855,10 +3855,6 @@ public class Panel : IActionListener, IChatable
                             GameCanvas.panel.setTypeZone();
                             GameCanvas.panel.show();
                         }
-                    }
-                    else if (type == 14)
-                    {
-                        Service.gI().requestMapSelect(selected);
                     }
                 }
             }
@@ -7445,7 +7441,11 @@ public class Panel : IActionListener, IChatable
 
     private void doFireMapTrans()
     {
-        doFireZone();
+        if (selected >= -1)
+        {
+            Service.gI().requestMapSelect(selected);
+            hideNow();
+        }
     }
 
     private void doFireGiaoDich()
@@ -7540,6 +7540,7 @@ public class Panel : IActionListener, IChatable
         {
             selected = -1;
         }
+      
     }
 
     private void doFireCombine()
@@ -8054,6 +8055,7 @@ public class Panel : IActionListener, IChatable
                     if (chatTField == null)
                     {
                         chatTField = new ChatTextField();
+                        chatTField.openMic = true;
                         chatTField.tfChat.y = GameCanvas.h - 35 - ChatTextField.gI().tfChat.height;
                         chatTField.initChatTextField();
                         chatTField.parentScreen = GameCanvas.panel;
@@ -8063,6 +8065,7 @@ public class Panel : IActionListener, IChatable
                     chatTField.to = string.Empty;
                     chatTField.isShow = true;
                     chatTField.tfChat.isFocus = true;
+                   
                     chatTField.tfChat.setIputType(TField.INPUT_TYPE_ANY);
                     if (Main.isWindowsPhone)
                     {
@@ -9502,6 +9505,7 @@ public class Panel : IActionListener, IChatable
             if (chatTField == null)
             {
                 chatTField = new ChatTextField();
+                chatTField.openMic = true;
                 chatTField.tfChat.y = GameCanvas.h - 35 - ChatTextField.gI().tfChat.height;
                 chatTField.initChatTextField();
                 chatTField.parentScreen = GameCanvas.panel;

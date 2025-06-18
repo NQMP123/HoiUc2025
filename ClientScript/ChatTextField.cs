@@ -47,6 +47,7 @@ public class ChatTextField : IActionListener
     public string to;
 
     public string strChat = "Chat ";
+    public  bool openMic = false;
 
     public ChatTextField()
     {
@@ -79,8 +80,6 @@ public class ChatTextField : IActionListener
     {
         left = new Command(mResources.OK, this, 8000, null, 1, GameCanvas.h - mScreen.cmdH + 1);
         right = new Command(mResources.DELETE, this, 8001, null, GameCanvas.w - 70, GameCanvas.h - mScreen.cmdH + 1);
-        center = new Command("MIC", this, 8003, null, GameCanvas.w / 2 - 34, GameCanvas.h - mScreen.cmdH + 1);
-        cmdVoiceRecord = center;
         w = tfChat.width + 20;
         h = tfChat.height + 26;
         x = GameCanvas.w / 2 - w / 2;
@@ -89,9 +88,8 @@ public class ChatTextField : IActionListener
         {
             w = 320;
         }
-        left.x = x-68;
-        center.x = x + w - 68;
-        right.x = center.x + w - 68;
+        left.x = x + 20;
+        right.x = left.x + w - 120;
         if (GameCanvas.isTouch)
         {
             tfChat.y -= 5;
@@ -99,10 +97,21 @@ public class ChatTextField : IActionListener
             h += 30;
             left.x = GameCanvas.w / 2 - 120 - 5;
             right.x = GameCanvas.w / 2 + 50;
-            center.x = GameCanvas.w / 2 - 35;
             left.y = GameCanvas.h - 30;
             right.y = GameCanvas.h - 30;
+
+        }
+     
+        if (openMic)
+        {
+            center = new Command("MIC", this, 8003, null, GameCanvas.w / 2 - 34, GameCanvas.h - mScreen.cmdH + 1);
+            cmdVoiceRecord = center;
+            center.x = GameCanvas.w / 2 - 35;
             center.y = GameCanvas.h - 30;
+        }
+        else
+        {
+            center = cmdVoiceRecord = null;
         }
         cmdChat = new Command();
         ActionChat actionChat = delegate (string str)
@@ -472,11 +481,7 @@ public class ChatTextField : IActionListener
             msg.writer().writeInt(voiceMsg.audioData.Length);
             msg.writer().write(voiceMsg.audioData);
 
-            if (!VoiceSession.gI().isConnected())
-            {
-                VoiceSession.gI().connect(GameMidlet.VOICE_IP, GameMidlet.VOICE_PORT);
-                VoiceSession.gI().sendInit(Char.myCharz().cName);
-            }
+            
             VoiceSession.gI().sendMessage(msg);
             UnityEngine.Debug.LogError("Send voice chat successt");
             msg.cleanup();

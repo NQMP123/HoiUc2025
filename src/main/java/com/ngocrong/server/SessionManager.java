@@ -79,7 +79,8 @@ public class SessionManager {
         }
         return userList;
     }
-      public static Player _findPlayer(String name) {
+
+    public static Player _findPlayer(String name) {
         for (Session ss : sessions.values()) {
             if (ss.socket != null && !ss.socket.isClosed() && ss.user != null) {
                 if (ss._player != null && ss._player.name.equals(name)) {
@@ -196,6 +197,21 @@ public class SessionManager {
                 System.err.println("Error at 139");
                 logger.error("failed!", ex);
             }
+        }
+    }
+
+    public static void addThongBaoAll(String text) {
+        for (Session ss : sessions.values()) {
+            try {
+                if (ss.isEnter && ss.socket != null && !ss.socket.isClosed() && ss._player != null) {
+                    ss._player.service.dialogMessage(text);
+                }
+            } catch (Exception ex) {
+                com.ngocrong.NQMP.UtilsNQMP.logError(ex);
+                System.err.println("Error at 138");
+                logger.error("failed!", ex);
+            }
+
         }
     }
 

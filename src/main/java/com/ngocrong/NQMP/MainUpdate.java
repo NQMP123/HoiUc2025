@@ -141,7 +141,7 @@ public class MainUpdate implements Runnable {
         if (now.getHour() >= 20) {
             RewardDHVT23();
         }
-        if (System.currentTimeMillis() - UtilsNQMP.lastCreateBot >= 1500) {
+        if (System.currentTimeMillis() - UtilsNQMP.lastCreateBot >= 5000) {
             VirtualBot_SoSinh bot = new VirtualBot_SoSinh(generateCharacterName());
             bot.setLocation(0, -1);
             UtilsNQMP.lastCreateBot = System.currentTimeMillis();

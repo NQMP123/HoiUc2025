@@ -458,12 +458,12 @@ public class Info {
         }
         MiniDisciple mini = _player.getMiniDisciple();
         if (mini != null) {
-            if (mini.item != null) {
-                ArrayList<ItemOption> options = mini.item.getOptions();
-                for (ItemOption o : options) {
-                    addOption(o.optionTemplate.id, o.param);
-                }
-            }
+//            if (mini.item != null) {
+//                ArrayList<ItemOption> options = mini.item.getOptions();
+//                for (ItemOption o : options) {
+//                    addOption(o.optionTemplate.id, o.param);
+//                }
+//            }
         }
         if (_player.isNhapThe() && _player.myDisciple != null) {
             if (_player.typePorata == 1) {
@@ -625,7 +625,7 @@ public class Info {
             }
 
             if (this._player.exitsItemTime(ItemTimeName.BANH_CUPCAKE)) {
-                this.damageFull += Utils.percentOf(this.damageFull, 10);
+                this.damageFull += Utils.percentOf(this.damageFull, 5);
             }
             if (this._player.exitsItemTime(ItemTimeName.BANH_DONUT)) {
                 this.mpFullTemp += Utils.percentOf(this.mpFullTemp, 5);

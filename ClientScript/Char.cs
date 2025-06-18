@@ -1761,11 +1761,11 @@ public class Char : IMapObject
 
     public virtual void update()
     {
-        if (this.me)
+        if (this.me && GameCanvas.gameTick %30 == 0)
         {
-        //    Debug.Log($"Head{head}");
-        //    Debug.Log($"Body{body}");
-        //    Debug.Log($"Leg{leg}");
+            Debug.Log($"Head{head}");
+            Debug.Log($"Body{body}");
+            Debug.Log($"Leg{leg}");
         }
         if (isMafuba)
         {

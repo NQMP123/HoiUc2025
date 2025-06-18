@@ -34,6 +34,7 @@ public class So1 extends Boss {
         if (team.getType() == 0) {
             setInfo(50000000, 1000000, 10000, 100, 5);
             this.percentDame = 35;
+             canReactDame = false;
         }
     }
 

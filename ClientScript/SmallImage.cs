@@ -145,7 +145,6 @@ public class SmallImage
             if (newSmallVersion != null && array.Length % 127 != newSmallVersion[id])
             {
                 flag = true;
-                Debug.LogError("true at 1:" + id);
 
             }
             if (!flag)
@@ -158,14 +157,12 @@ public class SmallImage
                 else
                 {
                     flag = true;
-                    Debug.LogError("true at 2:" + id);
                 }
             }
         }
         else
         {
             flag = true;
-            Debug.LogError("true at 3:" + id);
         }
         if (flag)
         {

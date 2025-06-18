@@ -30,6 +30,9 @@ public interface OsinCheckInRepository extends JpaRepository<OsinCheckInData, In
 
     @Query(value = "SELECT * FROM nr_event_checkin WHERE DATE(checkin_date) = CURDATE() AND is_rewarded = 0", nativeQuery = true)
     List<OsinCheckInData> findAllTodayUnrewarded();
+    
+    @Query(value = "SELECT * FROM nr_event_checkin WHERE DATE(checkin_date) = CURDATE() AND is_rewarded < :count", nativeQuery = true)
+    List<OsinCheckInData> findAllTodayUnrewarded(@Param("count") int count);
 
     @Query(value = "SELECT * FROM nr_event_checkin WHERE player_id = :playerId ORDER BY checkin_date DESC", nativeQuery = true)
     List<OsinCheckInData> findByPlayerId(@Param("playerId") int playerId);

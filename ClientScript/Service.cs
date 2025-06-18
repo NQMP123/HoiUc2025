@@ -1926,6 +1926,7 @@ public class Service
 
     public void requestMaptemplate(int maptemplateId)
     {
+        Debug.LogError("request info map :" + maptemplateId);
         Message message = null;
         try
         {
@@ -1935,7 +1936,7 @@ public class Service
         }
         catch (Exception ex)
         {
-            Cout.println(ex.Message + ex.StackTrace);
+            Debug.LogError(ex.Message + ex.StackTrace);
         }
         finally
         {
@@ -2188,19 +2189,10 @@ public class Service
         Message message = null;
         try
         {
-            Debug.LogError("REQUEST ICON " + id);
+           // Debug.LogError("REQUEST ICON " + id);
             message = new Message((sbyte)(-67));
             message.writer().writeInt(id);
-            if (Session_ME2.gI().isConnected() && !Session_ME2.connecting)
-            {
-                session = Session_ME2.gI();
-            }
-            else
-            {
-                session = Session_ME.gI();
-            }
             session.sendMessage(message);
-            session = Session_ME.gI();
         }
         catch (Exception ex)
         {

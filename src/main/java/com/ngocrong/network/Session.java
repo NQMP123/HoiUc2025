@@ -36,6 +36,8 @@ import com.ngocrong.consts.ItemName;
 import com.ngocrong.data.VongQuayThuongDeData;
 import com.ngocrong.data.WhisData;
 import com.ngocrong.event.OsinCheckInEvent;
+import com.ngocrong.map.MapManager;
+import com.ngocrong.map.TMap;
 import com.ngocrong.top.AutoReward.AutoReward;
 import com.ngocrong.user.func.BaiSu;
 import lombok.Getter;
@@ -168,6 +170,9 @@ public class Session implements ISession {
                 for (String path : datas) {
                     sv.download(path);
                 }
+                for (TMap map : MapManager.getInstance().maps.values()) {
+                    sv.requestMapTemplate2(map.mapID);
+                }
                 sv.downloadOk();
                 sv.setLinkListServer();
             }
@@ -206,6 +211,13 @@ public class Session implements ISession {
     public void sendMessage(Message message) {
         sender.addMessage(message);
         lastSendTime = System.currentTimeMillis();
+    }
+
+    public void sendMessage(Message message, boolean batch) {
+        if (batch) {
+            sender.addMessage(message);
+            lastSendTime = System.currentTimeMillis();
+        }
     }
 
     private static boolean isSpecialMessage(int command) {

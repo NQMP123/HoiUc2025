@@ -26,4 +26,7 @@ public class OsinCheckInData {
 
     @Column(name = "rewarded")
     private Byte rewarded;
+    
+    @Column(name = "is_rewarded")
+    private Integer is_rewarded;
 }

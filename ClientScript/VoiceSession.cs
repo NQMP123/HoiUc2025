@@ -1,8 +1,10 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Net.Sockets;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Collections.Concurrent;
+using UnityEngine;
 
 public class VoiceSession : ISession
 {
@@ -16,7 +18,22 @@ public class VoiceSession : ISession
     private readonly AutoResetEvent sendEvent = new AutoResetEvent(false);
     private volatile bool running;
     private bool handshake;
+    private volatile bool isConnecting;
+    public VoiceSession()
+    {
+        onConnectionEstablished += OnVoiceConnected;
+        onConnectionFailed += OnVoiceConnectionFailed;
+    }
+    static void OnVoiceConnected()
+    {
+        Debug.Log("Voice chat connected!");
+        VoiceSession.gI().sendInit("PlayerName");
+    }
 
+    static void OnVoiceConnectionFailed()
+    {
+        Debug.Log("Voice chat connection failed!");
+    }
     public static VoiceSession gI()
     {
         return instance;
@@ -24,7 +41,7 @@ public class VoiceSession : ISession
 
     public bool isConnected()
     {
-        return client != null && client.Connected;
+        return client != null && client.Connected && !isConnecting;
     }
 
     public void setHandler(IMessageHandler handler)
@@ -32,26 +49,87 @@ public class VoiceSession : ISession
         messageHandler = handler;
     }
 
+    // Async version - không block main thread
+    public async Task<bool> connectAsync(string host, int port, int timeoutMs = 5000)
+    {
+        if (isConnected() || isConnecting) return false;
+
+        isConnecting = true;
+        try
+        {
+            client = new TcpClient();
+
+            // Async connect với timeout
+            var connectTask = client.ConnectAsync(host, port);
+            var timeoutTask = System.Threading.Tasks.Task.Delay(timeoutMs);
+
+            var completedTask = await System.Threading.Tasks.Task.WhenAny(connectTask, timeoutTask);
+
+            if (completedTask == timeoutTask)
+            {
+                client?.Close();
+                throw new TimeoutException("Connection timeout");
+            }
+
+            if (client.Connected)
+            {
+                stream = client.GetStream();
+                running = true;
+
+                receiver = new Thread(run);
+                receiver.IsBackground = true;
+                receiver.Start();
+
+                sender = new Thread(runSender);
+                sender.IsBackground = true;
+                sender.Start();
+
+                isConnecting = false;
+                return true;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Connection failed: {ex.Message}");
+            client?.Close();
+        }
+
+        isConnecting = false;
+        return false;
+    }
+
+    // Sync version chạy trong background thread
     public void connect(string host, int port)
     {
-        if (isConnected()) return;
-        client = new TcpClient();
-        client.Connect(host, port);
-        stream = client.GetStream();
-        running = true;
-        receiver = new Thread(run);
-        receiver.IsBackground = true;
-        receiver.Start();
-        sender = new Thread(runSender);
-        sender.IsBackground = true;
-        sender.Start();
+        Debug.LogError("connect voiceServer : " +host + ":"+ port);
+        if (isConnected() || isConnecting) return;
+
+        // Chạy connect trong background thread
+        System.Threading.Tasks.Task.Run(async () =>
+        {
+            bool success = await connectAsync(host, port);
+            if (success)
+            {
+                // Notify connection success qua callback hoặc event
+                Debug.LogError("connect success");
+                onConnectionEstablished?.Invoke();
+            }
+            else
+            {
+                onConnectionFailed?.Invoke();
+            }
+        });
     }
+
+    // Events để thông báo kết quả connection
+    public event Action onConnectionEstablished;
+    public event Action onConnectionFailed;
 
     private void run()
     {
         try
         {
-            while (client.Connected)
+            while (client.Connected && running)
             {
                 Message msg = readMessage();
                 if (msg != null)
@@ -61,7 +139,10 @@ public class VoiceSession : ISession
                 else break;
             }
         }
-        catch { }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Receiver error: {ex.Message}");
+        }
         close();
     }
 
@@ -78,6 +159,10 @@ public class VoiceSession : ISession
                     {
                         writeMessage(msg);
                     }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Send error: {ex.Message}");
+                    }
                     finally
                     {
                         msg.cleanup();
@@ -85,35 +170,56 @@ public class VoiceSession : ISession
                 }
             }
         }
-        catch { }
-        close();
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Sender error: {ex.Message}");
+        }
     }
-
 
     private Message readMessage()
     {
         try
         {
+            // Thêm timeout cho read operations
+            if (!stream.DataAvailable)
+            {
+                Thread.Sleep(10); // Tránh CPU spinning
+                return null;
+            }
+
             int cmd = stream.ReadByte();
             if (cmd < 0) return null;
+
             int b1 = stream.ReadByte();
             int b2 = stream.ReadByte();
             int b3 = stream.ReadByte();
+
+            if (b1 < 0 || b2 < 0 || b3 < 0) return null;
+
             int size = (b1 << 16) | (b2 << 8) | b3;
+
+            // Giới hạn kích thước message để tránh memory issues
+            if (size > 1024 * 1024) // 1MB limit
+            {
+                throw new InvalidDataException("Message too large");
+            }
+
             byte[] data = new byte[size];
             int read = 0;
-            while (read < size)
+            while (read < size && running)
             {
                 int r = stream.Read(data, read, size - read);
                 if (r <= 0) return null;
                 read += r;
             }
+
             sbyte[] sdata = new sbyte[size];
             Buffer.BlockCopy(data, 0, sdata, 0, size);
             return new Message((sbyte)cmd, sdata);
         }
-        catch
+        catch (Exception ex)
         {
+            Console.WriteLine($"Read message error: {ex.Message}");
             return null;
         }
     }
@@ -127,24 +233,32 @@ public class VoiceSession : ISession
 
     private void writeMessage(Message message)
     {
-        sbyte[] data = message.getData();
-        stream.WriteByte((byte)message.command);
-        int len = data != null ? data.Length : 0;
-        stream.WriteByte((byte)(len >> 16));
-        stream.WriteByte((byte)(len >> 8));
-        stream.WriteByte((byte)(len));
-        if (len > 0)
+        try
         {
-            byte[] raw = new byte[len];
-            Buffer.BlockCopy(data, 0, raw, 0, len);
-            stream.Write(raw, 0, raw.Length);
+            sbyte[] data = message.getData();
+            stream.WriteByte((byte)message.command);
+            int len = data != null ? data.Length : 0;
+            stream.WriteByte((byte)(len >> 16));
+            stream.WriteByte((byte)(len >> 8));
+            stream.WriteByte((byte)(len));
+            if (len > 0)
+            {
+                byte[] raw = new byte[len];
+                Buffer.BlockCopy(data, 0, raw, 0, len);
+                stream.Write(raw, 0, raw.Length);
+            }
+            stream.Flush();
         }
-        stream.Flush();
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Write message error: {ex.Message}");
+            throw;
+        }
     }
 
     public void sendInit(string name)
     {
-        if (handshake) return;
+        if (handshake || !isConnected()) return;
         Message msg = new Message(-100);
         msg.writer().writeUTF(name);
         sendMessage(msg);
@@ -155,6 +269,13 @@ public class VoiceSession : ISession
     public void close()
     {
         running = false;
+        isConnecting = false;
+
         try { sendEvent.Set(); } catch { }
+        try { stream?.Close(); } catch { }
+        try { client?.Close(); } catch { }
+
+        // Reset state
+        handshake = false;
     }
 }

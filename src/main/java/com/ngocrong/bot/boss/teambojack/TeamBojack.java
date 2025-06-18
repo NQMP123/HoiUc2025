@@ -33,6 +33,7 @@ public class TeamBojack extends Boss {
         this.percentDame = 35;
         this.limit = -1;
         this.distanceToAddToList = 500;
+        canReactDame = false;
     }
 
     public void useAirshipToArrive(Boss boss, int mapID, int zoneID) {

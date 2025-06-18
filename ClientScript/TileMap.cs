@@ -1,4 +1,5 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 
 public class TileMap
@@ -697,6 +698,24 @@ public class TileMap
 
     public static void loadMapFromResource(int mapID)
     {
+        var map = MapData.getMap(mapID);
+        if (map != null)
+        {
+            tmw = map.tmw;
+            tmh = map.tmh;
+            maps = map.maps;
+            types = map.types;
+            return;
+        }
+        map = loadMaptoRMS(mapID);
+        if (map != null)
+        {
+            tmw = map.tmw;
+            tmh = map.tmh;
+            maps = map.maps;
+            types = map.types;
+            return;
+        }
         DataInputStream dataInputStream = null;
         dataInputStream = MyStream.readFile("/mymap/" + mapID);
         tmw = (ushort)dataInputStream.read();
@@ -708,7 +727,72 @@ public class TileMap
         }
         types = new int[maps.Length];
     }
-
+    public static MapData loadMaptoRMS(int mapId)
+    {
+        sbyte[] data = Rms.loadRMS($"mapid{mapId}");
+        if (data == null)
+        {
+            return null;
+        }
+        var reader = new DataInputStream(data);
+        TileMap.MapData map = new TileMap.MapData();
+        map.mapId = reader.readInt();
+        map.tmw = reader.readByte();
+        map.tmh = reader.readByte();
+        map.maps = new int[map.tmw * map.tmh];
+        for (int i = 0; i < map.maps.Length; i++)
+        {
+            int num = reader.readByte();
+            if (num < 0)
+            {
+                num += 256;
+            }
+            map.maps[i] = (ushort)num;
+        }
+        map.types = new int[map.maps.Length];
+        TileMap.mapDatas.Add(map);
+        return map;
+    }
+    public static void saveMaptoRMS(MapData map)
+    {
+        DataOutputStream dataOutputStream = new DataOutputStream();
+        try
+        {
+            dataOutputStream.writeInt(map.mapId);
+            dataOutputStream.writeByte((sbyte)map.tmw);
+            dataOutputStream.writeByte((sbyte)map.tmh);
+            for (int i = 0; i < map.tmw * map.tmh; i++)
+            {
+                dataOutputStream.writeByte((sbyte)map.maps[i]);
+            }
+            Rms.saveRMS($"mapid{map.mapId}", dataOutputStream.toByteArray());
+            dataOutputStream.close();
+        }
+        catch (Exception ex)
+        {
+            Cout.println(ex.StackTrace);
+        }
+    }
+    public class MapData
+    {
+        public int mapId;
+        public int tmw;
+        public int tmh;
+        public int[] maps;
+        public int[] types;
+        public static MapData getMap(int mapId)
+        {
+            foreach (var mapData in TileMap.mapDatas)
+            {
+                if (mapData.mapId == mapId)
+                {
+                    return mapData;
+                }
+            }
+            return null;
+        }
+    }
+    public static List<MapData> mapDatas = new List<MapData>();
     public static int tileAt(int x, int y)
     {
         try

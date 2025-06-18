@@ -17,6 +17,7 @@ import com.ngocrong.item.*;
 import com.ngocrong.lib.KeyValue;
 import com.ngocrong.lib.Menu;
 import com.ngocrong.map.MapManager;
+import com.ngocrong.map.MapService;
 import com.ngocrong.map.TMap;
 import com.ngocrong.map.tzone.Zone;
 import com.ngocrong.mob.Mob;
@@ -440,101 +441,105 @@ public class Service implements IService {
     }
 
     public void setMapInfo() {
-        try {
-            Zone z = player.zone;
-            if (z == null) {
-                logger.error("failed!1");
-                return;
-            }
-            TMap map = z.map;
-            if (map == null) {
-                logger.error("failed!2");
-                return;
-            }
-            Message mss = new Message(Cmd.MAP_INFO);
-            FastDataOutputStream ds = mss.writer();
-            ds.writeByte(map.mapID);
-            ds.writeByte(map.planet);
-            ds.writeByte(map.tileID);
-            ds.writeByte(map.bgID);
-            ds.writeByte(map.typeMap);
-            ds.writeUTF(map.name);
-            ds.writeByte(z.zoneID);
-            ds.writeShort(player.getX());
-            ds.writeShort(player.getY());
-            ds.writeByte(map.waypoints.length);
-            for (Waypoint w : map.waypoints) {
-                ds.writeShort(w.minX);
-                ds.writeShort(w.minY);
-                ds.writeShort(w.maxX);
-                ds.writeShort(w.maxY);
-                ds.writeBoolean(w.isEnter);
-                ds.writeBoolean(w.isOffline);
-                ds.writeUTF(w.name);
-            }
-            List<Mob> mobs = z.getListMob();
-            ds.writeByte(mobs.size());
-            for (Mob mob : mobs) {
-                ds.writeInt(mob.mobId);
-                ds.writeBoolean(mob.isDisable);
-                ds.writeBoolean(mob.isDontMove);
-                ds.writeBoolean(mob.isFire);
-                ds.writeBoolean(mob.isIce);
-                ds.writeBoolean(mob.isWind);
-                ds.writeByte(mob.templateId);
-                ds.writeByte(mob.sys);
-                ds.writeLong(mob.hp);
-                ds.writeByte(mob.level);
-                ds.writeLong(mob.maxHp);
-                ds.writeShort(mob.x);
-                ds.writeShort(mob.y);
-                ds.writeByte(mob.status);
-                ds.writeByte(mob.levelBoss);
-                ds.writeBoolean(mob.isBoss);
-            }
-            ds.writeByte(0);//empty
-            List<Npc> npcs = z.getListNpc(player);
-            ds.writeByte(npcs.size());
-            for (Npc npc : npcs) {
-                ds.writeByte(npc.status);
-                ds.writeShort(npc.x);
-                ds.writeShort(npc.y);
-                ds.writeByte(npc.templateId);
-                ds.writeShort(npc.avatar);
-            }
-            List<ItemMap> items = z.getListItemMap(player.taskMain);
-            ds.writeByte(items.size());
-            for (ItemMap item : items) {
-                ds.writeShort(item.id);
-                ds.writeShort(item.item.id);
-                ds.writeShort(item.x);
-                ds.writeShort(item.y);
-                ds.writeInt(item.playerID);
-                if (item.playerID == -2) {
-                    ds.writeShort(item.r);
+        Utils.setTimeout(()
+                -> {
+            try {
+                Zone z = player.zone;
+                if (z == null) {
+                    logger.error("failed!1");
+                    return;
                 }
+                TMap map = z.map;
+                if (map == null) {
+                    logger.error("failed!2");
+                    return;
+                }
+                Message mss = new Message(Cmd.MAP_INFO);
+                FastDataOutputStream ds = mss.writer();
+                ds.writeByte(map.mapID);
+                ds.writeByte(map.planet);
+                ds.writeByte(map.tileID);
+                ds.writeByte(map.bgID);
+                ds.writeByte(map.typeMap);
+                ds.writeUTF(map.name);
+                ds.writeByte(z.zoneID);
+                ds.writeShort(player.getX());
+                ds.writeShort(player.getY());
+                ds.writeByte(map.waypoints.length);
+                for (Waypoint w : map.waypoints) {
+                    ds.writeShort(w.minX);
+                    ds.writeShort(w.minY);
+                    ds.writeShort(w.maxX);
+                    ds.writeShort(w.maxY);
+                    ds.writeBoolean(w.isEnter);
+                    ds.writeBoolean(w.isOffline);
+                    ds.writeUTF(w.name);
+                }
+                List<Mob> mobs = z.getListMob();
+                ds.writeByte(mobs.size());
+                for (Mob mob : mobs) {
+                    ds.writeInt(mob.mobId);
+                    ds.writeBoolean(mob.isDisable);
+                    ds.writeBoolean(mob.isDontMove);
+                    ds.writeBoolean(mob.isFire);
+                    ds.writeBoolean(mob.isIce);
+                    ds.writeBoolean(mob.isWind);
+                    ds.writeByte(mob.templateId);
+                    ds.writeByte(mob.sys);
+                    ds.writeLong(mob.hp);
+                    ds.writeByte(mob.level);
+                    ds.writeLong(mob.maxHp);
+                    ds.writeShort(mob.x);
+                    ds.writeShort(mob.y);
+                    ds.writeByte(mob.status);
+                    ds.writeByte(mob.levelBoss);
+                    ds.writeBoolean(mob.isBoss);
+                }
+                ds.writeByte(0);//empty
+                List<Npc> npcs = z.getListNpc(player);
+                ds.writeByte(npcs.size());
+                for (Npc npc : npcs) {
+                    ds.writeByte(npc.status);
+                    ds.writeShort(npc.x);
+                    ds.writeShort(npc.y);
+                    ds.writeByte(npc.templateId);
+                    ds.writeShort(npc.avatar);
+                }
+                List<ItemMap> items = z.getListItemMap(player.taskMain);
+                ds.writeByte(items.size());
+                for (ItemMap item : items) {
+                    ds.writeShort(item.id);
+                    ds.writeShort(item.item.id);
+                    ds.writeShort(item.x);
+                    ds.writeShort(item.y);
+                    ds.writeInt(item.playerID);
+                    if (item.playerID == -2) {
+                        ds.writeShort(item.r);
+                    }
+                }
+                ds.writeShort(map.positionBgItems.length);
+                for (BgItem bg : map.positionBgItems) {
+                    ds.writeShort(bg.id);
+                    ds.writeShort(bg.x);
+                    ds.writeShort(bg.y);
+                }
+                ds.writeShort(map.effects.length);
+                for (KeyValue<String, String> k : map.effects) {
+                    ds.writeUTF(k.key);
+                    ds.writeUTF(k.value);
+                }
+                ds.writeByte(map.bgType);
+                ds.writeByte(player.getTeleport());
+                ds.writeBoolean(map.isDoubleMap());
+                ds.flush();
+                sendMessage(mss);
+                mss.cleanup();
+            } catch (IOException ex) {
+                com.ngocrong.NQMP.UtilsNQMP.logError(ex);
+                logger.error("failed!", ex);
             }
-            ds.writeShort(map.positionBgItems.length);
-            for (BgItem bg : map.positionBgItems) {
-                ds.writeShort(bg.id);
-                ds.writeShort(bg.x);
-                ds.writeShort(bg.y);
-            }
-            ds.writeShort(map.effects.length);
-            for (KeyValue<String, String> k : map.effects) {
-                ds.writeUTF(k.key);
-                ds.writeUTF(k.value);
-            }
-            ds.writeByte(map.bgType);
-            ds.writeByte(player.getTeleport());
-            ds.writeBoolean(map.isDoubleMap());
-            ds.flush();
-            sendMessage(mss);
-            mss.cleanup();
-        } catch (IOException ex) {
-            com.ngocrong.NQMP.UtilsNQMP.logError(ex);
-            logger.error("failed!", ex);
-        }
+        },
+                50);
     }
 
     public void clearMap() {
@@ -2650,36 +2655,52 @@ public class Service implements IService {
         sendMessage(new Message(Cmd.CREATE_PLAYER));
     }
 
-    public void requestMapTemplate(int map) {
+    public void requestMapTemplate(Message ms) {
         try {
-            byte[] ab = player.zone.map.mapData;
-            Message mss = messageNotMap(Cmd.REQUEST_MAPTEMPLATE);
-            FastDataOutputStream ds = mss.writer();
-            ds.write(ab);
-            ds.flush();
-            sendMessage(mss);
-            mss.cleanup();
+
+            int map = ms.reader().readUnsignedByte();
+            requestMapTemplate(map);
         } catch (IOException ex) {
             com.ngocrong.NQMP.UtilsNQMP.logError(ex);
             logger.error("failed!", ex);
         }
     }
 
-    public void requestMapTemplate(Message ms) {
+    public void requestMapTemplate2(int mapId) {
         try {
-
-            int map = ms.reader().readUnsignedByte();
-            byte[] ab = player.zone.map.mapData;
-            Message mss = messageNotMap(Cmd.REQUEST_MAPTEMPLATE);
-            FastDataOutputStream ds = mss.writer();
-            ds.write(ab);
-            ds.flush();
-            sendMessage(mss);
-            mss.cleanup();
+            TMap map = MapManager.getInstance().getMap(mapId);
+            byte[] ab = map.mapData;
+            if (ab != null) {
+                Message mss = messageNotMap(11);
+                FastDataOutputStream ds = mss.writer();
+                ds.writeInt(mapId);
+                ds.write(ab);
+                ds.flush();
+                sendMessage(mss);
+                mss.cleanup();
+            }
         } catch (IOException ex) {
             com.ngocrong.NQMP.UtilsNQMP.logError(ex);
             logger.error("failed!", ex);
         }
+    }
+
+    public void requestMapTemplate(int mapId) {
+        Utils.setTimeout(()
+                -> {
+            try {
+                TMap map = MapManager.getInstance().getMap(mapId);
+                byte[] ab = map.mapData;
+                Message mss = messageNotMap(Cmd.REQUEST_MAPTEMPLATE);
+                FastDataOutputStream ds = mss.writer();
+                ds.write(ab);
+                ds.flush();
+                sendMessage(mss);
+                mss.cleanup();
+            } catch (IOException ex) {
+                java.util.logging.Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }, 50);
     }
 
     public void requestIcon(int id) {

@@ -668,7 +668,7 @@ public class Session_ME : ISession
     public void sendMessage(Message message)
     {
         count++;
-        //   Debug.Log("SEND MSG: " + message.command);
+         //  Debug.Log("SEND MSG: " + message.command);
         sender.AddMessage(message);
     }
 

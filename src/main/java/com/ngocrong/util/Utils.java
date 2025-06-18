@@ -18,6 +18,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import static java.time.temporal.TemporalQueries.zoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -26,6 +27,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 
 public class Utils {
 
@@ -361,9 +365,7 @@ public class Utils {
         if (data == null || data.length == 0) {
             return data;
         }
-        try (ByteArrayInputStream bis = new ByteArrayInputStream(data);
-             GZIPInputStream gzip = new GZIPInputStream(bis);
-             ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(data); GZIPInputStream gzip = new GZIPInputStream(bis); ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
             byte[] buffer = new byte[1024];
             int len;
             while ((len = gzip.read(buffer)) != -1) {
@@ -542,12 +544,19 @@ public class Utils {
         }
 
     }
-    
+
+    public static int getSecondsUntilEndOfDay() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime endOfDay = now.toLocalDate().atTime(LocalTime.MAX); // 23:59:59.999999999
+
+        return (int) ChronoUnit.SECONDS.between(now, endOfDay);
+    }
     /**
      * Apply noise gate filter to audio data to reduce background noise
+     *
      * @param audioData Raw audio bytes
-     * @param threshold Threshold below which audio is considered noise (0.0-1.0)
+     * @param threshold Threshold below which audio is considered noise
+     * (0.0-1.0)
      * @return Filtered audio data
      */
-   
 }

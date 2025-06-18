@@ -142,8 +142,9 @@ public class BossManager {
     public static void bossXenCon() {
         for (int i = 0; i < 7; i++) {
             Utils.setTimeout(() -> {
+                int[] mapId = new int[]{92,93,94,96,97,98,99,100,102,103};
                 XenCon xc = new XenCon();
-                xc.setLocation(103, -1);
+                xc.setLocation(mapId[Utils.nextInt(mapId.length)], -1);
             }, 5000);
         }
     }

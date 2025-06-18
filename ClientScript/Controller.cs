@@ -114,6 +114,7 @@ public class Controller : IMessageHandler
     {
         GameCanvas.debugSession.removeAllElements();
         GameCanvas.debug("SA1", 2);
+       // Debug.LogError("Read message command : " + msg.command);
         try
         {
             Char @char = null;
@@ -1753,6 +1754,7 @@ public class Controller : IMessageHandler
                         break;
                     }
                 case 2:
+                    Debug.LogError("Settrue1");
                     Char.isLoadingMap = true;
                     LoginScr.isLoggingIn = false;
                     if (!GameScr.isLoadAllData)
@@ -2501,8 +2503,6 @@ public class Controller : IMessageHandler
                         {
                             int num13 = msg.reader().readByte();
                             sbyte b9 = msg.reader().readByte();
-                            Debug.LogError("mobTemplate:" + num13);
-                            Debug.LogError("b9:" + b9);
                             if (b9 != 0)
                             {
                                 Mob.arrMobTemplate[num13].data.readDataNewBoss(NinjaUtil.readByteArray(msg), b9);
@@ -2511,7 +2511,6 @@ public class Controller : IMessageHandler
                             {
                                 if (Mob.arrMobTemplate[num13] == null)
                                 {
-                                    Debug.LogError("null1:" + num13);
                                 }
                                 if (Mob.arrMobTemplate[num13].data == null)
                                 {
@@ -2558,7 +2557,7 @@ public class Controller : IMessageHandler
                         try
                         {
                             array18 = NinjaUtil.readByteArray(msg);
-                            Debug.LogError("request hinh icon = " + num176);
+                          //  Debug.LogError("request hinh icon = " + num176);
                             if (num176 == 3896)
                             {
                                 Res.outz("SIZE CHECK= " + array18.Length);
@@ -3424,46 +3423,56 @@ public class Controller : IMessageHandler
                     GameCanvas.endDlg();
                     break;
                 case -24:
-                    Char.isLoadingMap = true;
-                    Cout.println("GET MAP INFO");
-                    GameScr.gI().magicTree = null;
-                    GameCanvas.isLoading = true;
-                    GameCanvas.debug("SA75", 2);
-                    GameScr.resetAllvector();
-                    GameCanvas.endDlg();
-                    TileMap.vGo.removeAllElements();
-                    PopUp.vPopups.removeAllElements();
-                    mSystem.gcc();
-                    TileMap.mapID = msg.reader().readUnsignedByte();
-                    TileMap.planetID = msg.reader().readByte();
-                    TileMap.tileID = msg.reader().readByte();
-                    TileMap.bgID = msg.reader().readByte();
-                    Cout.println("load planet from server: " + TileMap.planetID + "bgType= " + TileMap.bgType + ".............................");
-                    TileMap.typeMap = msg.reader().readByte();
-                    TileMap.mapName = msg.reader().readUTF();
-                    TileMap.zoneID = msg.reader().readByte();
-                    GameCanvas.debug("SA75x1", 2);
                     try
                     {
-                        TileMap.loadMapFromResource(TileMap.mapID);
+                        Debug.LogError("GET MAP INFO");
+                        Debug.LogError("Settrue2");
+                        Char.isLoadingMap = true;
+                        GameScr.gI().magicTree = null;
+                        GameCanvas.isLoading = true;
+                        GameCanvas.debug("SA75", 2);
+                        GameScr.resetAllvector();
+                        GameCanvas.endDlg();
+                        TileMap.vGo.removeAllElements();
+                        PopUp.vPopups.removeAllElements();
+                        mSystem.gcc();
+                        TileMap.mapID = msg.reader().readUnsignedByte();
+                        TileMap.planetID = msg.reader().readByte();
+                        TileMap.tileID = msg.reader().readByte();
+                        TileMap.bgID = msg.reader().readByte();
+                        Debug.LogError("load planet from server: " + TileMap.planetID + "bgType= " + TileMap.bgType + ".............................");
+                        TileMap.typeMap = msg.reader().readByte();
+                        TileMap.mapName = msg.reader().readUTF();
+                        TileMap.zoneID = msg.reader().readByte();
+                        Debug.LogError("GET MAP INFO 2");
+                        try
+                        {
+                            TileMap.loadMapFromResource(TileMap.mapID);
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.LogError(e.ToString());
+                            Service.gI().requestMaptemplate(TileMap.mapID);
+                            messWait = msg;
+                            return;
+                        }
+                        loadInfoMap(msg);
+                        try
+                        {
+                            sbyte b30 = msg.reader().readByte();
+                            TileMap.isMapDouble = ((b30 != 0) ? true : false);
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.LogError(e.ToString());
+                        }
+                        GameScr.cmx = GameScr.cmtoX;
+                        GameScr.cmy = GameScr.cmtoY;
                     }
-                    catch (Exception)
+                    catch(Exception e)
                     {
-                        Service.gI().requestMaptemplate(TileMap.mapID);
-                        messWait = msg;
-                        return;
+                        Debug.LogError(e.ToString());
                     }
-                    loadInfoMap(msg);
-                    try
-                    {
-                        sbyte b30 = msg.reader().readByte();
-                        TileMap.isMapDouble = ((b30 != 0) ? true : false);
-                    }
-                    catch (Exception)
-                    {
-                    }
-                    GameScr.cmx = GameScr.cmtoX;
-                    GameScr.cmy = GameScr.cmtoY;
                     break;
                 case -31:
                     {
@@ -5303,8 +5312,8 @@ public class Controller : IMessageHandler
                                 loadItemNew(dataInputStream4.r, 1, isSave: false);
                                 DataInputStream dataInputStream5 = new DataInputStream(Rms.loadRMS("NRitem2"));
                                 loadItemNew(dataInputStream5.r, 2, isSave: false);
-                                DataInputStream dataInputStream6 = new DataInputStream(Rms.loadRMS("NRitem100"));
-                                loadItemNew(dataInputStream6.r, 100, isSave: false);
+                                //DataInputStream dataInputStream6 = new DataInputStream(Rms.loadRMS("NRitem100"));
+                                //loadItemNew(dataInputStream6.r, 100, isSave: false);
                                 LoginScr.isUpdateItem = false;
                             }
                             catch (Exception)
@@ -5389,11 +5398,31 @@ public class Controller : IMessageHandler
                     Debug.LogError("GET UPDATE_ITEM " + msg.reader().available() + " bytes");
                     createItemNew(msg.reader());
                     break;
+                case 11:
+                    TileMap.MapData map = new TileMap.MapData();
+                    map.mapId = msg.reader().readInt();
+                    map.tmw = msg.reader().readByte();
+                    map.tmh = msg.reader().readByte();
+                    map.maps = new int[map.tmw * map.tmh];
+                    for (int i = 0; i < map.maps.Length; i++)
+                    {
+                        int num = msg.reader().readByte();
+                        if (num < 0)
+                        {
+                            num += 256;
+                        }
+                        map.maps[i] = (ushort)num;
+                    }
+                    map.types = new int[map.maps.Length];
+                    TileMap.mapDatas.Add(map);
+                    TileMap.saveMaptoRMS(map);
+                    break;
                 case 10:
                     try
                     {
+                        Debug.LogError("Settrue3");
                         Char.isLoadingMap = true;
-                        Res.outz("REQUEST MAP TEMPLATE");
+                        Debug.LogError("Get MAP TEMPLATE");
                         GameCanvas.isLoading = true;
                         TileMap.maps = null;
                         TileMap.types = null;
@@ -5402,7 +5431,6 @@ public class Controller : IMessageHandler
                         TileMap.tmw = msg.reader().readByte();
                         TileMap.tmh = msg.reader().readByte();
                         TileMap.maps = new int[TileMap.tmw * TileMap.tmh];
-                        Res.outz("   M apsize= " + TileMap.tmw * TileMap.tmh);
                         for (int i = 0; i < TileMap.maps.Length; i++)
                         {
                             int num = msg.reader().readByte();
@@ -5426,7 +5454,7 @@ public class Controller : IMessageHandler
                     }
                     catch (Exception ex2)
                     {
-                        Cout.LogError("LOI TAI CASE REQUEST_MAPTEMPLATE " + ex2.ToString());
+                        Debug.LogError(ex2.ToString());
                     }
                     msg.cleanup();
                     messWait.cleanup();
@@ -5456,7 +5484,6 @@ public class Controller : IMessageHandler
         try
         {
 
-            Debug.LogError("---messageNotLogin : ");
             sbyte b = msg.reader().readByte();
 
             if (b == 3)

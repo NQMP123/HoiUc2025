@@ -79,9 +79,9 @@ public class XenCon extends Boss {
         }
         // dothanlinh
         if (Utils.isTrue(1 * DropRateService.getMobRate(), 10)) {
-            int[] ao = { ItemName.AO_THAN_LINH, ItemName.AO_THAN_XAYDA, ItemName.AO_THAN_NAMEC };
-            int[] quan = { ItemName.QUAN_THAN_LINH, ItemName.QUAN_THAN_NAMEC, ItemName.QUAN_THAN_XAYDA,
-                    ItemName.QUAN_THAN_LINH, ItemName.QUAN_THAN_NAMEC };
+            int[] ao = {ItemName.AO_THAN_LINH, ItemName.AO_THAN_XAYDA, ItemName.AO_THAN_NAMEC};
+            int[] quan = {ItemName.QUAN_THAN_LINH, ItemName.QUAN_THAN_NAMEC, ItemName.QUAN_THAN_XAYDA,
+                ItemName.QUAN_THAN_LINH, ItemName.QUAN_THAN_NAMEC};
             RandomCollection<Item> rc = new RandomCollection<>();
 
             // Thêm áo với tỷ lệ 10%
@@ -133,12 +133,11 @@ public class XenCon extends Boss {
 
     @Override
     public void startDie() {
-        Zone z = zone;
         super.startDie();
         Utils.setTimeout(() -> {
-            int[] mapIDs = new int[] { 103 };
+            int[] mapId = new int[]{92, 93, 94, 96, 97, 98, 99, 101, 102, 103};
             XenCon xc = new XenCon();
-            xc.setLocation(mapIDs[Utils.nextInt(mapIDs.length)], -1);
+            xc.setLocation(mapId[Utils.nextInt(mapId.length)], -1);
         }, 600000L);
     }
 

@@ -33,16 +33,18 @@ public class CallDragon1Star extends CallDragon {
         this.say = "Ta sẽ ban cho ngươi 1 điều ước, ngươi có 5 phút, hãy suy nghĩ thật kỹ trước khi quyết định";
         wishList = new KeyValue[2][];
         // trang 1
-        wishList[0] = new KeyValue[4];
+        wishList[0] = new KeyValue[5];
         wishList[0][0] = new KeyValue(20004, "10\nĐá bảo vệ", PROTECT_STONE);
         wishList[0][1] = new KeyValue(20004, "100\nthỏi vàng", GOLD_BAR);
         wishList[0][2] = new KeyValue(20004, "1500\nhồng ngọc", HONG_NGOC);
         wishList[0][3] = new KeyValue(20004, "Thêm\n2% chí\nmạng", ADD_CRITICAL);
+        wishList[0][4] = new KeyValue(20000, "Điều ước khác");
         // trang 2
-        wishList[1] = new KeyValue[3];
+        wishList[1] = new KeyValue[6];
         wishList[1][0] = new KeyValue(20004, "Avatar\nđẹp trai", AVATAR_VIP);
         wishList[1][1] = new KeyValue(20004, "Đổi\nchiêu 2\nĐệ tử", CHANGE_SKILL_2);
         wishList[1][2] = new KeyValue(20004, "Đổi\nchiêu 3\nĐệ tử", CHANGE_SKILL_3);
+        wishList[1][3] = new KeyValue(20000, "Điều ước khác", ADD_CRITICAL);
     }
 
     @Override
