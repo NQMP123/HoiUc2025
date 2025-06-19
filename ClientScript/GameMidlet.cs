@@ -12,6 +12,8 @@ public class GameMidlet
 
     public static string VOICE_IP;
     public static int VOICE_PORT = 14446;
+    public static string ICON_IP;
+    public static int ICON_PORT = 14447;
 
     public static sbyte PROVIDER;
 
@@ -37,8 +39,10 @@ public class GameMidlet
         Session_ME.gI().setHandler(Controller.gI());
         Session_ME2.gI().setHandler(Controller.gI());
         VoiceSession.gI().setHandler(Controller.gI());
+        IconSession.gI().setHandler(Controller.gI());
         Session_ME2.isMainSession = false;
         VOICE_IP = IP;
+        ICON_IP = IP;
         instance = this;
         gameCanvas = new GameCanvas();
         gameCanvas.start();

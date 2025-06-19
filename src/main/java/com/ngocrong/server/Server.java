@@ -132,6 +132,7 @@ public class Server {
     @Getter
     private final Config config;
     private com.ngocrong.server.voice.VoiceServer voiceServer;
+    private com.ngocrong.server.icon.IconServer iconServer;
     
     public Server() {
         config = new Config();
@@ -1809,6 +1810,8 @@ public class Server {
             server.setReuseAddress(true);
             voiceServer = new com.ngocrong.server.voice.VoiceServer(config.getVoicePort());
             voiceServer.start();
+            iconServer = new com.ngocrong.server.icon.IconServer(config.getIconPort());
+            iconServer.start();
             id = 0;
             start = true;
             Thread auto = new Thread(new AutoSaveData());
@@ -1863,6 +1866,9 @@ public class Server {
             server = null;
             if (voiceServer != null) {
                 voiceServer.stop();
+            }
+            if (iconServer != null) {
+                iconServer.stop();
             }
             Lucky.isRunning = false;
             MySQLConnect.close();

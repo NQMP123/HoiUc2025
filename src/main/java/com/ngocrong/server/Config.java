@@ -42,6 +42,7 @@ public class Config {
     private long delayAutoSave;
     private String listServers;
     private int voicePort = 14446;
+    private int iconPort = 14447;
 
     public void load() {
         try {
@@ -59,6 +60,10 @@ public class Config {
             String voicePortStr = props.getProperty("server.port_voice");
             if (voicePortStr != null) {
                 this.voicePort = Integer.parseInt(voicePortStr);
+            }
+            String iconPortStr = props.getProperty("server.port_icon");
+            if (iconPortStr != null) {
+                this.iconPort = Integer.parseInt(iconPortStr);
             }
             this.delayAutoSave = Long.parseLong(props.getProperty("server.autosave.delay"));
 

@@ -95,6 +95,10 @@ public class Session implements ISession {
     public boolean isEnter = false;
     public String deviceInfo;
     List<Short> iconList = new ArrayList();
+
+    public byte getZoomLevel() {
+        return zoomLevel;
+    }
     private long[][] matrixChallenge;
     private boolean matrixVerified;
     public String ip;

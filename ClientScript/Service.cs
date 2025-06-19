@@ -2185,14 +2185,17 @@ public class Service
 
     public void requestIcon(int id)
     {
-        GameCanvas.connect();
+        if (!IconSession.gI().isConnected())
+        {
+            IconSession.gI().connect(GameMidlet.ICON_IP, GameMidlet.ICON_PORT);
+        }
         Message message = null;
         try
         {
            // Debug.LogError("REQUEST ICON " + id);
             message = new Message((sbyte)(-67));
             message.writer().writeInt(id);
-            session.sendMessage(message);
+            IconSession.gI().sendMessage(message);
         }
         catch (Exception ex)
         {
