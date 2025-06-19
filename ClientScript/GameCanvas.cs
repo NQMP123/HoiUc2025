@@ -403,11 +403,7 @@ public class GameCanvas : IActionListener
         initPaint();
         loadDust();
         loadWaterSplash();
-        if (!VoiceSession.gI().isConnected())
-        {
-            VoiceSession.gI().connect(GameMidlet.VOICE_IP, GameMidlet.VOICE_PORT);
-            VoiceSession.gI().sendInit(Char.myCharz().cName);
-        }
+       
         panel = new Panel();
         imgShuriken = loadImage("/mainImage/myTexture2df.png");
         int num = Rms.loadRMSInt("clienttype");

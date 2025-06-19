@@ -2285,6 +2285,7 @@ public class Controller : IMessageHandler
                             flag7 = true;
                         }
                         sbyte type_shop = msg.reader().readByte();
+                        bool canBuyMore = msg.reader().readBool();
                         int count_tab = msg.reader().readUnsignedByte();
                         Char.myCharz().arrItemShop = new Item[count_tab][];
                         GameCanvas.panel.shopTabName = new string[count_tab + ((!flag7) ? 1 : 0)][];
@@ -2422,7 +2423,7 @@ public class Controller : IMessageHandler
                              }*/
                         }
                         GameCanvas.panel.tabName[1] = GameCanvas.panel.shopTabName;
-                        GameCanvas.panel.setTypeShop(type_shop);
+                        GameCanvas.panel.setTypeShop(type_shop,canBuyMore);
                         GameCanvas.panel.show();
                         break;
                     }
@@ -4421,7 +4422,7 @@ public class Controller : IMessageHandler
     {
         try
         {
-            GameCanvas.debug("Receiving voice message", 2);
+            Debug.LogError("Receiving voice message");
             
             // Read voice message data
             sbyte messageType = msg.reader().readByte();
@@ -4482,7 +4483,7 @@ public class Controller : IMessageHandler
         catch (Exception ex)
         {
             Res.outz("Error handling voice message: " + ex.Message);
-            UnityEngine.Debug.LogError("Error handling voice message: " + ex.Message);
+            UnityEngine.Debug.LogError("Error handling voice message: " + ex.ToString());
         }
     }
 
@@ -5507,6 +5508,7 @@ public class Controller : IMessageHandler
                 return;
             }
             string text = msg.reader().readUTF();
+            
             ServerListScreen.getServerList(text);
             int[] lenght = msg.reader().readInts();
             Item.listTypeBody.Clear();
@@ -5794,6 +5796,10 @@ public class Controller : IMessageHandler
                         GameScr.isNewMember = msg.reader().readByte();
                         Service.gI().updateCaption((sbyte)Char.myCharz().cgender);
                         Service.gI().androidPack();
+                        if (!VoiceSession.gI().isConnected())
+                        {
+                            VoiceSession.gI().connect(GameMidlet.VOICE_IP, GameMidlet.VOICE_PORT);
+                        }
                         try
                         {
                             Char.myCharz().idAuraEff = msg.reader().readShort();
@@ -5805,6 +5811,7 @@ public class Controller : IMessageHandler
                         {
                             break;
                         }
+                        
                     }
                 case 4:
                     GameCanvas.debug("SA23", 2);

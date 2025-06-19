@@ -170,6 +170,7 @@ public class Item {
             this.options.add(new ItemOption(107, Utils.nextInt(minStar, maxStar)));
         }
     }
+    
 
     public static final int NAPPA = 135;
     public static final int CADIC = 134;

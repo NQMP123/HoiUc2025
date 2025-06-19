@@ -40,7 +40,7 @@ public abstract class Boss extends Player implements Bot {
     public int point;
     public boolean isShow = true;
     public byte percentDame = -1;
-   
+
     public static List<Boss> listBoss = new ArrayList<>();
 
     public static String strBoss(Player player) {
@@ -111,22 +111,11 @@ public abstract class Boss extends Player implements Bot {
     }
 
     protected void dropGroupB(Player player) {
-        RandomCollection<Integer> rc = new RandomCollection<>();
-        rc.add(10, ItemName.NGOC_RONG_3_SAO);
-        rc.add(20, ItemName.NGOC_RONG_4_SAO);
-        rc.add(20, ItemName.NGOC_RONG_5_SAO);
-        rc.add(20, ItemName.NGOC_RONG_6_SAO);
-        rc.add(20, ItemName.NGOC_RONG_7_SAO);
         int percent = Utils.nextInt(100);
         if (percent < 10) {
             Item item = new Item(RandomItem.DO_CUOI.next());
             item.setDefaultOptions();
-            item.quantity = 1;
-            dropItem(item, player);
-        } else {
-            int id = rc.next();
-            Item item = new Item(id);
-            item.setDefaultOptions();
+            item.addRandomOption(1, 5);
             item.quantity = 1;
             dropItem(item, player);
         }
@@ -135,7 +124,11 @@ public abstract class Boss extends Player implements Bot {
     protected void dropGroupC(Player player) {
         int percent = Utils.nextInt(100);
         int itemId;
-        if (percent < 90) {
+        if (percent < 10) {
+            itemId = 15;
+        } else if (percent < 20) {
+            itemId = 16;
+        } else if (percent < 90) {
             itemId = 190;
         } else if (percent < 97) {
             int[] tl = {
@@ -153,7 +146,7 @@ public abstract class Boss extends Player implements Bot {
         }
         Item item = new Item(itemId);
         item.setDefaultOptions();
-        item.quantity = 1;
+        item.quantity = itemId == 190 ? 30000 : 1;
         dropItem(item, player);
     }
 

@@ -55,7 +55,6 @@ public class ServerListScreen : mScreen, IActionListener
 
     public static string smartPhoneVN = testIP;
     
-    public static string linkDefault = smartPhoneVN;
 
     public const sbyte languageVersion = 2;
 
@@ -64,6 +63,8 @@ public class ServerListScreen : mScreen, IActionListener
     private int tam;
 
     public static bool stopDownload;
+    public static string listgetServer = "https://hoiucnro.com/server.txt";
+    public static string linkDefault = "https://hoiucnro.com/server.txt";
 
     public static string linkweb = "http://HOIUCNGOCRONG.COM";
 
@@ -178,6 +179,7 @@ public class ServerListScreen : mScreen, IActionListener
             }
         };
         setLinkDefault(mSystem.LANGUAGE);
+        doUpdateServer();
     }
 
     public static void createDeleteRMS()
@@ -297,11 +299,11 @@ public class ServerListScreen : mScreen, IActionListener
         {
             GameCanvas.serverScreen = new ServerListScreen();
         }
-        Net.connectHTTP2(linkDefault, cmdUpdateServer);
     }
 
     public static void getServerList(string str)
     {
+        Debug.LogError("get Server : " + str);
         lengthServer = new int[3];
         string[] array = Res.split(str.Trim(), ",", 0);
         Res.outz("tem leng= " + array.Length);
@@ -607,8 +609,8 @@ public class ServerListScreen : mScreen, IActionListener
 
     public static void loadIP()
     {
-        getServerList(linkDefault);
-        /*sbyte[] array = Rms.loadRMS("NRlink2");
+        // getServerList(linkDefault);
+        sbyte[] array = Rms.loadRMS("NRlink2");
         if (array == null)
         {
             getServerList(linkDefault);
@@ -642,7 +644,7 @@ public class ServerListScreen : mScreen, IActionListener
         }
         catch (Exception)
         {
-        }*/
+        }
     }
 
     public override void switchToMe()

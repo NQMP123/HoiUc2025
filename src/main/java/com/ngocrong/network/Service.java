@@ -1595,6 +1595,7 @@ public class Service implements IService {
             int typeShop = shop.getTypeShop();
             ds.writeByte(typeShop);
             ArrayList<Tab> tabs = shop.getTabs();
+            ds.writeBoolean(shop.canBuyMore);
             ds.writeByte(tabs.size());
             int mul = 1;
             int npc = shop.getNpcId();

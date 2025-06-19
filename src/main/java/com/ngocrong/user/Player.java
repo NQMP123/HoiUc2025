@@ -296,11 +296,14 @@ public class Player {
     public int viewTop = -1;
 
     public Item danhHieu() {
-        try {
-            return itemBody[12];
-        } catch (Exception e) {
-            return null;
+        if (itemBody != null) {
+            for (Item item : itemBody) {
+                if (item != null && item.template != null && item.template.type == Item.TYPE_DANH_HIEU) {
+                    return item;
+                }
+            }
         }
+        return null;
     }
 
     private ArrayList<Card> cards;
@@ -2704,12 +2707,9 @@ public class Player {
                                         }
                                         dame = 1;
                                     }
-                                    if (_player instanceof SuperBroly) {
-                                        if (dame >= _player.info.hpFull / 10) {
-                                            dame = _player.info.hpFull / 10;
-                                        }
+                                    if (!(_player instanceof SuperBroly) && !(_player instanceof Broly)) {
+                                        dame = _player.injure(this, null, dame);
                                     }
-                                    dame = _player.injure(this, null, dame);
                                     _player.info.hp -= dame;
 
                                     zone.service.attackPlayer(_player, dame, false, (byte) -1);
@@ -2822,6 +2822,8 @@ public class Player {
                 type = 9;
             } else if (type == Item.TYPE_NGOC_BOI) {
                 type = 10;
+            } else if (type == Item.TYPE_DANH_HIEU) {
+                type = 11;
             }
             if (type >= this.itemBody.length - 1) {
                 return;
@@ -9605,13 +9607,10 @@ public class Player {
                                 service.sendThongBao("Bạn không thể tới đây");
                                 return;
                             }
-                            zone.service.addTeleport(this.id, (byte) 2);
-                            zone.leave(this);
-                            this.x = player.x;
-                            this.y = player.y;
-                            this.teleport = 2;
                             z.enter(this);
-                            this.teleport = 0;
+                            this.setX(player.x);
+                            this.setY(player.y);
+                            z.service.setPosition(this, (byte) 0, x, y);
                         } else {
                             service.sendThongBao("Bạn chưa thể đến nơi này");
                         }
@@ -9836,6 +9835,7 @@ public class Player {
                     service.sendThongBao("Hành trang không đủ ô trống");
                     return;
                 }
+
                 List<ItemTemplate> list = shop.getListItem(this);
                 ItemTemplate item = null;
                 for (ItemTemplate itm : list) {
@@ -9874,6 +9874,9 @@ public class Player {
                 if (type == 5 && item.buySpec == 0) {
                     return;
                 }
+                if (item.isHuyDiet()) {
+                    quantity = 1;
+                }
                 System.err.println(String.format("%s vừa mua %s với số lượng %d", this.name, item.name, quantity));
                 int t = 1;
                 long date = 3600000L;
@@ -9910,8 +9913,7 @@ public class Player {
                 }
                 int itemFoodToBuy = -1;
                 if (item.isHuyDiet()) {
-                    quantity = 1;
-                    buyGold = 500000000;
+                    buyGold = 0;
                     itemFoodToBuy = this.getThucAn();
                     if (itemFoodToBuy == -1) {
                         service.sendThongBao("Bạn không có đủ thức ăn");
@@ -9922,6 +9924,10 @@ public class Player {
                     if (index != -1) {
                         food = itemBag[index];
                     }
+                    if (this.gold < 500_000_000) {
+                        service.sendThongBao("Bạn không có đủ vàng");
+                        return;
+                    }
                     if (food == null) {
                         service.sendThongBao("Bạn không có đủ thức ăn");
                         return;
@@ -9930,12 +9936,6 @@ public class Player {
                         service.sendThongBao("Bạn không có đủ " + food.template.name);
                         return;
                     }
-                    if (getGold() < buyGold) {
-                        service.serverMessage2(
-                                "Bạn không đủ tiền. Còn thiếu " + Utils.formatNumber(buyGold - getGold()));
-                        return;
-                    }
-
                     Item itemTL = null;
                     int indexItemTL = getIndexBagById(shopBillByGender(item.id));
                     if (indexItemTL != -1) {
@@ -10538,29 +10538,31 @@ public class Player {
         if (item.template.isUpToUp()) {
             int maxQuantity = Server.getMaxQuantityItem();
 
-            // Tìm item có thể stack quantity (cùng template và options)
-            Item existingItem = findItemInList2(this.itemBag, item);
-            if (existingItem != null) {
-                if (existingItem.quantity + item.quantity > maxQuantity && maxQuantity != 0) {
-                    int add = maxQuantity - existingItem.quantity;
-                    existingItem.quantity = maxQuantity;
-                    item.quantity -= add;
+            if (item.template.id == 457) {
+                // Tìm item có thể stack quantity (cùng template và options)
+                Item existingItem = findItemInList2(this.itemBag, item);
+                if (existingItem != null) {
+                    if (existingItem.quantity + item.quantity > maxQuantity && maxQuantity != 0) {
+                        int add = maxQuantity - existingItem.quantity;
+                        existingItem.quantity = maxQuantity;
+                        item.quantity -= add;
+                    } else {
+                        existingItem.quantity += item.quantity;
+                    }
+                    service.setItemBag();
+                    return true;
                 } else {
-                    existingItem.quantity += item.quantity;
-                }
-                service.setItemBag();
-                return true;
-            } else {
-                for (int i = 0; i < itemBag.length; i++) {
-                    if (itemBag[i] == null) {
-                        itemBag[i] = item;
-                        item.indexUI = i;
-                        service.setItemBag();
-                        return true;
+                    for (int i = 0; i < itemBag.length; i++) {
+                        if (itemBag[i] == null) {
+                            itemBag[i] = item;
+                            item.indexUI = i;
+                            service.setItemBag();
+                            return true;
+                        }
                     }
                 }
-            }
 
+            }
             // Tìm item cùng id để cộng options (logic gốc của bạn)
             int index = getIndexBagById(item.id);
             if (index != -1) {
@@ -15588,7 +15590,7 @@ public class Player {
                 exp *= 2;
             }
             if (isDuiGaThomNgon) {
-                exp *= 2;
+                exp += Utils.percentOf(exp, 20);
             }
             if (isMamTraiCay) {
                 exp += Utils.percentOf(exp, 20);
@@ -16801,11 +16803,6 @@ public class Player {
         }
         byte ship = getShip();
         if (ship == 1) {
-            setTeleport((byte) 3);
-        } else {
-            setTeleport((byte) 1);
-        }
-        if (ship == 1) {
             info.recovery(Info.ALL, 100, true);
         }
         zone.service.addTeleport(this.id, this.teleport);
@@ -16837,7 +16834,6 @@ public class Player {
             map.enterZone(this, zoneId);
         }
         this.y = zone.map.collisionLand(this.x, this.y);
-        setTeleport((byte) 0);
     }
 
     public void teleport_home(int mapId) {
@@ -17828,15 +17824,11 @@ public class Player {
                 item.setDefaultOptions();
                 addItem(item);
 
-                // 5 thức ăn mỗi loại
-                int[] foods = {ItemName.BANH_PUDDING, ItemName.XUC_XICH, ItemName.KEM_DAU,
-                    ItemName.MI_LY, ItemName.SUSHI};
-                for (int f : foods) {
-                    item = new Item(f);
-                    item.quantity = 5;
-                    item.setDefaultOptions();
-                    addItem(item);
-                }
+                int f = Utils.nextInt(ItemName.BANH_PUDDING, ItemName.SUSHI);
+                item = new Item(f);
+                item.quantity = 5;
+                item.setDefaultOptions();
+                addItem(item);
 
                 // Các vật phẩm hỗ trợ
                 item = new Item(ItemName.CUONG_NO);
@@ -17848,10 +17840,6 @@ public class Player {
                 addItem(item);
 
                 item = new Item(ItemName.BO_KHI);
-                item.quantity = 1;
-                addItem(item);
-
-                item = new Item(ItemName.GIAP_XEN_BO_HUNG);
                 item.quantity = 1;
                 addItem(item);
 
@@ -17927,18 +17915,14 @@ public class Player {
                 item.options.add(new ItemOption(50, 8));
                 addItem(item);
 
-                // 3 bộ ngọc rồng Thiên mệnh
-                for (int i = 0; i < 3; i++) {
-                    for (int id = ItemName.NGOC_RONG_THIEN_MENH_1_SAO; id <= ItemName.NGOC_RONG_THIEN_MENH_7_SAO; id++) {
-                        item = new Item(id);
-                        item.quantity = 1;
-                        item.setDefaultOptions();
-                        addItem(item);
-                    }
+                for (int id = ItemName.NGOC_RONG_THIEN_MENH_1_SAO; id <= ItemName.NGOC_RONG_THIEN_MENH_7_SAO; id++) {
+                    item = new Item(id);
+                    item.quantity = 2;
+                    item.setDefaultOptions();
+                    addItem(item);
                 }
 
-                this.service
-                        .serverMessage("Bạn vừa nhận được phần thưởng từ mốc 500, hãy kiểm tra hành trang của mình");
+                this.service.serverMessage("Bạn vừa nhận được phần thưởng từ mốc 500, hãy kiểm tra hành trang của mình");
                 break;
 
             case 1000:
@@ -17980,7 +17964,7 @@ public class Player {
                 // 7 bộ Ngọc Rồng Thần Long
                 for (int i = 0; i < 7; i++) {
                     item = new Item(ItemName.NGOC_RONG_THIEN_MENH_1_SAO + i);
-                    item.quantity = 1;
+                    item.quantity = 3;
                     item.setDefaultOptions();
                     addItem(item);
                 }

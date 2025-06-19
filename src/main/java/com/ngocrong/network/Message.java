@@ -25,6 +25,8 @@ public class Message {
         this.command = command;
         is = new ByteArrayInputStream(data);
         dis = new FastDataInputStream(is);
+         os = new ByteArrayOutputStream();
+        dos = new FastDataOutputStream(os);
     }
 
     public byte getCommand() {

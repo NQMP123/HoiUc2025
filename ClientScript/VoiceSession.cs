@@ -19,21 +19,31 @@ public class VoiceSession : ISession
     private volatile bool running;
     private bool handshake;
     private volatile bool isConnecting;
+
     public VoiceSession()
     {
         onConnectionEstablished += OnVoiceConnected;
         onConnectionFailed += OnVoiceConnectionFailed;
     }
+
     static void OnVoiceConnected()
     {
-        Debug.Log("Voice chat connected!");
-        VoiceSession.gI().sendInit("PlayerName");
+        try
+        {
+            Debug.Log("Voice chat connected!");
+            VoiceSession.gI().sendInit(Char.myCharz().charID);
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+        }
     }
 
     static void OnVoiceConnectionFailed()
     {
         Debug.Log("Voice chat connection failed!");
     }
+
     public static VoiceSession gI()
     {
         return instance;
@@ -41,7 +51,7 @@ public class VoiceSession : ISession
 
     public bool isConnected()
     {
-        return client != null && client.Connected && !isConnecting;
+        return client != null && client.Connected && !isConnecting && stream != null;
     }
 
     public void setHandler(IMessageHandler handler)
@@ -55,53 +65,76 @@ public class VoiceSession : ISession
         if (isConnected() || isConnecting) return false;
 
         isConnecting = true;
+        TcpClient tempClient = null;
+        NetworkStream tempStream = null;
+
         try
         {
-            client = new TcpClient();
+            tempClient = new TcpClient();
 
             // Async connect với timeout
-            var connectTask = client.ConnectAsync(host, port);
+            var connectTask = tempClient.ConnectAsync(host, port);
             var timeoutTask = System.Threading.Tasks.Task.Delay(timeoutMs);
 
             var completedTask = await System.Threading.Tasks.Task.WhenAny(connectTask, timeoutTask);
 
             if (completedTask == timeoutTask)
             {
-                client?.Close();
+                tempClient?.Close();
                 throw new TimeoutException("Connection timeout");
             }
 
-            if (client.Connected)
+            // Kiểm tra nếu connect task có exception
+            await connectTask; // Rethrow exception nếu có
+
+            if (!tempClient.Connected)
             {
-                stream = client.GetStream();
-                running = true;
-
-                receiver = new Thread(run);
-                receiver.IsBackground = true;
-                receiver.Start();
-
-                sender = new Thread(runSender);
-                sender.IsBackground = true;
-                sender.Start();
-
-                isConnecting = false;
-                return true;
+                throw new Exception("Connection failed - not connected");
             }
+
+            // Thiết lập stream
+            tempStream = tempClient.GetStream();
+            if (tempStream == null)
+            {
+                throw new Exception("Failed to get network stream");
+            }
+
+            // Chỉ gán vào instance variables khi mọi thứ đã setup thành công
+            client = tempClient;
+            stream = tempStream;
+            running = true;
+
+            // Start threads
+            receiver = new Thread(run);
+            receiver.IsBackground = true;
+            receiver.Start();
+
+            sender = new Thread(runSender);
+            sender.IsBackground = true;
+            sender.Start();
+
+            isConnecting = false;
+            Debug.LogError("Connect Success");
+            return true;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Connection failed: {ex.Message}");
-            client?.Close();
-        }
+            Debug.LogError($"Connection failed: {ex.Message}");
 
-        isConnecting = false;
-        return false;
+            // Cleanup temporary objects
+            try { tempStream?.Close(); } catch { }
+            try { tempClient?.Close(); } catch { }
+
+            // Reset state
+            isConnecting = false;
+            return false;
+        }
     }
 
     // Sync version chạy trong background thread
     public void connect(string host, int port)
     {
-        Debug.LogError("connect voiceServer : " +host + ":"+ port);
+        Debug.LogError("connect voiceServer : " + host + ":" + port);
         if (isConnected() || isConnecting) return;
 
         // Chạy connect trong background thread
@@ -110,12 +143,12 @@ public class VoiceSession : ISession
             bool success = await connectAsync(host, port);
             if (success)
             {
-                // Notify connection success qua callback hoặc event
                 Debug.LogError("connect success");
                 onConnectionEstablished?.Invoke();
             }
             else
             {
+                Debug.LogError("connect failed");
                 onConnectionFailed?.Invoke();
             }
         });
@@ -129,21 +162,28 @@ public class VoiceSession : ISession
     {
         try
         {
-            while (client.Connected && running)
+            while (client != null && client.Connected && running)
             {
                 Message msg = readMessage();
                 if (msg != null)
                 {
                     messageHandler?.onMessage(msg);
                 }
-                else break;
+                else
+                {
+                    // Nếu không đọc được message, có thể connection bị đóng
+                    Thread.Sleep(10);
+                }
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Receiver error: {ex.Message}");
+            Debug.LogError($"Receiver error: {ex.Message}");
         }
-        close();
+        finally
+        {
+            close();
+        }
     }
 
     private void runSender()
@@ -157,11 +197,14 @@ public class VoiceSession : ISession
                 {
                     try
                     {
-                        writeMessage(msg);
+                        if (client != null && client.Connected && stream != null)
+                        {
+                            writeMessage(msg);
+                        }
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Send error: {ex.Message}");
+                        Debug.LogError($"Send error: {ex.Message}");
                     }
                     finally
                     {
@@ -172,7 +215,7 @@ public class VoiceSession : ISession
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Sender error: {ex.Message}");
+            Debug.LogError($"Sender error: {ex.Message}");
         }
     }
 
@@ -180,6 +223,9 @@ public class VoiceSession : ISession
     {
         try
         {
+            if (stream == null || !stream.CanRead)
+                return null;
+
             // Thêm timeout cho read operations
             if (!stream.DataAvailable)
             {
@@ -219,14 +265,20 @@ public class VoiceSession : ISession
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Read message error: {ex.Message}");
+            Debug.LogError($"Read message error: {ex.Message}");
             return null;
         }
     }
 
     public void sendMessage(Message message)
     {
-        if (!isConnected()) return;
+        if (!isConnected())
+        {
+            Debug.LogWarning("Cannot send message - not connected");
+            return;
+        }
+
+        Debug.LogError("Send message voice: " + message.command);
         sendQueue.Enqueue(message);
         sendEvent.Set();
     }
@@ -235,6 +287,11 @@ public class VoiceSession : ISession
     {
         try
         {
+            if (stream == null || !stream.CanWrite)
+            {
+                throw new InvalidOperationException("Stream is not available for writing");
+            }
+
             sbyte[] data = message.getData();
             stream.WriteByte((byte)message.command);
             int len = data != null ? data.Length : 0;
@@ -251,16 +308,21 @@ public class VoiceSession : ISession
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Write message error: {ex.Message}");
+            Debug.LogError($"Write message error: {ex.Message}");
             throw;
         }
     }
 
-    public void sendInit(string name)
+    public void sendInit(int id)
     {
-        if (handshake || !isConnected()) return;
+        if (handshake || !isConnected())
+        {
+            Debug.LogWarning($"Cannot send init - handshake: {handshake}, connected: {isConnected()}");
+            return;
+        }
+
         Message msg = new Message(-100);
-        msg.writer().writeUTF(name);
+        msg.writer().writeInt(id);
         sendMessage(msg);
         msg.cleanup();
         handshake = true;
@@ -272,10 +334,21 @@ public class VoiceSession : ISession
         isConnecting = false;
 
         try { sendEvent.Set(); } catch { }
+
+        // Đợi threads kết thúc
+        try
+        {
+            receiver?.Join(1000); // Đợi tối đa 1 giây
+            sender?.Join(1000);
+        }
+        catch { }
+
         try { stream?.Close(); } catch { }
         try { client?.Close(); } catch { }
 
         // Reset state
         handshake = false;
+        stream = null;
+        client = null;
     }
 }

@@ -8,7 +8,7 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
 
         public static bool isLoadKeySkill;
 
-        public static bool isAutoSendAttack;
+        public static byte isAutoSendAttack;
 
         private static long[] lastTimeSendAttack;
 
@@ -51,7 +51,7 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
 
         public static void Update()
         {
-            if (isAutoSendAttack)
+            if (isAutoSendAttack >= 1)
                 AutoSendAttack();
             if (isTrainPet)
                 AutoSkillForPet();
@@ -95,7 +95,30 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
             else
                 ChatTextField.gI().isShow = false;
         }
-
+        public static void setAK()
+        {
+            isAutoSendAttack++;
+            if (isAutoSendAttack >= 3)
+            {
+                isAutoSendAttack = 0;
+            }
+            var strs = "";
+            switch (isAutoSendAttack)
+            {
+                case 0:
+                    strs = "Tự đánh [OFF]";
+                    break;
+                case 1:
+                    strs = "Tự đánh [ON]";
+                    break;
+                case 2:
+                    strs = "Tự đánh VIP [ON]";
+                    break;
+                default:
+                    break;
+            }
+            GameScr.info1.addInfo(strs, 0);
+        }
         public void onCancelChat() => GameUtils.gI().resetTF();
 
         public void perform(int idAction, object p)
@@ -103,9 +126,8 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
             switch (idAction)
             {
                 case 1:
-                    isAutoSendAttack = !isAutoSendAttack;
-                    GameScr.info1.addInfo("Tự Đánh\n" + (isAutoSendAttack ? "[ON]" : "[OFF]"), 0);
-                    if (isAutoSendAttack)
+                    setAK();
+                    if (isAutoSendAttack != 0)
                         isAutoChangeFocus = false;
                     break;
                 case 2:
@@ -133,7 +155,7 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                     isAutoChangeFocus = !isAutoChangeFocus;
                     GameScr.info1.addInfo("Đánh Chuyển Mục Tiêu\n" + (isAutoChangeFocus ? "[ON]" : "[OFF]"), 0);
                     if (isAutoChangeFocus)
-                        isAutoSendAttack = false;
+                        isAutoSendAttack = 0;
                     break;
                 case 7:
                     listTargetAutoChangeFocus.Clear();
@@ -186,7 +208,7 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
         {
             LoadData();
             MyVector myVector = new MyVector();
-            myVector.addElement(new Command("Tự Đánh\n" + (isAutoSendAttack ? "[ON]" : "[OFF]"), getInstance(), 1, null));
+            myVector.addElement(new Command("Tự Đánh\n", getInstance(), 1, null));
             myVector.addElement(new Command(GameScr.keySkill.Length + " Ô Kỹ Năng", getInstance(), 3, null));
             myVector.addElement(new Command("Đánh Chuyển Mục Tiêu\n" + (isAutoChangeFocus ? "[ON]" : "[OFF]"), getInstance(), 6, null));
             if (listTargetAutoChangeFocus.Count > 0)
@@ -241,20 +263,53 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
         {
             if (Char.myCharz().meDead || Char.myCharz().cHP <= 0 || Char.myCharz().statusMe == 14 || Char.myCharz().statusMe == 5 || Char.myCharz().myskill.template.type == 3 || Char.myCharz().myskill.template.id == 10 || Char.myCharz().myskill.template.id == 11 || (Char.myCharz().myskill.paintCanNotUseSkill && !GameCanvas.panel.isShow))
                 return;
+            if (Char.myCharz().charFocus == null &&Char.myCharz().mobFocus == null)
+            {
+                return;
+            }
             int mySkillIndex = GetMySkillIndex();
             if (mSystem.currentTimeMillis() - lastTimeSendAttack[mySkillIndex] > GetCoolDown(Char.myCharz().myskill))
             {
-                if (GameScr.gI().isMeCanAttackMob(Char.myCharz().mobFocus))
+                if (Char.myCharz().mobFocus != null && GameScr.gI().isMeCanAttackMob(Char.myCharz().mobFocus))
                 {
                     Char.myCharz().myskill.lastTimeUseThisSkill = mSystem.currentTimeMillis();
                     SendAttackToMobFocus();
                     lastTimeSendAttack[mySkillIndex] = mSystem.currentTimeMillis();
                 }
-                else if (Char.myCharz().charFocus != null && isMeCanAttackChar(Char.myCharz().charFocus) && (double)Math.abs(Char.myCharz().charFocus.cx - Char.myCharz().cx) < (double)Char.myCharz().myskill.dx * 1.7)
+                else if (Char.myCharz().charFocus != null && isMeCanAttackChar(Char.myCharz().charFocus))
                 {
                     Char.myCharz().myskill.lastTimeUseThisSkill = mSystem.currentTimeMillis();
                     SendAttackToCharFocus();
                     lastTimeSendAttack[mySkillIndex] = mSystem.currentTimeMillis();
+                }
+            }
+            if (isAutoSendAttack == 2 && !Char.myCharz().isWaiting())
+            {
+
+                if (Char.myCharz().mobFocus != null && GameScr.gI().isMeCanAttackMob(Char.myCharz().mobFocus))
+                {
+                    getSkillAttack();
+                }
+                else if (Char.myCharz().charFocus != null && isMeCanAttackChar(Char.myCharz().charFocus))
+                {
+                    getSkillAttack();
+                }
+            }
+        }
+        static void getSkillAttack()
+        {
+            List<int> listAttack = new List<int>() { 0, 1, 9, 2, 3, 17, 4, 5 };
+            foreach (Skill skill in GameScr.keySkill)
+            {
+                if (skill != null && Char.myCharz().myskill != skill)
+                {
+                    if (listAttack.Contains(skill.template.id) && mSystem.currentTimeMillis() - skill.lastTimeUseThisSkill >= skill.coolDown)
+                    {
+                        Char.myCharz().myskill = skill;
+                        Service.gI().selectSkill(skill.template.id);
+                        GameScr.gI().lastSkill = skill;
+                        break;
+                    }
                 }
             }
         }

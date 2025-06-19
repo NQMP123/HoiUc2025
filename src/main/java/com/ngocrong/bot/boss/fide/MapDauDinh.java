@@ -23,7 +23,7 @@ public class MapDauDinh extends Boss {
         this.distanceToAddToList = 500;
         this.limit = 500;
         this.name = "Mập Đầu Đinh";
-        setInfo(15000000, 1000000, 20000, 1000, 50);
+        setInfo(10000000, 1000000, 20000, 1000, 50);
         this.waitingTimeToLeave = 0;
         setTypePK((byte) 5);
     }

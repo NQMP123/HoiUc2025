@@ -77,7 +77,7 @@ namespace NQMP
                         else
                         {
                             Service.gI().giaodich(0, global::Char.myCharz().charFocus.charID, -1, -1);
-                            GameScr.info1.addInfo("Đã Gửi Lời Mời Giao Dịch Đến: " + global::Char.myCharz().charFocus.cName, 0);
+                            GameScr.info1.addInfo("Đã Gửi Lời Mời Giao Dịch Đến: " + global::Char.myCharz().charFocus.subcName(), 0);
                         }
                         GameCanvas.clearAllPointerEvent();
                     }

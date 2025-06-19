@@ -119,7 +119,7 @@ public class VoiceMessageService {
             addToRecentMessages(voiceMsg);
 
             // Send to receiver
-            sendPrivateChatVoiceMessage(voiceMsg,sender, receiver);
+            sendPrivateChatVoiceMessage(voiceMsg, sender, receiver);
 
             System.err.println(String.format("Private chat voice message processed: %s", voiceMsg));
 
@@ -274,7 +274,7 @@ public class VoiceMessageService {
         }
     }
 
-    private void sendPrivateChatVoiceMessage(VoiceMessage voiceMsg,Player sender, Player receiver) {
+    private void sendPrivateChatVoiceMessage(VoiceMessage voiceMsg, Player sender, Player receiver) {
         try {
             Message msg = new Message(-58); // CMD_VOICE_RECEIVE
             writeVoiceMessageToMessage(msg, voiceMsg);
@@ -291,19 +291,29 @@ public class VoiceMessageService {
 
     private void writeVoiceMessageToMessage(Message msg, VoiceMessage voiceMsg) throws IOException {
         msg.writer().writeByte(voiceMsg.getMessageType().getValue());
+        System.err.println("getMessageType :" + voiceMsg.getMessageType().getValue());
         msg.writer().writeUTF(voiceMsg.getSenderName());
+        System.err.println("getSenderName " + voiceMsg.getSenderName());
         msg.writer().writeInt(voiceMsg.getSenderId());
-
+        System.err.println("voiceMsg.getSenderId() " + voiceMsg.getSenderId());
         if (voiceMsg.getReceiverName() != null) {
             msg.writer().writeUTF(voiceMsg.getReceiverName());
+            System.err.println("voiceMsg.getReceiverName()" + voiceMsg.getReceiverName());
         } else {
             msg.writer().writeUTF("");
+            System.err.println();
         }
 
         msg.writer().writeFloat(voiceMsg.getDuration());
+        System.err.println("voiceMsg.getDuration() " + voiceMsg.getDuration());
         msg.writer().writeLong(voiceMsg.getTimestamp());
+        System.err.println("voiceMsg.getTimestamp()" + voiceMsg.getTimestamp());
         msg.writer().writeInt(voiceMsg.getDataSize());
+        System.err.println("voiceMsg.getDataSize()" + voiceMsg.getDataSize());
         msg.writer().write(voiceMsg.getAudioData());
+        System.err.println("voiceMsg.getAudioData()" + voiceMsg.getAudioData().length);
+        msg.writer().flush();
+        System.err.println("FullData" + msg.getData().length);
     }
 
     private void sendErrorMessage(Player player, String errorMsg) {

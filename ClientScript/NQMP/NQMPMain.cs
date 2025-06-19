@@ -186,7 +186,7 @@ namespace NQMP
                         else
                         {
                             Service.gI().giaodich(0, global::Char.myCharz().charFocus.charID, -1, -1);
-                            GameScr.info1.addInfo("Đã Gửi Lời Mời Giao Dịch Đến: " + global::Char.myCharz().charFocus.cName, 0);
+                            GameScr.info1.addInfo("Đã Gửi Lời Mời Giao Dịch Đến: " + global::Char.myCharz().charFocus.subcName(), 0);
                         }
                         break;
                     case 'j':
@@ -465,6 +465,15 @@ namespace NQMP
                 catch { }
                 mFont.tahoma_7b_white.drawString(g, getTimess(), 85, 47, mFont.LEFT, mFont.tahoma_7b_dark);
                 if (!isPaintboss) return;
+                int num3 = 35;
+                for (int j = 0; j < bossVip.size(); j++)
+                {
+                    ((BossFunctions)bossVip.elementAt(j)).paintBoss(g, GameCanvas.w - 2, num3, mFont.RIGHT);
+                    num3 += 10;
+                }
+            }
+            public static void paintBoss(mGraphics g)
+            {
                 int num3 = 35;
                 for (int j = 0; j < bossVip.size(); j++)
                 {

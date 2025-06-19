@@ -270,7 +270,6 @@ public class Main : MonoBehaviour
             GameMidlet.gameCanvas.update();
             Image.update();
             DataInputStream.update();
-            Net.update();
             f++;
             if (f > 8)
             {

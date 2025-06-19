@@ -17,11 +17,12 @@ public class Raiti extends Boss {
         super();
         this.limit = -1;
         this.name = "Raiti";
-        setInfo(1000L, Integer.MAX_VALUE, 10, 1000, 10);
+        setInfo(5000L, Integer.MAX_VALUE, 10, 1000, 10);
         setDefaultPart();
         setTypePK((byte) 5);
         this.limitDame = 10;
         this.percentDame = 5;
+        this.canReactDame = false;
     }
 
     @Override
@@ -57,21 +58,23 @@ public class Raiti extends Boss {
 
     @Override
     public void throwItem(Object obj) {
-        if (!(obj instanceof Player)) {
-            return;
+        if (Utils.isTrue(1, 2)) {
+            if (!(obj instanceof Player)) {
+                return;
+            }
+            Player p = (Player) obj;
+            int itemId = Utils.nextInt(441, 448);
+            Item item = new Item(itemId);
+            item.setDefaultOptions();
+            item.quantity = 1;
+            ItemMap itemMap = new ItemMap(zone.autoIncrease++);
+            itemMap.item = item;
+            itemMap.playerID = Math.abs(p.id);
+            itemMap.x = getX();
+            itemMap.y = zone.map.collisionLand(getX(), getY());
+            zone.addItemMap(itemMap);
+            zone.service.addItemMap(itemMap);
         }
-        Player p = (Player) obj;
-        int itemId = Utils.nextInt(441, 448);
-        Item item = new Item(itemId);
-        item.setDefaultOptions();
-        item.quantity = 1;
-        ItemMap itemMap = new ItemMap(zone.autoIncrease++);
-        itemMap.item = item;
-        itemMap.playerID = Math.abs(p.id);
-        itemMap.x = getX();
-        itemMap.y = zone.map.collisionLand(getX(), getY());
-        zone.addItemMap(itemMap);
-        zone.service.addItemMap(itemMap);
     }
 
     @Override

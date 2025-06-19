@@ -982,6 +982,8 @@ public class Session implements ISession {
                         index = 9;
                     } else if (index == Item.TYPE_NGOC_BOI) {
                         index = 10;
+                    } else if (index == Item.TYPE_DANH_HIEU) {
+                        index = 11;
                     }
                     if (index > 12) {
                         index = 12;

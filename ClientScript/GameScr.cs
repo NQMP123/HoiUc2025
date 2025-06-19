@@ -579,7 +579,7 @@ public class GameScr : mScreen, IChatable
 
     private int selectedIndexSkill = -1;
 
-    private Skill lastSkill;
+    public Skill lastSkill;
 
     private bool doSeleckSkillFlag;
 
@@ -1194,7 +1194,7 @@ public class GameScr : mScreen, IChatable
 
     public void onKSkill(sbyte[] kSkillID)
     {
-        Debug.Log("GET KEYSKILL!");
+     //   Debug.Log("GET KEYSKILL!");
         keySkill = new Skill[10];
         if (kSkillID == null)
         {
@@ -2540,6 +2540,7 @@ public class GameScr : mScreen, IChatable
         GameCanvas.menu.showMenu = false;
         ChatTextField.gI().close();
         ChatTextField.gI().center = null;
+        Debug.LogError("check1");
         isLockKey = false;
         typeTrade = 0;
         indexMenu = 0;
@@ -6299,7 +6300,7 @@ public class GameScr : mScreen, IChatable
         fnick = null;
         alertURL = null;
         center = null;
-        ChatTextField.gI().center = null;
+        ChatTextField.gI().center = null; Debug.LogError("check2");
         if ((num = text.IndexOf("http://")) >= 0)
         {
             Cout.println("currentLine: " + text);
@@ -6522,6 +6523,7 @@ public class GameScr : mScreen, IChatable
         {
             isPaintMessage = false;
             ChatTextField.gI().center = null;
+            Debug.LogError("check3");
         }
     }
 
@@ -7038,6 +7040,7 @@ public class GameScr : mScreen, IChatable
             chatVip = chatVip.Substring(1, chatVip.Length);
             isFireWorks = true;
         }
+        Boss.gI().chatVip(chatVip);
         if (chatVip.Trim().ToLower().Contains("boss"))
         {
             try
@@ -7054,6 +7057,7 @@ public class GameScr : mScreen, IChatable
         {
             try
             {
+              
                 AutoPro.instance.chatVips.Add(new ChatVip(chatVip));
                 if (AutoPro.instance.chatVips.Count > 5)
                 {

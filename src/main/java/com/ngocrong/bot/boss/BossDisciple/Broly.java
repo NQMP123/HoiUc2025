@@ -29,7 +29,7 @@ public class Broly extends Boss {
         this.distanceToAddToList = 100;
         this.limit = 500;
         this.level = level;
-        setInfo(Utils.nextInt(100000, 500000), 100000, 10, 100, 20);
+        setInfo(Utils.nextInt(1000000, 5000000), 100000, 10, 100, 20);
         this.name = "Broly " + Utils.nextInt(100);
         setDefaultPart();
         this.waitingTimeToLeave = 5000;
@@ -118,13 +118,13 @@ public class Broly extends Boss {
         if (HP < 1000000) {
             Utils.setTimeout(() -> {
                 Broly broly = new Broly();
-                broly.setInfo(HP, Long.MAX_VALUE, 1000, id, id);
+                broly.setInfo(HP, Long.MAX_VALUE, 1000, 1000, 0);
                 broly.joinMap();
             }, 30000);
         } else {
             Utils.setTimeout(() -> {
                 SuperBroly superbroly = new SuperBroly();
-                superbroly.setInfo(HP, Long.MAX_VALUE, 1000, id, id);
+                superbroly.setInfo(HP, Long.MAX_VALUE, 1000, 1000, 0);
                 superbroly.setLocation(zone);
             }, 5000);
         }
@@ -165,8 +165,10 @@ public class Broly extends Boss {
     public Skill oldSelect;
 
     public void usingTTNL() {
-        this.select = TTNL[Utils.nextInt(TTNL.length)];
-        startRecoveryEnery();
+        if (!isKhongChe()) {
+            this.select = TTNL[Utils.nextInt(TTNL.length)];
+            startRecoveryEnery();
+        }
     }
 
     public void checkAttack() {
@@ -199,14 +201,17 @@ public class Broly extends Boss {
     }
 
     public void upPoint() {
-        long hp = (long) (info.hpFull / (Utils.nextInt(25, 35)));
+        if (!isKhongChe()) {
+            long hp = (long) (info.hpFull / (Utils.nextInt(25, 35)));
 
-        if (hp > 0) {
-            info.hp += hp;
-            info.hpFull += hp;
-            info.hp = Math.min(16070777, info.hp);
-            info.hpFull = Math.min(16070777, info.hpFull);
-            zone.service.playerLoadHP(this, (byte) 0);
+            if (hp > 0) {
+                info.hp += hp;
+                info.hpFull += hp;
+                info.hp = Math.min(16070777, info.hp);
+                info.hpFull = Math.min(16070777, info.hpFull);
+                zone.service.playerLoadHP(this, (byte) 0);
+            }
+
         }
     }
 

@@ -193,6 +193,14 @@ public class Char : IMapObject
     public short[] potential = new short[4];
 
     public string cName = string.Empty;
+    public string subcName()
+    {
+        if (cName.Contains('['))
+        {
+            cName = cName.Split(']')[1];
+        }
+        return cName;
+    }
 
     public int clanID;
 
@@ -1758,14 +1766,18 @@ public class Char : IMapObject
     public void updateChargeSkill()
     {
     }
-
+    public bool isWaiting()
+    {
+        return isWaitMonkey || isStandAndCharge || isFlyAndCharge || isCharge;
+    }
     public virtual void update()
     {
         if (this.me && GameCanvas.gameTick %30 == 0)
         {
-            Debug.Log($"Head{head}");
-            Debug.Log($"Body{body}");
-            Debug.Log($"Leg{leg}");
+            //Debug.Log($"Head{head}");
+            //Debug.Log($"Body{body}");
+            //Debug.Log($"Leg{leg}");
+         //   Debug.LogError("standandcharge : " + isStandAndCharge);
         }
         if (isMafuba)
         {

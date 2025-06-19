@@ -32,16 +32,16 @@ public class newVQTD {
             int randomValue = Utils.nextInt(10000);
             int cumulativeProbability = 0;
 
-            // 1. Đá nâng cấp 5 loại - 17%
-            cumulativeProbability += 1700;
+            // 1. Đá nâng cấp 5 loại - 19%
+            cumulativeProbability += 1900;
             if (randomValue < cumulativeProbability) {
                 Item item = createDNC();
                 player.boxCrackBall.add(item);
                 return true;
             }
 
-            // 2. Tôm chiên giòn - 3%
-            cumulativeProbability += 300;
+            // 2. Tôm chiên giòn - 1%
+            cumulativeProbability += 100;
             if (randomValue < cumulativeProbability) {
                 Item item = createTomChienGion();
                 player.boxCrackBall.add(item);
@@ -308,7 +308,7 @@ public class newVQTD {
     }
 
     static int getDays() {
-        return Utils.nextInt(1, 7);
+        return Utils.nextInt(1, 3);
     }
 
     /**
@@ -465,7 +465,6 @@ public class newVQTD {
     }
 
     // ---------- New reward items ----------
-
     private static Item createTomChienGion() {
         Item item = new Item(ItemName.TOM_CHIEN_GION);
         item.quantity = 1;
@@ -486,10 +485,12 @@ public class newVQTD {
     }
 
     private static Item createRuongCaiTrang() {
-        Item item = new Item(ItemName.RUONG_CAI_TRANG_THO_DAU_BAC);
-        item.quantity = 1;
-        item.options.add(new ItemOption(93, getDays()));
-        return item;
+        Item ctTDB = new Item(ItemName.CAI_TRANG_THO_DAU_BAC);
+        ctTDB.addItemOption(new ItemOption(101, Utils.nextInt(30, 100)));
+        int days = Utils.isTrue(1, 3) ? 3 : 1;
+        ctTDB.addItemOption(new ItemOption(93, days));
+        // item.options.add(new ItemOption(93, getDays()));
+        return ctTDB;
     }
 
     private static Item createNR57() {

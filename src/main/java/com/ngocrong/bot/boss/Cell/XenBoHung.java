@@ -6,6 +6,7 @@ import com.ngocrong.consts.ItemName;
 import com.ngocrong.item.Item;
 import com.ngocrong.item.ItemMap;
 import com.ngocrong.map.tzone.Zone;
+import com.ngocrong.model.RandomItem;
 import com.ngocrong.server.SessionManager;
 import com.ngocrong.skill.Skills;
 import com.ngocrong.user.Player;
@@ -79,7 +80,26 @@ public class XenBoHung extends Boss {
         if (obj == null) {
             return;
         }
-        dropGroupB((Player) obj);
+        var player = (Player) obj;
+        if (level <= 1) {
+            dropGroupB((Player) obj);
+        } else {
+            int percent = Utils.nextInt(100);
+            Item item = null;
+            if (percent <= 30) {
+                item = new Item(ItemName.NGOC_RONG_3_SAO);
+                item.quantity = 1;
+            } else if (percent <= 70) {
+                item = new Item(ItemName.VANG_190);
+                item.quantity = 10_000_000;
+            } else {
+                item = new Item(RandomItem.DO_CUOI.next());
+                item.setDefaultOptions();
+                item.addRandomOption(1, 5);
+                item.quantity = 1;
+            }
+            dropItem(item, player);
+        }
     }
 
     @Override
@@ -96,7 +116,7 @@ public class XenBoHung extends Boss {
             Utils.setTimeout(() -> {
                 XenBoHung xenBoHung = new XenBoHung((byte) 0);
                 xenBoHung.setLocation(100, -1);
-            }, 15 *60000);
+            }, 15 * 60000);
         }
     }
 

@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class Paint
 {
 	public static int COLORBACKGROUND = 15787715;
@@ -144,6 +146,8 @@ public class Paint
 				}
 			}
 		}
+		else
+		{  }
 		if (right == null)
 		{
 			return;

@@ -523,20 +523,20 @@ public class Info {
         switch (giapLuyenTap) {
             case 529:
             case 534:
-                dameAdd = 5;
+                dameAdd = 10;
                 break;
 
             case 530:
             case 535:
-                dameAdd = 10;
+                dameAdd = 20;
                 break;
 
             case 531:
             case 536:
-                dameAdd = 15;
+                dameAdd = 30;
                 break;
             case 2268:
-                dameAdd = 20;
+                dameAdd = 40;
                 break;
         }
         if (isMacGiapLuyenTap) {

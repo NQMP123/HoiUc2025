@@ -1,44 +1,38 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Networking;
 
-internal class Net
+public class NETHTTPClient : MonoBehaviour
 {
-	public static WWW www;
+    public static string baseUrl = "https://hoiucnro.com/server.txt";
+    public static string finishRespone = "";
+    public static void start()
+    {
+        Main.main.StartCoroutine(GetTextFromURL(baseUrl));
+        
+    }
+    public static IEnumerator GetTextFromURL(string url)
+    {
+        using (UnityWebRequest request = UnityWebRequest.Get(url))
+        {
+            yield return request.SendWebRequest();
 
-	public static Command h;
+            if (request.result == UnityWebRequest.Result.Success)
+            {
+                string content = request.downloadHandler.text;
+                finishRespone = content;
+                connect();
+                Debug.Log("Content: " + content);
+            }
+            else
+            {
+                Debug.LogError("Error: " + request.error);
+            }
+        }
+    }
+    public static void connect()
+    {
+        ServerListScreen.getServerList(finishRespone);
 
-	public static void update()
-	{
-		if (www != null && www.isDone)
-		{
-			string str = string.Empty;
-			if (www.error == null || www.error.Equals(string.Empty))
-			{
-				str = www.text;
-			}
-			www = null;
-			if (h != null)
-			{
-				h.perform(str);
-			}
-		}
-	}
-
-	public static void connectHTTP(string link, Command h)
-	{
-		if (www != null)
-		{
-			Cout.LogError("GET HTTP BUSY");
-		}
-		www = new WWW(link);
-		Net.h = h;
-	}
-
-	public static void connectHTTP2(string link, Command h)
-	{
-		Net.h = h;
-		if (link != null)
-		{
-			h.perform(link);
-		}
-	}
+    }
 }

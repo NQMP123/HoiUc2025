@@ -881,9 +881,12 @@ public class Zone extends Thread {
                     break;
             }
             long damageFull = _player.info.damageFull;
+
             long dame = damageFull + Utils.percentOf(damageFull, (percentDame - 100));
             dame = Utils.nextLong(dame - (dame / 10), dame);
+           
             dame -= Utils.percentOf(dame, target.info.options[94]);
+           
             if ((skill.template.id == SkillName.CHIEU_KAMEJOKO)) {
                 dame += (dame * _player.info.optionKame / 100);
             }
@@ -893,6 +896,7 @@ public class Zone extends Thread {
             if ((skill.template.id == SkillName.CHIEU_DAM_GALICK && _player.isSetKakarot())) {
                 dame += Utils.percentOf(dame, 150);
             }
+           
             boolean xuyenGiap = false;
             if (_player.info.options[98] > 0 && (skill.template.id == SkillName.CHIEU_KAMEJOKO || skill.template.id == SkillName.CHIEU_MASENKO || skill.template.id == SkillName.CHIEU_ANTOMIC)) {
                 int rd = Utils.nextInt(100);
@@ -910,16 +914,16 @@ public class Zone extends Thread {
                 }
                 pPhanDonCanChien = _player.info.options[15];
             }
-            if (!xuyenGiap) {
-                dame -= target.info.defenseFull;
-            }
+           
+            
             if (map.isBaseBabidi() && !target.isBoss() && !_player.isBoss()) {
                 dame = target.info.hpFull / 10;
             }
+            
             if (dame <= 0) {
                 dame = 1;
             }
-
+           
             if (target instanceof GeneralWhite) {
                 Mob mob = findMobByTemplateID(22, false);
                 if (mob != null) {
@@ -934,12 +938,14 @@ public class Zone extends Thread {
             if (target.isGiapXen()) {
                 dame /= 2;
             }
+           
             if (target.info.options[157] > 0) {
                 long pM = target.info.mp * 100 / target.info.mpFull;
                 if (pM < 20) {
                     dame -= Utils.percentOf(dame, target.info.options[157]);
                 }
             }
+           
             if (sp != null) {
                 if ((sp.id == 1 && skill.template.id == SkillName.CHIEU_DAM_GALICK) || (sp.id == 2 && skill.template.id == SkillName.CHIEU_ANTOMIC) || (sp.id == 3 && _player.isMonkey())
                         || (sp.id == 11 && skill.template.id == SkillName.CHIEU_DAM_DRAGON) || (sp.id == 12 && skill.template.id == SkillName.CHIEU_KAMEJOKO)
@@ -953,6 +959,7 @@ public class Zone extends Thread {
                     }
                 }
             }
+            
             if (skill.template.id == SkillName.CHIEU_DAM_DRAGON || skill.template.id == SkillName.CHIEU_KAMEJOKO || skill.template.id == SkillName.CHIEU_DAM_DEMON || skill.template.id == SkillName.CHIEU_MASENKO || skill.template.id == SkillName.CHIEU_DAM_GALICK || skill.template.id == SkillName.CHIEU_ANTOMIC || skill.template.id == SkillName.LIEN_HOAN || skill.template.id == SkillName.KAIOKEN) {
                 int percentDamageBonus = _player.getPercentDamageBonus();
                 if (percentDamageBonus > 0) {
@@ -960,6 +967,7 @@ public class Zone extends Thread {
                     _player.setPercentDamageBonus(0);
                 }
             }
+            
             boolean flag = false;
             if (skill.template.id == SkillName.MAKANKOSAPPO) {
                 dame = Utils.percentOf(_player.info.mp, percentDame);
@@ -1002,6 +1010,7 @@ public class Zone extends Thread {
                 dame *= 2;
                 dame += Utils.percentOf(dame, _player.info.options[5]);
             }
+            
             if (target.limitDame != -1) {
                 if (_player.mapPhuHo == 114) {
                     if (target instanceof BuiBui || target instanceof Drabura || target instanceof Mabu || target instanceof Yacon) {
@@ -1016,14 +1025,15 @@ public class Zone extends Thread {
                         dame = target.limitDame * 10;
                     }
                 }
-
             }
+           
             if (_player.isBoss()) {
                 Boss boss = (Boss) _player;
                 if (boss.percentDame != -1) {
                     dame = Utils.percentOf(target.info.hpFull, boss.percentDame);
                 }
             }
+           
             if (dame > 0) {
                 dame = target.injure(_player, null, dame);
                 long reactDame = Utils.percentOf(dame, target.info.options[97] + pPhanDonCanChien);
@@ -1035,6 +1045,9 @@ public class Zone extends Thread {
                 }
                 if (reactDame >= _player.info.hp) {
                     reactDame = _player.info.hp - 1;
+                }
+                if (target instanceof Broly || target instanceof SuperBroly) {
+                    reactDame = -1;
                 }
                 if (reactDame > 0) {
                     if (_player.info.hp > 1) {

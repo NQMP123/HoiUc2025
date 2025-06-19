@@ -176,7 +176,7 @@ public class AutoPro
                     else
                     {
                         Service.gI().giaodich(0, Char.myCharz().charFocus.charID, -1, -1);
-                        GameScr.info1.addInfo("Đã gửi lời mời giao dịch đến " + Char.myCharz().charFocus.cName, 0);
+                        GameScr.info1.addInfo("Đã gửi lời mời giao dịch đến " + Char.myCharz().charFocus.subcName(), 0);
                     }
                     break;
                 }

@@ -195,7 +195,7 @@ public class BossManager {
 //    }
     public static void bossBlackGoku() {
         for (int i = 0; i < 3; i++) {
-            int[] mapIDs = new int[]{103};
+            int[] mapIDs = new int[]{92, 93, 94, 96, 97, 98, 99, 101, 102, 103};
             Utils.setTimeout(() -> {
                 BlackGoku bl = new BlackGoku(false);
                 bl.setLocation(mapIDs[Utils.nextInt(mapIDs.length)], -1);
@@ -283,12 +283,12 @@ public class BossManager {
     }
 
     public static void bossTestServer() {
-        Utils.setTimeout(() -> {
-            for (int i = 0; i < 50; i++) {
-                TestServerBoss boss = new TestServerBoss();
-                boss.setLocation(38, 5);
-            }
-        }, 5000);
+//        Utils.setTimeout(() -> {
+//            for (int i = 0; i < 50; i++) {
+//                TestServerBoss boss = new TestServerBoss();
+//                boss.setLocation(38, 5);
+//            }
+//        }, 5000);
 
     }
 

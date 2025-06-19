@@ -19,6 +19,7 @@ public class SplashScr : mScreen
 	public SplashScr()
 	{
 		instance = this;
+		//NETHTTPClient.start();
 	}
 
 	public static void loadSplashScr()

@@ -47,7 +47,7 @@ public class ChatTextField : IActionListener
     public string to;
 
     public string strChat = "Chat ";
-    public  bool openMic = false;
+    public bool openMic = false;
 
     public ChatTextField()
     {
@@ -101,18 +101,7 @@ public class ChatTextField : IActionListener
             right.y = GameCanvas.h - 30;
 
         }
-     
-        if (openMic)
-        {
-            center = new Command("MIC", this, 8003, null, GameCanvas.w / 2 - 34, GameCanvas.h - mScreen.cmdH + 1);
-            cmdVoiceRecord = center;
-            center.x = GameCanvas.w / 2 - 35;
-            center.y = GameCanvas.h - 30;
-        }
-        else
-        {
-            center = cmdVoiceRecord = null;
-        }
+
         cmdChat = new Command();
         ActionChat actionChat = delegate (string str)
         {
@@ -153,7 +142,19 @@ public class ChatTextField : IActionListener
             tfChat.isPaintMouse = false;
         }
     }
+    public void setOpenMic()
+    {
 
+        openMic = true;
+        if (openMic)
+        {
+            center = new Command("MIC", this, 8003, null, GameCanvas.w / 2 - 34, GameCanvas.h - mScreen.cmdH + 1);
+            cmdVoiceRecord = center;
+            center.x = GameCanvas.w / 2 - 35;
+            center.y = GameCanvas.h - 30;
+        }
+        UnityEngine.Debug.LogError("set open mic");
+    }
     public void updateWhenKeyBoardVisible()
     {
     }
@@ -204,7 +205,7 @@ public class ChatTextField : IActionListener
         right.caption = mResources.CLOSE;
         this.to = to;
         currentChatType = (string.IsNullOrEmpty(to) || to.Equals("")) ? VoiceMessageType.WORLD_CHAT : VoiceMessageType.PRIVATE_CHAT;
-        
+
         if (Main.isWindowsPhone)
         {
             tfChat.showSubTextField = false;
@@ -226,17 +227,17 @@ public class ChatTextField : IActionListener
         tfChat.setText(string.Empty);
         tfChat.clearAll();
         isPublic = false;
-        
+
         UpdateVoiceButtonText();
     }
 
     public void startChat2(IChatable parentScreen, string to)
     {
         tfChat.setFocusWithKb(isFocus: true);
-    //    this.to = to;
+        //    this.to = to;
         this.parentScreen = parentScreen;
         currentChatType = (string.IsNullOrEmpty(to) || to.Equals("")) ? VoiceMessageType.WORLD_CHAT : VoiceMessageType.PRIVATE_CHAT;
-        
+
         if (Main.isWindowsPhone)
         {
             tfChat.showSubTextField = false;
@@ -257,7 +258,7 @@ public class ChatTextField : IActionListener
         tfChat.setText(string.Empty);
         tfChat.clearAll();
         isPublic = false;
-        
+
         UpdateVoiceButtonText();
     }
 
@@ -271,14 +272,14 @@ public class ChatTextField : IActionListener
         {
             return;
         }
-        
+
         // Update voice recording
         if (isRecordingVoice)
         {
             VoiceRecorder.gI().Update();
             UpdateVoiceButtonText();
         }
-        
+
         tfChat.update();
         if (Main.isWindowsPhone)
         {
@@ -481,14 +482,14 @@ public class ChatTextField : IActionListener
             msg.writer().writeInt(voiceMsg.audioData.Length);
             msg.writer().write(voiceMsg.audioData);
 
-            
+
             VoiceSession.gI().sendMessage(msg);
             UnityEngine.Debug.LogError("Send voice chat successt");
             msg.cleanup();
         }
         catch (System.Exception e)
         {
-            UnityEngine.Debug.LogError("Error sending voice message to server: " + e.Message);
+            UnityEngine.Debug.LogError("Error sending voice message to server: " + e.ToString());
         }
     }
 

@@ -77,7 +77,8 @@ public class Shop implements Cloneable {
     private String tableName;
     private int npcId;
     private Npc npc;
-
+    public boolean canBuyMore = true;
+    
     public void init() {
         try {
             Server server = DragonBall.getInstance().getServer();

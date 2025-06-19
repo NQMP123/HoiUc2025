@@ -16,7 +16,7 @@ public class VoiceRecorder
     private const float NOISE_GATE_THRESHOLD = 0.002f; // minimum gate threshold
     private const float DYNAMIC_THRESHOLD_FACTOR = 0.0001f; // factor of average amplitude
     public static float playbackGain = 1.5f; // amplify playback volume, configurable
-    public static float minimumValue = 0.005f; // minimum volume threshold for noise filtering, configurable
+    public static float minimumValue = 0.02f; // minimum volume threshold for noise filtering, configurable
     public static float noiseReductionStrength = 0.7f; // strength of noise reduction (0.0 - 1.0)
     public static float speechThreshold = 0.02f; // threshold to detect speech vs silence
 

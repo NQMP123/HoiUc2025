@@ -80,7 +80,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class Server {
-
+    
     private static final Logger logger = Logger.getLogger(Server.class);
     public static int COUNT_SESSION_ON_IP = 10;
     public static final String VERSION = "0.0.3";
@@ -113,7 +113,7 @@ public class Server {
     public ArrayList<Part> parts;
     public ArrayList<SkillPaint> sks;
     public ArrayList<ClanImage> clanImages;
-
+    
     public int[] idHead, idAvatar;
     public int mapNrNamec[] = {-1, -1, -1, -1, -1, -1, -1};
     public String nameNrNamec[] = {"", "", "", "", "", "", ""};
@@ -123,23 +123,23 @@ public class Server {
     public ArrayList<ItemTemplate> flags;
     public ArrayList<AchievementTemplate> achievements;
     public static ConcurrentHashMap<String, Integer> ips = new ConcurrentHashMap<>();
-
+    
     public List<Integer> isFightingDhvtSieuHang = new ArrayList<>();
     public List<Integer> isRewardDhvtSieuHang = new ArrayList<>();
-
+    
     public List<String> isValidDll = new ArrayList<>();
     public boolean isStopDhvtSieuHang;
     @Getter
     private final Config config;
     private com.ngocrong.server.voice.VoiceServer voiceServer;
-
+    
     public Server() {
         config = new Config();
         config.load();
     }
-
+    
     public void init() {
-
+        
         AutoBackup.start();
         MySQLConnect.create(config.getDbHost(), config.getDbPort(), config.getDbName(), config.getDbUser(), config.getDbPassword());
         initBGSmallVersion();
@@ -197,11 +197,11 @@ public class Server {
         loadDllValid();
         partSum = UtilsNQMP.getTableChecksum("nr_part");
         itemSum = UtilsNQMP.getTableChecksum("nr_item") + UtilsNQMP.getTableChecksum("nr_item_option_template");
-
+        
     }
     public long partSum = 0;
     public long itemSum = 0;
-
+    
     public void initLucky() {
         Lucky.addLucky(new GoldLucky(Lucky.LUCKY_GOLD, "Vàng"));
         Lucky.addLucky(new GoldBarLucky(Lucky.LUCKY_GOLDBAR, "Thỏi vàng"));
@@ -209,7 +209,7 @@ public class Server {
         Lucky.addLucky(new GemLockLucky(Lucky.LUCKY_GEMLOCK, "Hồng ngọc"));
         Lucky.start();
     }
-
+    
     public void setOfflineAll() {
         try {
             GameRepository.getInstance().player.setOfflineAll();
@@ -218,13 +218,13 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void saveData() {
         SessionManager.saveData();
         ClanManager.getInstance().saveData();
         Consignment.getInstance().saveData();
     }
-
+    
     public void initClanImage() {
         try {
             clanImages = new ArrayList<>();
@@ -254,7 +254,7 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void loadDllValid() {
         try {
             PreparedStatement ps = MySQLConnect.getConnection().prepareStatement("select * from nr_isvaliddll");
@@ -275,7 +275,7 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void initAchievement() {
         try {
             achievements = new ArrayList<>();
@@ -298,7 +298,7 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void initSkillDisciple() {
         try {
             SkillPet.list = new ArrayList<>();
@@ -321,7 +321,7 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void initGameInfo() {
         try {
             gameInfos = new ArrayList<>();
@@ -342,7 +342,7 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void initializeSpecialSkill() {
         try {
             SpecialSkill.specialSkillTemplates = new ArrayList<>();
@@ -366,7 +366,7 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void setCacheMap() {
         try {
             Server server = DragonBall.getInstance().getServer();
@@ -385,7 +385,7 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void setCacheSkillTemplate() {
         try {
             Server server = DragonBall.getInstance().getServer();
@@ -435,7 +435,7 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void setCacheItem(int type) {
         try {
             Server server = DragonBall.getInstance().getServer();
@@ -444,9 +444,9 @@ public class Server {
             int size = iTemplates.size();
             ByteArrayOutputStream dos = new ByteArrayOutputStream();
             DataOutputStream ds = new DataOutputStream(dos);
-
+            
             byte newVItem = (byte) Math.abs((server.iOptionTemplates.size() + server.iTemplates.size() + config.getItemVersion()));
-
+            
             ds.writeByte(newVItem);
             ds.writeByte(type);
             if (type == 0) {
@@ -498,7 +498,7 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void initCaption() {
         try {
             Connection conn = MySQLConnect.getConnection();
@@ -516,7 +516,7 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void initPower() {
         try {
             powers = new ArrayList<>();
@@ -534,7 +534,7 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void initDart() {
         try {
             darts = new ArrayList<>();
@@ -594,7 +594,7 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void setCacheDart() {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -645,7 +645,7 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void initArrow() {
         try {
             arrs = new ArrayList<>();
@@ -669,7 +669,7 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void setCacheArrow() {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -690,7 +690,7 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void initEffect() {
         try {
             efs = new ArrayList<>();
@@ -708,7 +708,7 @@ public class Server {
                     eff.arrEfInfo[i].idImg = obj.getInt("id");
                     eff.arrEfInfo[i].dx = obj.getInt("dx");
                     eff.arrEfInfo[i].dy = obj.getInt("dy");
-
+                    
                 }
                 efs.add(eff);
             }
@@ -719,7 +719,7 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void initImgByName() {
         try {
             ImgByName.images = new ArrayList<>();
@@ -741,7 +741,7 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void setCacheEffect() {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -765,7 +765,7 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void initImage() {
         try {
             smallImg = new ArrayList<>();
@@ -789,7 +789,7 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void setCacheImage() {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -811,7 +811,7 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void initPart() {
         try {
             parts = new ArrayList<>();
@@ -821,7 +821,7 @@ public class Server {
             while (res.next()) {
                 int id = res.getInt("id");
                 try {
-
+                    
                     byte type = res.getByte("type");
                     JSONArray jA = new JSONArray(res.getString("part"));
                     Part part = new Part(type);
@@ -839,7 +839,7 @@ public class Server {
                         }
                     }
                     parts.add(part);
-
+                    
                 } catch (Exception e) {
                     com.ngocrong.NQMP.UtilsNQMP.logError(e);
                     System.err.println("Error at part : " + id);
@@ -853,7 +853,7 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void setCachePart() {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -878,7 +878,7 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void initSkill() {
         try {
             sks = new ArrayList<>();
@@ -937,7 +937,7 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void setCacheSkill() {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -979,7 +979,7 @@ public class Server {
                     dos.writeShort(sip.adx);
                     dos.writeShort(sip.ady);
                 }
-
+                
             }
             CACHE_SKILL = bos.toByteArray();
             dos.close();
@@ -990,7 +990,7 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void initEffectData() {
         try {
             Effect.effects = new ArrayList<>();
@@ -1049,7 +1049,7 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void initBGItem() {
         try {
             BgItem.bgItems = new ArrayList<>();
@@ -1082,7 +1082,7 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void initMap() {
         try {
             MapManager mapManager = MapManager.getInstance();
@@ -1136,7 +1136,7 @@ public class Server {
                     }
                     map.mobs[i] = mob;
                 }
-
+                
                 JSONArray npcs = new JSONArray(res.getString("npc"));
                 lent = npcs.length();
                 map.npcs = new Npc[lent];
@@ -1150,7 +1150,7 @@ public class Server {
                     Npc npc = new Npc(i, status, templateId, x, y, avatar);
                     map.npcs[i] = npc;
                 }
-
+                
                 JSONArray poss = new JSONArray(res.getString("position_bg_item"));
                 lent = poss.length();
                 map.positionBgItems = new BgItem[lent];
@@ -1208,18 +1208,18 @@ public class Server {
                 }
                 map.init();
                 mapManager.maps.put(map.mapID, map);
-
+                
             }
             TMap.createData();
             res.close();
             stmt.close();
-
+            
         } catch (SQLException | JSONException ex) {
             com.ngocrong.NQMP.UtilsNQMP.logError(ex);
             logger.error("failed!", ex);
         }
     }
-
+    
     public void initMob() {
         try {
             Connection conn = MySQLConnect.getConnection();
@@ -1299,7 +1299,7 @@ public class Server {
                                 mob.frameBoss[i][j] = (byte) frame.getInt(j);
                             }
                         }
-
+                        
                     }
                     mob.createData();
                 }
@@ -1313,7 +1313,7 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void initNpc() {
         try {
             Connection conn = MySQLConnect.getConnection();
@@ -1351,7 +1351,7 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void initNgocRongNamec(byte type) {
         int[] mapId = {7, 8, 9, 10, 11, 12, 13, 31, 32, 33, 34, 43};
         for (byte i = 0; i < (byte) 7; i++) {
@@ -1448,7 +1448,7 @@ public class Server {
             }
         }
     }
-
+    
     public void initOthers() {
         try {
             Gson g = new Gson();
@@ -1484,6 +1484,10 @@ public class Server {
                         String table = obj.getString("table");
                         int npc = obj.getInt("npc");
                         int type = obj.getInt("type");
+                        if (obj.has("buyMore") && obj.get("buyMore") != null) {
+                            boolean canBuyMore = obj.getInt("buyMore") == 1;
+                            shop.canBuyMore = canBuyMore;
+                        }
                         shop.setTableName(table);
                         shop.setNpcId(npc);
                         shop.setTypeShop((byte) type);
@@ -1529,7 +1533,7 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void initItemTemplate() {
         try {
             iOptionTemplates = new ArrayList<>();
@@ -1579,7 +1583,7 @@ public class Server {
                     }
                 }
                 iTemplates.put((int) iTemplate.id, iTemplate);
-
+                
             }
             res2.close();
             stmt2.close();
@@ -1591,7 +1595,7 @@ public class Server {
             logger.error("init item template err", ex);
         }
     }
-
+    
     public void initTaskTemplate() {
         try {
             taskTemplates = new ArrayList<>();
@@ -1603,7 +1607,7 @@ public class Server {
                 TaskTemplate task = new TaskTemplate();
                 try {
                     task.id = res.getInt("id");
-
+                    
                     task.name = res.getString("name");
                     task.rewardPotential = res.getInt("reward_potential");
                     task.rewardPower = res.getInt("reward_power");
@@ -1629,7 +1633,7 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void initSkillTemplate() {
         try {
             sOptionTemplates = new ArrayList<>();
@@ -1654,27 +1658,27 @@ public class Server {
                     case 0:
                         nClass.name = "Trái đất";
                         break;
-
+                    
                     case 1:
                         nClass.name = "Namec";
                         break;
-
+                    
                     case 2:
                         nClass.name = "Xayda";
                         break;
-
+                    
                     case 3:
                         nClass.name = "Chưa xác định";
                         break;
-
+                    
                     case 4:
                         nClass.name = "Chưa xác định";
                         break;
-
+                    
                     case 5:
                         nClass.name = "Chưa xác định";
                         break;
-
+                    
                     default:
                         nClass.name = "Chưa xác định";
                         break;
@@ -1719,10 +1723,10 @@ public class Server {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void initSmallVersion() {
         try {
-
+            
             smallVersion = new byte[4][];
             for (int i = 0; i < 4; i++) {
                 File file = new File("resources/image/" + (i + 1) + "/small/");
@@ -1743,7 +1747,7 @@ public class Server {
                     name = name.replaceAll("Small", "");
                     name = name.replace(".png", "");
                     int id = Integer.parseInt(name);
-
+                    
                     smallVersion[i][id] = (byte) (Files.readAllBytes(f.toPath()).length % 127);
                 }
             }
@@ -1752,7 +1756,7 @@ public class Server {
             logger.error("small version", ex);
         }
     }
-
+    
     public void initResVersion() {
         for (int i = 0; i < 4; i++) {
             File folder = new File("resources/data/" + (i + 1));
@@ -1760,7 +1764,7 @@ public class Server {
             resVersion[i] = ver + 0;
         }
     }
-
+    
     public void initBGSmallVersion() {
         try {
             backgroundVersion = new byte[4][];
@@ -1780,7 +1784,7 @@ public class Server {
                     String name = f.getName();
                     int id = Integer.parseInt(name.replace(".png", ""));
                     backgroundVersion[i][id] = (byte) (Files.readAllBytes(f.toPath()).length % 127);
-
+                    
                 }
             }
         } catch (Exception e) {
@@ -1788,7 +1792,7 @@ public class Server {
             logger.error("bg version", e);
         }
     }
-
+    
     public void initFlags() {
         flags = new ArrayList<>();
         for (ItemTemplate itemTemplate : iTemplates.values()) {
@@ -1797,7 +1801,7 @@ public class Server {
             }
         }
     }
-
+    
     protected void start() {
         logger.debug("Start socket post=" + config.getPort());
         try {
@@ -1821,7 +1825,7 @@ public class Server {
             threadMapManager.start();
             logger.debug("Start server Success!");
             while (start) {
-
+                
                 try {
                     if (!server.isClosed()) {
                         Socket client = server.accept();
@@ -1844,15 +1848,15 @@ public class Server {
             logger.error("failed!", e);
         }
     }
-
+    
     protected void stop() {
         if (start) {
             start = false;
             close();
-
+            
         }
     }
-
+    
     protected void close() {
         try {
             server.close();
@@ -1868,7 +1872,7 @@ public class Server {
             logger.error("failed!", e);
         }
     }
-
+    
     public ClanImage getClanImageByID(int id) {
         for (ClanImage clan : clanImages) {
             if (clan.id == id) {
@@ -1877,7 +1881,7 @@ public class Server {
         }
         return null;
     }
-
+    
     public ArrayList<ClanImage> getListClanImageCanBuy() {
         ArrayList<ClanImage> list = new ArrayList<>();
         for (ClanImage clanImage : clanImages) {
@@ -1887,11 +1891,11 @@ public class Server {
         }
         return list;
     }
-
+    
     private void resetDhvt() {
         MainUpdate.ResetDHVT();
     }
-
+    
     public void clearDhvtReward() {
         GameRepository.getInstance().dhvtSieuHangRewardRepository.deleteAll();
         logger.info("Delete all reward");
@@ -1948,7 +1952,7 @@ public class Server {
                 continue;
             }
             if (item.type <= 4 && (item.level == level && (item.gender == gender || (item.type == 4 && item.gender == 3)))) {
-
+                
                 int p = 10;
                 if (item.type == 2) {
                     p = 7;
@@ -1962,22 +1966,22 @@ public class Server {
         }
         return r.next();
     }
-
+    
     public static int getMaxQuantityItem() {
         return DragonBall.getInstance().getServer().getConfig().getMaxQuantity();
     }
-
+    
     public static void checkTest() {
-
+        
         long i = 0;
         int numtest = 2000000;
-
+        
         ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
         DataOutputStream writeOld = new DataOutputStream(baos1);
-
+        
         ByteArrayOutputStream baos2 = new ByteArrayOutputStream();
         FastDataOutputStream writeNew = new FastDataOutputStream(baos2);
-
+        
         System.out.println("start oldWriter");
         long startTime = System.currentTimeMillis();
         try {
@@ -1990,7 +1994,7 @@ public class Server {
         }
         long endTime = System.currentTimeMillis();
         System.out.println("oldWriter : " + (endTime - startTime) + " ms");
-
+        
         i = 0;
         System.out.println("start newWriter");
         long startTime2 = System.currentTimeMillis();
@@ -2004,9 +2008,9 @@ public class Server {
         }
         long endTime2 = System.currentTimeMillis();
         System.out.println("newWriter : " + (endTime2 - startTime2) + " ms");
-
+        
     }
-
+    
     private void activeCommandLine() {
         new Thread(() -> {
             Scanner sc = new Scanner(System.in);
@@ -2051,7 +2055,7 @@ public class Server {
                         Hirudegarn.addMob(z);
                         logger.info("Init Hirudegarn : 126 - " + z.zoneID);
                     }
-
+                    
                 }
                 if (line.equals("baotri")) {
                     try {
@@ -2077,7 +2081,7 @@ public class Server {
             }
         }, "Active line").start();
     }
-
+    
     private void autoUpdateCCU() {
         new Thread(() -> {
             byte tick = 5;
@@ -2100,11 +2104,11 @@ public class Server {
             }
         }, "auto Update CCU").start();
     }
-
+    
     public boolean isSameMapNrNamec() {
         return (mapNrNamec[0] == 7) && (mapNrNamec[1] == 7) && (mapNrNamec[2] == 7) && (mapNrNamec[3] == 7) && (mapNrNamec[4] == 7) && (mapNrNamec[5] == 7) && (mapNrNamec[6] == 7);
     }
-
+    
     public boolean isSameZoneNrNamec() {
         return (zoneNrNamec[0] == zoneNrNamec[1]) && (zoneNrNamec[2] == zoneNrNamec[0]) && (zoneNrNamec[3] == zoneNrNamec[0]) && (zoneNrNamec[4] == zoneNrNamec[0]) && (zoneNrNamec[5] == zoneNrNamec[0]) && (zoneNrNamec[6] == zoneNrNamec[0]);
     }

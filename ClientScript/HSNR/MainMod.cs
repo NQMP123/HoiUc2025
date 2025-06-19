@@ -124,9 +124,14 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
         private void paintModStatus(mGraphics g)
         {
             int num = GameCanvas.hh / 2 + 30;
-            if (AutoSkill.isAutoSendAttack)
+            if (AutoSkill.isAutoSendAttack == 1)
             {
                 mFont.tahoma_7b_white.drawString(g, "Tự đánh: on", 20, num, 0, mFont.tahoma_7b_dark);
+                num += 10;
+            }
+            if (AutoSkill.isAutoSendAttack == 2)
+            {
+                mFont.tahoma_7b_white.drawString(g, "Tự đánh VIP: on", 20, num, 0, mFont.tahoma_7b_dark);
                 num += 10;
             }
             if (isAutoRevive)
@@ -241,7 +246,7 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                     else
                     {
                         Service.gI().giaodich(0, Char.myCharz().charFocus.charID, -1, -1);
-                        GameScr.info1.addInfo("Đã Gửi Lời Mời Giao Dịch Đến: " + Char.myCharz().charFocus.cName, 0);
+                        GameScr.info1.addInfo("Đã Gửi Lời Mời Giao Dịch Đến: " + Char.myCharz().charFocus.subcName(), 0);
                     }
                     break;
                 case 'm':

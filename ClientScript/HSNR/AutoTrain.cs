@@ -339,6 +339,10 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
 
         private static void DoIt()
         {
+            if (Char.myCharz().isWaiting())
+            {
+                return;
+            }
             if (Char.myCharz().statusMe == 14 || Char.myCharz().statusMe == 5)
                 return;
             if (listMobIds.Count == 0)
@@ -407,15 +411,23 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                     }
                 }
             }
+            if (skill != Char.myCharz().myskill)
+            {
+                Char.myCharz().myskill = skill;
+                Service.gI().selectSkill(skill.template.id);
+                GameScr.gI().lastSkill = skill;
+            }
             if (skill != null)
             {
-
-                if (skill != Char.myCharz().myskill)
+                if (skill.template.type == 1)
                 {
-                    Service.gI().selectSkill(skill.template.id);
-                    Char.myCharz().myskill = skill;
+                    Ak();
+                    skill.lastTimeUseThisSkill = mSystem.currentTimeMillis();
                 }
-                Ak();
+                else
+                {
+                    GameScr.gI().doUseSkill(skill, true);
+                }
             }
         }
         public static void Ak()

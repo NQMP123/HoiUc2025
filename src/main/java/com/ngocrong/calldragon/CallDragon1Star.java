@@ -40,11 +40,11 @@ public class CallDragon1Star extends CallDragon {
         wishList[0][3] = new KeyValue(20004, "Thêm\n2% chí\nmạng", ADD_CRITICAL);
         wishList[0][4] = new KeyValue(20000, "Điều ước khác");
         // trang 2
-        wishList[1] = new KeyValue[6];
+        wishList[1] = new KeyValue[4];
         wishList[1][0] = new KeyValue(20004, "Avatar\nđẹp trai", AVATAR_VIP);
         wishList[1][1] = new KeyValue(20004, "Đổi\nchiêu 2\nĐệ tử", CHANGE_SKILL_2);
         wishList[1][2] = new KeyValue(20004, "Đổi\nchiêu 3\nĐệ tử", CHANGE_SKILL_3);
-        wishList[1][3] = new KeyValue(20000, "Điều ước khác", ADD_CRITICAL);
+        wishList[1][3] = new KeyValue(20000, "Điều ước khác");
     }
 
     @Override
@@ -80,7 +80,14 @@ public class CallDragon1Star extends CallDragon {
                 break;
 
             case ADD_CRITICAL:
-                _c.info.originalCritical = Math.min(_c.info.originalCritical + 2, 10);
+               if (_c.info.originalCritical >= (_c.info.powerLimitMark.critical + 20)) {
+                    back("Chí mạng của bạn đã đạt mức tối đa");
+                    return;
+                }
+                _c.info.originalCritical += 2;
+                if (_c.info.originalCritical > _c.info.powerLimitMark.critical + 20) {
+                    _c.info.originalCritical = _c.info.powerLimitMark.critical + 20;
+                }
                 _c.info.setInfo();
                 _c.service.loadPoint();
                 _c.service.serverMessage("Bạn đã được cộng 2% chí mạng");
