@@ -3087,7 +3087,6 @@ public class Service implements IService {
 
     public void size(int size) {
         try {
-            System.err.println("Size : " + size);
             Message mss = new Message(Cmd.GET_IMAGE_SOURCE);
             FastDataOutputStream ds = mss.writer();
             ds.writeByte(1);

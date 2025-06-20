@@ -19,12 +19,14 @@ public class SuperRank {
     public int rank;
     public byte ticket;
     public long lastBonusTicket;
+    public long lastAttack;
     public long lastReward;
     public static long DAY = 1000 * 60 * 60 * 24;
+    public static long HalfDay = 1000 * 60 * 60 * 12;
 
     public SuperRank() {
         ticket = 3;
-        lastReward = System.currentTimeMillis();
+        lastAttack = System.currentTimeMillis();
         lastBonusTicket = System.currentTimeMillis();
     }
 
@@ -35,10 +37,13 @@ public class SuperRank {
 
             if (jsonArray.length() >= 2) {
                 rank.ticket = (byte) jsonArray.getInt(0);
-                rank.lastReward = jsonArray.getLong(1);
+                rank.lastAttack = jsonArray.getLong(1);
 
                 if (jsonArray.length() >= 3) {
                     rank.lastBonusTicket = jsonArray.getLong(2);
+                }
+                if (jsonArray.length() >= 4) {
+                    rank.lastReward = jsonArray.getLong(3);
                 }
 
                 if (System.currentTimeMillis() - rank.lastBonusTicket >= DAY) {
@@ -69,7 +74,7 @@ public class SuperRank {
                 boolean found = rs.next();
                 if (found) {
                     String data = rs.getString("data");
-                    if (!data.equals("[-1,-1,-1]")) {
+                    if (!data.equals("[-1,-1,-1,-1]")) {
                         player.superrank = getJSON(data);
                         checkReward(player);
                     } else {
@@ -107,43 +112,45 @@ public class SuperRank {
     public String toJSON() {
         var rank = this;
         if (rank == null) {
-            return String.format("[%d,%d,%d]", 3, System.currentTimeMillis(), System.currentTimeMillis());
+            return String.format("[%d,%d,%d,%d]", 3, System.currentTimeMillis(), System.currentTimeMillis(), System.currentTimeMillis());
         }
-        return String.format("[%d,%d,%d]", rank.ticket, rank.lastReward, rank.lastBonusTicket);
+        return String.format("[%d,%d,%d,%d]", rank.ticket, rank.lastAttack, rank.lastBonusTicket, rank.lastReward);
     }
 
     public static void checkReward(Player player) {
-        Utils.setTimeout(()
-                -> {
-
-            if (player.superrank.rank < 100 && System.currentTimeMillis() - player.superrank.lastReward >= DAY) {
-                var rank = player.superrank.rank;
-                player.superrank.lastReward = System.currentTimeMillis();
-                int goldReward = 5;
-                if (rank == 1) {
-                    goldReward = 200;
-                } else if (rank == 2 || rank == 3) {
-                    goldReward = 100;
-                } else if (rank <= 9) {
-                    goldReward = 50;
-                } else if (rank <= 20) {
-                    goldReward = 10;
-                } else if (rank <= 50) {
-                    goldReward = 5;
-                } else if (rank <= 100) {
-                    goldReward = 2;
-                }
-
-                Item thoivang = new Item(457);
-                thoivang.quantity = goldReward;
-                player.addItem(thoivang);
-                player.service.dialogMessage(String.format(
-                        "Bạn đạt Top %d ở Giải Đấu Siêu Hạng\n"
-                        + "Bạn nhận được %d thỏi vàng", player.superrank.rank, goldReward));
-            }
-
-        },
-                5000);
+//        Utils.setTimeout(()
+//                -> {
+//            if (player.superrank.rank < 100 && System.currentTimeMillis() - player.superrank.lastAttack >= 30 * 60000 && System.currentTimeMillis() - player.superrank.lastReward >= HalfDay) {
+//
+//                var rank = player.superrank.rank;
+//                player.superrank.lastReward = System.currentTimeMillis();
+//                player.superrank.lastAttack = System.currentTimeMillis();
+//                int goldReward = 5;
+//                
+//                if (rank == 1) {
+//                    goldReward = 200;
+//                } else if (rank == 2 || rank == 3) {
+//                    goldReward = 100;
+//                } else if (rank <= 9) {
+//                    goldReward = 50;
+//                } else if (rank <= 20) {
+//                    goldReward = 10;
+//                } else if (rank <= 50) {
+//                    goldReward = 5;
+//                } else if (rank <= 100) {
+//                    goldReward = 2;
+//                }
+//
+//                Item thoivang = new Item(457);
+//                thoivang.quantity = goldReward;
+//                player.addItem(thoivang);
+//                player.service.dialogMessage(String.format(
+//                        "Bạn đạt Top %d ở Giải Đấu Siêu Hạng\n"
+//                        + "Bạn nhận được %d thỏi vàng", player.superrank.rank, goldReward));
+//            }
+//
+//        },
+//                5000);
 
     }
 

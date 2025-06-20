@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Assets.Moding;
 using Assets.Scripts.Assembly_CSharp.HSNR;
 using Assets.src.g;
 using NQMP;
@@ -7066,6 +7067,7 @@ public class GameScr : mScreen, IChatable
             }
             catch { }
         }
+        NotifyBoss.checkChatVip(chatVip);
         vChatVip.addElement(chatVip);
     }
 

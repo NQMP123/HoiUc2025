@@ -17,6 +17,7 @@ import com.ngocrong.server.DragonBall;
 import com.ngocrong.server.Server;
 import com.ngocrong.util.Utils;
 import com.google.gson.annotations.SerializedName;
+import com.ngocrong.bot.Boss;
 import com.ngocrong.consts.ItemTimeName;
 import org.apache.log4j.Logger;
 
@@ -552,17 +553,13 @@ public class Info {
             this.mpFullTemp /= 2;
             this.damageFull /= 2;
         }
-        if (_player.isNhapThe() && _player.myDisciple != null) {
-            Disciple disciple = _player.myDisciple;
-            this.hpFullTemp += disciple.info.hpFull;
-            this.mpFullTemp += disciple.info.mpFull;
-            this.damageFull += disciple.info.damageFull;
-//            if (disciple.typeDisciple > 0) {
-//                this.hpFullTemp += Utils.percentOf(this.hpFullTemp, 10);
-//                this.mpFullTemp += Utils.percentOf(this.mpFullTemp, 10);
-//                this.damageFull += Utils.percentOf(this.damageFull, 10);
-//            }
+
+        int phuX = _player.getPhuX();
+        if (phuX > 0 && _player.zone.map.isBlackDragonBall()) {
+            this.hpFullTemp *= phuX;
+            this.mpFullTemp *= phuX;
         }
+
         if (_player.isSetNappa()) {
             this.hpFullTemp += Utils.percentOf(this.hpFullTemp, 80);
         }
@@ -706,12 +703,6 @@ public class Info {
                 }
             }
         }
-        int phuX = _player.getPhuX();
-        if (phuX > 0 && _player.zone.map.isBlackDragonBall()) {
-            this.hpFullTemp *= phuX;
-            this.mpFullTemp *= phuX;
-//            this.damageFull *= phuX;
-        }
         if (_player.isHaveFood()) {
             this.damageFull += this.damageFull / 10;
         }
@@ -773,7 +764,7 @@ public class Info {
             this.options[94] += 5;
         }
         if (_player.zone != null && _player.zone.map.isCold()) {
-            if (!isUnaffectedCold) {
+            if (!isUnaffectedCold && !(this._player instanceof Boss)) {
                 this.hpFullTemp /= 2;
                 this.damageFull /= 2;
             }
@@ -788,6 +779,18 @@ public class Info {
         if (this.mpFullTemp <= 0) {
             this.mpFullTemp = 1;
         }
+        if (_player.isNhapThe() && _player.myDisciple != null) {
+            Disciple disciple = _player.myDisciple;
+            this.hpFullTemp += disciple.info.hpFull;
+            this.mpFullTemp += disciple.info.mpFull;
+            this.damageFull += disciple.info.damageFull;
+//            if (disciple.typeDisciple > 0) {
+//                this.hpFullTemp += Utils.percentOf(this.hpFullTemp, 10);
+//                this.mpFullTemp += Utils.percentOf(this.mpFullTemp, 10);
+//                this.damageFull += Utils.percentOf(this.damageFull, 10);
+//            }
+        }
+
         this.hpFull = this.hpFullTemp;
         this.mpFull = this.mpFullTemp;
         if (this.hp > this.hpFull) {

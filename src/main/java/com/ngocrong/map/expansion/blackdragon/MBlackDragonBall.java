@@ -20,12 +20,13 @@ public class MBlackDragonBall extends IMap<ZBlackDragonBall> {
 
     public MBlackDragonBall() {
         super(3600);
-        int[] zoneNumber = new int[]{3,3,3,30};
+        int[] zoneNumber = new int[]{3, 3, 3, 30};
         for (int i = 0; i < MAPS.length; i++) {
             int m = MAPS[i];
             TMap map = MapManager.getInstance().getMap(m);
             for (int j = 0; j < zoneNumber[i]; j++) {
                 ZBlackDragonBall z = new ZBlackDragonBall(map, j, i);
+                z.setMaxPlayer(30);
                 zones.add(z);
                 map.addZone(z);
             }

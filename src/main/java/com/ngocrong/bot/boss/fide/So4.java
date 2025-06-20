@@ -81,7 +81,7 @@ public class So4 extends Boss {
             return;
         }
         Player c = (Player) obj;
-        dropGroupA(c);
+        //dropGroupA(c);
         if (team.getType() == 0) {
             for (int i = 0; i < 5; i++) {
                 Item item = new Item(ItemName.THOI_VANG);

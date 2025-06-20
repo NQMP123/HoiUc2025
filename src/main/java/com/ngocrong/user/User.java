@@ -61,7 +61,7 @@ public class User {
 
         UserData userData = userDataList.get(0);
         // admin moi dc login
-        if (userData.getRole() != 1 && LocalDateTime.now().isBefore(LocalDateTime.of(2025, 4, 6, 10, 0))) {
+        if (userData.getRole() != 1 && LocalDateTime.now().isBefore(LocalDateTime.of(2025, 6, 21, 10, 0))) {
             return 7;
         }
         setId(userData.id);
@@ -84,6 +84,14 @@ public class User {
             return 4;
         }
         return 1;
+    }
+
+    public int getActivated() {
+        //RadioTest
+        if (true) {
+            return 1;
+        }
+        return this.activated;
     }
 
     public byte createChar(String name, byte gender, short hair) {
@@ -173,27 +181,21 @@ public class User {
             tv.setDefaultOptions();
             tv.addItemOption(new ItemOption(30, 0));
             itemBoxs.add(tv);
-
-            Item tanthu = new Item(2175);
-            tanthu.indexUI = 2;
-            tanthu.quantity = 20;
-            tanthu.setDefaultOptions();
-            itemBoxs.add(tanthu);
-
+            
             Item pean = new Item(595);
-            pean.indexUI = 3;
+            pean.indexUI = 2;
             pean.quantity = 20_000;
             pean.setDefaultOptions();
             itemBoxs.add(pean);
 
             Item csl = new Item(194);
-            csl.indexUI = 4;
+            csl.indexUI = 3;
             csl.quantity = 1;
             csl.setDefaultOptions();
             itemBoxs.add(csl);
 
             Item bongtai = new Item(454);
-            bongtai.indexUI = 5;
+            bongtai.indexUI = 4;
             bongtai.quantity = 1;
             bongtai.setDefaultOptions();
             itemBoxs.add(bongtai);
@@ -203,7 +205,7 @@ public class User {
             Info info = new Info(gender);
             info.recovery(Info.ALL, 100, false);
             info.setStamina();
-            info.power = info.potential = 15_000_000;
+            info.power = info.potential = 1_500_000;
             PlayerData data = new PlayerData();
             data.userId = getId();
             data.serverId = config.getServerID();

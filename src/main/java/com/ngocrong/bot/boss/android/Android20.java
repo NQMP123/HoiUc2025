@@ -66,7 +66,7 @@ public class Android20 extends Boss {
         if (obj == null) {
             return;
         }
-        dropGroupA((Player) obj);
+//        dropGroupA((Player) obj);
     }
 
     @Override

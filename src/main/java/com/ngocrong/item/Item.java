@@ -170,7 +170,6 @@ public class Item {
             this.options.add(new ItemOption(107, Utils.nextInt(minStar, maxStar)));
         }
     }
-    
 
     public static final int NAPPA = 135;
     public static final int CADIC = 134;
@@ -579,31 +578,46 @@ public class Item {
     }
 
     public boolean isCanSaleToConsignment() {
-        if (template.id == 2243 || template.id == 2261 || template.id == 568 || template.id == 2197) {
+        if (template.id == 457) {
+            return false;
+        }
+//        if (template.id == 2243 || template.id == 2261 || template.id == 568 || template.id == 2197) {
+//            return true;
+//        }
+//        if (template.id == 2251 || template.id == 1994) {
+//            return true;
+//        }
+        if (template.id == 1021 || template.id == 1022 || template.id == 1023 || (template.id >= 381 && template.id <= 384)) {
+            return true;
+            // item c1,2
+        }
+        if (template.id == 987) {
+            // da bao ve
             return true;
         }
-        if (template.id == 2251 || template.id == 1994) {
+        if (template.id == 987) {
+            // da bao ve
             return true;
         }
-        if (template.id == 1021 || template.id == 1022 || template.id == 1023) {
-            return true;
-        }
+        
+        
         if (template.type < 5 && (template.level == 13 || template.level == 14)) {
             return true;
         }
-        if (template.id == 752 || template.id == 752 || template.id == 2146 || template.id == 2147) {
-            return true;
-        }
-        if (template.id >= 925 && template.id <= 931) {
-            return true;
-        }
-        if (template.id >= 2106 && template.id <= 2112) {
-            return true;
-        }
+//        if (template.id == 752 || template.id == 752 || template.id == 2146 || template.id == 2147) {
+//            return true;
+//        }
+//        if (template.id >= 925 && template.id <= 931) {
+//            return true;
+//        }
+//        if (template.id >= 2106 && template.id <= 2112) {
+//            return true;
+//        }
         if (template.type == 29) {
             return true;
         }
-        return template.type == 14 || template.type == 12 || getItemOption(86) != null;
+        // spl-nr - da nang cap
+        return template.type == 30 || template.type == 14 || template.type == 12 || getItemOption(86) != null;
     }
 
     public boolean isLastItemInShop() {

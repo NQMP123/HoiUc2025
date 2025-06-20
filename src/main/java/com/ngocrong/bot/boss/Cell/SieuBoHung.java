@@ -86,7 +86,33 @@ public class SieuBoHung extends Boss {
         if (obj == null) {
             return;
         }
-        dropGroupC((Player) obj);
+        Player player = (Player) obj;
+        int percent = Utils.nextInt(100);
+        int itemId;
+        if (percent < 10 && false) {
+            itemId = 15;
+        } else if (percent < 20 && false) {
+            itemId = 16;
+        } else if (percent < 90 && false) {
+            itemId = 190;
+        } else if (percent < 97) {
+            int[] tl = {
+                ItemName.AO_THAN_LINH, ItemName.AO_THAN_NAMEC, ItemName.AO_THAN_XAYDA,
+                ItemName.QUAN_THAN_LINH, ItemName.QUAN_THAN_NAMEC, ItemName.QUAN_THAN_XAYDA,
+                ItemName.GIAY_THAN_LINH, ItemName.GIAY_THAN_NAMEC, ItemName.GIAY_THAN_XAYDA,
+                ItemName.NHAN_THAN_LINH
+            };
+            itemId = tl[Utils.nextInt(tl.length)];
+        } else {
+            int[] tl = {
+                ItemName.GANG_THAN_LINH, ItemName.GANG_THAN_NAMEC, ItemName.GANG_THAN_XAYDA
+            };
+            itemId = tl[Utils.nextInt(tl.length)];
+        }
+        Item item = new Item(itemId);
+        item.setDefaultOptions();
+        item.quantity = itemId == 190 ? 30000 : 1;
+        dropItem(item, player);
 
     }
 

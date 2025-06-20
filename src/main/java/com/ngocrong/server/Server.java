@@ -83,7 +83,7 @@ public class Server {
     
     private static final Logger logger = Logger.getLogger(Server.class);
     public static int COUNT_SESSION_ON_IP = 10;
-    public static final String VERSION = "0.0.3";
+    public static final String VERSION = "0.0.1";
     protected ServerSocket server;
     public boolean start;
     protected int id;

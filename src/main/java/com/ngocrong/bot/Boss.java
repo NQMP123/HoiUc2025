@@ -112,7 +112,7 @@ public abstract class Boss extends Player implements Bot {
 
     protected void dropGroupB(Player player) {
         int percent = Utils.nextInt(100);
-        if (percent < 10) {
+        if (percent < 10 ) {
             Item item = new Item(RandomItem.DO_CUOI.next());
             item.setDefaultOptions();
             item.addRandomOption(1, 5);
@@ -124,11 +124,8 @@ public abstract class Boss extends Player implements Bot {
     protected void dropGroupC(Player player) {
         int percent = Utils.nextInt(100);
         int itemId;
-        if (percent < 10) {
-            itemId = 15;
-        } else if (percent < 20) {
-            itemId = 16;
-        } else if (percent < 90) {
+        //RadioTest
+        if (percent < 90 && false) {
             itemId = 190;
         } else if (percent < 97) {
             int[] tl = {
@@ -354,6 +351,9 @@ public abstract class Boss extends Player implements Bot {
             return;
         }
         Player target = (Player) obj;
+        if (target.inVisible) {
+            return;
+        }
         Skill skill = selectSkillAttack();
         if (skill != null) {
             int d = Utils.getDistance(0, 0, skill.dx, skill.dy);

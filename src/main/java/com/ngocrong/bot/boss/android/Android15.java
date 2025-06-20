@@ -71,7 +71,7 @@ public class Android15 extends Boss {
         if (obj == null) {
             return;
         }
-        dropGroupA((Player) obj);
+//        dropGroupA((Player) obj);
     }
 
     @Override

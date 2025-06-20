@@ -69,16 +69,13 @@ public class CloneSieuHang extends Boss {
 
     @Override
     public void setDefaultLeg() {
-        setLeg((short) 194);
     }
 
     @Override
     public void setDefaultBody() {
-        setBody((short) 193);
     }
 
     @Override
     public void setDefaultHead() {
-        setHead((short) 198);
     }
 }

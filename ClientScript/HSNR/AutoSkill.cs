@@ -261,10 +261,24 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
 
         public static void AutoSendAttack()
         {
-            if (Char.myCharz().meDead || Char.myCharz().cHP <= 0 || Char.myCharz().statusMe == 14 || Char.myCharz().statusMe == 5 || Char.myCharz().myskill.template.type == 3 || Char.myCharz().myskill.template.id == 10 || Char.myCharz().myskill.template.id == 11 || (Char.myCharz().myskill.paintCanNotUseSkill && !GameCanvas.panel.isShow))
+            if (Char.myCharz().myskill == null || Char.myCharz().myskill.template == null)
+            {
+               
                 return;
+            }
+            if (GameCanvas.panel != null && GameCanvas.panel.isShow)
+            {
+               
+                return;
+            }
+            if (Char.myCharz().meDead || Char.myCharz().cHP <= 0 || Char.myCharz().statusMe == 14 || Char.myCharz().statusMe == 5 || Char.myCharz().myskill.template.type == 3 || Char.myCharz().myskill.template.id == 10 || Char.myCharz().myskill.template.id == 11 || (Char.myCharz().myskill.paintCanNotUseSkill))
+            {
+             
+                return;
+            }
             if (Char.myCharz().charFocus == null &&Char.myCharz().mobFocus == null)
             {
+              
                 return;
             }
             int mySkillIndex = GetMySkillIndex();

@@ -5,7 +5,9 @@ import com.ngocrong.bot.Boss;
 import com.ngocrong.bot.TrongTai;
 import com.ngocrong.bot.boss.dhvt23.*;
 import com.ngocrong.consts.CMDPk;
+import com.ngocrong.consts.ItemTimeName;
 import com.ngocrong.consts.MapName;
+import com.ngocrong.item.ItemTime;
 import com.ngocrong.map.MapManager;
 import com.ngocrong.map.TMap;
 import com.ngocrong.skill.Skill;
@@ -87,6 +89,15 @@ public class Arena23 extends Zone {
         }
     }
 
+    public void reSkill() {
+        for (Skill skill : currFightingPlayer.skills) {
+            if (skill.coolDown > 0) {
+                skill.lastTimeUseThisSkill = System.currentTimeMillis() - skill.coolDown;
+            }
+        }
+        currFightingPlayer.service.updateCoolDown(currFightingPlayer.skills);
+    }
+
     public void fight() {
         started = true;
         leave(trongTai);
@@ -94,12 +105,8 @@ public class Arena23 extends Zone {
         currFightingPlayer.setY((short) 312);
         service.setPosition(currFightingPlayer, (byte) 0);
         currFightingPlayer.info.recovery(Info.ALL, 100, true);
-        for (Skill skill : currFightingPlayer.skills) {
-            if (skill.coolDown > 0) {
-                skill.lastTimeUseThisSkill = System.currentTimeMillis() - 3600000;
-            }
-        }
-        currFightingPlayer.service.updateCoolDown(currFightingPlayer.skills);
+        reSkill();
+
         if (boss != null) {
             currFightingPlayer.testCharId = boss.id;
             boss.testCharId = currFightingPlayer.id;
@@ -110,6 +117,24 @@ public class Arena23 extends Zone {
         } else {
             close();
         }
+    }
+
+    public void load() {
+        int round = currFightingPlayer.roundDHVT23;
+        var player = currFightingPlayer;
+        reSkill();
+        ItemTime item = new ItemTime(ItemTimeName.THOI_MIEN, 3782, 12, false);
+        player.addItemTime(item);
+        player.setSleep(true);
+        service.setEffect(null, player.id, Skill.ADD_EFFECT, Skill.CHARACTER, (byte) 41);
+        if (boss != null) {
+            boss.addItemTime(item);
+            boss.setSleep(true);
+            service.setEffect(null, boss.id, Skill.ADD_EFFECT, Skill.CHARACTER, (byte) 41);
+        }
+        player.info.hp = player.info.hpFull;
+        player.info.mp = player.info.mpFull;
+        service.playerLoadAll(player);
     }
 
     @Override
@@ -130,6 +155,8 @@ public class Arena23 extends Zone {
             }
             long now = System.currentTimeMillis();
             if (now - last >= 1000) {
+                int round = currFightingPlayer.roundDHVT23;
+                var player = currFightingPlayer;
                 last = now;
                 if (countDownToStart > 0) {
                     countDownToStart--;
@@ -137,6 +164,7 @@ public class Arena23 extends Zone {
                         service.chat(trongTai, "Trận đấu sắp diễn ra");
                     } else if (countDownToStart == 12) {
                         service.chat(trongTai, "Xin quý vị khán giả cho 1 tràng pháo tay cổ vũ cho 2 đấu thủ nào");
+
                     } else if (countDownToStart == 10) {
                         service.chat(trongTai, "Mọi người hãy ổn định chỗ ngồi, trận đấu sẽ bắt đầu sau 3 giây nữa");
                     } else if (countDownToStart == 8) {
@@ -176,7 +204,7 @@ public class Arena23 extends Zone {
                 setNextBoss(currFightingPlayer.roundDHVT23);
                 started = false;
                 this.countDown = 180;
-                this.countDownToStart = 15;
+                this.countDownToStart = 16;
                 currFightingPlayer.setTypePK((byte) 0);
             } else if (currFightingPlayer.isDead() || currFightingPlayer.zone != this) {
                 currFightingPlayer.service.serverMessage("Bạn đã thất bại");
@@ -186,7 +214,8 @@ public class Arena23 extends Zone {
     }
 
     public void setNextBoss(int level) {
-        if (level > 12) {
+        load();
+        if (level > 11) {
             service.chat(currFightingPlayer, "Đã hết đối thủ thách đấu, bạn đã dành chiến thắng");
             close();
         }
@@ -224,9 +253,9 @@ public class Arena23 extends Zone {
             case 10:
                 boss = new LiuLiu(currFightingPlayer);
                 break;
-            case 11:
-                boss = new Bardock(currFightingPlayer);
-                break;
+//            case 11:
+//                boss = new Bardock(currFightingPlayer);
+//                break;
             default:
                 close();
                 break;
@@ -268,6 +297,6 @@ public class Arena23 extends Zone {
             boss.setTypePK((byte) 0);
             leave(boss);
         }
-
+        currFightingPlayer.setTypePK((byte) 0);
     }
 }

@@ -555,6 +555,14 @@ public class Player {
     public void useCollectibleCard(Item item) {
         Card c = getCollectionCard(item.id);
         if (c != null) {
+            for (Card card : this.cards) {
+                if (c.id == card.id) {
+                    if (card.level == 3) {
+                        service.serverMessage("Bạn đã max level của thẻ này");
+                        return;
+                    }
+                }
+            }
             removeItem(item.indexUI, 1);
             c.amount++;
             service.setCardExp(c.id, c.amount, c.template.max_amount);
@@ -666,7 +674,8 @@ public class Player {
                 result++;
             }
         }
-        return result;
+        //RadioTest
+        return Math.max(result, 100);
     }
 
     public Amulet getAmulet(int id) {
@@ -2228,6 +2237,8 @@ public class Player {
         }
     }
 
+    public long lastWakeUp;
+
     public void wakeUpFromDead() {
         if (!this.isDead) {
             return;
@@ -2257,6 +2268,7 @@ public class Player {
         this.info.mp = this.info.mpFull;
         this.isDead = false;
         service.sendMessage(new Message(Cmd.ME_LIVE));
+        lastWakeUp = System.currentTimeMillis();
         if (zone != null) {
             zone.service.playerLoadLive(this);
         }
@@ -2358,42 +2370,45 @@ public class Player {
     }
 
     public void loadEffectSkillPlayer(Player _player) {
-        if (_player.isSleep) {
-            service.setEffect(null, _player.id, Skill.ADD_EFFECT, Skill.CHARACTER, (byte) 41);
-        }
-        if (_player.isProtected) {
-            service.setEffect(null, _player.id, Skill.ADD_EFFECT, Skill.CHARACTER, (byte) 33);
-        }
-        if (_player.isBlind) {
-            service.setEffect(null, _player.id, Skill.ADD_EFFECT, Skill.CHARACTER, (byte) 40);
-        }
-        if (_player.isRecoveryEnergy) {
-            service.skillNotFocus(_player.id, (short) _player.select.id, (byte) 1, null, null);
-        }
-        if (_player.isHeld && _player.hold.holder == _player) {
-            if (_player.hold.detainee instanceof Mob) {
-                Mob mob = (Mob) _player.hold.detainee;
-                service.setEffect(_player.hold, mob.mobId, Skill.ADD_EFFECT, Skill.MONSTER, (byte) 32);
-            } else {
-                Player _c = (Player) _player.hold.detainee;
-                service.setEffect(_player.hold, _c.id, Skill.ADD_EFFECT, Skill.CHARACTER, (byte) 32);
+        try {
+            if (_player.isSleep) {
+                service.setEffect(null, _player.id, Skill.ADD_EFFECT, Skill.CHARACTER, (byte) 41);
             }
-        }
-        if (_player.isCharge()) {
-            switch (_player.select.template.id) {
-                case SkillName.QUA_CAU_KENH_KHI:
-                case SkillName.MAKANKOSAPPO:
-                    service.skillNotFocus(_player.id, (short) _player.select.id, (byte) 4, null, null);
-                    break;
-
-                case SkillName.BIEN_HINH:
-                    service.skillNotFocus(_player.id, (short) _player.select.id, (byte) 6, null, null);
-                    break;
-
-                case SkillName.TU_PHAT_NO:
-                    service.skillNotFocus(_player.id, (short) _player.select.id, (byte) 7, null, null);
-                    break;
+            if (_player.isProtected) {
+                service.setEffect(null, _player.id, Skill.ADD_EFFECT, Skill.CHARACTER, (byte) 33);
             }
+            if (_player.isBlind) {
+                service.setEffect(null, _player.id, Skill.ADD_EFFECT, Skill.CHARACTER, (byte) 40);
+            }
+            if (_player.isRecoveryEnergy) {
+                service.skillNotFocus(_player.id, (short) _player.select.id, (byte) 1, null, null);
+            }
+            if (_player.isHeld && _player.hold.holder == _player) {
+                if (_player.hold.detainee instanceof Mob) {
+                    Mob mob = (Mob) _player.hold.detainee;
+                    service.setEffect(_player.hold, mob.mobId, Skill.ADD_EFFECT, Skill.MONSTER, (byte) 32);
+                } else {
+                    Player _c = (Player) _player.hold.detainee;
+                    service.setEffect(_player.hold, _c.id, Skill.ADD_EFFECT, Skill.CHARACTER, (byte) 32);
+                }
+            }
+            if (_player.isCharge()) {
+                switch (_player.select.template.id) {
+                    case SkillName.QUA_CAU_KENH_KHI:
+                    case SkillName.MAKANKOSAPPO:
+                        service.skillNotFocus(_player.id, (short) _player.select.id, (byte) 4, null, null);
+                        break;
+
+                    case SkillName.BIEN_HINH:
+                        service.skillNotFocus(_player.id, (short) _player.select.id, (byte) 6, null, null);
+                        break;
+
+                    case SkillName.TU_PHAT_NO:
+                        service.skillNotFocus(_player.id, (short) _player.select.id, (byte) 7, null, null);
+                        break;
+                }
+            }
+        } catch (Exception e) {
         }
     }
 
@@ -2644,7 +2659,7 @@ public class Player {
                 info.mp -= manaUse;
                 List<Player> list = zone.getListChar(Zone.TYPE_HUMAN, Zone.TYPE_PET);
                 for (Player _player : list) {
-                    if (_player != null && !_player.isDead && !_player.isBoss() && !_player.isMiniDisciple()) {
+                    if (_player != null && !_player.isDead && !_player.isBoss() && !_player.isMiniDisciple() && canHuytSao(_player)) {
                         int d = Utils.getDistance(this.x, this.y, _player.x, _player.y);
                         if (d < distance) {
                             ItemTime item = new ItemTime(ItemTimeName.HUYT_SAO, 3781, 30, false);
@@ -2666,6 +2681,18 @@ public class Player {
         }
         select.lastTimeUseThisSkill = now;
         zone.service.skillNotFocus(this, type, mobs, players);
+    }
+
+    public boolean canHuytSao(Player target) {
+        int myFlag = this.flag;
+        int targetFlag = target.flag;
+        if (myFlag == 0 || targetFlag == 0) {
+            return true;
+        }
+        if (myFlag == targetFlag) {
+            return true;
+        }
+        return false;
     }
 
     public void explode(int distance) {
@@ -2820,8 +2847,6 @@ public class Player {
                 type = 8;
             } else if (type == 36) {
                 type = 9;
-            } else if (type == Item.TYPE_NGOC_BOI) {
-                type = 10;
             } else if (type == Item.TYPE_DANH_HIEU) {
                 type = 11;
             }
@@ -3954,6 +3979,8 @@ public class Player {
                         } else {
 //                            menus.add(new KeyValue(1158, "Thiên Đường Mộng Mơ "));
                             menus.add(new KeyValue(1161, "Hành Tinh Bill"));
+                            menus.add(new KeyValue(605, "Top 100\nSức mạnh"));
+                            menus.add(new KeyValue(1169, "Top 100\nNhiệm vụ"));
 //                            menus.add(new KeyValue(1156, "Di chuyển\ntới Map\nsự kiện"));
 
                         }
@@ -3979,7 +4006,7 @@ public class Player {
                         menus.add(new KeyValue(1110, "Shop\nĐặc Biệt"));
                         // menus.add(new KeyValue(1116, "Di chuyển\nĐến Đặc Biệt"));
                         // menus.add(new KeyValue(1134, "Di chuyển\nĐến Quảng Trường\nPháo Hoa"));
-                        menus.add(new KeyValue(1138, "Hồi Skill Ngay\n(200tr Vàng)"));
+//                        menus.add(new KeyValue(1138, "Hồi Skill Ngay\n(200tr Vàng)"));
                         // menus.add(new KeyValue(1145, "Đổi bình nước"));
                         // menus.add(new KeyValue(1139, "Đổi Hộp Quà 2025"));
                         // menus.add(new KeyValue(1140, "Vòng quay tết 2025"));
@@ -4152,7 +4179,7 @@ public class Player {
                     case NpcName.QUY_LAO_KAME:
 //                        menus.add(new KeyValue(1127, "Đổi mảnh\ntổng hợp"));
                         menus.add(new KeyValue(605, "Top 100\nSức mạnh"));
-                        menus.add(new KeyValue(1210, "Úp Bông tai Cấp 2"));
+                        //   menus.add(new KeyValue(1210, "Úp Bông tai Cấp 2"));
                         if (clan != null) {
                             menus.add(new KeyValue(536, "Bang hội"));
                             menus.add(new KeyValue(606, "Kho báu\ndưới biển"));
@@ -4543,12 +4570,20 @@ public class Player {
                             sb.append("Sự kiện: Điểm Danh Nhận Quà Tại NPC Ôsin\n");
                             sb.append("- Hướng dẫn: Đến gặp NPC Ôsin tại 3 làng để 'Điểm danh'. Số người điểm danh càng đông, quà càng lớn.\n");
                             sb.append("- Các mốc phần thưởng:\n");
+//                            sb.append("  + Mốc 200 người: 500 triệu vàng\n");
+//                            sb.append("  + Mốc 300 người: 500 triệu vàng\n");
+//                            sb.append("  + Mốc 400 người: x3 Vệ tinh ngẫu nhiên.\n");
+//                            sb.append("  + Mốc 500 người: 1 tỷ vàng\n");
+//                            sb.append("  + Mốc 1000 người:1 Item cấp 2 ngẫu nhiên và x2 TNSM cho các người điểm danh 1 ngày\n");
+//                            sb.append("  + Mốc 2000 người: 5 Thỏi vàng.\n");
+                            //RadioTest
                             sb.append("  + Mốc 200 người: 500 triệu vàng\n");
                             sb.append("  + Mốc 300 người: 500 triệu vàng\n");
                             sb.append("  + Mốc 400 người: x3 Vệ tinh ngẫu nhiên.\n");
-                            sb.append("  + Mốc 500 người: 1 tỷ vàng\n");
-                            sb.append("  + Mốc 1000 người:1 Item cấp 2 ngẫu nhiên và x2 TNSM cho các người điểm danh 1 ngày\n");
-                            sb.append("  + Mốc 2000 người: 5 Thỏi vàng.\n");
+                            sb.append("  + Mốc 500 người: 50k thỏi vàng\n");
+                            sb.append("  + Mốc 1000 người:100k thỏi vàng\n");
+                            sb.append("  + Mốc 2000 người:200k Thỏi vàng.\n");
+
                             sb.append("- Lưu ý quan trọng: Phải tham gia 'Điểm danh' mới có thể 'Nhận quà'.\n");
                             sb.append("- Mẹo nhỏ: Những người điểm danh vào đúng các mốc 200,300,... sẽ được x2 Phần quà\n");
                             sb.append("- Số người đã điểm danh: " + OsinCheckInEvent.getTotalTodayCheckIns());
@@ -7228,12 +7263,7 @@ public class Player {
                 ItemCMS_Service.ShowCMSItem(this, npc);
                 break;
             case 1166:
-                service.dialogMessage(
-                        "Top 1 : x7 đá Huyết Ma Thiên Tử cấp 5 ( sử dụng 10 viên ) nhận Huyết Ma Thiên Tử Cấp 5 : 5% HP,KI,SĐ vĩnh viễn\n"
-                        + "Top 2 : x3 đá Huyết Ma Thiên Tử cấp 5 ( sử dụng 10 viên ) nhận Huyết Ma Thiên Tử cấp 5 : 5% HP,KI,SĐ vĩnh viễn\n"
-                        + "Top 3,4,5,6 : x5 đá Huyết Ma Thiên Tử cấp 3 : ( sử dụng 10 viên ) nhận Huyết Ma Thiên Tử cấp 3 : 3% HP,KI,SĐ vĩnh viễn\n"
-                        + "Top 7-16 : x3 đá Huyết Ma Thiên Tử cấp 2 : ( sử dụng 10 viên ) nhận Huyết Ma Thiên Tử cấp 2 : 2% HP,KI,SĐ vĩnh viễn\n"
-                        + "Ngày nào chốt thưởng ngày đấy, chốt top vào lúc 00h00 hàng ngày");
+                service.dialogMessage("Tính năng đang phát triển...");
                 break;
             case 1167:
                 Top topWhisRw = Top.getTop(Top.TOP_WHIS_Reward);
@@ -7241,6 +7271,7 @@ public class Player {
                 topWhisRw.update();
                 topWhisRw.show(this);
                 break;
+
             case 1168:
                 int selectt = (int) keyValue.elements[0];
                 item = getItemInBag(2243);
@@ -7287,6 +7318,12 @@ public class Player {
                         service.sendThongBao("Bạn nhận được Vé đổi nội tại");
                         break;
                 }
+                break;
+            case 1169:
+                Top TOP_TASK = Top.getTop(Top.TOP_TASK);
+                assert TOP_TASK != null;
+                TOP_TASK.update();
+                TOP_TASK.show(this);
                 break;
             case 2810:
 
@@ -7665,8 +7702,9 @@ public class Player {
             case 20006: {
                 long now2 = System.currentTimeMillis();
                 long time = now2 - lastTimeCallDragon;
-                if (time < 30000) {
-                    int seconds = (int) ((30000 - time) / 1000);
+                long delay = 10 * 60000;
+                if (time < delay) {
+                    int seconds = (int) ((delay - time) / 1000);
                     service.sendThongBao(String.format("Vui lòng đợi %s nữa", Utils.timeAgo(seconds)));
                     return;
                 }
@@ -9579,6 +9617,7 @@ public class Player {
             logger.error("failed!", ex);
         }
     }
+    long lastTele;
 
     public void gotoPlayer(Message ms) {
         try {
@@ -9590,6 +9629,10 @@ public class Player {
             int playerID = ms.reader().readInt();
             if (isHaveEquipTeleport) {
                 Player player = SessionManager.findChar(playerID);
+                if (System.currentTimeMillis() - lastTele <= 10000) {
+                    service.sendThongBao("Hãy đợi 1 lát nữa...");
+                    return;
+                }
                 if (player != null) {
                     if (player.isAnDanh) {
                         service.sendThongBao("Không tìm thấy vị trí người này");
@@ -9607,6 +9650,8 @@ public class Player {
                                 service.sendThongBao("Bạn không thể tới đây");
                                 return;
                             }
+                            lastTele = System.currentTimeMillis();
+                            this.zone.leave(this);
                             z.enter(this);
                             this.setX(player.x);
                             this.setY(player.y);
@@ -9906,7 +9951,8 @@ public class Player {
                     }
                     if (item.id == 880 || item.id == 881 || item.id == 882) {
                         if (this.taskMain.id < 26) {
-                            service.dialogMessage("Bạn chưa thể mua lúc này , hãy tiếp tục hoàn thành nhiệm vụ");
+                            service.dialogMessage("Bạn chưa thể mua lúc này , hãy tiếp tục hoàn thành nhiệm vụ\n"
+                                    + "Hoàn thành nhiệm vụ Xên tại Thị trấn Ginder");
                         }
                         return;
                     }
@@ -10571,7 +10617,7 @@ public class Player {
 
                 if (item2.options != null && item.options != null) {
                     for (ItemOption o : item2.options) {
-                        if (o.optionTemplate.id == 1 || o.optionTemplate.id == 31 || o.optionTemplate.id == 11
+                        if (o.optionTemplate.id == 1 || o.optionTemplate.id == 11
                                 || o.optionTemplate.id == 12 || o.optionTemplate.id == 13) {
                             for (ItemOption o2 : item.options) {
                                 if (o.optionTemplate.id == o2.optionTemplate.id) {
@@ -10840,8 +10886,9 @@ public class Player {
                         updateBag();
                         if (zone.map.isBlackDragonBall()) {
                             ZBlackDragonBall z = (ZBlackDragonBall) zone;
-                            z.itemBlackDragonBall.countDown = 300;
+                            z.itemBlackDragonBall.countDown = 10;
                             z.setPlayerHolding(this);
+                            z.setFlagForAllChar();
                         }
                     } else if (item.id == ItemName.DUA_BE) {
                         itemMap.isPickedUp = false;
@@ -11229,7 +11276,54 @@ public class Player {
                     return;
                 }
                 if (item.template.type == Item.TYPE_SACH) {
-                    service.useItem(type, where, index, String.format("Bạn có muôn dùng\n%s?", item.template.name));
+                    SkillBook book = Skills.getSkillBook(item.id);
+                    if (book == null) {
+                        return;
+                    }
+                    int skill_id = book.id;
+                    int level = book.level;
+                    int indexSkill = -1;
+                    Skill skillOld = null;
+                    int i = 0;
+                    for (Skill skill : this.skills) {
+                        if (skill.template.id == skill_id) {
+                            skillOld = skill;
+                            indexSkill = i;
+                            break;
+                        }
+                        i++;
+                    }
+                    if (skillOld == null) {
+                        if (level == 1) {
+                            Skill skill = Skills.getSkill(this.gender, skill_id, level);
+                            if (skill != null) {
+                                learnSkill(skill, 0, -1, item);
+                            }
+                        } else {
+                            service.sendThongBao("Bạn hãy học kỹ năng này trước.");
+                        }
+                    } else {
+                        if (skillOld.point + 1 == level) {
+                            Skill skillNew = null;
+                            for (Skill skill : skillOld.template.skills) {
+                                if (skill.point == level) {
+                                    skillNew = skill;
+                                    break;
+                                }
+                            }
+                            if (skillNew != null) {
+                                learnSkill(skillNew, 1, indexSkill, item);
+                            }
+                        } else {
+                            int plevel = (skillOld.point + 1);
+                            if (plevel <= skillOld.template.skills.size()) {
+                                service.sendThongBao(
+                                        String.format(Language.LEARN_SKILL_FAIL_2, skillOld.template.name, plevel));
+                            } else {
+                                service.sendThongBao(skillOld.template.name + " đã đạt cấp tối đa");
+                            }
+                        }
+                    }
                 } else if (item.template.type == Item.TYPE_DAUTHAN) {
                     long now = System.currentTimeMillis();
                     if (now - lastUsePotion >= 10000) {
@@ -12848,529 +12942,201 @@ public class Player {
                 // return;
                 // }
                 menus.clear();
-                Item it;
                 StringBuilder sbnew = new StringBuilder();
                 sbnew.append("Bạn đã nhận được\n");
+                int gold = 0;
+                int diamondlock = 0;
+                List<Item> rewards = new ArrayList<>();
+                Item itemTemp = null;
                 switch (level) {
                     case 1: {
-                        int itemId = RandomItem.DA_NANG_CAP.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 3;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.RUONG_GO_LEVEL_1.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 3;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        menus.add(new KeyValue(CMDMenu.CANCEL, "OK"));
-                        service.openUIConfirm(NpcName.CON_MEO, String.valueOf(sbnew), getPetAvatar(), menus);
+                        gold = Utils.nextInt(10, 50);
+                        diamondlock = 5;
+                        itemTemp = new Item(Utils.nextInt(441, 447));
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
                     }
                     break;
                     case 2: {
-                        int itemId = RandomItem.DA_NANG_CAP.next();
-                        it = new Item(itemId);
-                        it.quantity = 3;
-                        it.setDefaultOptions();
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
+                        gold = Utils.nextInt(10, 50);
+                        diamondlock = 5;
+                        itemTemp = new Item(Utils.nextInt(441, 447));
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
 
-                        itemId = RandomItem.RUONG_GO_LEVEL_1.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 5;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
+                        itemTemp = new Item(20);
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
                     }
                     break;
                     case 3: {
-                        int itemId = RandomItem.DA_NANG_CAP.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 3;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
+                        gold = Utils.nextInt(10, 50);
+                        diamondlock = 5;
+                        itemTemp = new Item(Utils.nextInt(441, 447));
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
 
-                        itemId = RandomItem.SAO_PHA_LE.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 1;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.RUONG_GO_LEVEL_1.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 10;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
+                        itemTemp = new Item(Utils.nextInt(19, 20));
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
 
                     }
                     break;
                     case 4: {
-                        int itemId = RandomItem.DA_NANG_CAP.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 3;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
+                        gold = Utils.nextInt(10, 50);
+                        diamondlock = 5;
+                        itemTemp = new Item(Utils.nextInt(441, 447));
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
 
-                        itemId = RandomItem.SAO_PHA_LE.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 3;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.NGOC_RONG_4_7_SAO.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 1;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.RUONG_GO_LEVEL_4.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 3;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
+                        itemTemp = new Item(19);
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
 
                     }
                     break;
                     case 5: {
-                        int itemId = RandomItem.DA_NANG_CAP.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 3;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
+                        gold = Utils.nextInt(50, 100);
+                        diamondlock = 5;
+                        itemTemp = new Item(Utils.nextInt(441, 447));
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
 
-                        itemId = RandomItem.SAO_PHA_LE.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 3;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.NGOC_RONG_4_7_SAO.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 3;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.ITEM_CAP_1.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 1;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.RUONG_GO_LEVEL_4.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 5;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
+                        itemTemp = new Item(Utils.nextInt(18, 19));
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
 
                     }
                     break;
                     case 6: {
-                        int itemId = RandomItem.DA_NANG_CAP.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 3;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
+                        gold = Utils.nextInt(50, 200);
+                        diamondlock = 5;
+                        itemTemp = new Item(Utils.nextInt(441, 447));
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
 
-                        itemId = RandomItem.SAO_PHA_LE.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 3;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.GINYUFORCE.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 3;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.ITEM_CAP_1.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 3;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.RUONG_GO_LEVEL_4.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 10;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
+                        itemTemp = new Item(18);
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
                     }
                     break;
                     case 7: {
-                        int itemId = RandomItem.DA_NANG_CAP.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 3;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
+                        gold = Utils.nextInt(100, 250);
+                        diamondlock = 5;
+                        itemTemp = new Item(Utils.nextInt(441, 447));
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
 
-                        itemId = RandomItem.SAO_PHA_LE.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 3;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.GINYUFORCE.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 3;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.ITEM_CAP_1.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 3;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.RUONG_GO_LEVEL_4.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 10;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
+                        itemTemp = new Item(Utils.nextInt(17, 18));
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
                     }
                     break;
                     case 8: {
-                        int itemId = RandomItem.DA_NANG_CAP.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 3;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
+                        gold = Utils.nextInt(200, 300);
+                        diamondlock = 10;
+                        itemTemp = new Item(Utils.nextInt(441, 447));
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
 
-                        itemId = RandomItem.SAO_PHA_LE.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 3;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.GINYUFORCE.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 3;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.ITEM_CAP_1.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 3;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.DO_CUOI.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.addRandomOption(3, 3);
-                        it.quantity = 1;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.RUONG_GO_LEVEL_4.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 20;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
+                        itemTemp = new Item(17);
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
                     }
                     break;
                     case 9: {
+                        gold = Utils.nextInt(500, 1000);
+                        diamondlock = 10;
+                        itemTemp = new Item(Utils.nextInt(441, 447));
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
+                        itemTemp = new Item(Utils.nextInt(441, 447));
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
 
-                        int itemId = RandomItem.DA_NANG_CAP.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 10;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
+                        for (int i = 17; i <= 20; i++) {
+                            itemTemp = new Item(i);
+                            itemTemp.setDefaultOptions();
+                            rewards.add(itemTemp);
+                        }
 
-                        itemId = RandomItem.SAO_PHA_LE.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 10;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
+                        itemTemp = new Item(Utils.nextInt(381, 385));
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
 
-                        itemId = RandomItem.ITEM_CAP_1.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 5;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.DO_CUOI.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.addRandomOption(4, 4);
-                        it.quantity = 1;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.RUONG_GO_LEVEL_9.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 3;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
+                        itemTemp = new Item(Utils.nextInt(381, 385));
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
                     }
                     break;
                     case 10: {
+                        gold = Utils.nextInt(1000, 2000);
+                        diamondlock = 10;
+                        itemTemp = new Item(Utils.nextInt(441, 447));
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
+                        itemTemp = new Item(Utils.nextInt(441, 447));
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
+                        itemTemp = new Item(Utils.nextInt(441, 447));
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
 
-                        int itemId = RandomItem.DA_NANG_CAP.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 10;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
+                        itemTemp = new Item(16);
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
 
-                        itemId = RandomItem.SAO_PHA_LE.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 10;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.ITEM_CAP_2.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 1;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.DO_CUOI.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.addRandomOption(4, 4);
-                        it.quantity = 1;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.DO_CUOI.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.addRandomOption(4, 4);
-                        it.quantity = 1;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.RUONG_GO_LEVEL_9.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 5;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
+                        var items = new int[]{842, 859, 956};
+                        itemTemp = new Item(items[Utils.nextInt(items.length)]);
+                        itemTemp.quantity = 3;
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
+                        itemTemp = new Item(Utils.nextInt(1021, 1023));
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
                     }
                     break;
                     case 11: {
+                        gold = Utils.nextInt(1000, 2000);
+                        diamondlock = 10;
+                        itemTemp = new Item(Utils.nextInt(441, 447));
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
+                        itemTemp = new Item(Utils.nextInt(441, 447));
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
+                        itemTemp = new Item(Utils.nextInt(441, 447));
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
+                        itemTemp = new Item(Utils.nextInt(441, 447));
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
 
-                        int itemId = RandomItem.ITEM_CAP_2.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 1;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
+                        itemTemp = new Item(16);
+                        itemTemp.quantity = Utils.nextInt(1, 3);
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
 
-                        itemId = RandomItem.ITEM_CAP_1.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 3;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
+                        var items = new int[]{842, 859, 956};
+                        itemTemp = new Item(items[Utils.nextInt(items.length)]);
+                        itemTemp.quantity = Utils.nextInt(3, 7);
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
 
-                        itemId = ItemName.NGOC_RONG_2_SAO;
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 1;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.DO_CUOI.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.addRandomOption(3, 5);
-                        it.quantity = 1;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.DO_CUOI.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.addRandomOption(3, 5);
-                        it.quantity = 1;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.RUONG_GO_LEVEL_9.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 10;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
+                        itemTemp = new Item(Utils.nextInt(1021, 1023));
+                        itemTemp.quantity = 2;
+                        itemTemp.setDefaultOptions();
+                        rewards.add(itemTemp);
                     }
                     break;
-                    case 12: {
-
-                        int itemId = RandomItem.ITEM_CAP_2.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 3;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.ITEM_CAP_1.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 5;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = ItemName.NGOC_RONG_2_SAO;
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 1;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.DO_CUOI.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.addRandomOption(3, 5);
-                        it.quantity = 1;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.DO_CUOI.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.addRandomOption(3, 5);
-                        it.quantity = 1;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.RUONG_GO_LEVEL_9.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 10;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = ItemName.MANH_DOI_TRUONG_VANG_956;
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 1;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = ItemName.MANH_DOC_NHAN;
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 1;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-                    }
-                    break;
-                    case 13: {
-                        int itemId = RandomItem.ITEM_CAP_2.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 3;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.ITEM_CAP_1.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 7;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = ItemName.NGOC_RONG_2_SAO;
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 1;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = ItemName.NGOC_RONG_3_SAO;
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 1;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.DO_CUOI.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.addRandomOption(3, 5);
-                        it.quantity = 1;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.DO_CUOI.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.addRandomOption(3, 5);
-                        it.quantity = 1;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.RUONG_GO_LEVEL_9.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 10;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = ItemName.MANH_DOI_TRUONG_VANG_956;
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 2;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = ItemName.MANH_DOC_NHAN;
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 3;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-
-                        itemId = RandomItem.RUONG_GO_LEVEL_13.next();
-                        it = new Item(itemId);
-                        it.setDefaultOptions();
-                        it.quantity = 1;
-                        addItem(it);
-                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
-                    }
-                    break;
-                    default:
-                        service.serverMessage("Có lỗi xảy ra");
-                        return;
+                }
+                addGold(gold);
+                addDiamondLock(diamondlock);
+                sbnew.append("|1|" + gold + " vàng\n");
+                sbnew.append("|1|" + diamondlock + " hồng ngọc\n");
+                for (Item it : rewards) {
+                    sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
+                    addItem(it);
                 }
                 menus.add(new KeyValue(CMDMenu.CANCEL, "OK"));
                 service.openUIConfirm(NpcName.CON_MEO, String.valueOf(sbnew), getPetAvatar(), menus);
@@ -13861,9 +13627,9 @@ public class Player {
                     if (z == null) {
                         return;
                     }
-                    long delay = 12;
+                    long delay = 15;
                     if (sachdacbiet[7] || exitsItemTime(ItemTimeName.KEO_MUT_XOAN)) {
-                        delay = 5;
+                        delay = 7;
                     }
                     long now = System.currentTimeMillis();
                     int seconds = (int) ((now - lastTimeRequestChangeZone) / 1000);
@@ -14325,6 +14091,7 @@ public class Player {
     public void updateEveryOneSeconds() {
         // auto update nv
         try {
+            checkInvisible();
             if (taskMain != null) {
                 if (taskMain.id == 7 && taskMain.index == 0) {
                     if (info.power >= 16000) {
@@ -14881,6 +14648,21 @@ public class Player {
             com.ngocrong.NQMP.UtilsNQMP.logError(e);
             System.err.println("Error at 45");
             logger.error("updateEveryOneMinutes error", e);
+        }
+    }
+
+    public boolean inVisible = false;
+
+    public void checkInvisible() {
+        if (this.info.options[105] == 0) {
+            inVisible = false;
+            return;
+        }
+        if (System.currentTimeMillis() - lastAttack >= 3000 && !inVisible) {
+            inVisible = true;
+        }
+        if (System.currentTimeMillis() - lastAttack < 3000 && inVisible) {
+            inVisible = false;
         }
     }
 
@@ -15477,6 +15259,19 @@ public class Player {
         return isPudding() || isXucXich() || isKemDau() || isMiLy() || isSushi();
     }
 
+    public boolean isRewardClan(int star) {
+        if (clan != null) {
+            ClanMember mem = clan.getMember(this.id);
+            if (mem != null) {
+                ClanReward r = mem.getClanReward(star);
+                if (r != null) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public void addExp(byte type, long exp, boolean canX2, boolean isAddForMember) {
         if (info.power >= info.powerLimitMark.power) {
             return;
@@ -15548,13 +15343,17 @@ public class Player {
                 if (disciple.master.exitsItemTime(ItemTimeName.DAU_THAN_KY)) {
                     exp += Utils.percentOf(exp, 100);
                 }
+                if (disciple.master.isRewardClan(4)) {
+                    exp += Utils.percentOf(exp, 10);
+                }
+                if (disciple.master.isUocThienMenh1) {
+                    exp *= 2;
+                }
+                if (disciple.master.isQuaHongDao) {
+                    exp *= 2;
+                }
             }
-            if (disciple.master.isUocThienMenh1) {
-                exp *= 2;
-            }
-            if (disciple.master.isQuaHongDao) {
-                exp *= 2;
-            }
+
         } else {
             if (exitsItemTime(ItemTimeName.DA_MA_THUAT_SELECT4)) {
                 exp += Utils.percentOf(exp, 100);
@@ -15576,6 +15375,9 @@ public class Player {
             }
             if (exitsItemTime(ItemTimeName.PHIEU_X2_TNSM)) {
                 exp += Utils.percentOf(exp, 100);
+            }
+            if (isRewardClan(4)) {
+                exp += Utils.percentOf(exp, 10);
             }
             if (isRewardTNSMDragonNamek) {
                 exp += Utils.percentOf(exp, 10);

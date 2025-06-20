@@ -269,7 +269,7 @@ public class DHVT23 {
     public void winRound() {
         round++;
         player.roundDHVT23 = round;
-        if (round < 12) {
+        if (round < 11) {
             timeWait = 15;
             time = 180;
         } else {

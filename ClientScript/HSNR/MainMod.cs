@@ -52,18 +52,26 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
             font.drawString(g, $"{ping.ToString()} ms", 85, 42, 0, mFont.tahoma_7b_dark);
             mFont.tahoma_7b_white.drawString(g, mapInfo, 20, GameCanvas.hh / 2 + 10, mFont.LEFT, mFont.tahoma_7b_dark);
             guiStyle.fontSize = 8 * mGraphics.zoomLevel;
-        
+
             g.drawString(strHP, 85, 4, guiStyle);
             guiStyle.fontSize = 7 * mGraphics.zoomLevel;
             g.drawString(strMP, 85, 19, guiStyle);
             paintCharInfo(g, Char.myCharz());
             ListChars.gI().paintListCharsInMap(g);
-            Boss.gI().paintBossesScreen(g);
+            //Boss.gI().paintBossesScreen(g);
             paintModStatus(g);
             paintButton(g);
+            if (Boss.gI().isShow)
+            {
+                NQMP.NQMPMain.aaMod.paintBoss(g);
+            }
         }
         private void paintButton(mGraphics g)
         {
+            if (!Panel.isShowPhimTat)
+            {
+                return;
+            }
             if (GameScr.isAnalog == 1 && GameCanvas.isTouch && !ChatTextField.gI().isShow && !GameCanvas.menu.showMenu && !GameCanvas.panel.isShow && !Char.isLoadingMap && !Char.myCharz().meDead)
             {
                 if (button != null)
@@ -84,8 +92,8 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                         {
                             if (button[i] != null)
                             {
-                               
-                                button[i].x =  ((GameCanvas.w / 2) - (23*6)) + 23*i;
+
+                                button[i].x = ((GameCanvas.w / 2) - (23 * 6)) + 23 * i;
                                 button[i].y = GameScr.ySkill - GameScr.imgSkill.getHeight() / 2 - 40;
                                 button[i].Paint(g);
                             }
@@ -147,27 +155,34 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
         }
         public void Update()
         {
-            ListChars.gI().Update();
-            AutoItem.gI().Update();
-            AutoMap.instance.Update();
-            AutoSkill.Update();
-            AutoPean.Update();
-            AutoPick.Update();
-            AutoTrain.Update();
-            if (isAutoRevive)
+            try
             {
-                if (Char.myCharz().meDead && GameCanvas.gameTick % 20 == 0)
+                ListChars.gI().Update();
+                AutoItem.gI().Update();
+                AutoMap.instance.Update();
+                AutoSkill.Update();
+                AutoPean.Update();
+                AutoPick.Update();
+                AutoTrain.Update();
+                if (isAutoRevive)
                 {
-                    if (Char.myCharz().luong > 0)
+                    if (Char.myCharz().meDead && GameCanvas.gameTick % 20 == 0)
                     {
-                        Service.gI().wakeUpFromDead();
-                        Char.myCharz().liveFromDead();
+                        if (Char.myCharz().luong > 0)
+                        {
+                            Service.gI().wakeUpFromDead();
+                            Char.myCharz().liveFromDead();
+                        }
                     }
                 }
+                if (mSystem.currentTimeMillis() - Service.gI().lastRequestPing >= 1000L)
+                {
+                    Service.gI().pingToServer();
+                }
             }
-            if (mSystem.currentTimeMillis() - Service.gI().lastRequestPing >= 1000L)
+            catch (Exception e)
             {
-                Service.gI().pingToServer();
+                Debug.LogError(e.ToString());
             }
         }
         public void UpdateKey()
@@ -318,7 +333,7 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
             MyVector myVector = new MyVector();
             myVector.addElement(new Command("Thông Báo\nBoss\n" + (Boss.gI().isShow ? "[ON]" : "[OFF]"), this, 9, null));
             myVector.addElement(new Command("Danh Sách\nNhân Vật\nTrong Khu\n" + (ListChars.gI().isShow ? "[ON]" : "[OFF]"), this, 10, null));
-         
+
             GameCanvas.menu.startAt(myVector, 0);
         }
         public bool Chat(string text)

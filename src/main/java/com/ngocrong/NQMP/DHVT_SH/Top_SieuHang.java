@@ -5,8 +5,10 @@
 package com.ngocrong.NQMP.DHVT_SH;
 
 import com.ngocrong.consts.Cmd;
+import com.ngocrong.item.Item;
 import com.ngocrong.network.FastDataOutputStream;
 import com.ngocrong.network.Message;
+import com.ngocrong.server.SessionManager;
 import com.ngocrong.server.mysql.MySQLConnect;
 import com.ngocrong.top.Top;
 import com.ngocrong.top.TopInfo;
@@ -27,7 +29,7 @@ import org.apache.log4j.Logger;
  */
 public class Top_SieuHang {
 
-    public int pid;
+    public int player_Id;
     public String name;
     public short head;
     public short body;
@@ -35,11 +37,13 @@ public class Top_SieuHang {
     public int rank;
     public String info;
     public String info2 = "";
+    public boolean isReward;
     public static List<Top_SieuHang> elements = new ArrayList<>();
+
 
     public static void setNewRank(int pid, int newRank) {
         for (Top_SieuHang top : elements) {
-            if (top != null && top.pid == pid) {
+            if (top != null && top.player_Id == pid) {
                 top.rank = newRank;
                 break;
             }
@@ -60,7 +64,7 @@ public class Top_SieuHang {
 // Lấy đối tượng Top_SieuHang dựa vào ID người chơi (pid)
     public static Top_SieuHang getTopbyPid(int pid) {
         for (Top_SieuHang top : elements) {
-            if (top != null && top.pid == pid) {
+            if (top != null && top.player_Id == pid) {
                 return top;
             }
         }
@@ -82,7 +86,7 @@ public class Top_SieuHang {
             int i = 1;
             for (var top : sortedList) {
                 ds.writeInt(top.rank);
-                ds.writeInt(top.pid);
+                ds.writeInt(top.player_Id);
                 ds.writeShort(top.head);
                 ds.writeShort(top.body);
                 ds.writeShort(top.leg);
@@ -160,7 +164,7 @@ public class Top_SieuHang {
                     short leg = rs.getShort("leg");
                     short rank = rs.getShort("rank");
                     info.rank = rank;
-                    info.pid = id;
+                    info.player_Id = id;
                     info.name = name;
                     info.head = head;
                     info.body = body;

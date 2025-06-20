@@ -45,9 +45,6 @@ public class DHVT23_Service {
             arena23.setCurrFightingPlayer(player);
             arena23.enter(player);
             player.zone.service.setPosition(player, (byte) 0);
-            Utils.setTimeout(() -> {
-                player.service.setMapInfo();
-            }, 1000);
         } catch (Exception e) {
             com.ngocrong.NQMP.UtilsNQMP.logError(e);
             e.printStackTrace();
@@ -59,9 +56,10 @@ public class DHVT23_Service {
         DHVT23.remove(dhvt);
     }
 
+    
     public static long getGold(byte times) {
-        long baseGold = 100_000_000L;
-        return baseGold * (1L << times);
+        long baseGold = 100_000_000L * (times+1);
+        return Math.min(500_000_000, baseGold);
     }
 
 }

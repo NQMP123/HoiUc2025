@@ -17,7 +17,7 @@ public class Raiti extends Boss {
         super();
         this.limit = -1;
         this.name = "Raiti";
-        setInfo(5000L, Integer.MAX_VALUE, 10, 1000, 10);
+        setInfo(500L, Integer.MAX_VALUE, 10, 1000, 10);
         setDefaultPart();
         setTypePK((byte) 5);
         this.limitDame = 10;

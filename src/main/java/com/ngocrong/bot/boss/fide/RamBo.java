@@ -61,7 +61,7 @@ public class RamBo extends Boss {
         if (obj == null) {
             return;
         }
-        dropGroupA((Player) obj);
+//        dropGroupA((Player) obj);
     }
 
     @Override

@@ -19,6 +19,7 @@ import com.ngocrong.skill.SkillName;
 import com.ngocrong.skill.Skills;
 import com.ngocrong.user.Player;
 import com.ngocrong.util.Utils;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 /**
@@ -65,9 +66,12 @@ public class TeamBojack extends Boss {
         } finally {
             zone.leave(this);
             Utils.setTimeout(() -> {
-                this.wakeUpFromDead();
-                this.joinMap();
-                this.setTypePK((byte) 5);
+                LocalDateTime time = LocalDateTime.now();
+                if (time.getHour() < 12) {
+                    this.wakeUpFromDead();
+                    this.joinMap();
+                    this.setTypePK((byte) 5);
+                }
             }, 600000);
         }
 
@@ -75,6 +79,10 @@ public class TeamBojack extends Boss {
 
     @Override
     public void update() {
+        LocalDateTime time = LocalDateTime.now();
+        if (time.getHour() >= 12) {
+            this.startDie();
+        }
         super.update();
         //  System.err.println("update boss : " + this.name + " - " + this.skills.size());
     }

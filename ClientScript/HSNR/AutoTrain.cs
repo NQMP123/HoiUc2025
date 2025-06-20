@@ -411,7 +411,8 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                     }
                 }
             }
-            if (skill != Char.myCharz().myskill)
+         
+            if (skill != null && skill.template != null&&skill != Char.myCharz().myskill)
             {
                 Char.myCharz().myskill = skill;
                 Service.gI().selectSkill(skill.template.id);

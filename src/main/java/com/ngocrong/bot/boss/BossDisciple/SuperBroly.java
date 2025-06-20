@@ -5,6 +5,7 @@ import com.ngocrong.map.MapManager;
 import com.ngocrong.map.TMap;
 import com.ngocrong.map.tzone.Zone;
 import com.ngocrong.mob.Mob;
+import com.ngocrong.server.SessionManager;
 import com.ngocrong.skill.Skill;
 import com.ngocrong.skill.Skills;
 import com.ngocrong.user.Player;
@@ -39,6 +40,9 @@ public class SuperBroly extends Boss {
     }
 
     public long getDameAttack(Player plAtt) {
+        if (plAtt.info.originalDamage < 40000) {
+            return -1;
+        }
         long baseDame = this.info.hpFull / 10;
         long dameCap;
         long weakPlayerHpThreshold = 50000;
@@ -77,11 +81,13 @@ public class SuperBroly extends Boss {
 
     @Override
     public void sendNotificationWhenAppear(String map) {
-
+        SessionManager.chatVip(String.format("BOSS %s vừa xuất hiện tại %s", this.name, map));
+        logger.debug(String.format("BOSS %s vừa xuất hiện tại %s khu vực %d", this.name, map, zone.zoneID));
     }
 
     @Override
     public void sendNotificationWhenDead(String text) {
+        SessionManager.chatVip(String.format("%s: Đã tiêu diệt được %s mọi người đều ngưỡng mộ.", name, this.name));
 
     }
 
@@ -116,11 +122,11 @@ public class SuperBroly extends Boss {
         super.startDie();
         long HP = info.hpFull;
 
-        Utils.setTimeout(() -> {
-            SuperBroly superbroly = new SuperBroly();
-            superbroly.setInfo(HP, Long.MAX_VALUE, 1000, 1000, 0);
-            superbroly.setLocation(zone);
-        }, 15 * 60000);
+//        Utils.setTimeout(() -> {
+//            SuperBroly superbroly = new SuperBroly();
+//            superbroly.setInfo(HP, Long.MAX_VALUE, 1000, 1000, 0);
+//            superbroly.setLocation(zone);
+//        }, 15 * 60000);
     }
 
     @Override
@@ -165,10 +171,14 @@ public class SuperBroly extends Boss {
         return Math.min(dameInput, this.info.hpFull / 100);
     }
 
+    public long lastTTNL;
+
     public void usingTTNL() {
-          if (!isKhongChe()) {
-        this.select = TTNL[Utils.nextInt(TTNL.length)];
-        startRecoveryEnery();}
+        if (!isKhongChe() && System.currentTimeMillis() - lastTTNL >= 5000) {
+            lastTTNL = System.currentTimeMillis();
+            this.select = TTNL[Utils.nextInt(TTNL.length)];
+            startRecoveryEnery();
+        }
     }
 
     public void checkAttack() {

@@ -124,8 +124,10 @@ public class OsinCheckInEvent {
                 repo().save(checkInData);
             }
             if (currentMilestone == 5) {
+                //RadioTest
                 Item reward = new Item(Utils.nextInt(1021, 1023));
-                reward.quantity = 1;
+                reward = new Item(ItemName.THOI_VANG);
+                reward.quantity = 100000;
                 p.addItem(reward);
             }
             if (rewardItem == null) {
@@ -164,15 +166,17 @@ public class OsinCheckInEvent {
      */
     private static Item getRewardItemForMilestoneValue(int milestoneValue) {
         Item reward = null;
+        //RadioTest
+
         if (milestoneValue >= 6) {
             reward = new Item(ItemName.THOI_VANG);
-            reward.quantity = 5;
+            reward.quantity = 200000;
         }
         if (milestoneValue >= 5) {
 
         } else if (milestoneValue >= 4) {
-            reward = new Item(ItemName.VANG_190);
-            reward.quantity = 1_000_000_000;
+            reward = new Item(ItemName.THOI_VANG);
+            reward.quantity = 50000;
         } else if (milestoneValue >= 3) {
             int[] vt = {342, 343, 344, 345};
             reward = new Item(vt[Utils.nextInt(vt.length)]);
@@ -185,6 +189,26 @@ public class OsinCheckInEvent {
             reward.quantity = 500_000_000;
         }
 
+//        if (milestoneValue >= 6) {
+//            reward = new Item(ItemName.THOI_VANG);
+//            reward.quantity = 5;
+//        }
+//        if (milestoneValue >= 5) {
+//
+//        } else if (milestoneValue >= 4) {
+//            reward = new Item(ItemName.VANG_190);
+//            reward.quantity = 1_000_000_000;
+//        } else if (milestoneValue >= 3) {
+//            int[] vt = {342, 343, 344, 345};
+//            reward = new Item(vt[Utils.nextInt(vt.length)]);
+//            reward.quantity = 3;
+//        } else if (milestoneValue >= 2) {
+//            reward = new Item(ItemName.VANG_190);
+//            reward.quantity = 500_000_000;
+//        } else if (milestoneValue >= 1) {
+//            reward = new Item(ItemName.VANG_190);
+//            reward.quantity = 500_000_000;
+//        }
         if (reward != null) {
             reward.setDefaultOptions();
         }
@@ -204,7 +228,7 @@ public class OsinCheckInEvent {
                     player.setTimeForItemtime(ItemTimeName.PHIEU_X2_TNSM, 1);
                 }
             }
-        }, 5000);
+        }, 3000);
     }
 
     // Các phương thức cũ isCheckInDay(), isRewardDay(), today(),

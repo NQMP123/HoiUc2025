@@ -48,6 +48,7 @@ public class ZBlackDragonBall extends Zone {
         item.y = 0;
         item.x = 0;
         item.countDown = 10 * 60;
+        item.countDown = 10;
         itemBlackDragonBall = item;
     }
 

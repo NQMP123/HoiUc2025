@@ -68,13 +68,17 @@ public class Consignment {
                 player.service.sendThongBao("Chỉ có thể kí tối đa 10 vật phẩm");
                 return;
             }
-            long gold = 500000000;
+            long gold = 200000000;
             if (player.gold < gold) {
-                player.service.sendThongBao("Bạn không đủ vàng để kí");
+                player.service.sendThongBao("Bạn không đủ vàng để ký");
                 return;
             }
             if (price < 1) {
                 player.service.sendThongBao("Giá kí phải từ 1 thỏi vàng trở lên");
+                return;
+            }
+            if (price > 5000) {
+                player.service.sendThongBao("Chỉ có thể ký tối đa 5000 thỏi vàng");
                 return;
             }
             Item item = player.itemBag[index];
@@ -93,7 +97,7 @@ public class Consignment {
             GameRepository.getInstance().consignmentItem.save(data);
             ConsignmentItem itemConsignment = new ConsignmentItem(data);
             items.put(itemConsignment.id, itemConsignment);
-            player.subThoiVang(1);
+            player.subGold(gold);
             player.removeItem(index, quantity);
             showShop(player);
             player.service.sendThongBao("Treo bán vật phẩm thành công");
@@ -221,6 +225,7 @@ public class Consignment {
             Message mss = new Message(Cmd.SHOP);
             FastDataOutputStream ds = mss.writer();
             ds.writeByte(2);
+            ds.writeBoolean(false);
             ds.writeByte(consignmentItemHashMap.size());
             int tab_index = 0;
             for (HashMap<Integer, ConsignmentItem> tab : consignmentItemHashMap.values()) {

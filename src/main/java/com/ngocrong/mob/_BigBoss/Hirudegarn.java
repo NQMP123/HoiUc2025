@@ -80,19 +80,21 @@ public class Hirudegarn extends NewBoss {
             return;
         }
         Player c = _c;
-        Item item = new Item(ItemName.QUA_TRUNG);
-        item.setDefaultOptions();
-        item.addItemOption(new ItemOption(86, 0));
-        item.quantity = 1;
-        ItemMap itemMap = new ItemMap(zone.autoIncrease++);
-        itemMap.item = item;
-        itemMap.playerID = 999999;
-        itemMap.x = (short) Utils.nextInt(getX() - 100, getX() + 100);
-        itemMap.y = zone.map.collisionLand(getX(), getY());
-        zone.addItemMap(itemMap);
-        zone.service.addItemMap(itemMap);
+        
+//        item.setDefaultOptions();
+//        item.addItemOption(new ItemOption(86, 0));
+//        item.quantity = 1;
+//       
+//        itemMap.item = item;
+//        itemMap.playerID = 999999;
+//        itemMap.x = (short) Utils.nextInt(getX() - 100, getX() + 100);
+//        itemMap.y = zone.map.collisionLand(getX(), getY());
+//        zone.addItemMap(itemMap);
+//        zone.service.addItemMap(itemMap);
         if (Utils.nextInt(100) <= 50) {
+            Item item = new Item(ItemName.QUA_TRUNG);
             int[] ao = {ItemName.AO_THAN_LINH, ItemName.AO_THAN_XAYDA, ItemName.QUAN_THAN_NAMEC};
+             ItemMap itemMap = new ItemMap(zone.autoIncrease++);
             item = new Item(ao[Utils.nextInt(ao.length)]);
             item.setDefaultOptions();
             item.quantity = 1;

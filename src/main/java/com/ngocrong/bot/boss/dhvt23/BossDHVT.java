@@ -45,6 +45,10 @@ public class BossDHVT extends Boss {
     public long getDameAttack(Player target) {
         long dame = this.info.originalDamage;
         long dame2 = (target.info.hpFull * percentDame) / 100;
+        if(target.isProtected())
+        {
+            return -1;
+        }
         return Math.max(dame, dame2);
     }
 

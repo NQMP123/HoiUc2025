@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Moding;
 using Assets.Scripts.Assembly_CSharp.HSNR;
 using Assets.src.g;
 using NQMP;
@@ -145,7 +146,7 @@ public class Panel : IActionListener, IChatable
 
     public static string[] strTool = new string[8]
     {
-        mResources.gameInfo,
+        "Thông báo Boss",
         mResources.change_flag,
         mResources.change_zone,
         mResources.chat_world,
@@ -2123,6 +2124,7 @@ public class Panel : IActionListener, IChatable
             }
             switch (type)
             {
+                case 28:
                 case 23:
                 case 24:
                     updateKeyScrollView();
@@ -4037,6 +4039,9 @@ public class Panel : IActionListener, IChatable
             paintTab(g);
             switch (type)
             {
+                case 28:
+                    paintNotifyBoss(g);
+                    break;
                 case 9:
                     paintArchivement(g);
                     break;
@@ -5770,8 +5775,8 @@ public class Panel : IActionListener, IChatable
                 g.setColor(9993045, 0.8f);
                 g.fillRect(x + 2, y + 2, w - 4, h - 4, 4);
                 paintEff(g, item, x, y);
-              
-               
+
+
                 SmallImage.drawSmallImage(g, item.template.iconID, x + w / 2, y + h / 2, 0, mGraphics.VCENTER | mGraphics.HCENTER);
                 if (item.quantity > 1)
                 {
@@ -5928,6 +5933,13 @@ public class Panel : IActionListener, IChatable
             g.setColor(13524492);
             g.fillRect(X + 1, 78, W - 2, 1);
             mFont.tahoma_7b_dark.drawString(g, mResources.gameInfo, xScroll + wScroll / 2, 59, mFont.CENTER);
+            return;
+        }
+        if (type == 28)
+        {
+            g.setColor(13524492);
+            g.fillRect(X + 1, 78, W - 2, 1);
+            mFont.tahoma_7b_dark.drawString(g, "Thông báo Boss", xScroll + wScroll / 2, 59, mFont.CENTER);
             return;
         }
         if (type == 20)
@@ -6422,6 +6434,7 @@ public class Panel : IActionListener, IChatable
             case 16:
             case 23:
             case 24:
+            case 28:
                 SmallImage.drawSmallImage(g, Char.myCharz().avatarz(), X + 25, 50, 0, 33);
                 paintMyInfo(g);
                 break;
@@ -7393,9 +7406,10 @@ public class Panel : IActionListener, IChatable
                 Debug.Log("updatekeyType" + type);
                 switch (type)
                 {
-
+                    case 28:
+                        doFireNotifyBoss();
+                        break;
                     case 26:
-
                         doFiretypeGame();
                         break;
                     case 23:
@@ -8164,7 +8178,7 @@ public class Panel : IActionListener, IChatable
                     Service.gI().openMenu(54);
                     break;
                 case 2:
-                    setTypeGameInfo();
+                    setTypeNotifyBoss();
                     break;
                 case 3:
                     Service.gI().getFlag(0, -1);
@@ -8243,7 +8257,7 @@ public class Panel : IActionListener, IChatable
                 Service.gI().openMenu(54);
                 break;
             case 2:
-                setTypeGameInfo();
+                setTypeNotifyBoss();
                 break;
             case 3:
                 doFirePet();
@@ -11399,5 +11413,90 @@ public class Panel : IActionListener, IChatable
         }
         return false;
     }
+
+
+    void doFireNotifyBoss()
+    {
+        if (selected >= 0 && selected < currentListLength)
+        {
+            if (bossSelect.Equals(""))
+            {
+                bossSelect = NotifyBoss.listNameBoss()[selected];
+                setTypeNotifyBoss(1);
+            }
+        }
+    }
+    public void setTypeNotifyBoss(int typeSet = 0)
+    {
+        currentListLength = typeSet == 0 ? NotifyBoss.listNameBoss().Count : NotifyBoss.notisByName(bossSelect).Count;
+        selected = (GameCanvas.isTouch ? (-1) : 0);
+        ITEM_HEIGHT = 25;
+        if (currentListLength < 9 && typeSet == 0 && currentListLength > 0)
+        {
+            ITEM_HEIGHT = hScroll / currentListLength;
+        }
+        cmyLim = currentListLength * ITEM_HEIGHT - hScroll;
+        cmy = (cmtoY = 0);
+        type = 28;
+        setType(0);
+        if (typeSet == 0)
+        {
+            bossSelect = "";
+        }
+    }
+    static string bossSelect = "";
+    public void paintNotifyBoss(mGraphics g)
+    {
+        g.setClip(xScroll, yScroll, wScroll, hScroll);
+        g.translate(0, -cmy);
+        if (bossSelect == "")
+        {
+            for (int i = 0; i < currentListLength; i++)
+            {
+                // ITEM_HEIGHT = 25;
+                var obj = NotifyBoss.listNameBoss()[i];
+                int num = xScroll;
+                int num2 = yScroll + i * ITEM_HEIGHT;
+                int num3 = wScroll - 1;
+                int h = ITEM_HEIGHT - 1;
+                if (num2 - cmy > yScroll + hScroll || num2 - cmy < yScroll - ITEM_HEIGHT || obj == null)
+                {
+                    continue;
+                }
+                g.setColor(15196114);
+                g.fillRect(num, num2, num3, h, 5);
+                mFont.tahoma_7b_dark.drawString(g, obj, xScroll + wScroll / 2, num2 + 5, mFont.CENTER);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < currentListLength; i++)
+            {
+                ITEM_HEIGHT = 60;
+                var obj = NotifyBoss.notisByName(bossSelect)[i];
+                int num = xScroll;
+                int num2 = yScroll + i * ITEM_HEIGHT;
+                int num3 = wScroll - 1;
+                int h = ITEM_HEIGHT - 1;
+                if (num2 - cmy > yScroll + hScroll || num2 - cmy < yScroll - ITEM_HEIGHT || obj == null)
+                {
+                    continue;
+                }
+                g.setColor(15196114);
+                g.fillRect(num, num2, num3, h, 5);
+                string[] lines = obj.getLines();
+                mFont.tahoma_7.drawString(g, lines[0], xScroll + 5, num2 + 2, mFont.LEFT);
+                mFont.tahoma_7.drawString(g, lines[1], xScroll + 5, num2 + 15, mFont.LEFT);
+                mFont.tahoma_7.drawString(g, lines[2], xScroll + 5, num2 + 28, mFont.LEFT);
+                mFont.tahoma_7.drawString(g, lines[3], xScroll + 5, num2 + 41, mFont.LEFT);
+
+            }
+        }
+        this.paintScrollArrow(g);
+    }
+
+
+
+
 
 }

@@ -48,7 +48,7 @@ public class KuKu extends Boss {
             return;
         }
 
-        dropGroupA((Player) obj);
+//        dropGroupA((Player) obj);
     }
 
     @Override

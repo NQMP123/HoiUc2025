@@ -2189,7 +2189,6 @@ public class Service
         Message message = null;
         try
         {
-           // Debug.LogError("REQUEST ICON " + id);
             message = new Message((sbyte)(-67));
             message.writer().writeInt(id);
             session.sendMessage(message);

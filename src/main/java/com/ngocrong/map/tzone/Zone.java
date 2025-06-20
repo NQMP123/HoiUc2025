@@ -87,6 +87,10 @@ public class Zone extends Thread {
         start();
     }
 
+    public void setMaxPlayer(int max) {
+        maxPlayer = max;
+    }
+
     public void initial() {
         long now = System.currentTimeMillis();
         service = new MapService(this);
@@ -783,6 +787,9 @@ public class Zone extends Thread {
         if (_player.isDead() || (target.isDead() && _player.select.template.id != SkillName.TRI_THUONG)) {
             return;
         }
+        if (System.currentTimeMillis() - target.lastWakeUp <= 2000) {
+            return;
+        }
         ArrayList<Player> targets = new ArrayList<>();
         targets.add(target);
         Skill skill = _player.select;
@@ -884,9 +891,9 @@ public class Zone extends Thread {
 
             long dame = damageFull + Utils.percentOf(damageFull, (percentDame - 100));
             dame = Utils.nextLong(dame - (dame / 10), dame);
-           
+
             dame -= Utils.percentOf(dame, target.info.options[94]);
-           
+
             if ((skill.template.id == SkillName.CHIEU_KAMEJOKO)) {
                 dame += (dame * _player.info.optionKame / 100);
             }
@@ -896,7 +903,7 @@ public class Zone extends Thread {
             if ((skill.template.id == SkillName.CHIEU_DAM_GALICK && _player.isSetKakarot())) {
                 dame += Utils.percentOf(dame, 150);
             }
-           
+
             boolean xuyenGiap = false;
             if (_player.info.options[98] > 0 && (skill.template.id == SkillName.CHIEU_KAMEJOKO || skill.template.id == SkillName.CHIEU_MASENKO || skill.template.id == SkillName.CHIEU_ANTOMIC)) {
                 int rd = Utils.nextInt(100);
@@ -914,16 +921,15 @@ public class Zone extends Thread {
                 }
                 pPhanDonCanChien = _player.info.options[15];
             }
-           
-            
+
             if (map.isBaseBabidi() && !target.isBoss() && !_player.isBoss()) {
                 dame = target.info.hpFull / 10;
             }
-            
+
             if (dame <= 0) {
                 dame = 1;
             }
-           
+
             if (target instanceof GeneralWhite) {
                 Mob mob = findMobByTemplateID(22, false);
                 if (mob != null) {
@@ -938,14 +944,14 @@ public class Zone extends Thread {
             if (target.isGiapXen()) {
                 dame /= 2;
             }
-           
+
             if (target.info.options[157] > 0) {
                 long pM = target.info.mp * 100 / target.info.mpFull;
                 if (pM < 20) {
                     dame -= Utils.percentOf(dame, target.info.options[157]);
                 }
             }
-           
+
             if (sp != null) {
                 if ((sp.id == 1 && skill.template.id == SkillName.CHIEU_DAM_GALICK) || (sp.id == 2 && skill.template.id == SkillName.CHIEU_ANTOMIC) || (sp.id == 3 && _player.isMonkey())
                         || (sp.id == 11 && skill.template.id == SkillName.CHIEU_DAM_DRAGON) || (sp.id == 12 && skill.template.id == SkillName.CHIEU_KAMEJOKO)
@@ -959,7 +965,7 @@ public class Zone extends Thread {
                     }
                 }
             }
-            
+
             if (skill.template.id == SkillName.CHIEU_DAM_DRAGON || skill.template.id == SkillName.CHIEU_KAMEJOKO || skill.template.id == SkillName.CHIEU_DAM_DEMON || skill.template.id == SkillName.CHIEU_MASENKO || skill.template.id == SkillName.CHIEU_DAM_GALICK || skill.template.id == SkillName.CHIEU_ANTOMIC || skill.template.id == SkillName.LIEN_HOAN || skill.template.id == SkillName.KAIOKEN) {
                 int percentDamageBonus = _player.getPercentDamageBonus();
                 if (percentDamageBonus > 0) {
@@ -967,7 +973,7 @@ public class Zone extends Thread {
                     _player.setPercentDamageBonus(0);
                 }
             }
-            
+
             boolean flag = false;
             if (skill.template.id == SkillName.MAKANKOSAPPO) {
                 dame = Utils.percentOf(_player.info.mp, percentDame);
@@ -1010,7 +1016,7 @@ public class Zone extends Thread {
                 dame *= 2;
                 dame += Utils.percentOf(dame, _player.info.options[5]);
             }
-            
+
             if (target.limitDame != -1) {
                 if (_player.mapPhuHo == 114) {
                     if (target instanceof BuiBui || target instanceof Drabura || target instanceof Mabu || target instanceof Yacon) {
@@ -1026,16 +1032,18 @@ public class Zone extends Thread {
                     }
                 }
             }
-           
+
             if (_player.isBoss()) {
                 Boss boss = (Boss) _player;
                 if (boss.percentDame != -1) {
                     dame = Utils.percentOf(target.info.hpFull, boss.percentDame);
                 }
             }
-           
+
             if (dame > 0) {
-                dame = target.injure(_player, null, dame);
+                if (!isMiss) {
+                    dame = target.injure(_player, null, dame);
+                }
                 long reactDame = Utils.percentOf(dame, target.info.options[97] + pPhanDonCanChien);
                 if (!(_player instanceof Broly) && !(_player instanceof SuperBroly)) {
                     reactDame = _player.injure(target, null, reactDame);
@@ -1089,6 +1097,16 @@ public class Zone extends Thread {
             dame = target.injure(_player, null, dame);
             if (dame < 0) {
                 dame = 0;
+            }
+            if (!isMiss && target.isProtected()) {
+                if (dame > target.info.hpFull) {
+                    target.setTimeForItemtime(0, 0);
+                    target.service.sendThongBao("Khiên năng lượng đã vỡ");
+                }
+                dame = 1;
+                if (target.info.hp <= dame) {
+                    isMiss = true;
+                }
             }
             if (_player.useSkill(target)) {
                 if (!_player.isSkillSpecial()) {
@@ -1574,7 +1592,7 @@ public class Zone extends Thread {
         } else if (pw < 110_000_000_000L) {
             num = 0.015625;
         } else {
-            num = 0.00390625;
+            num = 0.000590625;
         }
         return (long) ((double) result * num);
     }

@@ -980,8 +980,6 @@ public class Session implements ISession {
                         index = 8;
                     } else if (index == 36) {
                         index = 9;
-                    } else if (index == Item.TYPE_NGOC_BOI) {
-                        index = 10;
                     } else if (index == Item.TYPE_DANH_HIEU) {
                         index = 11;
                     }
@@ -1051,7 +1049,7 @@ public class Session implements ISession {
             } else if (status == 6) {
                 sv.dialogMessage("Tài khoản không được chứa ký tự đặc biệt");
             } else if (status == 7) {
-                sv.dialogMessage("Đã kết thúc phiên bản Alphatest, Sever sẽ được mở bản chính thức vào 10h00 sáng mai, ngày mùng 6 tháng 4");
+                sv.dialogMessage("Trò chơi sẽ được bắt đầu vào lúc 10h00 ngày 21 tháng 6");
             } else {
                 if (status == 4) {
                     Timestamp banUntil = us.getLockTime();
@@ -1135,7 +1133,11 @@ public class Session implements ISession {
                         if (m == null) {
                             break;
                         }
-                        batch.add(m);
+                        if (m.getCommand() != -74) {
+                            batch.add(m);
+                        } else {
+                            doSendMessage(m);
+                        }
                     }
 
                     if (batch.size() == 1) {

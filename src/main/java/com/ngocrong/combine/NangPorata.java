@@ -16,7 +16,7 @@ public class NangPorata extends Combine {
 
     private static final org.apache.log4j.Logger logger = Logger.getLogger(NangPorata.class);
     public static final int PERCENT = 100;
-    public static final int[] REQUIRE = {1, 999, 20, 50};
+    public static final int[] REQUIRE = {1, 9999, 20, 50};
 
     public NangPorata() {
         StringBuilder sb = new StringBuilder();
@@ -24,7 +24,7 @@ public class NangPorata extends Combine {
         sb.append("\n");
         sb.append("Chọn bông tai Porata");
         sb.append("\n");
-        sb.append("Chọn mảnh bông tai để nâng cấp, số lượng 999 cái");
+        sb.append("Chọn mảnh bông tai để nâng cấp, số lượng 9999 cái");
         sb.append("\n");
         sb.append("Sau đó chọn 'Nâng cấp'");
         setInfo(sb.toString());

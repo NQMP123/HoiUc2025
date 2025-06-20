@@ -80,13 +80,13 @@ public class CallDragon1Star extends CallDragon {
                 break;
 
             case ADD_CRITICAL:
-               if (_c.info.originalCritical >= (_c.info.powerLimitMark.critical + 20)) {
+               if (_c.info.originalCritical >= 25) {
                     back("Chí mạng của bạn đã đạt mức tối đa");
                     return;
                 }
                 _c.info.originalCritical += 2;
-                if (_c.info.originalCritical > _c.info.powerLimitMark.critical + 20) {
-                    _c.info.originalCritical = _c.info.powerLimitMark.critical + 20;
+                if (_c.info.originalCritical > 25) {
+                    _c.info.originalCritical = 25;
                 }
                 _c.info.setInfo();
                 _c.service.loadPoint();
@@ -107,8 +107,7 @@ public class CallDragon1Star extends CallDragon {
                 Item item = new Item(itemID);
                 item.quantity = 1;
                 item.addItemOption(new ItemOption(77, Utils.nextInt(10, 25)));
-                item.addItemOption(new ItemOption(97, Utils.nextInt(10, 25)));
-                item.addItemOption(new ItemOption(50, Utils.nextInt(10, 25)));
+                item.addItemOption(new ItemOption(97, Utils.nextInt(5, 10)));
                 _c.addItem(item);
             }
             break;

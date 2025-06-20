@@ -29,7 +29,7 @@ public class Broly extends Boss {
         this.distanceToAddToList = 100;
         this.limit = 500;
         this.level = level;
-        setInfo(Utils.nextInt(1000000, 5000000), 100000, 10, 100, 20);
+        setInfo(Utils.nextInt(1000000, 2000000), 100000, 10, 100, 20);
         this.name = "Broly " + Utils.nextInt(100);
         setDefaultPart();
         this.waitingTimeToLeave = 5000;
@@ -111,6 +111,7 @@ public class Broly extends Boss {
 
     @Override
     public void startDie() {
+        int map = this.zone.map.mapID;
         Zone zone = this.zone;
         listTarget.clear();
         super.startDie();
@@ -125,7 +126,7 @@ public class Broly extends Boss {
             Utils.setTimeout(() -> {
                 SuperBroly superbroly = new SuperBroly();
                 superbroly.setInfo(HP, Long.MAX_VALUE, 1000, 1000, 0);
-                superbroly.setLocation(zone);
+                superbroly.setLocation(map, -1);
             }, 5000);
         }
     }
@@ -163,9 +164,10 @@ public class Broly extends Boss {
     }
 
     public Skill oldSelect;
-
+    long lastTTNL;
     public void usingTTNL() {
-        if (!isKhongChe()) {
+        if (!isKhongChe() && System.currentTimeMillis() - lastTTNL >= 5000) {
+            lastTTNL = System.currentTimeMillis();
             this.select = TTNL[Utils.nextInt(TTNL.length)];
             startRecoveryEnery();
         }

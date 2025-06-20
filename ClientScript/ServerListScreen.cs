@@ -36,7 +36,7 @@ public class ServerListScreen : mScreen, IActionListener
     public static string testIP = "Sever1:160.191.2.73:14445:0,0,0";
     public static string testMain = "Test:103.97.132.88:14445:0,0,0";
     public static string localIP = "Local:127.0.0.1:14445:0,0,0";
-    public static string mainIP = Decrypt("⛧✃⛜⛿⛻⛩⛗✍⛣⛪✆✐⛣⛿⛋✊⛯⛮✂✀⛷⛞⛬✐⛢✃⛤✌⛸⛪✅✎⛤⛚⛧⛆⛤⛪✅✍⛢⛚⛗✉⛣⛗⛓⛓", 9878);
+    public static string mainIP = Decrypt("◆▣◇◪◕◞◇◪►▵▲◩◀◛▶▣▾▴▥◩◀◅▶◦▾◚▥◪▿◅◂▧▾◅◂□▿▵◆▧▾▴◨◨▽▵▲▮", 9585);
     public static string Decrypt(string encryptedText, int key)
     {
         StringBuilder stringBuilder = new StringBuilder();

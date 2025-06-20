@@ -110,6 +110,7 @@ public class ArenaSieuHang extends Zone {
     public void update() {
         super.update();
         if (currFightingPlayer != null && currFightingPlayer.zone != this) {
+            lose();
             close();
         }
         if (currFightingPlayer != null && trongTai != null && running) {
@@ -122,6 +123,7 @@ public class ArenaSieuHang extends Zone {
                 if (countDownToStart > 0) {
                     countDownToStart--;
                     if (countDownToStart == 10) {
+                        this.service.playerLoadAll(boss);
                         service.chat(trongTai, "Trận đấu sắp diễn ra");
                     } else if (countDownToStart == 8) {
                         service.chat(trongTai, "3");
@@ -326,13 +328,14 @@ public class ArenaSieuHang extends Zone {
     }
 
     public void close() {
+      //  currFightingPlayer.service.serverMessage("Bạn đã thất bại");
         running = false;
+        currFightingPlayer.setTypePK((byte) 0);
         currFightingPlayer.inFighting = false;
         currFightingPlayer.setLastTimeThachDau(System.currentTimeMillis());
         Server server = DragonBall.getInstance().getServer();
         if (server.isFightingDhvtSieuHang != null) {
             server.isFightingDhvtSieuHang.removeIf(id -> id.equals(clonePlayerId) || id.equals(currFightingPlayer.id));
-
         }
         if (currFightingPlayer.zone == this) {
             if (currFightingPlayer.isDead()) {
@@ -362,7 +365,7 @@ public class ArenaSieuHang extends Zone {
         }
         StartDHVT_SH.listAttack.remove(currFightingPlayer.id);
         StartDHVT_SH.listAttack.remove(clonePlayerId);
-        currFightingPlayer.superrank.lastReward = System.currentTimeMillis();
+        currFightingPlayer.superrank.lastAttack = System.currentTimeMillis();
 
     }
 

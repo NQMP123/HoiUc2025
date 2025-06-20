@@ -26,6 +26,7 @@ public abstract class Top {
     public static final int TOP_VQTD = 4;
     public static final int TOP_WHIS = 5;
     public static final int TOP_WHIS_Reward = 6;
+    public static final int TOP_TASK = 7;
     public boolean isToggle;
     private static Logger logger = Logger.getLogger(Top.class);
     private static ArrayList<Top> tops = new ArrayList<>();
@@ -47,6 +48,7 @@ public abstract class Top {
 
     public static void initialize() {
         addTop(new TopPower(TOP_POWER, TYPE_NONE, "Sức mạnh", (byte) 100));
+        addTop(new TopTask(TOP_TASK, TYPE_NONE, "Nhiệm Vụ", (byte) 100));
         addTop(new TopExchange(TOP_EXCHANGE, TYPE_NONE, "Đổi Vật phẩm", (byte) 100));
         addTop(new TopDHVTSieuHang(Top.TOP_DHVT_SIEU_HANG, TYPE_THACH_DAU, "Top DHVT Siêu Hạng", (byte) 100));
         addTop(new TopVQTD(Top.TOP_VQTD, TYPE_NONE, "Top Vòng Quay Thượng Đế", (byte) 50));

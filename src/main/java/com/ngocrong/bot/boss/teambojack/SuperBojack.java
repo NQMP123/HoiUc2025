@@ -93,11 +93,6 @@ public class SuperBojack extends TeamBojack {
 //            zone.leave(this);
 //        }
 //    }
-    @Override
-    public void update() {
-        super.update();
-        //  System.err.println("update boss : " + this.name + " - " + this.skills.size());
-    }
 
     @Override
     public void attack(Object obj) {

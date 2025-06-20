@@ -4,6 +4,9 @@
  */
 package com.ngocrong.NQMP;
 
+import com.ngocrong.NQMP.DHVT_SH.SuperRank;
+import static com.ngocrong.NQMP.DHVT_SH.SuperRank.HalfDay;
+import com.ngocrong.NQMP.DHVT_SH.Top_SieuHang;
 import com.ngocrong.NQMP.Mabu14H.Bu_Map;
 import static com.ngocrong.NQMP.Mabu14H.Bu_Map.list;
 import com.ngocrong.NQMP.Whis.RewardWhis;
@@ -127,36 +130,52 @@ public class MainUpdate implements Runnable {
 
     static long initCold = System.currentTimeMillis();
     static long initBot = System.currentTimeMillis();
+    static long lastRewardSieuHang = System.currentTimeMillis();
 
     public static void update() {
-        now = LocalDateTime.now();
-        isSupportMisson = now.getHour() == 17 || now.getHour() == 18 || now.getHour() == 19;
-        DHVT23_Service.update();
-        ConSoMayMan.update();
-        checkKickOut();
-        if (!isResetDHVT && now.getHour() == 0 && now.getMinute() == 0 && now.getSecond() == 0) {
-            isResetDHVT = true;
-            ResetDHVT();
-        }
-        if (now.getHour() >= 20) {
-            RewardDHVT23();
-        }
-        if (System.currentTimeMillis() - UtilsNQMP.lastCreateBot >= 5000) {
-            VirtualBot_SoSinh bot = new VirtualBot_SoSinh(generateCharacterName());
-            bot.setLocation(0, -1);
-            UtilsNQMP.lastCreateBot = System.currentTimeMillis();
-        }
-        if (System.currentTimeMillis() - initCold >= 15000 && BotCold.TotalBotCold < 50) {
-            initCold = System.currentTimeMillis();
-            int[] map = new int[]{105, 106, 107, 108, 109, 110};
-            TMap map2 = MapManager.getInstance().getMap(map[Utils.nextInt(map.length)]);
-            UtilsNQMP.createBotCold(1, map2.mapID);
-        }
-        if (System.currentTimeMillis() - initBot >= 5000 && VirtualBot.TotalBot < 250) {
-            initBot = System.currentTimeMillis();
-            int[] map = new int[]{0, 7, 14, 5};
-            VirtualBot.TotalBot++;
-            UtilsNQMP.createBot(1, map[Utils.nextInt(map.length)]);
+        try {
+            now = LocalDateTime.now();
+            isSupportMisson = now.getHour() == 17 || now.getHour() == 18 || now.getHour() == 19;
+            DHVT23_Service.update();
+            ConSoMayMan.update();
+            checkKickOut();
+            if (!isResetDHVT && now.getHour() == 0 && now.getMinute() == 0 && now.getSecond() == 0) {
+                isResetDHVT = true;
+                ResetDHVT();
+            }
+            if (now.getHour() >= 20) {
+                RewardDHVT23();
+            }
+            if (System.currentTimeMillis() - UtilsNQMP.lastCreateBot >= 5000) {
+                VirtualBot_SoSinh bot = new VirtualBot_SoSinh(generateCharacterName());
+                bot.setLocation(0, -1);
+                UtilsNQMP.lastCreateBot = System.currentTimeMillis();
+            }
+            if (System.currentTimeMillis() - initCold >= 15000 && BotCold.TotalBotCold < 50) {
+                initCold = System.currentTimeMillis();
+                int[] map = new int[]{105, 106, 107, 108, 109, 110};
+                TMap map2 = MapManager.getInstance().getMap(map[Utils.nextInt(map.length)]);
+                UtilsNQMP.createBotCold(1, map2.mapID);
+            }
+            if (System.currentTimeMillis() - initBot >= 5000 && VirtualBot.TotalBot < 250) {
+                initBot = System.currentTimeMillis();
+                int[] map = new int[]{0, 7, 14, 5};
+                VirtualBot.TotalBot++;
+                UtilsNQMP.createBot(1, map[Utils.nextInt(map.length)]);
+            }
+//            if (System.currentTimeMillis() - lastRewardSieuHang >= 60000 && now.getHour() >= 20) {
+//                List<Player> list = new ArrayList<>(SessionManager.getPlayers());
+//                for (var player : list) {
+//                    if (player != null && player.superrank != null && player.superrank.rank < 100) {
+//                        if (System.currentTimeMillis() - player.superrank.lastAttack >= 30 * 60000 && System.currentTimeMillis() - player.superrank.lastReward >= HalfDay) {
+//                            SuperRank.checkReward(player);
+//                        }
+//                    }
+//                }
+//
+//            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
 //        System.err.println("Hour:"+now.getHour());
@@ -169,9 +188,9 @@ public class MainUpdate implements Runnable {
     }
 
     static void setRewardWhis() {
-        MainUpdate.runTaskDay(() -> {
-            RewardWhis.reward();
-        }, "00:00");
+//        MainUpdate.runTaskDay(() -> {
+//            RewardWhis.reward();
+//        }, "00:00");
     }
 
     static void setMabu14h() {
@@ -183,7 +202,7 @@ public class MainUpdate implements Runnable {
             } catch (Exception e) {
                 logger.error("Error during Mabu 14H initialization: ", e);
             }
-        }, "14:00","15:00");
+        }, "14:00", "15:00");
     }
 
     @Override
