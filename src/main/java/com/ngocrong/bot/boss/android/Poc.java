@@ -29,6 +29,7 @@ public class Poc extends Boss {
         setInfo(25000000, 1000000, 10000, 100, 5);
         this.willLeaveAtDeath = false;
         point = 3;
+        canDispose = true;
     }
 
     @Override
@@ -102,5 +103,10 @@ public class Poc extends Boss {
     @Override
     public void setDefaultHead() {
         setHead((short) 240);
+    }
+
+    @Override
+    public void update() {
+        super.update();
     }
 }

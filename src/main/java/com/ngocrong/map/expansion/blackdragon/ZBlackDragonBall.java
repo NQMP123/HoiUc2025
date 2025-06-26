@@ -48,7 +48,7 @@ public class ZBlackDragonBall extends Zone {
         item.y = 0;
         item.x = 0;
         item.countDown = 10 * 60;
-        item.countDown = 10;
+   //     item.countDown = 10;
         itemBlackDragonBall = item;
     }
 
@@ -243,7 +243,7 @@ public class ZBlackDragonBall extends Zone {
 
     public void setPositionItem() {
         List<Player> list = getListChar(TYPE_HUMAN);
-        if (list.size() > 0) {
+        if (!list.isEmpty()) {
             Player p = list.get(0);
             itemBlackDragonBall.x = p.getX();
             itemBlackDragonBall.y = map.collisionLand(p.getX(), (short) 24);

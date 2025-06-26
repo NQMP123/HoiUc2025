@@ -13,7 +13,7 @@ public class GinyuForce {
 
     public static int[] MAP_NAMEC = {MapName.VACH_NUI_MOORI_2, MapName.TRAM_TAU_VU_TRU_2, MapName.THUNG_LUNG_MAIMA, MapName.THUNG_LUNG_NAMEC, MapName.DAO_GURU,
         MapName.VUC_MAIMA, MapName.NUI_HOA_TIM, MapName.NUI_HOA_VANG, MapName.NAM_GURU, MapName.DONG_NAM_GURU};
-    public static int[] MAP_FIDE = {79, 82, 83};
+    public static int[] MAP_FIDE = {79, 82};
 
     private final So4 so4;
     private final So3 so3;
@@ -79,24 +79,17 @@ public class GinyuForce {
 
     public void next(Boss boss) {
         if (boss instanceof So4) {
-            Utils.setTimeout(() -> {
-                so3.setTypePK((byte) 5);
-            }, 1000L);
+            so3.setTypePK((byte) 5);
         }
         if (boss instanceof So3) {
-            Utils.setTimeout(() -> {
-                so2.setTypePK((byte) 5);
-            }, 1000L);
+            so2.setTypePK((byte) 5);
+
         }
         if (boss instanceof So2) {
-            Utils.setTimeout(() -> {
-                so1.setTypePK((byte) 5);
-            }, 1000L);
+            so1.setTypePK((byte) 5);
         }
         if (boss instanceof So1) {
-            Utils.setTimeout(() -> {
-                tieuDoiTruong.setTypePK((byte) 5);
-            }, 1000L);
+            tieuDoiTruong.setTypePK((byte) 5);
         }
         if (boss instanceof TieuDoiTruong) {
             end();
@@ -106,7 +99,7 @@ public class GinyuForce {
     private void end() {
         Utils.setTimeout(() -> {
             born();
-        }, type == 0 ? 15 * 60000 : 5 * 60000L);
+        }, type == 0 ? 15 * 60000 : 3 * 60000L);
     }
 
     public void spawnSolo(Boss boss) {

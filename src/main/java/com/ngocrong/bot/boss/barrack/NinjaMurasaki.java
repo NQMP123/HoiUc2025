@@ -140,11 +140,14 @@ public class NinjaMurasaki extends Boss {
 
     @Override
     public void throwItem(Object obj) {
+        if (isClone) {
+            return;
+        }
         if (obj == null) {
             return;
         }
         Player c = (Player) obj;
-        Item item = new Item(ItemName.NGOC_RONG_3_SAO);
+        Item item = new Item(Utils.nextInt(ItemName.NGOC_RONG_4_SAO, ItemName.NGOC_RONG_7_SAO));
         item.setDefaultOptions();
         item.quantity = 1;
         ItemMap itemMap = new ItemMap(zone.autoIncrease++);
@@ -154,33 +157,5 @@ public class NinjaMurasaki extends Boss {
         itemMap.y = zone.map.collisionLand(getX(), getY());
         zone.addItemMap(itemMap);
         zone.service.addItemMap(itemMap);
-//        if (!isClone) {
-//            if (obj != null) {
-//                Player c = (Player) obj;
-//                int itemID = RandomItem.DRAGONBALL.next();
-//                Item item = new Item(itemID);
-//                item.setDefaultOptions();
-//                item.quantity = 1;
-//                ItemMap itemMap = new ItemMap(zone.autoIncrease++);
-//                itemMap.item = item;
-//                itemMap.playerID = Math.abs(c.id);
-//                itemMap.x = getX();
-//                itemMap.y = zone.map.collisionLand(getX(), getY());
-//                zone.addItemMap(itemMap);
-//                zone.service.addItemMap(itemMap);
-//
-//                itemID = ItemName.MANH_VO_BONG_TAI;
-//                item = new Item(itemID);
-//                item.setDefaultOptions();
-//                item.quantity = Utils.nextInt(90, 110);
-//                itemMap = new ItemMap(zone.autoIncrease++);
-//                itemMap.item = item;
-//                itemMap.playerID = -1;
-//                itemMap.x = getX();
-//                itemMap.y = zone.map.collisionLand(getX(), getY());
-//                zone.addItemMap(itemMap);
-//                zone.service.addItemMap(itemMap);
-//            }
-//        }
     }
 }

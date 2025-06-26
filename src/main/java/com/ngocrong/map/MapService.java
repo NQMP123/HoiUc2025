@@ -231,8 +231,8 @@ public class MapService {
             Message mss = new Message(Cmd.SET_POS);
             FastDataOutputStream ds = mss.writer();
             ds.writeInt(_player.id);
-            ds.writeShort(_player.getX());
-            ds.writeShort(_player.getY());
+            ds.writeShort(x);
+            ds.writeShort(y);
             ds.writeByte(type);
             ds.flush();
             sendMessage(mss, null);
@@ -338,7 +338,11 @@ public class MapService {
             FastDataOutputStream ds = mss.writer();
             ds.writeByte(type);
             ds.writeInt(_player.id);
-            ds.writeShort(skill.id);
+            if (type != 1 && type != 3) {
+                ds.writeShort(skill.id);
+            } else {
+                ds.writeShort(-1);
+            }
             if (type == 0) {
                 ds.writeByte(mobs.size());
                 for (Mob mob : mobs) {

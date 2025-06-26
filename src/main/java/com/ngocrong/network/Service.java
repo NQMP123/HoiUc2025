@@ -3064,6 +3064,73 @@ public class Service implements IService {
         }
     }
 
+    public void batchDownloadAction2(ArrayList<String> paths) {
+        try {
+            System.err.println("Starting batch download (action 2) for " + paths.size() + " files");
+            long startTime = System.currentTimeMillis();
+
+            Message mss = new Message(Cmd.GET_IMAGE_SOURCE);
+            FastDataOutputStream ds = mss.writer();
+            ds.writeByte(2); // Vẫn sử dụng action 2
+
+            // Ghi số lượng files đầu tiên
+            ds.writeInt(paths.size());
+
+            long totalSize = 0;
+            int processedFiles = 0;
+
+            for (String path : paths) {
+                try {
+                    String str = path.replace("\\", "/").replace("resources/data/" + session.zoomLevel, "");
+                    str = Utils.cutPng(str);
+
+                    byte[] raw = Utils.getFile(path);
+                    if (raw != null) {
+                        ds.writeUTF(str);           // Tên file
+                        ds.writeInt(raw.length);    // Kích thước
+                        ds.write(raw);              // Nội dung file
+                        totalSize += raw.length;
+                        processedFiles++;
+                        if (processedFiles % 100 == 0) {
+                            System.err.println("Processed " + processedFiles + "/" + paths.size() + " files");
+                        }
+                    } else {
+                        System.err.println("Warning: Could not read file: " + path);
+                        // Ghi file rỗng
+                        ds.writeUTF(str);
+                        ds.writeInt(0);
+                    }
+                } catch (Exception ex) {
+                    System.err.println("Error processing file " + path + ": " + ex.getMessage());
+                    // Skip file bị lỗi, ghi file rỗng
+                    try {
+                        String str = path.replace("\\", "/").replace("resources/data/" + session.zoomLevel, "");
+                        str = Utils.cutPng(str);
+                        ds.writeUTF(str);
+                        ds.writeInt(0);
+                    } catch (Exception e2) {
+                        System.err.println("Failed to write empty file entry: " + e2.getMessage());
+                    }
+                }
+            }
+
+            ds.flush();
+            sendMessage(mss);
+            mss.cleanup();
+
+            long endTime = System.currentTimeMillis();
+            System.err.println("Batch download completed:");
+            System.err.println("- Files processed: " + processedFiles + "/" + paths.size());
+            System.err.println("- Total size: " + (totalSize / 1024) + " KB");
+            System.err.println("- Time taken: " + (endTime - startTime) + "ms");
+            System.err.println("- Average: " + (totalSize / Math.max(1, endTime - startTime)) + " bytes/ms");
+
+        } catch (IOException ex) {
+            com.ngocrong.NQMP.UtilsNQMP.logError(ex);
+            logger.error("batchDownloadAction2 error", ex);
+        }
+    }
+
     public void download(String path) {
         try {
             String str = path.replace("\\", "/").replace("resources/data/" + session.zoomLevel, "");
@@ -3073,7 +3140,6 @@ public class Service implements IService {
             ds.writeByte(2);
             ds.writeUTF(str);
             byte[] raw = Utils.getFile(path);
-            byte[] ab = Utils.compress(raw);
             ds.writeInt(raw.length);
             ds.write(raw);
             ds.flush();
@@ -3082,6 +3148,179 @@ public class Service implements IService {
         } catch (IOException ex) {
             com.ngocrong.NQMP.UtilsNQMP.logError(ex);
             logger.error("download error", ex);
+        }
+    }
+
+    /**
+     * Download file nhỏ (< 100KB) - load toàn bộ vào memory
+     */
+    private void downloadSmallFile(String path) {
+        try {
+            String str = path.replace("\\", "/").replace("resources/data/" + session.zoomLevel, "");
+            str = Utils.cutPng(str);
+            Message mss = new Message(Cmd.GET_IMAGE_SOURCE);
+            FastDataOutputStream ds = mss.writer();
+            ds.writeByte(2);
+            ds.writeUTF(str);
+            byte[] raw = Utils.getFile(path);
+            byte[] compressed = Utils.compress(raw);
+            ds.writeInt(raw.length);
+            ds.writeInt(compressed.length);
+            ds.write(compressed);
+            ds.flush();
+            sendMessage(mss);
+            mss.cleanup();
+        } catch (IOException ex) {
+            com.ngocrong.NQMP.UtilsNQMP.logError(ex);
+            logger.error("downloadSmallFile error", ex);
+        }
+    }
+
+    /**
+     * Download file lớn (>= 100KB) với streaming để tránh load hết vào memory
+     */
+    private void downloadWithStreaming(String path) {
+        FileInputStream fis = null;
+        try {
+            String str = path.replace("\\", "/").replace("resources/data/" + session.zoomLevel, "");
+            str = Utils.cutPng(str);
+
+            java.io.File file = new java.io.File(path);
+            fis = new FileInputStream(file);
+
+            final int CHUNK_SIZE = 32 * 1024; // 32KB chunks
+            byte[] buffer = new byte[CHUNK_SIZE];
+            int totalSize = (int) file.length();
+            int totalChunks = (totalSize + CHUNK_SIZE - 1) / CHUNK_SIZE;
+
+            // Gửi header chunk đầu tiên
+            Message headerMsg = new Message(Cmd.GET_IMAGE_SOURCE);
+            FastDataOutputStream headerDs = headerMsg.writer();
+            headerDs.writeByte(5); // Action 5 = streaming start
+            headerDs.writeUTF(str);
+            headerDs.writeInt(totalSize);
+            headerDs.writeShort(totalChunks);
+            headerDs.flush();
+            sendMessage(headerMsg);
+            headerMsg.cleanup();
+
+            // Gửi từng chunk
+            int chunkIndex = 0;
+            int bytesRead;
+            while ((bytesRead = fis.read(buffer)) != -1) {
+                Message chunkMsg = new Message(Cmd.GET_IMAGE_SOURCE);
+                FastDataOutputStream chunkDs = chunkMsg.writer();
+                chunkDs.writeByte(6); // Action 6 = streaming chunk
+                chunkDs.writeShort(chunkIndex);
+                chunkDs.writeInt(bytesRead);
+
+                // Compress chunk
+                byte[] chunkData = new byte[bytesRead];
+                System.arraycopy(buffer, 0, chunkData, 0, bytesRead);
+                byte[] compressed = Utils.compress(chunkData);
+
+                chunkDs.writeInt(compressed.length);
+                chunkDs.write(compressed);
+                chunkDs.flush();
+                sendMessage(chunkMsg);
+                chunkMsg.cleanup();
+
+                chunkIndex++;
+            }
+
+        } catch (Exception ex) {
+            com.ngocrong.NQMP.UtilsNQMP.logError(ex);
+            logger.error("downloadWithStreaming error", ex);
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException ignored) {
+                }
+            }
+        }
+    }
+
+    /**
+     * Batch download nhiều file nhỏ trong một message để giảm overhead
+     */
+    public void batchDownload(ArrayList<String> paths) {
+        try {
+            final int BATCH_SIZE = 10; // Gom 10 file nhỏ/lần
+            final int MAX_FILE_SIZE = 50 * 1024; // File > 50KB sẽ gửi riêng
+
+            ArrayList<String> batchFiles = new ArrayList<>();
+
+            for (String path : paths) {
+                try {
+                    java.io.File file = new java.io.File(path);
+
+                    // File lớn gửi riêng
+                    if (file.length() > MAX_FILE_SIZE) {
+                        // Gửi batch hiện tại trước
+                        if (!batchFiles.isEmpty()) {
+                            sendBatchFiles(batchFiles);
+                            batchFiles.clear();
+                        }
+                        // Gửi file lớn riêng
+                        download(path);
+                    } else {
+                        // Thêm vào batch
+                        batchFiles.add(path);
+
+                        // Gửi batch khi đủ số lượng
+                        if (batchFiles.size() >= BATCH_SIZE) {
+                            sendBatchFiles(batchFiles);
+                            batchFiles.clear();
+                        }
+                    }
+                } catch (Exception ex) {
+                    com.ngocrong.NQMP.UtilsNQMP.logError(ex);
+                    logger.error("Error processing file: " + path, ex);
+                }
+            }
+
+            // Gửi batch cuối cùng
+            if (!batchFiles.isEmpty()) {
+                sendBatchFiles(batchFiles);
+            }
+
+        } catch (Exception ex) {
+            com.ngocrong.NQMP.UtilsNQMP.logError(ex);
+            logger.error("batchDownload error", ex);
+        }
+    }
+
+    /**
+     * Gửi một batch file trong một message
+     */
+    private void sendBatchFiles(ArrayList<String> paths) {
+        try {
+            Message mss = new Message(Cmd.GET_IMAGE_SOURCE);
+            FastDataOutputStream ds = mss.writer();
+            ds.writeByte(4); // Action 4 = batch download
+            ds.writeShort(paths.size());
+
+            // Ghi thông tin và data của từng file
+            for (String path : paths) {
+                String str = path.replace("\\", "/").replace("resources/data/" + session.zoomLevel, "");
+                str = Utils.cutPng(str);
+
+                byte[] raw = Utils.getFile(path);
+                byte[] compressed = Utils.compress(raw);
+
+                ds.writeUTF(str);
+                ds.writeInt(raw.length);
+                ds.writeInt(compressed.length);
+                ds.write(compressed);
+            }
+
+            ds.flush();
+            sendMessage(mss);
+            mss.cleanup();
+        } catch (IOException ex) {
+            com.ngocrong.NQMP.UtilsNQMP.logError(ex);
+            logger.error("sendBatchFiles error", ex);
         }
     }
 

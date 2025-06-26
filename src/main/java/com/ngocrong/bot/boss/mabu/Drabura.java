@@ -103,14 +103,12 @@ public class Drabura extends Boss {
             return;
         }
         Player c = (Player) obj;
-        int percent = Utils.nextInt(100);
-
+        int percent = Utils.nextInt(1000);
         Item item;
-        if (percent < 20) {
-
+        if (percent < 226) {
             item = new Item(RandomItem.DO_CUOI.next());
             item.setDefaultOptions();
-            item.addRandomOption(1, 5);
+            item.addRandomOptionMabu(percent);
             item.quantity = 1;
             ItemMap itemMap = new ItemMap(zone.autoIncrease++);
             itemMap.item = item;
@@ -120,18 +118,6 @@ public class Drabura extends Boss {
             zone.addItemMap(itemMap);
             zone.service.addItemMap(itemMap);
         }
-
-        item = new Item(2156);
-        item.setDefaultOptions();
-        item.quantity = 1;
-        ItemMap itemMap = new ItemMap(zone.autoIncrease++);
-        itemMap.item = item;
-        itemMap.playerID = Math.abs(c.id);
-        itemMap.x = getX();
-        itemMap.y = zone.map.collisionLand(getX(), getY());
-        zone.addItemMap(itemMap);
-        zone.service.addItemMap(itemMap);
-
     }
 
     @Override

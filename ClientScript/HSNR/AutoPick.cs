@@ -34,7 +34,7 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
 
         public static void Update()
         {
-            if ((GameScr.isAutoPlay && (GameScr.canAutoPlay || AutoTrain.isAutoTrain)) || !isAutoPick)
+            if (!isAutoPick)
                 return;
             if (isNRDMap(TileMap.mapID))
                 try
@@ -42,7 +42,15 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                     for (int i = 0; i < GameScr.vItemMap.size(); i++)
                     {
                         ItemMap itemMap = (ItemMap)GameScr.vItemMap.elementAt(i);
+                        if (itemMap == null || !isNRD(itemMap))
+                        {
+                            continue;
+                        }
                         int num = Math.Abs(Char.myCharz().cx - itemMap.x);
+                        if (itemMap != null && num >= 60)
+                        {
+                            TeleportTo(itemMap.x, itemMap.y);
+                        }
                         if ((itemMap.playerId == Char.myCharz().charID || itemMap.playerId == -1) && num <= 60 && itemMap != null && mSystem.currentTimeMillis() - lastTimePickedItem > 550L && isNRD(itemMap))
                         {
                             Service.gI().pickItem(itemMap.itemMapID);
@@ -107,7 +115,7 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
             }
             GameUtils.gI().resetTF();
         }
-
+        public bool autoNRSD;
         public void perform(int idAction, object p)
         {
             switch (idAction)

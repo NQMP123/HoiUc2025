@@ -65,7 +65,7 @@ public class newVQTD {
             }
 
             // 5. Ngọc rồng 5-7 sao - 20%
-            cumulativeProbability += 2000;
+            cumulativeProbability += 1700;
             if (randomValue < cumulativeProbability) {
                 Item item = createNR57();
                 player.boxCrackBall.add(item);
@@ -124,6 +124,12 @@ public class newVQTD {
             cumulativeProbability += 700;
             if (randomValue < cumulativeProbability) {
                 Item item = createNR4();
+                player.boxCrackBall.add(item);
+                return true;
+            }
+            cumulativeProbability += 300;
+            if (randomValue < cumulativeProbability) {
+                Item item = createCaiTrangVegetaThoiTrang();
                 player.boxCrackBall.add(item);
                 return true;
             }
@@ -472,7 +478,7 @@ public class newVQTD {
     }
 
     private static Item createCaiTrangVegeta() {
-        Item item = new Item(ItemName.CAI_TRANG_VEGETA_HUY_DIET);
+        Item item = new Item(ItemName.CAI_TRANG_GOHAN_BEAST);
         item.quantity = 1;
         item.options.add(new ItemOption(77, Utils.nextInt(30, 35))); // HP 30-35%
         item.options.add(new ItemOption(103, Utils.nextInt(30, 35))); // KI 30-35%
@@ -569,6 +575,19 @@ public class newVQTD {
     private static Item createNR4() {
         Item item = new Item(ItemName.NGOC_RONG_4_SAO);
         item.setDefaultOptions();
+        return item;
+    }
+
+    private static Item createCaiTrangVegetaThoiTrang() {
+        Item item = new Item(ItemName.CAI_TRANG_VEGETA_THOITRANG);
+        item.quantity = 1;
+        item.options.add(new ItemOption(77, Utils.nextInt(30, 35))); // HP 30-35%
+        item.options.add(new ItemOption(103, Utils.nextInt(30, 35))); // KI 30-35%
+        item.options.add(new ItemOption(50, Utils.nextInt(30, 35))); // SĐ 30-35%
+        item.options.add(new ItemOption(5, Utils.nextInt(1, 15))); // Giáp 15-20%
+        if (!Utils.isTrue(10, 100)) {
+            item.options.add(new ItemOption(93, getDays()));
+        }
         return item;
     }
 

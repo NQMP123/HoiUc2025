@@ -22,7 +22,7 @@ public class ServerMaintenance implements Runnable {
         try {
             Server server = DragonBall.getInstance().getServer();
             if (!server.isMaintained) {
-                ServerMaintenance serverMaintenance = new ServerMaintenance("Bảo trì", second);
+                ServerMaintenance serverMaintenance = new ServerMaintenance("Bảo trì định kỳ hằng ngày 06h05", second);
                 Thread t = new Thread(serverMaintenance);
                 t.start();
             } else {

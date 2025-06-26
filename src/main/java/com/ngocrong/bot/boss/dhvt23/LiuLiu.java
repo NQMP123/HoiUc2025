@@ -22,6 +22,7 @@ public class LiuLiu extends BossDHVT {
             canAttack = true;
         }, 14500);
         super.setDame(10, plAtt);
+        percentDef = 50;
     }
     private static Logger logger = Logger.getLogger(SoiHecQuyn.class);
 

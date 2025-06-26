@@ -39,6 +39,7 @@ public class XenBoHung extends Boss {
         this.waitingTimeToLeave = 0;
         setTypePK((byte) 5);
         point = 4;
+        canDispose = true;
     }
 
     @Override

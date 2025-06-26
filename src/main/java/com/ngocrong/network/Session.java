@@ -104,7 +104,7 @@ public class Session implements ISession {
     public boolean isConfirm = false;
     public long lastConfirm = System.currentTimeMillis(), lastCreateSession = System.currentTimeMillis();
     private static final int SOCKET_BUFFER_SIZE = 4096;
-    private static final int PING_INTERVAL = 150000, TIMEOUT = 150000; // 30s
+    public static int PING_INTERVAL = 600000, TIMEOUT = 600000; // 30s
     private static final int SENDING_QUEUE_LIMIT = 2048;
 
     public Session(Socket socket, String ip, int id) throws IOException {
@@ -142,7 +142,7 @@ public class Session implements ISession {
                 return;
             }
             if (!version.equals(Server.VERSION)) {
-                ((Service) this.service).dialogMessage("Vui lòng tải phiên bản mới tại HOIUCNGOCRONG.COM");
+                ((Service) this.service).dialogMessage(String.format("Vui lòng tải phiên bản [%s] tại %s",Server.VERSION,"HOIUCNGOCRONG.COM"));
                 return;
             }
             this.isSetClientInfo = true;
@@ -156,20 +156,25 @@ public class Session implements ISession {
     }
 
     public void getImageSource(Message ms) {
-
+        long startTime = System.currentTimeMillis();
         try {
             byte action = ms.reader().readByte();
+            System.err.println("action " + action);
+
             if (action == 1) {
                 Service sv = (Service) service;
                 String folder = "resources/data/" + zoomLevel;
                 ArrayList<String> datas = new ArrayList<>();
                 File file = new File(folder);
+
                 addPath(datas, file);
+
                 sv.size(datas.size());
 
                 for (String path : datas) {
                     sv.download(path);
                 }
+
                 for (TMap map : MapManager.getInstance().maps.values()) {
                     sv.requestMapTemplate2(map.mapID);
                 }
@@ -179,6 +184,7 @@ public class Session implements ISession {
         } catch (IOException ex) {
             com.ngocrong.NQMP.UtilsNQMP.logError(ex);
             logger.error("failed!", ex);
+        } finally {
         }
     }
 
@@ -221,7 +227,7 @@ public class Session implements ISession {
     }
 
     private static boolean isSpecialMessage(int command) {
-        return command == Cmd.BACKGROUND_TEMPLATE || command == Cmd.GET_EFFDATA || command == Cmd.REQUEST_NPCTEMPLATE || command == Cmd.REQUEST_ICON || command == Cmd.GET_IMAGE_SOURCE || command == Cmd.UPDATE_DATA || command == Cmd.GET_IMG_BY_NAME || command == 120;
+        return command == Cmd.BACKGROUND_TEMPLATE || command == Cmd.GET_EFFDATA || command == Cmd.REQUEST_NPCTEMPLATE || command == Cmd.REQUEST_ICON || command == Cmd.UPDATE_DATA || command == Cmd.GET_IMG_BY_NAME || command == 120 || command == -74;
     }
 
     protected synchronized void doSendMessage(Message m) throws IOException {
@@ -230,12 +236,15 @@ public class Session implements ISession {
         }
 
         byte[] data = m.getData();
-        if (data != null) {
+        boolean skipBase64 = (m.getCommand() == Cmd.GET_IMAGE_SOURCE);
+        if (data != null && !skipBase64) {
             data = java.util.Base64.getEncoder().encode(data);
         }
 
         byte b = m.getCommand();
-
+        if (skipBase64) {
+            System.err.println("Send message : " + b + " - lenght " + data.length);
+        }
         // Gửi command byte
         if (isConnected) {
             dos.writeByte(writeKey(b));
@@ -969,26 +978,30 @@ public class Session implements ISession {
                 JSONArray itemBody = new JSONArray(discipleData.itemBody);
                 int lent = itemBody.length();
                 for (int i = 0; i < lent; i++) {
-                    Item item = new Item();
-                    item.load(itemBody.getJSONObject(i));
-                    int index = item.template.type;
-                    if (index == 32) {
-                        index = 6;
-                    } else if (index == 23 || index == 24) {
-                        index = 7;
-                    } else if (index == 11) {
-                        index = 8;
-                    } else if (index == 36) {
-                        index = 9;
-                    } else if (index == Item.TYPE_DANH_HIEU) {
-                        index = 11;
-                    }
-                    if (index > 12) {
-                        index = 12;
-                    }
-                    deTu.itemBody[index] = item;
-                    if (!iconList.contains(item.template.iconID)) {
-                        iconList.add(item.template.iconID);
+                    try {
+                        Item item = new Item();
+                        item.load(itemBody.getJSONObject(i));
+                        int index = item.template.type;
+                        if (index == 32) {
+                            index = 6;
+                        } else if (index == 23 || index == 24) {
+                            index = 7;
+                        } else if (index == 11) {
+                            index = 8;
+                        } else if (index == 36) {
+                            index = 9;
+                        } else if (index == Item.TYPE_DANH_HIEU) {
+                            index = 11;
+                        }
+                        if (index > 12) {
+                            index = 12;
+                        }
+                        deTu.itemBody[index] = item;
+                        if (!iconList.contains(item.template.iconID)) {
+                            iconList.add(item.template.iconID);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 
@@ -1049,7 +1062,7 @@ public class Session implements ISession {
             } else if (status == 6) {
                 sv.dialogMessage("Tài khoản không được chứa ký tự đặc biệt");
             } else if (status == 7) {
-                sv.dialogMessage("Trò chơi sẽ được bắt đầu vào lúc 10h00 ngày 21 tháng 6");
+                sv.dialogMessage("Hồi Ức Ngọc Rồng sẽ chính thức OpenTest vào lúc 18h00 23/06/2025");
             } else {
                 if (status == 4) {
                     Timestamp banUntil = us.getLockTime();
@@ -1128,15 +1141,20 @@ public class Session implements ISession {
                     batch.add(first);
 
                     long start = System.currentTimeMillis();
-                    while (System.currentTimeMillis() - start < 10) {
+                    int lenght = 0;
+                    while (System.currentTimeMillis() - start < 2) {
                         Message m = sendingMessage.poll();
                         if (m == null) {
                             break;
                         }
-                        if (m.getCommand() != -74) {
-                            batch.add(m);
-                        } else {
+                        if (m.getCommand() == -74 && false) {
                             doSendMessage(m);
+                        } else {
+                            lenght += m.getData().length;
+                            batch.add(m);
+                            if (batch.size() >= 50) {
+                                break;
+                            }
                         }
                     }
 
@@ -1164,7 +1182,7 @@ public class Session implements ISession {
                     try {
                         if (message != null) {
                             if (message.getCommand() == Cmd.GET_SESSION_ID) {
-                                generateKey(10);
+                                generateKey(1);
                                 sendKey();
                             } else {
                                 messageHandler.onMessage(message);

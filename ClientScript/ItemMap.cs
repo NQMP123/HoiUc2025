@@ -157,25 +157,7 @@ public class ItemMap : IMapObject
 		if (isAuraItem())
 		{
 			g.drawImage(TileMap.bong, x + 3, y, mGraphics.VCENTER | mGraphics.HCENTER);
-			if (status <= 0)
-			{
-				if (countAura < 10)
-				{
-					g.drawImage(imageAuraItem1, x, y + status + 3, mGraphics.BOTTOM | mGraphics.HCENTER);
-				}
-				else
-				{
-					g.drawImage(imageAuraItem2, x, y + status + 3, mGraphics.BOTTOM | mGraphics.HCENTER);
-				}
-			}
-			else if (countAura < 10)
-			{
-				g.drawImage(imageAuraItem1, x, y + 3, mGraphics.BOTTOM | mGraphics.HCENTER);
-			}
-			else
-			{
-				g.drawImage(imageAuraItem2, x, y + 3, mGraphics.BOTTOM | mGraphics.HCENTER);
-			}
+g.drawImage(imageAuraItem2, x, y + status + 3, mGraphics.BOTTOM | mGraphics.HCENTER);
 		}
 		else if (!isAuraItem())
 		{

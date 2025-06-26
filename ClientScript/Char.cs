@@ -1772,12 +1772,10 @@ public class Char : IMapObject
     }
     public virtual void update()
     {
-        if (this.me && GameCanvas.gameTick %30 == 0)
+        if (this.me && GameCanvas.gameTick % 50 == 0)
         {
-            //Debug.Log($"Head{head}");
-            //Debug.Log($"Body{body}");
-            //Debug.Log($"Leg{leg}");
-         //   Debug.LogError("standandcharge : " + isStandAndCharge);
+            Debug.LogError("cx :" + this.cx);
+            Debug.LogError("cy :" + this.cy);
         }
         if (isMafuba)
         {
@@ -3675,6 +3673,10 @@ public class Char : IMapObject
 
     public void updateSuperEff()
     {
+        if (GameCanvas.lowGraphic)
+        {
+            return;
+        }
         if (GameCanvas.panel.isShow || isCopy || isFusion || isSetPos || isPet || isMiniPet || isMonkey == 1)
         {
             return;
@@ -5435,6 +5437,10 @@ public class Char : IMapObject
     {
         try
         {
+            if (GameCanvas.lowGraphic && !this.me)
+            {
+                return;
+            }
             if (this.danhhieu.Count > 0)
             {
 
@@ -5634,6 +5640,10 @@ public class Char : IMapObject
 
     private void paintSuperEffBehind(mGraphics g)
     {
+        if (GameCanvas.lowGraphic)
+        {
+            return;
+        }
         if (me)
         {
             if (!isPaintAura && idAuraEff > -1)
@@ -7791,6 +7801,10 @@ public class Char : IMapObject
 
     public void paintAuraBehind(mGraphics g)
     {
+        if (GameCanvas.lowGraphic)
+        {
+            return;
+        }
         if ((!me || !isPaintAura) && idAuraEff > -1 && (statusMe == 1 || statusMe == 6) && !GameCanvas.panel.isShow && mSystem.currentTimeMillis() - timeBlue > 0)
         {
             string nameImg = strEffAura + idAuraEff + "_0";
@@ -7801,6 +7815,10 @@ public class Char : IMapObject
 
     public void paintAuraFront(mGraphics g)
     {
+        if (GameCanvas.lowGraphic)
+        {
+            return;
+        }
         if ((me && !isPaintAura) || idAuraEff <= -1)
         {
             return;

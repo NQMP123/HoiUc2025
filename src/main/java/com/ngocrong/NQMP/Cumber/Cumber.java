@@ -189,7 +189,7 @@ public class Cumber extends Boss {
                                     dame = _player.limitDame;
                                 }
                                 if (_player.isProtected()) {
-                                    if (dame >= _player.info.hp) {
+                                    if (dame >= _player.info.hpFull) {
                                         _player.setTimeForItemtime(0, 0);
                                         _player.service.sendThongBao("Khiên năng lượng đã vỡ");
                                     }

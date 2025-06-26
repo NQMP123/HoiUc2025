@@ -114,7 +114,7 @@ public class CallDragon1Star extends CallDragon {
 
             case CHANGE_SKILL_2:
                 if (_c.myDisciple != null) {
-                    if (_c.myDisciple.skillOpened < 3) {
+                    if (_c.myDisciple.skillOpened < 2) {
                         back("Không thể thực hiện, vui lòng chọn điều ước khác");
                         return;
                     }

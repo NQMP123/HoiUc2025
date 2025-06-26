@@ -488,7 +488,6 @@ public class MessageHandler implements IMessageHandler {
                         break;
                     case -99: {
                         int type = mss.reader().readByte();
-                        System.err.println("GameMSG : " + type);
                         if (type == 6) {
                             Boss.sendInfoBoss(_player);
                         }

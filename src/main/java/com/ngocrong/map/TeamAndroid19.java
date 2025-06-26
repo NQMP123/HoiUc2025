@@ -3,6 +3,7 @@ package com.ngocrong.map;
 import com.ngocrong.bot.Boss;
 import com.ngocrong.bot.boss.android.*;
 import com.ngocrong.consts.MapName;
+import com.ngocrong.user.Info;
 import com.ngocrong.util.Utils;
 
 public class TeamAndroid19 {
@@ -28,9 +29,12 @@ public class TeamAndroid19 {
         if (android20.isDead()) {
             android20.wakeUpFromDead();
         }
+        android19.info.recovery(Info.ALL, 100, true);
+        android19.info.recovery(Info.ALL, 100, true);
         useAirshipToArrive(android19, mapID, zoneID);
         useAirshipToArrive(android20, mapID, zoneID);
         android19.setTypePK((byte) 5);
+        android20.setTypePK((byte) 0);
     }
 
     public void next(Boss boss) {
@@ -45,7 +49,7 @@ public class TeamAndroid19 {
     }
 
     private void end() {
-        Utils.setTimeout(this::born, 600000L);
+        Utils.setTimeout(this::born, 3 * 60000L);
     }
 
     public void useAirshipToArrive(Boss boss, int mapID, int zoneID) {

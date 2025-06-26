@@ -50,6 +50,7 @@ public class SieuBoHung extends Boss {
         this.waitingTimeToLeave = 5000;
         setTypePK((byte) 5);
         point = 5;
+        canDispose = true;
     }
 
     @Override

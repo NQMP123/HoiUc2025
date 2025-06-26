@@ -3,15 +3,16 @@ package com.ngocrong.map;
 import com.ngocrong.bot.Boss;
 import com.ngocrong.bot.boss.android.*;
 import com.ngocrong.consts.MapName;
+import com.ngocrong.user.Info;
 import com.ngocrong.util.Utils;
 
 public class TeamAndroid16 {
 
-    private final Poc poc;
+    public final Poc poc;
 
-    private final Pic pic;
+    public final Pic pic;
 
-    private final KingKong kingKong;
+    public final KingKong kingKong;
 
     public TeamAndroid16() {
         poc = new Poc(this);
@@ -34,10 +35,16 @@ public class TeamAndroid16 {
         if (kingKong.isDead()) {
             kingKong.wakeUpFromDead();
         }
+        kingKong.info.recovery(Info.ALL, 100, true);
+        poc.info.recovery(Info.ALL, 100, true);
+        pic.info.recovery(Info.ALL, 100, true);
+
         useAirshipToArrive(poc, mapID, zoneID);
         useAirshipToArrive(pic, mapID, zoneID);
         useAirshipToArrive(kingKong, mapID, zoneID);
         poc.setTypePK((byte) 5);
+        pic.setTypePK((byte) 0);
+        kingKong.setTypePK((byte) 0);
     }
 
     public void next(Boss boss) {
@@ -57,7 +64,13 @@ public class TeamAndroid16 {
     }
 
     private void end() {
-        Utils.setTimeout(this::born, 600000L);
+        if (this.pic.zone != null) {
+            this.pic.zone.leave(pic);
+        }
+        if (this.poc.zone != null) {
+            this.poc.zone.leave(poc);
+        }
+        Utils.setTimeout(this::born, 3 * 60000L);
     }
 
     public void useAirshipToArrive(Boss boss, int mapID, int zoneID) {

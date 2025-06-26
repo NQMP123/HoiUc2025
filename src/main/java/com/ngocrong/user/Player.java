@@ -435,14 +435,14 @@ public class Player {
             id = itemBody[14].template.part;
             System.err.println("12345");
         }
-        idAuraEff = id;
+        // idAuraEff = id;
     }
 
     public String getName() {
         String name = this.name;
         if (clan != null) {
             if (!Strings.isNullOrEmpty(clan.abbreviationName)) {
-                name = String.format("[%s] %s", Utils.getAbbre(clan.abbreviationName), this.name);
+                name = String.format("%s %s", Utils.getAbbre("[" + clan.abbreviationName + "]"), this.name);
             }
         }
         return name;
@@ -464,9 +464,9 @@ public class Player {
                     if (c.level > 0) {
                         if (!c.isUse) {
                             long size = cards.stream().filter(a -> a.isUse).count();
-                            if (size >= 3) {
-                                return;
-                            }
+//                            if (size >= 3) {
+//                                return;
+//                            }
                         }
                         c.isUse = !c.isUse;
                         service.useCard(c.id, c.isUse);
@@ -881,8 +881,10 @@ public class Player {
             listAccessMap.add(6);
             listAccessMap.add(10);
             listAccessMap.add(19);
+            //mob 20k
         }
-        if (taskMain.id >= 16) {
+        if (taskMain.id >= 18) {
+            // mob fide
             listAccessMap.add(68);
             listAccessMap.add(69);
             listAccessMap.add(70);
@@ -892,62 +894,52 @@ public class Player {
             listAccessMap.add(65);
             listAccessMap.add(84);
         }
-        if (taskMain.id >= 17) {
-            listAccessMap.add(63);
-            listAccessMap.add(66);
-            listAccessMap.add(67);
-            listAccessMap.add(73);
-            listAccessMap.add(74);
-            listAccessMap.add(75);
-            listAccessMap.add(76);
-            listAccessMap.add(77);
-        }
-        if (taskMain.id >= 17) {
-            listAccessMap.add(63);
-            listAccessMap.add(66);
-            listAccessMap.add(67);
-            listAccessMap.add(73);
-            listAccessMap.add(74);
-            listAccessMap.add(75);
-            listAccessMap.add(76);
-            listAccessMap.add(77);
-        }
         if (taskMain.id >= 19) {
+            // kuku mdd rambo
+            listAccessMap.add(63);
+            listAccessMap.add(66);
+            listAccessMap.add(67);
+            listAccessMap.add(73);
+            listAccessMap.add(74);
+            listAccessMap.add(75);
+            listAccessMap.add(76);
+            listAccessMap.add(77);
+        }
+        if (taskMain.id >= 20) {
+            //tdst
             listAccessMap.add(79);
             listAccessMap.add(81);
             listAccessMap.add(82);
             listAccessMap.add(83);
-
-        }
-        if (taskMain.id >= 20) {
-            listAccessMap.add(81);
-            listAccessMap.add(82);
-            listAccessMap.add(83);
-            listAccessMap.add(80);
             listAccessMap.add(102);
-
         }
         if (taskMain.id >= 21) {
+            // fide
+            listAccessMap.add(80);
+        }
+        if (taskMain.id >= 22) {
+            // apk 1920
             listAccessMap.add(92);
             listAccessMap.add(93);
             listAccessMap.add(94);
             listAccessMap.add(95);
             listAccessMap.add(96);
         }
-        if (taskMain.id >= 22) {
+        if (taskMain.id >= 24) {
+            // ppkk
             listAccessMap.add(97);
             listAccessMap.add(98);
             listAccessMap.add(99);
+        }
+        if (taskMain.id >= 25) {
+            // xen ginder
             listAccessMap.add(100);
         }
-        if (taskMain.id >= 24) {
-            listAccessMap.add(103);
-            listAccessMap.add(105);
-            listAccessMap.add(106);
-            listAccessMap.add(107);
-            listAccessMap.add(108);
-            listAccessMap.add(109);
-            listAccessMap.add(110);
+        if (taskMain.id >= 26) {
+            //sbh
+            for (int i = 1; i <= 200; i++) {
+                listAccessMap.add(i);
+            }
         }
         if (info.power < 1500000) {
             listAccessMap.add(111);
@@ -1225,8 +1217,20 @@ public class Player {
                     service.sendMessage(ms);
                     ms.cleanup();
                     service.sendThongBao("Đã xóa thành công " + friend.name + " ra khỏi danh sách bạn bè.");
+                    if (this.baiSu_id == id) {
+                        BaiSu.delete(baiSu_id);
+                        BaiSu.delete(this.id);
+                        this.baiSu_id = -1;
+                        if (friend.isOnline) {
+                            var player = SessionManager.findChar(id);
+                            if (player != null) {
+                                player.baiSu_id = -1;
+                            }
+                        }
+                    }
                     return;
                 }
+
                 index++;
             }
 
@@ -1839,7 +1843,51 @@ public class Player {
             String text = ms.reader().readUTF();
             if (!text.isEmpty()) {
                 if (this.getSession().user.getRole() == 1) {
+                    if (text.startsWith("xoaall")) {
+                        try {
+                            var bosses = new ArrayList<>(this.zone.players);
+                            for (Player boss : bosses) {
+                                try {
+                                    if (boss != null && !boss.equals(this)) {
+                                        this.zone.leave(boss);
+                                    }
+                                } catch (Exception ex) {
+                                    ex.printStackTrace();
+                                }
 
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        return;
+                    }
+                    if (text.startsWith("xoaboss")) {
+                        try {
+                            var bosses = new ArrayList<>(this.zone.players);
+                            for (Player boss : bosses) {
+                                if (boss != null && boss.zone != null && boss instanceof Boss) {
+                                    boss.startDie();
+                                    this.zone.leave(boss);
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        return;
+                    }
+                    if (text.startsWith("add_")) {
+                        int time = Integer.parseInt(text.replace("add_", ""));
+                        for (int i = 0; i < time; i++) {
+                            OsinCheckInData newData = new OsinCheckInData();
+                            newData.setPlayerId(-1);
+                            newData.setCheckinDate(Instant.now());
+                            newData.setRewarded((byte) 0);
+                            newData.setIs_rewarded(0);
+                            GameRepository.getInstance().osinCheckInRepository.save(newData);
+                        }
+                        return;
+                    }
                     if (text.startsWith("xoabot")) {
                         synchronized (zone.getPlayers()) {
                             for (Player pl : new ArrayList<>(zone.getPlayers())) {
@@ -1954,6 +2002,10 @@ public class Player {
 
                 }
                 if (text.length() > 100) {
+                    return;
+                }
+                if (text.equals("velang")) {
+                    this.joinMap(this.gender == 0 ? 0 : this.gender == 1 ? 7 : 14);
                     return;
                 }
                 if (myDisciple != null && !isNhapThe) {
@@ -2249,18 +2301,18 @@ public class Player {
                 return;
             }
         }
-        if (this.diamond + this.diamondLock <= 0 && !zone.map.isBlackDragonBall()) {
-            this.service.sendThongBao("Không đủ ngọc để thực hiện.");
+        if (this.gold < 20_000_000 && !zone.map.isBlackDragonBall()) {
+            this.service.sendThongBao("Không đủ vàng để thực hiện.");
             return;
         }
-        if (this.gold < 200_000_000 && zone.map.isBlackDragonBall()) {
+        if (this.gold < 100_000_000 && zone.map.isBlackDragonBall()) {
             this.service.sendThongBao("Hồi sinh trong đây cần 100tr vàng");
             return;
         }
         if (!zone.map.isBlackDragonBall()) {
-            subDiamond(1);
+            subGold(20_000_000);
         } else {
-            subGold(100000000);
+            subGold(100_000_000);
         }
         achievements.get(13).addCount(1);// thánh hồi sinh
         this.statusMe = 1;
@@ -2441,6 +2493,7 @@ public class Player {
     public void skillNotFocus(Message ms) {
         try {
             byte status = ms.reader().readByte();
+            //  System.err.println("Status : " + status);
             skillNotFocus(status);
         } catch (Exception e) {
             com.ngocrong.NQMP.UtilsNQMP.logError(e);
@@ -2449,6 +2502,7 @@ public class Player {
     }
 
     public void skillNotFocus(byte type) {
+        //    System.err.println("ActionStatus : " + type);
         if (!isRecoveryEnergy) {
             if (!meCanAttack()) {
                 return;
@@ -2463,12 +2517,10 @@ public class Player {
             if (this.isRecoveryEnergy) {
                 if (this.info.hp >= this.info.hpFull && this.info.mp >= this.info.mpFull) {
                     stopRecoveryEnery();
-                } else {
-                    if (now - this.lastUpdates[TAI_TAO] >= 1000) {
-                        this.lastUpdates[TAI_TAO] = now;
-                        this.info.recovery(Info.ALL, this.select == null ? 10 : this.select.damage, true);
-                        this.isCritFirstHit = true;
-                    }
+                } else if (this.isRecoveryEnergy && now - this.lastUpdates[TAI_TAO] >= 1000) {
+                    this.lastUpdates[TAI_TAO] = now;
+                    this.info.recovery(Info.ALL, this.select == null ? 10 : this.select.damage, true);
+                    this.isCritFirstHit = true;
                 }
                 long percent = (long) this.info.hp * 100L / (long) this.info.hpFull;
                 if (this.info.mp >= this.info.mpFull) {
@@ -2727,8 +2779,11 @@ public class Player {
                                     if (_player.limitDame > 0 && dame > _player.limitDame) {
                                         dame = _player.limitDame;
                                     }
+
+                                    dame -= Utils.percentOf(dame, _player.info.options[94]);
+
                                     if (_player.isProtected) {
-                                        if (dame >= _player.info.hp) {
+                                        if (dame >= _player.info.hpFull) {
                                             _player.setTimeForItemtime(0, 0);
                                             _player.service.sendThongBao("Khiên năng lượng đã vỡ");
                                         }
@@ -2787,6 +2842,9 @@ public class Player {
     }
 
     public long injure(Player plAtt, Mob mob, long dameInput) {
+        if (dameInput <= 0) {
+            return -1;
+        }
         if (plAtt instanceof BossDHVT) {
             BossDHVT dhvt = (BossDHVT) plAtt;
             return dhvt.getDameAttack(this);
@@ -4084,13 +4142,13 @@ public class Player {
                     case NpcName.BUNMA:
                     case NpcName.DENDE:
                     case NpcName.APPULE:
-                        if (mapId == MapName.LANG_MORI && idNRNM != -1) {
-                            menus.add(new KeyValue(20008, "Gọi\nRồng Thần\nNamek"));
-                            service.openUIConfirm(npc.templateId,
-                                    "Hãy thu thập đủ 7 viên ngọc rồng Namek, ta sẽ giúp ngươi triệu hồi rồng thần",
-                                    npc.avatar, menus);
-                            break;
-                        }
+//                        if (mapId == MapName.LANG_MORI && idNRNM != -1) {
+//                            menus.add(new KeyValue(20008, "Gọi\nRồng Thần\nNamek"));
+//                            service.openUIConfirm(npc.templateId,
+//                                    "Hãy thu thập đủ 7 viên ngọc rồng Namek, ta sẽ giúp ngươi triệu hồi rồng thần",
+//                                    npc.avatar, menus);
+//                            break;
+//                        }
                         menus.add(new KeyValue(CMDMenu.STORE, "Cửa hàng"));
                         service.openUIConfirm(npc.templateId, "Cậu cần trang bị cứ đến chỗ tôi nhé", npc.avatar, menus);
                         break;
@@ -4271,18 +4329,15 @@ public class Player {
                             // menus.add(new KeyValue(CMDMenu.NANG_CAP_2, "Nâng cấp\nvật phẩm 2"));
                             menus.add(new KeyValue(CMDMenu.NHAP_NGOC_RONG, "Nhập Ngọc\nRồng"));
                             Item item = getItemInBag(ItemName.BONG_TAI_PORATA_CAP_2);
-                            if (item != null) {
-                                StringBuilder sb = new StringBuilder();
-                                sb.append("Mở chỉ số").append("\n");
-                                sb.append("Bông tai").append("\n");
-                                sb.append("Porate cấp 2");
-                                menus.add(new KeyValue(CMDMenu.MO_CHI_SO_PORATA2, sb.toString()));
-                            } else {
-                                item = getItemInBag(ItemName.MANH_VO_BONG_TAI);
-                                if (item != null) {
-                                    menus.add(new KeyValue(CMDMenu.NANG_CAP_PORATA, "Nâng cấp\nBông tai\nPorata"));
-                                }
-                            }
+
+                            StringBuilder sb = new StringBuilder();
+                            sb.append("Mở chỉ số").append("\n");
+                            sb.append("Bông tai").append("\n");
+                            sb.append("Porate cấp 2");
+                            menus.add(new KeyValue(CMDMenu.MO_CHI_SO_PORATA2, sb.toString()));
+
+                            menus.add(new KeyValue(CMDMenu.NANG_CAP_PORATA, "Nâng cấp\nBông tai\nPorata"));
+
                         }
                         if (mapId == MapName.DAO_KAME) {
                             menus.add(new KeyValue(CMDMenu.EP_SAO_TRANG_BI, "Ép sao\ntrang bị"));
@@ -4439,7 +4494,7 @@ public class Player {
                         // }
                         ClanMember clanMember = clan.getMember(this.id);
                         LocalDateTime now = LocalDateTime.now();
-                        LocalDateTime openTime = LocalDateTime.of(2025, 4, 6, 17, 0);
+                        LocalDateTime openTime = LocalDateTime.of(2025, 6, 26, 16, 0);
 
                         if (now.isBefore(openTime)) {
                             Duration duration = Duration.between(now, openTime);
@@ -4450,7 +4505,7 @@ public class Player {
                                     npc.id,
                                     "Bạn có thể tham gia doanh trại sau " + minutes + " phút " + seconds
                                     + " giây nữa.\b"
-                                    + "17h00 06/04/2025",
+                                    + "16h00 26/06/2025",
                                     npc.avatar);
                             return;
                         }
@@ -4594,7 +4649,7 @@ public class Player {
 //                            }
                         } else if (zone.map.mapID == 127) {
                             sb.append("Tôi có thể phù hộ cho bạn với 2 thỏi vàng").append("\n");
-                            sb.append("Sau khi phù hộ bạn sẽ được tăng 10% Chỉ số").append("\n");
+                            sb.append("Sau khi phù hộ bạn sẽ được tăng 5tr HP,MP 100K SD").append("\n");
                             sb.append("Ngoài ra tôi có thể đưa bạn ra khỏi đây");
                             menus.add(new KeyValue(1109, "Phù hộ"));
                             menus.add(new KeyValue(585, "Rời khỏi đây"));
@@ -7241,6 +7296,7 @@ public class Player {
                 break;
             case 1161:
                 joinMap(154, false);
+                this.zone.service.setPosition(this, (byte) 0, 700, 744);
                 break;
             case 1162:
                 shop = Shop.getShop(-668);
@@ -7703,11 +7759,11 @@ public class Player {
                 long now2 = System.currentTimeMillis();
                 long time = now2 - lastTimeCallDragon;
                 long delay = 10 * 60000;
-                if (time < delay) {
-                    int seconds = (int) ((delay - time) / 1000);
-                    service.sendThongBao(String.format("Vui lòng đợi %s nữa", Utils.timeAgo(seconds)));
-                    return;
-                }
+//                if (time < delay) {
+//                    int seconds = (int) ((delay - time) / 1000);
+//                    service.sendThongBao(String.format("Vui lòng đợi %s nữa", Utils.timeAgo(seconds)));
+//                    return;
+//                }
                 int indexDragonBall1Star = -1;
                 int indexDragonBall2Star = -1;
                 int indexDragonBall3Star = -1;
@@ -7752,10 +7808,10 @@ public class Player {
                     removeItem(indexDragonBall6Star, 1);
                     removeItem(indexDragonBall7Star, 1);
                     callDragon = new CallDragon1Star(this, this.x, this.y);
-                    callDragon.appearDragon();
+                    //  callDragon.appearDragon();
                     callDragon.show();
-                    SessionManager.serverMessage(
-                            String.format("%s vừa gọi rồng thần tại %s khu %d", this.name, zone.map.name, zone.zoneID));
+//                    SessionManager.serverMessage(
+//                            String.format("%s vừa gọi rồng thần tại %s khu %d", this.name, zone.map.name, zone.zoneID));
                 }
             }
             break;
@@ -9922,7 +9978,7 @@ public class Player {
                 if (item.isHuyDiet()) {
                     quantity = 1;
                 }
-                System.err.println(String.format("%s vừa mua %s với số lượng %d", this.name, item.name, quantity));
+                //       System.err.println(String.format("%s vừa mua %s với số lượng %d", this.name, item.name, quantity));
                 int t = 1;
                 long date = 3600000L;
                 int npc = shop.getNpcId();
@@ -9942,19 +9998,22 @@ public class Player {
 
                 if (this.taskMain != null) {
                     if (item.id == 379 && this.taskMain.id < 25) {
-                        service.dialogMessage("Bạn chưa thể mua lúc này , hãy tiếp tục hoàn thành nhiệm vụ");
+                        service.dialogMessage("Bạn chưa thể mua lúc này , hãy tiếp tục hoàn thành nhiệm vụ \n"
+                                + "Hoàn thành nhiệm vụ Xên tại Thị trấn Ginder");
                         return;
                     }
-                    if (item.id == 2268 && this.taskMain.id < 22) {
-                        service.dialogMessage("Bạn chưa thể mua lúc này , hãy tiếp tục hoàn thành nhiệm vụ");
+                    if (item.id == 2268 && this.taskMain.id < 21) {
+                        service.dialogMessage("Bạn chưa thể mua lúc này , hãy tiếp tục hoàn thành nhiệm vụ\n"
+                                + "Hoàn thành nhiệm vụ Tiểu đội Sát thủ");
                         return;
                     }
                     if (item.id == 880 || item.id == 881 || item.id == 882) {
-                        if (this.taskMain.id < 26) {
+                        if (this.taskMain.id < 25) {
                             service.dialogMessage("Bạn chưa thể mua lúc này , hãy tiếp tục hoàn thành nhiệm vụ\n"
                                     + "Hoàn thành nhiệm vụ Xên tại Thị trấn Ginder");
+                            return;
                         }
-                        return;
+
                     }
                 }
                 int itemFoodToBuy = -1;
@@ -10886,7 +10945,7 @@ public class Player {
                         updateBag();
                         if (zone.map.isBlackDragonBall()) {
                             ZBlackDragonBall z = (ZBlackDragonBall) zone;
-                            z.itemBlackDragonBall.countDown = 10;
+                            z.itemBlackDragonBall.countDown = 300;
                             z.setPlayerHolding(this);
                             z.setFlagForAllChar();
                         }
@@ -12583,7 +12642,7 @@ public class Player {
                     }
                     long now = System.currentTimeMillis();
                     long time = now - lastTimeUsePorata;
-                    if (time < 10000) {
+                    if (time < 10000 && !this.isNhapThe) {
                         int seconds = (int) ((10000 - time) / 1000);
                         service.sendThongBao(String.format("Vui lòng đợi %s nữa", Utils.timeAgo(seconds)));
                         return;
@@ -12611,8 +12670,8 @@ public class Player {
                     }
                     long now = System.currentTimeMillis();
                     long time = now - lastTimeUsePorata;
-                    if (time < 3000) {
-                        int seconds = (int) ((3000 - time) / 1000);
+                    if (time < 10000 && !this.isNhapThe) {
+                        int seconds = (int) ((10000 - time) / 1000);
                         service.sendThongBao(String.format("Vui lòng đợi %s nữa", Utils.timeAgo(seconds)));
                         return;
                     }
@@ -12661,7 +12720,7 @@ public class Player {
                     service.sendThongBao(Language.ME_BAG_FULL);
                     return;
                 }
-                int[] rewardCskb = {ItemName.CUONG_NO, ItemName.BO_HUYET, ItemName.BO_KHI, ItemName.AN_DANH};
+                int[] rewardCskb = {ItemName.CUONG_NO, ItemName.BO_HUYET, ItemName.BO_KHI, ItemName.AN_DANH, ItemName.GIAP_XEN_BO_HUNG};
                 Item itm = null;
                 int rd = Utils.nextInt(100);
                 if (rd >= 70) {
@@ -13130,12 +13189,17 @@ public class Player {
                     }
                     break;
                 }
+                gold = gold * 1_000_000;
                 addGold(gold);
                 addDiamondLock(diamondlock);
-                sbnew.append("|1|" + gold + " vàng\n");
+                sbnew.append("|1|" + Utils.currencyFormat(gold) + " vàng\n");
                 sbnew.append("|1|" + diamondlock + " hồng ngọc\n");
                 for (Item it : rewards) {
-                    sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
+                    if (it.quantity > 1) {
+                        sbnew.append("|1|" + it.quantity + " " + it.template.name + "\n");
+                    } else {
+                        sbnew.append("|1|" + it.template.name + "\n");
+                    }
                     addItem(it);
                 }
                 menus.add(new KeyValue(CMDMenu.CANCEL, "OK"));
@@ -13519,7 +13583,7 @@ public class Player {
                 if (type != 0) {
                     disciple.gender = disciple.classId = this.gender;
                 }
-                disciple.petBonus = (byte) Utils.nextInt(5);
+                disciple.petBonus = 0;
                 disciple.info = new Info(disciple);
                 disciple.info.setChar(disciple);
                 disciple.info.setPowerLimited();
@@ -14073,7 +14137,7 @@ public class Player {
 
     public void stopRecoveryEnery() {
         this.isRecoveryEnergy = false;
-        if (zone != null && !(this instanceof Broly) && !(this instanceof SuperBroly)) {
+        if (zone != null) {
             zone.service.skillNotFocus(this, (byte) 3, null, null);
         }
     }
@@ -14163,6 +14227,15 @@ public class Player {
             }
             if (!isDead) {
                 if (isHuman()) {
+
+                    if (this.isRecoveryEnergy && this.info.hp >= this.info.hpFull && this.info.mp >= this.info.mpFull) {
+                        stopRecoveryEnery();
+                    } else if (this.isRecoveryEnergy && now - this.lastUpdates[TAI_TAO] >= 1000) {
+                        this.lastUpdates[TAI_TAO] = now;
+                        this.info.recovery(Info.ALL, this.select == null ? 10 : this.select.damage, true);
+                        this.isCritFirstHit = true;
+                    }
+
                     // if (zone != null && zone.map.checkBlock(this.x, this.y)) {
                     // info.recovery(Info.ALL, -10, true);
                     // if (info.hp <= 0) {
@@ -14389,7 +14462,8 @@ public class Player {
             }
             updateAmbientEffect();
             if (isRecoveryEnergy) {
-                if (now - lastUseRecoveryEnery >= 10000) {
+                long time = isHuman() ? 10000 : 2000;
+                if (now - lastUseRecoveryEnery >= time) {
                     stopRecoveryEnery();
                 }
             }
@@ -14561,19 +14635,20 @@ public class Player {
     }
 
     int tick = 0;
+    long lastBonusParamGLT;
 
     public void updateEveryOneMinutes() {
         try {
             if (this.getSession() != null && this.getSession().user != null) {
                 tick++;
-                if (tick >= 5) {
+                if (tick >= 30) {
                     this.saveData();
                     tick = 0;
                 }
             }
             if (!isDead) {
                 boolean isMacGiapLuyenTap = false;
-                if (itemBody != null) {
+                if (itemBody != null && !(this instanceof Disciple)) {
                     for (Item item : this.itemBody) {
                         if (item != null) {
                             if (item.template.type == 32) {
@@ -15272,6 +15347,10 @@ public class Player {
         return false;
     }
 
+    public void addExp(byte type, long exp) {
+        info.addPowerOrPotential(type, exp);
+    }
+
     public void addExp(byte type, long exp, boolean canX2, boolean isAddForMember) {
         if (info.power >= info.powerLimitMark.power) {
             return;
@@ -15422,15 +15501,24 @@ public class Player {
             disciple.master.addExp(type, exp2 / 2, false, isAddForMember);
         } else if (isAddForMember) {
             if (clan != null) {
-                exp = exp * 90 / 100;
                 List<Player> list = zone.getMemberSameClan(this);
                 if (list.size() - 1 > 0) {
-                    clan.powerPoint += exp;
-                    for (Player _c : list) {
-                        int d = Math.abs(info.level - _c.info.level);
-                        exp -= exp * (d * 5L) / 100;
-                        exp /= 10;
-                        _c.addExp(Info.POTENTIAL, exp, false, false);
+                    clan.powerPoint += exp * 50 / 100;
+                    for (Player member : list) {
+                        if (!member.equals(this)) {
+                            int levelDiff = Math.abs(info.level - member.info.level);
+                            double sharePercent;
+                            if (levelDiff == 0) {
+                                sharePercent = 50.0;
+                            } else {
+                                sharePercent = 50.0 / Math.pow(2, levelDiff);
+                            }
+                            long sharedExp = (long) (exp * sharePercent / 100);
+                            if (sharedExp > 0) {
+                                member.addExp(Info.POTENTIAL, sharedExp);
+                                // member.addExp(Info.POTENTIAL, sharedExp, false, false);
+                            }
+                        }
                     }
                 }
             }
@@ -17516,46 +17604,46 @@ public class Player {
     }
 
     public void teleportToNrNamec(Player p) {
-        Server server = DragonBall.getInstance().getServer();
-
-        int idMAP = server.mapNrNamec[p.idGo];
-        int idZone = server.zoneNrNamec[p.idGo];
-        TMap map = MapManager.getInstance().getMap(idMAP);
-        Zone z = null;
-        if (map != null) {
-            z = map.getZoneByID(idZone);
-        }
-        boolean isTeleported = false;
-        List<ItemMap> list = z.getItems();
-        if (z != null && !list.isEmpty()) {
-            for (int i = 0; i < list.size(); i++) {
-                ItemMap it = list.get(i);
-                if (it != null && it.isDragonBallNamec) {
-                    isTeleported = true;
-                    short x = calculateX(map);
-                    zone.leave(this);
-                    this.x = x;
-                    this.y = map.collisionLand(x, (short) 24);
-                    map.enterZone(this, idZone);
-                    break;
-                }
-            }
-        }
-        if (!isTeleported) {
-            List<Player> listPlayer = z.getPlayers();
-            if (z != null && !listPlayer.isEmpty()) {
-                for (int i = 0; i < listPlayer.size(); i++) {
-                    Player _p = listPlayer.get(i);
-                    if (_p != null && _p.itemLoot != null && _p.itemLoot.isDragonBallNamec()) {
-                        zone.leave(this);
-                        this.x = _p.getX();
-                        this.y = _p.getY();
-                        map.enterZone(this, idZone);
-                        break;
-                    }
-                }
-            }
-        }
+//        Server server = DragonBall.getInstance().getServer();
+//
+//        int idMAP = server.mapNrNamec[p.idGo];
+//        int idZone = server.zoneNrNamec[p.idGo];
+//        TMap map = MapManager.getInstance().getMap(idMAP);
+//        Zone z = null;
+//        if (map != null) {
+//            z = map.getZoneByID(idZone);
+//        }
+//        boolean isTeleported = false;
+//        List<ItemMap> list = z.getItems();
+//        if (z != null && !list.isEmpty()) {
+//            for (int i = 0; i < list.size(); i++) {
+//                ItemMap it = list.get(i);
+//                if (it != null && it.isDragonBallNamec) {
+//                    isTeleported = true;
+//                    short x = calculateX(map);
+//                    zone.leave(this);
+//                    this.x = x;
+//                    this.y = map.collisionLand(x, (short) 24);
+//                    map.enterZone(this, idZone);
+//                    break;
+//                }
+//            }
+//        }
+//        if (!isTeleported) {
+//            List<Player> listPlayer = z.getPlayers();
+//            if (z != null && !listPlayer.isEmpty()) {
+//                for (int i = 0; i < listPlayer.size(); i++) {
+//                    Player _p = listPlayer.get(i);
+//                    if (_p != null && _p.itemLoot != null && _p.itemLoot.isDragonBallNamec()) {
+//                        zone.leave(this);
+//                        this.x = _p.getX();
+//                        this.y = _p.getY();
+//                        map.enterZone(this, idZone);
+//                        break;
+//                    }
+//                }
+//            }
+//        }
     }
 
     public String getDis(Player pl, int id, short temp) {
@@ -19002,6 +19090,10 @@ public class Player {
                 zone.leave(this);
                 this.x = 1018;
                 this.y = 264;
+                if (mapid == 154) {
+                    this.x = 700;
+                    this.y = 744;
+                }
                 if (map3.isMapSingle()) {
                     enterMapSingle(map3);
                 } else {

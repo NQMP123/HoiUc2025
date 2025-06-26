@@ -171,6 +171,24 @@ public class Item {
         }
     }
 
+    public void addRandomOptionMabu(int random) {
+        // Tăng thông số của tất cả option hiện có lên 0-15%
+        if (!this.options.isEmpty()) {
+            for (ItemOption io : this.options) {
+                io.param += (io.param * (Utils.nextInt(0, 15)) / 100);
+            }
+        }
+        if (random < 200) {          // 200/1000 = 20% cho giá trị 1-4
+            this.options.add(new ItemOption(107, Utils.nextInt(1, 4)));
+        } else if (random < 220) {   // 20/1000 = 2% cho giá trị 5
+            this.options.add(new ItemOption(107, 5));
+        } else if (random < 225) {   // 5/1000 = 0.5% cho giá trị 6
+            this.options.add(new ItemOption(107, 6));
+        } else if (random < 226) {   // 1/1000 = 0.1% cho giá trị 7
+            this.options.add(new ItemOption(107, 7));
+        }
+    }
+
     public static final int NAPPA = 135;
     public static final int CADIC = 134;
     public static final int KAKAROT = 133;
@@ -599,8 +617,7 @@ public class Item {
             // da bao ve
             return true;
         }
-        
-        
+
         if (template.type < 5 && (template.level == 13 || template.level == 14)) {
             return true;
         }

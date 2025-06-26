@@ -226,29 +226,38 @@ public class Rms
 
     private static void __saveRMS(string filename, sbyte[] data)
     {
-        filename = StringToHex(filename).ToLower();
-        string text = GetiPhoneDocumentsPath() + "/" + filename;
-        FileStream fileStream = new FileStream(text, FileMode.Create);
-        fileStream.Write(ArrayCast.cast(data), 0, data.Length);
-        fileStream.Flush();
-        fileStream.Close();
-        Main.setBackupIcloud(text);
+        try
+        {
+            filename = StringToHex(filename);
+            string text = GetiPhoneDocumentsPath() + "/" + filename;
+            FileStream fileStream = new FileStream(text, FileMode.Create);
+            fileStream.Write(ArrayCast.cast(data), 0, data.Length);
+            fileStream.Flush();
+            fileStream.Close();
+            Main.setBackupIcloud(text);
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+        }
     }
 
     private static sbyte[] __loadRMS(string filename)
     {
+        var filenamehex = filename;
         try
         {
-            filename = StringToHex(filename).ToLower();
-            FileStream fileStream = new FileStream(GetiPhoneDocumentsPath() + "/" + filename, FileMode.Open);
+            filenamehex = StringToHex(filename);
+            FileStream fileStream = new FileStream(GetiPhoneDocumentsPath() + "/" + filenamehex, FileMode.Open);
             byte[] array = new byte[fileStream.Length];
             fileStream.Read(array, 0, array.Length);
             fileStream.Close();
-            sbyte[] array2 = ArrayCast.cast(array);
             return ArrayCast.cast(array);
         }
-        catch (Exception)
+        catch (Exception e)
         {
+            //Debug.LogError("error load rms: " + filename + " - " + filenamehex);
+            //Debug.LogError(e.ToString());
             return null;
         }
     }

@@ -5,7 +5,9 @@
 package com.ngocrong.bot.boss.dhvt23;
 
 import com.ngocrong.bot.Boss;
+import com.ngocrong.mob.Mob;
 import com.ngocrong.user.Player;
+import com.ngocrong.util.Utils;
 
 /**
  *
@@ -18,7 +20,7 @@ public class BossDHVT extends Boss {
         info.percentMiss = 20;
         this.isShow = false;
     }
-
+    public int percentDef = 0;
     public Player plAtt = null;
     public boolean canAttack;
 
@@ -42,11 +44,19 @@ public class BossDHVT extends Boss {
         }
     }
 
+    @Override
+    public long injure(Player plAtt, Mob mob, long dameInput) {
+        if (dameInput <= 0) {
+            return -1;
+        }
+        dameInput -= Utils.percentOf(dameInput, percentDef);
+        return dameInput;
+    }
+
     public long getDameAttack(Player target) {
         long dame = this.info.originalDamage;
         long dame2 = (target.info.hpFull * percentDame) / 100;
-        if(target.isProtected())
-        {
+        if (target.isProtected()) {
             return -1;
         }
         return Math.max(dame, dame2);

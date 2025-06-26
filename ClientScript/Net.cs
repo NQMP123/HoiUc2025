@@ -22,7 +22,6 @@ public class NETHTTPClient : MonoBehaviour
                 string content = request.downloadHandler.text;
                 finishRespone = content;
                 connect();
-                Debug.Log("Content: " + content);
             }
             else
             {

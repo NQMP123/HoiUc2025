@@ -184,42 +184,73 @@ public class Session_ME2 : ISession
         {
             try
             {
-                int num = readKey(dis.ReadSByte()) + 128;
-                int num2 = readKey(dis.ReadSByte()) + 128;
-                int num3 = readKey(dis.ReadSByte()) + 128;
-                int num4 = (num3 * 256 + num2) * 256 + num;
-                Cout.LogError("SIZE = " + num4);
+                // Kiểm tra kết nối trước khi đọc
+                if (dis == null || !dis.BaseStream.CanRead || !connected)
+                {
+                    Debug.Log("Connection is not available for reading");
+                    return null;
+                }
 
-                //if (num4 <= 0 || num4 > 1000000) // Kiểm tra kích thước hợp lý
-                //{
-                //    Debug.LogError("Invalid message size in readMessage2: " + num4);
-                //    return null;
-                //}
+                int numBits = 28;
+                int size = 0;
+
+                // Đọc kích thước (3 byte) với timeout
+                for (int i = 0; i < numBits; i += 8)
+                {
+                    try
+                    {
+                        int bitsToRead = Math.Min(8, numBits - i);
+                        int value = readKey(dis.ReadSByte()) + 128;
+                        size |= (value & ((1 << bitsToRead) - 1)) << i;
+                    }
+                    catch (IOException ex)
+                    {
+                        Debug.LogError("Error reading message size: " + ex.Message);
+                        return null;
+                    }
+                }
 
                 // Sử dụng ArrayPool để tránh GC
-                sbyte[] array = ArrayPool<sbyte>.Shared.Rent(num4);
-
+                sbyte[] pooledArray = ArrayPool<sbyte>.Shared.Rent(size);
                 try
                 {
-                    // Đọc dữ liệu vào array
-                    byte[] src = dis.ReadBytes(num4);
-                    Buffer.BlockCopy(src, 0, array, 0, num4);
+                    // Đọc nội dung message với timeout
+                    byte[] src;
+                    try
+                    {
+                        src = dis.ReadBytes(size);
+                    }
+                    catch (IOException ex)
+                    {
+                        Debug.LogError("Error reading message content: " + ex.Message);
+                        ArrayPool<sbyte>.Shared.Return(pooledArray);
+                        return null;
+                    }
 
-                    recvByteCount += 5 + num4;
-                    int num6 = recvByteCount + sendByteCount;
-                    strRecvByteCount = num6 / 1024 + "." + num6 % 1024 / 102 + "Kb";
+                    if (src == null || src.Length != size)
+                    {
+                        Debug.LogError("Invalid message content length");
+                        ArrayPool<sbyte>.Shared.Return(pooledArray);
+                        return null;
+                    }
+
+                    Buffer.BlockCopy(src, 0, pooledArray, 0, size);
 
                     if (getKeyComplete)
                     {
-                        for (int i = 0; i < num4; i++)
+                        // Giải mã từng byte
+                        for (int i = 0; i < size; i++)
                         {
-                            array[i] = readKey(array[i]);
+                            pooledArray[i] = readKey(pooledArray[i]);
                         }
                     }
 
-                    byte[] raw = new byte[num4];
-                    Buffer.BlockCopy(array, 0, raw, 0, num4);
+                    recvByteCount += (numBits / 8) + 2 + size;
+                    int num6 = recvByteCount + sendByteCount;
+                    strRecvByteCount = num6 / 1024 + "." + num6 % 1024 / 102 + "Kb";
                     sbyte[] decoded;
+                    byte[] raw = new byte[size];
+                    Buffer.BlockCopy(pooledArray, 0, raw, 0, size);
                     try
                     {
                         string str = Encoding.ASCII.GetString(raw);
@@ -229,16 +260,24 @@ public class Session_ME2 : ISession
                     }
                     catch (Exception)
                     {
-                        decoded = array;
+                        // Nếu decode base64 thất bại, giữ nguyên data
+                        decoded = new sbyte[size];
+                        Buffer.BlockCopy(pooledArray, 0, decoded, 0, size);
                     }
 
-                    // Sử dụng constructor 3 tham số
-                    return new Message(cmd, decoded, decoded.Length);
+
+                    // Trả lại pooledArray vào pool
+                    ArrayPool<sbyte>.Shared.Return(pooledArray);
+
+                    // Tạo message mới với decoded data
+                    Message result = new Message(cmd, decoded, decoded.Length);
+                    return result;
                 }
                 catch (Exception ex)
                 {
-                    ArrayPool<sbyte>.Shared.Return(array);
-                    Debug.LogError("Exception in readMessage2 data processing: " + ex.ToString());
+                    // Trả lại array vào pool nếu có lỗi
+                    ArrayPool<sbyte>.Shared.Return(pooledArray);
+                    Debug.LogError("Error processing message2: " + ex.ToString());
                     return null;
                 }
             }
@@ -265,7 +304,7 @@ public class Session_ME2 : ISession
                     b = readKey(b);
                 }
 
-                if (b == -32 || b == -66 || b == 11 || b == -67 || b == -74 || b == -87)
+                if (b == -32 || b == -66 || b == 11 || b == -67 || b == -74|| b == -87)
                 {
                     return readMessage2(b);
                 }
@@ -284,21 +323,12 @@ public class Session_ME2 : ISession
                     num = (b4 & 0xFF) << 8 | (b5 & 0xFF);
                 }
 
-                //if (num < 0 || num > 1000000) // Kiểm tra kích thước hợp lý
-                //{
-                //    Debug.LogError("Invalid message size in readMessage: " + num);
-                //    return null;
-                //}
-
-                // Sử dụng ArrayPool để tránh GC
                 sbyte[] array = ArrayPool<sbyte>.Shared.Rent(num);
 
                 try
                 {
-                    // Đọc dữ liệu vào array
                     byte[] src = dis.ReadBytes(num);
                     Buffer.BlockCopy(src, 0, array, 0, num);
-
                     recvByteCount += 5 + num;
                     int num4 = recvByteCount + sendByteCount;
                     strRecvByteCount = num4 / 1024 + "." + num4 % 1024 / 102 + "Kb";
@@ -310,7 +340,6 @@ public class Session_ME2 : ISession
                             array[i] = readKey(array[i]);
                         }
                     }
-
                     byte[] raw = new byte[num];
                     Buffer.BlockCopy(array, 0, raw, 0, num);
                     sbyte[] decoded;
@@ -325,8 +354,6 @@ public class Session_ME2 : ISession
                     {
                         decoded = array;
                     }
-
-                    // Sử dụng constructor 3 tham số
                     return new Message(b, decoded, decoded.Length);
                 }
                 catch (Exception ex)
@@ -691,21 +718,20 @@ public class Session_ME2 : ISession
 
     public static void update()
     {
-        int processLimit = 10; // Giới hạn số lượng message xử lý mỗi frame
+        int processLimit = 20; // Giới hạn số lượng message xử lý mỗi frame
         int processCount = 0;
 
         while (processCount < processLimit)
         {
             Message message = null;
 
-            lock (recieveMsgLock)
-            {
+           
                 if (recieveMsg.size() > 0)
                 {
                     message = (Message)recieveMsg.elementAt(0);
                     recieveMsg.removeElementAt(0);
                 }
-            }
+            
 
             if (message == null)
             {

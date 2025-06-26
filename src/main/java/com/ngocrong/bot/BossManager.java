@@ -43,8 +43,8 @@ public class BossManager {
         bossGinyu();
         bossGalaxySoldier();
 
-        bossHaiTac();
-        bossTayDu();
+//        bossHaiTac();
+//        bossTayDu();
         bossFide();
         bossKuKu();
         bossMapDauDinh();
@@ -58,7 +58,7 @@ public class BossManager {
         bossSuperBroly();
         bossTestServer();
         bossRaiti();
-        NuThan();
+        //   NuThan();
         bossChilled();
 //        bossTet2();
 //        bossCumber();
@@ -140,12 +140,11 @@ public class BossManager {
     }
 
     public static void bossXenCon() {
+        int[] mapId = new int[]{92, 93, 94, 96, 97, 98, 99, 100, 102, 103};
         for (int i = 0; i < 7; i++) {
-            Utils.setTimeout(() -> {
-                int[] mapId = new int[]{92,93,94,96,97,98,99,100,102,103};
-                XenCon xc = new XenCon();
-                xc.setLocation(mapId[Utils.nextInt(mapId.length)], -1);
-            }, 5000);
+            var index = i;
+            XenCon xc = new XenCon(index);
+            xc.setLocation(mapId[Utils.nextInt(mapId.length)], -1);
         }
     }
 
@@ -195,7 +194,7 @@ public class BossManager {
 //    }
     public static void bossBlackGoku() {
         for (int i = 0; i < 3; i++) {
-            int[] mapIDs = new int[]{92, 93, 94, 96, 97, 98, 99, 101, 102, 103};
+            int[] mapIDs = new int[]{92, 93, 94, 96, 97, 98, 99, 100, 102, 103};
             Utils.setTimeout(() -> {
                 BlackGoku bl = new BlackGoku(false);
                 bl.setLocation(mapIDs[Utils.nextInt(mapIDs.length)], -1);
@@ -299,10 +298,6 @@ public class BossManager {
                 Broly broly = new Broly();
                 broly.joinMap();
             }
-//            for (int i = 0; i < 2; i++) {
-//                SuperMabu supermabu = new SuperMabu();
-//                supermabu.setLocation(mapIDs[Utils.nextInt(mapIDs.length)], -1);
-//            }
         }, 5000);
 
     }

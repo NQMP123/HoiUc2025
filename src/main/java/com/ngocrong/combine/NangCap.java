@@ -228,7 +228,7 @@ public class NangCap extends Combine {
             if (items[2] != null) {
                 player.removeItem(items[2].indexUI, 1);
             }
-            System.err.println("percent :" + percent);
+     //       System.err.println("percent :" + percent);
             if (Utils.isTrue(percent, 100.0)) {
                 if (itemOption2 == null) {
                     itemOption2 = new ItemOption(72, 0);

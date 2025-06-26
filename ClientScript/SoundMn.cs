@@ -233,30 +233,34 @@ public class SoundMn
 
     public void getStrOption()
     {
-        string text = "[x]   ";
-        string text2 = "[  ]   ";
-        if (Main.isPC)
+        try
         {
+            string text = "[x]   ";
+            string text2 = "[  ]   ";
+            if (Main.isPC)
+            {
+                Panel.strCauhinh = new string[]
+                {
+                    (!Char.isPaintAura) ? (text2 + mResources.aura_off.Trim()) : (text + mResources.aura_off.Trim()),
+                    (!Char.isPaintAura2) ? (text2 + mResources.aura_off_2.Trim()) : (text + mResources.aura_off_2.Trim()),
+                    (!GameCanvas.isPlaySound) ? (text2 + mResources.turnOffSound.Trim()) : (text + mResources.turnOffSound.Trim()),
+                     ((!GameCanvas.lowGraphic) ? ("Chuyển sang cấu hình thấp") : ("Chuyển sang cấu hình cao"))
+                };
+                return;
+            }
             Panel.strCauhinh = new string[]
             {
                 (!Char.isPaintAura) ? (text2 + mResources.aura_off.Trim()) : (text + mResources.aura_off.Trim()),
                 (!Char.isPaintAura2) ? (text2 + mResources.aura_off_2.Trim()) : (text + mResources.aura_off_2.Trim()),
-                (!GameCanvas.isPlaySound) ? (text2 + mResources.turnOffSound.Trim()) : (text + mResources.turnOffSound.Trim())
+                (!GameCanvas.isPlaySound) ? (text2 + mResources.turnOffSound.Trim()) : (text + mResources.turnOffSound.Trim()),
+                ((!GameCanvas.lowGraphic) ? ("Chuyển sang cấu hình thấp") : ("Chuyển sang cấu hình cao")),
+                ((GameScr.isAnalog != 0) ? (text + mResources.turnOffAnalog) : (text2 + mResources.turnOnAnalog))
             };
-            return;
         }
-        string text3 = ((GameScr.isAnalog != 0) ? (text + mResources.turnOffAnalog) : (text2 + mResources.turnOnAnalog));
-        if (!GameCanvas.isTouch)
+        catch (Exception e)
         {
-            text3 = (GameScr.isPaintChatVip ? (text + mResources.serverchat_off) : (text2 + mResources.serverchat_off));
+            UnityEngine.Debug.LogException(e);
         }
-        Panel.strCauhinh = new string[]
-        {
-            (!Char.isPaintAura) ? (text2 + mResources.aura_off.Trim()) : (text + mResources.aura_off.Trim()),
-            (!Char.isPaintAura2) ? (text2 + mResources.aura_off_2.Trim()) : (text + mResources.aura_off_2.Trim()),
-            (!GameCanvas.isPlaySound) ? (text2 + mResources.turnOffSound.Trim()) : (text + mResources.turnOffSound.Trim()),
-            text3
-        };
     }
 
     public void HP_MPup()

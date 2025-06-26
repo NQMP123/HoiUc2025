@@ -1,7 +1,9 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 public class Main : MonoBehaviour
 {
@@ -103,6 +105,7 @@ public class Main : MonoBehaviour
         {
             isPC = true;
         }
+        //isPC = false;
         started = true;
         UnityEngine.Time.timeScale = 2f;
         Application.targetFrameRate = 60;
@@ -150,6 +153,7 @@ public class Main : MonoBehaviour
             checkInput();
             Session_ME.update();
             Session_ME2.update();
+            VoiceSession.gI().update();
             if (Event.current.type.Equals(EventType.Repaint))
             {
                 GameMidlet.gameCanvas.paint(g);
@@ -249,39 +253,93 @@ public class Main : MonoBehaviour
 
     void FixedUpdate()
     {
+        // Debug FixedUpdate performance chi tiết
+        performanceTimer.Restart();
+        //DebugManager.gI().AddDebugString("FIXED_UPDATE", "=== FixedUpdate START ===");
+
+        // Debug Rms.update()
+        var rmsTimer = Stopwatch.StartNew();
         Rms.update();
+        rmsTimer.Stop();
+        //DebugManager.gI().AddDebugString("FIXED_UPDATE", $"Rms.update() took: {rmsTimer.ElapsedMilliseconds}ms");
+
         count++;
+        //DebugManager.gI().AddDebugString("FIXED_UPDATE", $"Count incremented to: {count}");
+
         if (count >= 10)
         {
+            //DebugManager.gI().AddDebugString("FIXED_UPDATE", "Count >= 10, executing main logic");
+
             if (up == 0)
             {
                 timeup = mSystem.currentTimeMillis();
+                //DebugManager.gI().AddDebugString("FIXED_UPDATE", "Initializing timeup");
             }
             else if (mSystem.currentTimeMillis() - timeup > 1000)
             {
                 upmax = up;
                 up = 0;
                 timeup = mSystem.currentTimeMillis();
+                //DebugManager.gI().AddDebugString("FIXED_UPDATE", $"FixedUpdate rate: {upmax}/sec");
             }
             up++;
+
+            // Debug setsizeChange()
+            var setsizeTimer = Stopwatch.StartNew();
             setsizeChange();
+            setsizeTimer.Stop();
+            //DebugManager.gI().AddDebugString("FIXED_UPDATE", $"setsizeChange() took: {setsizeTimer.ElapsedMilliseconds}ms");
+
             updateCount++;
+            //DebugManager.gI().AddDebugString("FIXED_UPDATE", $"UpdateCount: {updateCount}");
+
+            // Debug ipKeyboard.update()
+            var keyboardTimer = Stopwatch.StartNew();
             ipKeyboard.update();
+            keyboardTimer.Stop();
+            //DebugManager.gI().AddDebugString("FIXED_UPDATE", $"ipKeyboard.update() took: {keyboardTimer.ElapsedMilliseconds}ms");
+
+            // Debug GameMidlet.gameCanvas.update()
+            var gameCanvasTimer = Stopwatch.StartNew();
             GameMidlet.gameCanvas.update();
+            gameCanvasTimer.Stop();
+            //DebugManager.gI().AddDebugString("FIXED_UPDATE", $"GameMidlet.gameCanvas.update() took: {gameCanvasTimer.ElapsedMilliseconds}ms");
+
+            // Debug Image.update()
+            var imageTimer = Stopwatch.StartNew();
             Image.update();
+            imageTimer.Stop();
+            //DebugManager.gI().AddDebugString("FIXED_UPDATE", $"Image.update() took: {imageTimer.ElapsedMilliseconds}ms");
+
+            // Debug DataInputStream.update()
+            var dataStreamTimer = Stopwatch.StartNew();
             DataInputStream.update();
+            dataStreamTimer.Stop();
+            //DebugManager.gI().AddDebugString("FIXED_UPDATE", $"DataInputStream.update() took: {dataStreamTimer.ElapsedMilliseconds}ms");
+
             f++;
             if (f > 8)
             {
                 f = 0;
             }
-            if (!isPC)
-            {
-                int num = 1 / a;
-            }
+            //DebugManager.gI().AddDebugString("FIXED_UPDATE", $"Frame counter f: {f}");
+        }
+        else
+        {
+            //DebugManager.gI().AddDebugString("FIXED_UPDATE", $"Count < 10 ({count}), skipping main logic");
+        }
 
+        performanceTimer.Stop();
+        long totalTime = performanceTimer.ElapsedMilliseconds;
+        //DebugManager.gI().AddDebugString("FIXED_UPDATE", $"=== FixedUpdate TOTAL: {totalTime}ms ===");
+
+        // Cảnh báo nếu FixedUpdate quá chậm
+        if (totalTime > 16) // Hơn 16ms có thể gây lag
+        {
+            //DebugManager.gI().AddDebugString("FIXED_UPDATE", $"⚠️ SLOW FixedUpdate: {totalTime}ms");
         }
     }
+    private Stopwatch performanceTimer = new Stopwatch();
 
     private void Update()
     {

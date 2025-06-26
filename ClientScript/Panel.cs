@@ -207,7 +207,7 @@ public class Panel : IActionListener, IChatable
 
     private static string[][] boxPet = mResources.petMainTab;
 
-    public string[][][] tabName = new string[28][][]
+    public string[][][] tabName = new string[29][][]
     {
         null,
         null,
@@ -236,7 +236,8 @@ public class Panel : IActionListener, IChatable
         new string[1][] { new string[1] { string.Empty } },
         new string[1][] { new string[1] { string.Empty } },
         new string[1][] { new string[1] { string.Empty } },
-        new string[1][] { new string[1] { string.Empty } }
+        new string[1][] { new string[1] { string.Empty } },
+          new string[1][] { new string[1] { "Thông báo BOSS" } }
     };
 
     public static sbyte BOX_BAG = 0;
@@ -1105,6 +1106,66 @@ public class Panel : IActionListener, IChatable
         }
         scroll = null;
     }
+    private void setTypeNotifyBoss(int position, int type2)
+    {
+        typeShop = -1;
+        W = WIDTH_PANEL;
+        H = GameCanvas.h;
+        X = 0;
+        Y = 0;
+        ITEM_HEIGHT = type2 == 0 ? 25 : 60;
+        this.position = position;
+        switch (position)
+        {
+            case 0:
+                xScroll = 2;
+                yScroll = 80;
+                wScroll = W - 4;
+                hScroll = H - 96;
+                cmx = wScroll;
+                cmtoX = 0;
+                X = 0;
+                break;
+            case 1:
+                wScroll = W - 4;
+                xScroll = GameCanvas.w - W + 2;
+                yScroll = 80;
+                hScroll = H - 96;
+                X = xScroll - 2;
+                cmx = -(GameCanvas.w + W);
+                cmtoX = GameCanvas.w - W;
+                break;
+        }
+        TAB_W = W / 6 - 1;
+        currentTabIndex = 0;
+        try
+        { currentTabName = tabName[type]; }
+        catch { }
+        if (currentTabName != null && currentTabName.Length < 6)
+        {
+            TAB_W += 6;
+        }
+        startTabPos = xScroll + wScroll / 2 - currentTabName.Length * TAB_W / 2;
+        lastSelect = new int[currentTabName.Length];
+        cmyLast = new int[currentTabName.Length];
+        for (int i = 0; i < currentTabName.Length; i++)
+        {
+            lastSelect[i] = (GameCanvas.isTouch ? (-1) : 0);
+        }
+        if (lastTabIndex[type] != -1)
+        {
+            currentTabIndex = lastTabIndex[type];
+        }
+        if (currentTabIndex < 0)
+        {
+            currentTabIndex = 0;
+        }
+        if (currentTabIndex > currentTabName.Length - 1)
+        {
+            currentTabIndex = currentTabName.Length - 1;
+        }
+        scroll = null;
+    }
 
     public void setTypeMapTrans()
     {
@@ -1406,7 +1467,6 @@ public class Panel : IActionListener, IChatable
 
     public void setTypeBox()
     {
-        Debug.Log("bỗx");
         type = 2;
         if (GameCanvas.w > 2 * WIDTH_PANEL)
         {
@@ -2022,6 +2082,7 @@ public class Panel : IActionListener, IChatable
 
     public void show()
     {
+        bossSelect = "";
         if (GameCanvas.isTouch)
         {
             cmdClose.x = 156;
@@ -3197,6 +3258,7 @@ public class Panel : IActionListener, IChatable
         pointerIsDowning = false;
         pointerDownTime = 0;
         GameCanvas.isPointerJustRelease = false;
+
     }
 
     public string subArray(string[] str)
@@ -7187,6 +7249,7 @@ public class Panel : IActionListener, IChatable
 
     public void hideNow()
     {
+        bossSelect = "";
         if (timeShow > 0)
         {
             isClose = false;
@@ -7230,6 +7293,7 @@ public class Panel : IActionListener, IChatable
 
     public void hide()
     {
+        bossSelect = "";
         if (timeShow > 0)
         {
             isClose = false;
@@ -7266,6 +7330,17 @@ public class Panel : IActionListener, IChatable
             if (type == 24)
             {
                 setTypeGameInfo();
+            }
+            else if (type == 28)
+            {
+                if (bossSelect == "")
+                {
+                    setTypeMain();
+                }
+                else
+                {
+                    setTypeNotifyBoss(0);
+                }
             }
             else if (type == 27)
             {
@@ -7324,174 +7399,181 @@ public class Panel : IActionListener, IChatable
 
     public void update()
     {
-        if (chatTField != null && chatTField.isShow)
+        try
         {
-            chatTField.update();
-            return;
-        }
-        if (isKiguiXu)
-        {
-            delayKigui++;
-            if (delayKigui == 10)
+            if (chatTField != null && chatTField.isShow)
             {
-                delayKigui = 0;
-                isKiguiXu = false;
-                chatTField.tfChat.setText(string.Empty);
-                chatTField.strChat = mResources.kiguiXuchat + " ";
-                chatTField.tfChat.name = mResources.input_money;
-                chatTField.to = string.Empty;
-                chatTField.isShow = true;
-                chatTField.tfChat.setIputType(TField.INPUT_TYPE_NUMERIC);
-                chatTField.tfChat.setMaxTextLenght(9);
-                if (GameCanvas.isTouch)
-                {
-                    chatTField.tfChat.doChangeToTextBox();
-                }
-                if (Main.isWindowsPhone)
-                {
-                    chatTField.tfChat.strInfo = chatTField.strChat;
-                }
-                if (!Main.isPC)
-                {
-                    chatTField.startChat2(this, string.Empty);
-                }
+                chatTField.update();
+                return;
             }
-            return;
-        }
-        if (isKiguiLuong)
-        {
-            delayKigui++;
-            if (delayKigui == 10)
+            if (isKiguiXu)
             {
-                delayKigui = 0;
-                isKiguiLuong = false;
-                chatTField.tfChat.setText(string.Empty);
-                chatTField.strChat = mResources.kiguiLuongchat + "  ";
-                chatTField.tfChat.name = mResources.input_money;
-                chatTField.to = string.Empty;
-                chatTField.isShow = true;
-                chatTField.tfChat.setIputType(TField.INPUT_TYPE_NUMERIC);
-                chatTField.tfChat.setMaxTextLenght(9);
-                if (GameCanvas.isTouch)
+                delayKigui++;
+                if (delayKigui == 10)
                 {
-                    chatTField.tfChat.doChangeToTextBox();
+                    delayKigui = 0;
+                    isKiguiXu = false;
+                    chatTField.tfChat.setText(string.Empty);
+                    chatTField.strChat = mResources.kiguiXuchat + " ";
+                    chatTField.tfChat.name = mResources.input_money;
+                    chatTField.to = string.Empty;
+                    chatTField.isShow = true;
+                    chatTField.tfChat.setIputType(TField.INPUT_TYPE_NUMERIC);
+                    chatTField.tfChat.setMaxTextLenght(9);
+                    if (GameCanvas.isTouch)
+                    {
+                        chatTField.tfChat.doChangeToTextBox();
+                    }
+                    if (Main.isWindowsPhone)
+                    {
+                        chatTField.tfChat.strInfo = chatTField.strChat;
+                    }
+                    if (!Main.isPC)
+                    {
+                        chatTField.startChat2(this, string.Empty);
+                    }
                 }
-                if (Main.isWindowsPhone)
-                {
-                    chatTField.tfChat.strInfo = chatTField.strChat;
-                }
-                if (!Main.isPC)
-                {
-                    chatTField.startChat2(this, string.Empty);
-                }
+                return;
             }
-            return;
-        }
-        if (scroll != null)
-        {
-            scroll.updatecm();
-        }
-        if (tabIcon != null && tabIcon.isShow)
-        {
-            tabIcon.update();
-            return;
-        }
-        moveCamera();
-        if (waitToPerform > 0)
-        {
-            waitToPerform--;
-            if (waitToPerform == 0)
+            if (isKiguiLuong)
             {
-                lastSelect[currentTabIndex] = selected;
-                Debug.Log("updatekeyType" + type);
-                switch (type)
+                delayKigui++;
+                if (delayKigui == 10)
                 {
-                    case 28:
-                        doFireNotifyBoss();
-                        break;
-                    case 26:
-                        doFiretypeGame();
-                        break;
-                    case 23:
-                        doFireGameInfo();
-                        break;
-                    case 21:
-                        doFirePetMain();
-                        break;
-                    case 0:
-                        doFireMain();
-                        break;
-                    case 2:
-                        doFireBox();
-                        break;
-                    case 3:
-                        doFireZone();
-                        break;
-                    case 1:
-                    case 17:
-                        doFireShop();
-                        break;
-                    case 25:
-                        doSpeacialSkill();
-                        break;
-                    case 4:
-                        doFireMap();
-                        break;
-                    case 14:
-                        doFireMapTrans();
-                        break;
-                    case 7:
-                        if (Equals(GameCanvas.panel2) && GameCanvas.panel.type == 2)
-                        {
+                    delayKigui = 0;
+                    isKiguiLuong = false;
+                    chatTField.tfChat.setText(string.Empty);
+                    chatTField.strChat = mResources.kiguiLuongchat + "  ";
+                    chatTField.tfChat.name = mResources.input_money;
+                    chatTField.to = string.Empty;
+                    chatTField.isShow = true;
+                    chatTField.tfChat.setIputType(TField.INPUT_TYPE_NUMERIC);
+                    chatTField.tfChat.setMaxTextLenght(9);
+                    if (GameCanvas.isTouch)
+                    {
+                        chatTField.tfChat.doChangeToTextBox();
+                    }
+                    if (Main.isWindowsPhone)
+                    {
+                        chatTField.tfChat.strInfo = chatTField.strChat;
+                    }
+                    if (!Main.isPC)
+                    {
+                        chatTField.startChat2(this, string.Empty);
+                    }
+                }
+                return;
+            }
+            if (scroll != null)
+            {
+                scroll.updatecm();
+            }
+            if (tabIcon != null && tabIcon.isShow)
+            {
+                tabIcon.update();
+                return;
+            }
+            moveCamera();
+            if (waitToPerform > 0)
+            {
+                waitToPerform--;
+                if (waitToPerform == 0)
+                {
+                    lastSelect[currentTabIndex] = selected;
+                    Debug.Log("updatekeyType" + type);
+                    switch (type)
+                    {
+                        case 28:
+                            doFireNotifyBoss();
+                            break;
+                        case 26:
+                            doFiretypeGame();
+                            break;
+                        case 23:
+                            doFireGameInfo();
+                            break;
+                        case 21:
+                            doFirePetMain();
+                            break;
+                        case 0:
+                            doFireMain();
+                            break;
+                        case 2:
                             doFireBox();
-                            return;
-                        }
-                        doFireInventory();
-                        break;
-                    case 8:
-                        doFireLogMessage();
-                        break;
-                    case 9:
-                        doFireArchivement();
-                        break;
-                    case 10:
-                        doFirePlayerMenu();
-                        break;
-                    case 11:
-                        doFireFriend();
-                        break;
-                    case 16:
-                        doFireEnemy();
-                        break;
-                    case 15:
-                        doFireTop();
-                        break;
-                    case 12:
-                        doFireCombine();
-                        break;
-                    case 13:
-                        doFireGiaoDich();
-                        break;
-                    case 18:
-                        doFireChangeFlag();
-                        break;
-                    case 19:
-                        doFireOption();
-                        break;
-                    case 20:
-                        doFireAccount();
-                        break;
-                    case 22:
-                        doFireAuto();
-                        break;
+                            break;
+                        case 3:
+                            doFireZone();
+                            break;
+                        case 1:
+                        case 17:
+                            doFireShop();
+                            break;
+                        case 25:
+                            doSpeacialSkill();
+                            break;
+                        case 4:
+                            doFireMap();
+                            break;
+                        case 14:
+                            doFireMapTrans();
+                            break;
+                        case 7:
+                            if (Equals(GameCanvas.panel2) && GameCanvas.panel.type == 2)
+                            {
+                                doFireBox();
+                                return;
+                            }
+                            doFireInventory();
+                            break;
+                        case 8:
+                            doFireLogMessage();
+                            break;
+                        case 9:
+                            doFireArchivement();
+                            break;
+                        case 10:
+                            doFirePlayerMenu();
+                            break;
+                        case 11:
+                            doFireFriend();
+                            break;
+                        case 16:
+                            doFireEnemy();
+                            break;
+                        case 15:
+                            doFireTop();
+                            break;
+                        case 12:
+                            doFireCombine();
+                            break;
+                        case 13:
+                            doFireGiaoDich();
+                            break;
+                        case 18:
+                            doFireChangeFlag();
+                            break;
+                        case 19:
+                            doFireOption();
+                            break;
+                        case 20:
+                            doFireAccount();
+                            break;
+                        case 22:
+                            doFireAuto();
+                            break;
+                    }
                 }
             }
+            for (int i = 0; i < ClanMessage.vMessage.size(); i++)
+            {
+                ((ClanMessage)ClanMessage.vMessage.elementAt(i)).update();
+            }
+            updateCombineEff();
         }
-        for (int i = 0; i < ClanMessage.vMessage.size(); i++)
+        catch (Exception e)
         {
-            ((ClanMessage)ClanMessage.vMessage.elementAt(i)).update();
+            Debug.LogException(e);
         }
-        updateCombineEff();
     }
 
     private void doSpeacialSkill()
@@ -8051,9 +8133,14 @@ public class Panel : IActionListener, IChatable
 
     public void setTypeBossInfo()
     {
-        Debug.Log("setTypeGame");
+        type = 27;
+        this.setType(0);
+        this.setTabBossInfo();
+        cmx = (cmtoX = 0);
+    }
+    public void setTabBossInfo()
+    {
         currentListLength = BossInfo.bossInfos.Count;
-        ITEM_HEIGHT = 24;
         selected = (GameCanvas.isTouch ? (-1) : 0);
         cmyLim = currentListLength * ITEM_HEIGHT - hScroll;
         if (cmyLim < 0)
@@ -8068,9 +8155,8 @@ public class Panel : IActionListener, IChatable
         {
             cmy = (cmtoY = cmyLim);
         }
-        type = 27;
-
     }
+
     private void setTypeGame()
     {
         Debug.Log("setTypeGame");
@@ -10861,14 +10947,9 @@ public class Panel : IActionListener, IChatable
                 SoundMn.gI().soundToolOption();
                 break;
             case 3:
-                if (Main.isPC)
-                {
-                    GameCanvas.startYesNoDlg(mResources.changeSizeScreen, new Command(mResources.YES, this, 170391, null), new Command(mResources.NO, this, 4005, null));
-                }
-                else
-                {
-                    SoundMn.gI().CaseSizeScr();
-                }
+
+                SoundMn.gI().CaseSizeScr();
+
                 break;
             /*case 4:
                 if (Main.isPC)
@@ -11414,6 +11495,107 @@ public class Panel : IActionListener, IChatable
         return false;
     }
 
+    private List<string> _cachedBossNames = null;
+    private List<NotifyBoss> _cachedBossNotis = null;
+    private string _lastBossSelect = "";
+    public void setTypeNotifyBoss(int typeSet = 0)
+    {
+        // Làm mới cache khi thay đổi type
+        _cachedBossNames = null;
+        _cachedBossNotis = null;
+
+        currentListLength = typeSet == 0 ? NotifyBoss.listNameBoss().Count : NotifyBoss.notisByName(bossSelect).Count;
+        selected = (GameCanvas.isTouch ? (-1) : 0);
+        ITEM_HEIGHT = typeSet == 0 ? 25 : 60;
+        if (currentListLength < 9 && currentListLength > 0)
+        {
+            ITEM_HEIGHT = hScroll / currentListLength;
+        }
+        cmyLim = currentListLength * ITEM_HEIGHT - hScroll;
+        cmy = (cmtoY = 0);
+        type = 28;
+        setTypeNotifyBoss(0, typeSet);
+        if (typeSet == 0)
+        {
+            bossSelect = "";
+        }
+    }
+
+    static string bossSelect = "";
+    public void paintNotifyBoss(mGraphics g)
+    {
+        try
+        {
+            g.setClip(xScroll, yScroll, wScroll, hScroll);
+            g.translate(0, -cmy);
+
+            if (bossSelect == "")
+            {
+                // Cache danh sách boss names
+                if (_cachedBossNames == null)
+                {
+                    _cachedBossNames = NotifyBoss.listNameBoss();
+                }
+
+                // Chỉ render các item visible
+                int startIndex = Math.Max(0, cmy / ITEM_HEIGHT);
+                int endIndex = Math.Min(currentListLength, (cmy + hScroll) / ITEM_HEIGHT + 1);
+
+                for (int i = startIndex; i < endIndex; i++)
+                {
+                    if (i >= _cachedBossNames.Count) break;
+
+                    var obj = _cachedBossNames[i];
+                    int num = xScroll;
+                    int num2 = yScroll + i * ITEM_HEIGHT;
+                    int num3 = wScroll - 1;
+                    int h = ITEM_HEIGHT - 1;
+
+                    g.setColor(i == selected ? 16383818 : 15196114);
+                    g.fillRect(num, num2, num3, h, 5);
+                    mFont.tahoma_7b_dark.drawString(g, obj, xScroll + wScroll / 2, num2 + 5, mFont.CENTER);
+                }
+            }
+            else
+            {
+                // Cache danh sách notifications của boss
+                if (_cachedBossNotis == null || _lastBossSelect != bossSelect)
+                {
+                    _cachedBossNotis = NotifyBoss.notisByName(bossSelect);
+                    _lastBossSelect = bossSelect;
+                }
+
+                // Chỉ render các item visible
+                int startIndex = Math.Max(0, cmy / ITEM_HEIGHT);
+                int endIndex = Math.Min(currentListLength, (cmy + hScroll) / ITEM_HEIGHT + 1);
+
+                for (int i = startIndex; i < endIndex; i++)
+                {
+                    if (i >= _cachedBossNotis.Count) break;
+
+                    var obj = _cachedBossNotis[i];
+                    int num = xScroll;
+                    int num2 = yScroll + i * ITEM_HEIGHT;
+                    int num3 = wScroll - 1;
+                    int h = ITEM_HEIGHT - 1;
+
+                    g.setColor(i == selected ? 16383818 : 15196114);
+                    g.fillRect(num, num2, num3, h, 5);
+
+                    string[] lines = obj.getLines();
+                    mFont.tahoma_7.drawString(g, lines[0], xScroll + 5, num2 + 2, mFont.LEFT);
+                    mFont.tahoma_7.drawString(g, lines[1], xScroll + 5, num2 + 15, mFont.LEFT);
+                    mFont.tahoma_7.drawString(g, lines[2], xScroll + 5, num2 + 28, mFont.LEFT);
+                    mFont.tahoma_7.drawString(g, lines[3], xScroll + 5, num2 + 41, mFont.LEFT);
+                }
+            }
+            this.paintScrollArrow(g);
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+        }
+    }
 
     void doFireNotifyBoss()
     {
@@ -11426,76 +11608,6 @@ public class Panel : IActionListener, IChatable
             }
         }
     }
-    public void setTypeNotifyBoss(int typeSet = 0)
-    {
-        currentListLength = typeSet == 0 ? NotifyBoss.listNameBoss().Count : NotifyBoss.notisByName(bossSelect).Count;
-        selected = (GameCanvas.isTouch ? (-1) : 0);
-        ITEM_HEIGHT = 25;
-        if (currentListLength < 9 && typeSet == 0 && currentListLength > 0)
-        {
-            ITEM_HEIGHT = hScroll / currentListLength;
-        }
-        cmyLim = currentListLength * ITEM_HEIGHT - hScroll;
-        cmy = (cmtoY = 0);
-        type = 28;
-        setType(0);
-        if (typeSet == 0)
-        {
-            bossSelect = "";
-        }
-    }
-    static string bossSelect = "";
-    public void paintNotifyBoss(mGraphics g)
-    {
-        g.setClip(xScroll, yScroll, wScroll, hScroll);
-        g.translate(0, -cmy);
-        if (bossSelect == "")
-        {
-            for (int i = 0; i < currentListLength; i++)
-            {
-                // ITEM_HEIGHT = 25;
-                var obj = NotifyBoss.listNameBoss()[i];
-                int num = xScroll;
-                int num2 = yScroll + i * ITEM_HEIGHT;
-                int num3 = wScroll - 1;
-                int h = ITEM_HEIGHT - 1;
-                if (num2 - cmy > yScroll + hScroll || num2 - cmy < yScroll - ITEM_HEIGHT || obj == null)
-                {
-                    continue;
-                }
-                g.setColor(15196114);
-                g.fillRect(num, num2, num3, h, 5);
-                mFont.tahoma_7b_dark.drawString(g, obj, xScroll + wScroll / 2, num2 + 5, mFont.CENTER);
-            }
-        }
-        else
-        {
-            for (int i = 0; i < currentListLength; i++)
-            {
-                ITEM_HEIGHT = 60;
-                var obj = NotifyBoss.notisByName(bossSelect)[i];
-                int num = xScroll;
-                int num2 = yScroll + i * ITEM_HEIGHT;
-                int num3 = wScroll - 1;
-                int h = ITEM_HEIGHT - 1;
-                if (num2 - cmy > yScroll + hScroll || num2 - cmy < yScroll - ITEM_HEIGHT || obj == null)
-                {
-                    continue;
-                }
-                g.setColor(15196114);
-                g.fillRect(num, num2, num3, h, 5);
-                string[] lines = obj.getLines();
-                mFont.tahoma_7.drawString(g, lines[0], xScroll + 5, num2 + 2, mFont.LEFT);
-                mFont.tahoma_7.drawString(g, lines[1], xScroll + 5, num2 + 15, mFont.LEFT);
-                mFont.tahoma_7.drawString(g, lines[2], xScroll + 5, num2 + 28, mFont.LEFT);
-                mFont.tahoma_7.drawString(g, lines[3], xScroll + 5, num2 + 41, mFont.LEFT);
-
-            }
-        }
-        this.paintScrollArrow(g);
-    }
-
-
 
 
 

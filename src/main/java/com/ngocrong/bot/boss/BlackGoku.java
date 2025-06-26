@@ -22,7 +22,7 @@ public class BlackGoku extends Boss {
 
     private final boolean isSuper;
 
-    public static final int[] MAPS = new int[]{92, 93, 94, 96, 97, 98, 99, 101, 102, 103};
+    public static final int[] MAPS = new int[]{92, 93, 94, 96, 97, 98, 99, 100, 102, 103};
 
     public static RandomCollection<Integer> ITEMS = new RandomCollection<>();
 
@@ -131,7 +131,6 @@ public class BlackGoku extends Boss {
 
     @Override
     public void startDie() {
-        Zone z = zone;
         super.startDie();
         if (!isSuper) {
             BlackGoku bl = new BlackGoku(true);

@@ -1,6 +1,7 @@
 package com.ngocrong.util;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import com.ngocrong.NQMP.UtilsNQMP;
 import com.ngocrong.lib.KeyValue;
 import com.ngocrong.lib.RandomCollection;
 
@@ -30,6 +31,8 @@ import java.util.regex.Pattern;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Utils {
 
@@ -221,6 +224,7 @@ public class Utils {
                 Thread.sleep(delay);
                 runnable.run();
             } catch (Exception ignored) {
+                UtilsNQMP.logError(ignored);
                 ignored.printStackTrace();
                 System.err.println("Error at 4");
             }
@@ -332,12 +336,17 @@ public class Utils {
         }
         return text;
     }
-
+    static Map<String, byte[]> cacheFile = new HashMap<>();
     public static byte[] getFile(String url) {
         try {
+            if(cacheFile.containsKey(url))
+                return cacheFile.get(url);
+            
             File file = new File(url);
             if (file.exists()) {
-                return Files.readAllBytes(file.toPath());
+                byte[] data = Files.readAllBytes(file.toPath());
+                cacheFile.put(url, data);
+                return data;
             }
         } catch (IOException ex) {
             com.ngocrong.NQMP.UtilsNQMP.logError(ex);

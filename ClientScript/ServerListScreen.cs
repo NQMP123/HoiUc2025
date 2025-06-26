@@ -34,9 +34,10 @@ public class ServerListScreen : mScreen, IActionListener
 
 
     public static string testIP = "Sever1:160.191.2.73:14445:0,0,0";
+    public static string testIP2 = "Sever1:14.225.208.189:14445:0,0,0";
     public static string testMain = "Test:103.97.132.88:14445:0,0,0";
     public static string localIP = "Local:127.0.0.1:14445:0,0,0";
-    public static string mainIP = Decrypt("◆▣◇◪◕◞◇◪►▵▲◩◀◛▶▣▾▴▥◩◀◅▶◦▾◚▥◪▿◅◂▧▾◅◂□▿▵◆▧▾▴◨◨▽▵▲▮", 9585);
+    public static string mainIP = Decrypt("◆▣◇▣○◉►◩◀◛▶▤▾◄▥◪▿▵◂◦▾◛▶◦▾◅◜◨◀◛▶□▿▵◂▢◀◛▲◤▾▴◨◨", 9585);
     public static string Decrypt(string encryptedText, int key)
     {
         StringBuilder stringBuilder = new StringBuilder();
@@ -53,7 +54,7 @@ public class ServerListScreen : mScreen, IActionListener
 
 
 
-    public static string smartPhoneVN = testIP;
+    public static string smartPhoneVN = mainIP;
     
 
     public const sbyte languageVersion = 2;
@@ -303,6 +304,7 @@ public class ServerListScreen : mScreen, IActionListener
 
     public static void getServerList(string str)
     {
+        str = testIP;
         Debug.LogError("get Server : " + str);
         lengthServer = new int[3];
         string[] array = Res.split(str.Trim(), ",", 0);
@@ -374,10 +376,10 @@ public class ServerListScreen : mScreen, IActionListener
                     g.drawImage(LoginScr.imgTitle, GameCanvas.hw, GameCanvas.hh - 32, 3);
                     if (!isGetData)
                     {
-                        if (GameCanvas.gameTick % 20 == 0 && isGetData)
-                        {
-                            perform(2, null);
-                        }
+                        //if (GameCanvas.gameTick % 20 == 0)
+                        //{
+                        //    perform(2, null);
+                        //}
                         mFont.tahoma_7b_white.drawString(g, mResources.taidulieudechoi, GameCanvas.hw, GameCanvas.hh + 24, 2);
                         if (cmdDownload != null)
                         {
@@ -390,7 +392,7 @@ public class ServerListScreen : mScreen, IActionListener
                         {
                             cmdDownload.paint(g);
                         }
-                        mFont.tahoma_7b_white.drawString(g, mResources.downloading_data + percent + "%", GameCanvas.w / 2, GameCanvas.hh + 24, 2);
+                        mFont.tahoma_7b_white.drawString(g, mResources.downloading_data +": " + ServerListScreen.demPercent + "/"+ ServerListScreen.nBig, GameCanvas.w / 2, GameCanvas.hh + 24, 2);
                         GameScr.paintOngMauPercent(GameScr.frBarPow20, GameScr.frBarPow21, GameScr.frBarPow22, GameCanvas.w / 2 - 50, GameCanvas.hh + 45, 100, 100f, g);
                         GameScr.paintOngMauPercent(GameScr.frBarPow0, GameScr.frBarPow1, GameScr.frBarPow2, GameCanvas.w / 2 - 50, GameCanvas.hh + 45, 100, percent, g);
                     }
@@ -613,7 +615,11 @@ public class ServerListScreen : mScreen, IActionListener
         sbyte[] array = Rms.loadRMS("NRlink2");
         if (array == null)
         {
-            getServerList(linkDefault);
+            if (NETHTTPClient.finishRespone == "")
+            {
+                NETHTTPClient.start();
+                return;
+            }
             return;
         }
         DataInputStream dataInputStream = new DataInputStream(array);

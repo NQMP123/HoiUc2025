@@ -753,9 +753,9 @@ public class Info {
             this.damageFull += Utils.percentOf(this.damageFull, _player.percentPhuHo);
         }
         if (_player.mapPhuHo == 127) {
-            this.hpFullTemp += Utils.percentOf(this.hpFullTemp, _player.percentPhuHo);
-            this.mpFullTemp += Utils.percentOf(this.mpFullTemp, _player.percentPhuHo);
-            this.damageFull += Utils.percentOf(this.damageFull, _player.percentPhuHo);
+            this.hpFullTemp += 5000000;
+            this.mpFullTemp += 5000000;
+            this.damageFull += 100000;
         }
         if (_player.sachdacbiet[5]) {
             this.options[5] += 5;

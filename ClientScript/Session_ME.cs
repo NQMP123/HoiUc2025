@@ -111,12 +111,14 @@ public class Session_ME : ISession
                     }
                     try
                     {
+                       // Debug.LogError("Have message : " + message.command);
                         if (message.command == -27)
                         {
                             getKey(message);
                         }
                         else
                         {
+
                             onRecieveMsg(message);
                         }
                     }
@@ -257,9 +259,13 @@ public class Session_ME : ISession
                     int num6 = recvByteCount + sendByteCount;
                     strRecvByteCount = num6 / 1024 + "." + num6 % 1024 / 102 + "Kb";
 
+                    sbyte[] decoded;
+
+
+                    // Các message khác thử decode base64
                     byte[] raw = new byte[size];
                     Buffer.BlockCopy(pooledArray, 0, raw, 0, size);
-                    sbyte[] decoded;
+
                     try
                     {
                         string str = Encoding.ASCII.GetString(raw);
@@ -267,14 +273,20 @@ public class Session_ME : ISession
                         decoded = new sbyte[d.Length];
                         Buffer.BlockCopy(d, 0, decoded, 0, d.Length);
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        decoded = pooledArray;
+                        // Nếu decode base64 thất bại, giữ nguyên data
+                        decoded = new sbyte[size];
+                        Buffer.BlockCopy(pooledArray, 0, decoded, 0, size);
+                        Debug.LogException(e);
                     }
 
-                    // Tạo message mới với array từ pool
+
+                    // Trả lại pooledArray vào pool
+                    ArrayPool<sbyte>.Shared.Return(pooledArray);
+
+                    // Tạo message mới với decoded data
                     Message result = new Message(cmd, decoded, decoded.Length);
-                    // Không trả lại array vào pool vì Message sẽ quản lý nó
                     return result;
                 }
                 catch (Exception ex)
@@ -314,12 +326,10 @@ public class Session_ME : ISession
                 }
                 catch (IOException ex)
                 {
-                    Debug.LogError("Error reading command byte: " + ex.Message);
+                   // Debug.LogError("Error reading command byte: " + ex.Message);    
                     return null;
                 }
-
-                // Xử lý các loại message đặc biệt
-                if (b == -32 || b == -66 || b == 11 || b == -67 || b == -74 || b == -87 || b == 66 || b == 120)
+                if (b == -32 || b == -66 || b == 11 || b == -67  || b == -74|| b == -87 || b == 66 || b == 120)
                 {
                     return readMessage2(b);
                 }
@@ -329,8 +339,6 @@ public class Session_ME : ISession
                 {
                     if (getKeyComplete)
                     {
-                        // Sử dụng 3 byte (24-bit) thay vì 2 byte cho message thường
-                        // Tăng từ 65KB lên 16MB capacity
                         sbyte b1 = dis.ReadSByte();
                         sbyte b2 = dis.ReadSByte();
                         sbyte b3 = dis.ReadSByte();
@@ -343,11 +351,9 @@ public class Session_ME : ISession
                     }
                     else
                     {
-                        // Không mã hóa cũng sử dụng 3 byte
                         sbyte b1 = dis.ReadSByte();
                         sbyte b2 = dis.ReadSByte();
                         sbyte b3 = dis.ReadSByte();
-
                         dataSize = ((b1 & 0xFF) << 16) | ((b2 & 0xFF) << 8) | (b3 & 0xFF);
                     }
                 }
@@ -356,19 +362,9 @@ public class Session_ME : ISession
                     Debug.LogError("Error reading message size: " + ex.Message);
                     return null;
                 }
-
-                // Kiểm tra kích thước hợp lệ
-                if (dataSize < 0 || dataSize > 16777215) // 24-bit max value
-                {
-                    Debug.LogError($"Invalid message size: {dataSize}");
-                    return null;
-                }
-
-                // Sử dụng ArrayPool để tránh GC
                 sbyte[] pooledArray = ArrayPool<sbyte>.Shared.Rent(dataSize);
                 try
                 {
-                    // Đọc nội dung message với timeout
                     byte[] src;
                     try
                     {
@@ -397,15 +393,15 @@ public class Session_ME : ISession
 
                     if (getKeyComplete)
                     {
-                        // Giải mã từng byte
                         for (int i = 0; i < dataSize; i++)
                         {
                             pooledArray[i] = readKey(pooledArray[i]);
                         }
                     }
-
+                    
                     byte[] raw = new byte[dataSize];
                     Buffer.BlockCopy(pooledArray, 0, raw, 0, dataSize);
+                    
                     sbyte[] decoded;
                     try
                     {
@@ -414,8 +410,9 @@ public class Session_ME : ISession
                         decoded = new sbyte[d.Length];
                         Buffer.BlockCopy(d, 0, decoded, 0, d.Length);
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
+                        Debug.LogException(e);
                         decoded = pooledArray;
                     }
 
@@ -599,8 +596,8 @@ public class Session_ME : ISession
             {
                 TcpClient tcpClient = new TcpClient();
                 // Đặt buffer cho socket
-                tcpClient.ReceiveBufferSize = 8192;
-                tcpClient.SendBufferSize = 8192;
+                tcpClient.ReceiveBufferSize = 65536;
+                tcpClient.SendBufferSize = 65536;
                 tcpClient.NoDelay = true; // Tắt Nagle algorithm để giảm độ trễ
 
                 // Đặt timeout kết nối
@@ -668,7 +665,7 @@ public class Session_ME : ISession
     public void sendMessage(Message message)
     {
         count++;
-         //  Debug.Log("SEND MSG: " + message.command);
+        //  Debug.Log("SEND MSG: " + message.command);
         sender.AddMessage(message);
     }
 
@@ -817,21 +814,20 @@ public class Session_ME : ISession
 
     public static void update()
     {
-        int processLimit = 10; // Giới hạn số lượng message xử lý mỗi frame để tránh lag
+        int processLimit = 200; // Giới hạn số lượng message xử lý mỗi frame để tránh lag
         int processCount = 0;
 
         while (processCount < processLimit)
         {
             Message message = null;
 
-            lock (recieveMsgLock)
-            {
+            
                 if (recieveMsg.size() > 0)
                 {
                     message = (Message)recieveMsg.elementAt(0);
                     recieveMsg.removeElementAt(0);
                 }
-            }
+            
 
             if (message == null)
             {

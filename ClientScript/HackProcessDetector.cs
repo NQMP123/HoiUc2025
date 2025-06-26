@@ -4,7 +4,7 @@
  * • Phát hiện keyword (ida, hxd64, dnspy …) trong tiêu đề cửa sổ / tên exe
  */
 
-#if UNITY_EDITOR || UNITY_STANDALONE_WIN
+#if UNITY_STANDALONE_WIN
 using UnityEngine;
 using System;
 using System.Collections.Generic;
@@ -47,7 +47,7 @@ public static class HackProcessDetector
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
         public string szExeFile;
     }
-
+    //android lam gi co kernel32.dll ma dung cai nay
     [DllImport("kernel32.dll")] private static extern IntPtr CreateToolhelp32Snapshot(uint dwFlags, uint th32ProcessId);
     [DllImport("kernel32.dll")] private static extern bool Process32First(IntPtr hSnapshot, ref PROCESSENTRY32 lppe);
     [DllImport("kernel32.dll")] private static extern bool Process32Next(IntPtr hSnapshot, ref PROCESSENTRY32 lppe);
@@ -194,9 +194,10 @@ public static class HackProcessDetector
 #endif
 
 /* ---------- Stub for other platforms ---------- */
-#if !(UNITY_EDITOR || UNITY_STANDALONE_WIN)
+#if !UNITY_STANDALONE_WIN
 public static class HackProcessDetector
 {
     public static void Dummy() { }
+    public static void init(){}
 }
 #endif

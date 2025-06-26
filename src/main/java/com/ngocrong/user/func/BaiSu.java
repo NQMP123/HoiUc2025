@@ -65,7 +65,11 @@ public class BaiSu {
     }
 
     public static void insert(int id1, int id2) {
-        UtilsNQMP.ExcuteQuery(String.format("INSERT INTO `nrobaby`.`nr_baisu` (`player1`, `player2`) VALUES (%d, %d);", id1, id2));
+        UtilsNQMP.ExcuteQuery(String.format("INSERT INTO `nr_baisu` (`player1`, `player2`) VALUES (%d, %d);", id1, id2));
+    }
+    
+     public static void delete(int id1) {
+        UtilsNQMP.ExcuteQuery(String.format("DELETE FROM `nr_baisu` where player1 = %s or player2 = %s", id1, id1));
     }
 
     public static int getBaisuId(int playerId) {

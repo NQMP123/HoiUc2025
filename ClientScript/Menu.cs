@@ -296,7 +296,7 @@ public class Menu
 				GameCanvas.panel.cp.updateKey();
 			}
 		}
-		if (!disableClose && GameCanvas.isPointerJustRelease && !GameCanvas.isPointer(menuX, menuY, w, menuH) && !pointerIsDowning && !GameScr.gI().isRongThanMenu() && flag2)
+		if (!disableClose && GameCanvas.isPointerJustRelease && !GameCanvas.isPointer(menuX, menuY, w, menuH) && !pointerIsDowning && !GameScr.gI().isRongThanMenu())
 		{
 			if (!isScrolling())
 			{

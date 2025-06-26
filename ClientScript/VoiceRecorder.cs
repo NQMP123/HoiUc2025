@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading;
 using UnityEngine;
 
 public class VoiceRecorder
@@ -119,6 +120,13 @@ public class VoiceRecorder
             return false;
         }
 
+        if(Thread.CurrentThread.Name != Main.mainThreadName)
+        {
+            UnityEngine.Debug.LogError("Only play audio on main thread");
+
+            return false;
+        }
+
         StopAllAudio();
 
         try
@@ -150,6 +158,13 @@ public class VoiceRecorder
 
     public void StopPlaying()
     {
+        if (Thread.CurrentThread.Name != Main.mainThreadName)
+        {
+            UnityEngine.Debug.LogError("Only play audio on main thread");
+
+            return;
+        }
+
         if (isPlaying)
         {
             AudioSource audioSource = GetAudioSource();

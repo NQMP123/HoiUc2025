@@ -146,23 +146,23 @@ public class MainUpdate implements Runnable {
             if (now.getHour() >= 20) {
                 RewardDHVT23();
             }
-            if (System.currentTimeMillis() - UtilsNQMP.lastCreateBot >= 5000) {
-                VirtualBot_SoSinh bot = new VirtualBot_SoSinh(generateCharacterName());
-                bot.setLocation(0, -1);
-                UtilsNQMP.lastCreateBot = System.currentTimeMillis();
-            }
-            if (System.currentTimeMillis() - initCold >= 15000 && BotCold.TotalBotCold < 50) {
-                initCold = System.currentTimeMillis();
-                int[] map = new int[]{105, 106, 107, 108, 109, 110};
-                TMap map2 = MapManager.getInstance().getMap(map[Utils.nextInt(map.length)]);
-                UtilsNQMP.createBotCold(1, map2.mapID);
-            }
-            if (System.currentTimeMillis() - initBot >= 5000 && VirtualBot.TotalBot < 250) {
-                initBot = System.currentTimeMillis();
-                int[] map = new int[]{0, 7, 14, 5};
-                VirtualBot.TotalBot++;
-                UtilsNQMP.createBot(1, map[Utils.nextInt(map.length)]);
-            }
+//            if (System.currentTimeMillis() - UtilsNQMP.lastCreateBot >= 5000) {
+//                VirtualBot_SoSinh bot = new VirtualBot_SoSinh(generateCharacterName());
+//                bot.setLocation(0, -1);
+//                UtilsNQMP.lastCreateBot = System.currentTimeMillis();
+//            }
+//            if (System.currentTimeMillis() - initCold >= 15000 && BotCold.TotalBotCold < 50) {
+//                initCold = System.currentTimeMillis();
+//                int[] map = new int[]{105, 106, 107, 108, 109, 110};
+//                TMap map2 = MapManager.getInstance().getMap(map[Utils.nextInt(map.length)]);
+//                UtilsNQMP.createBotCold(1, map2.mapID);
+//            }
+//            if (System.currentTimeMillis() - initBot >= 5000 && VirtualBot.TotalBot < 250) {
+//                initBot = System.currentTimeMillis();
+//                int[] map = new int[]{0, 7, 14, 5};
+//                VirtualBot.TotalBot++;
+//                UtilsNQMP.createBot(1, map[Utils.nextInt(map.length)]);
+//            }
 //            if (System.currentTimeMillis() - lastRewardSieuHang >= 60000 && now.getHour() >= 20) {
 //                List<Player> list = new ArrayList<>(SessionManager.getPlayers());
 //                for (var player : list) {
@@ -184,7 +184,7 @@ public class MainUpdate implements Runnable {
     static void setBaoTri() {
         MainUpdate.runTaskDay(() -> {
             ServerMaintenance.BaoTri(5 * 60);
-        }, "03:00");
+        }, "06:00");
     }
 
     static void setRewardWhis() {
@@ -202,7 +202,7 @@ public class MainUpdate implements Runnable {
             } catch (Exception e) {
                 logger.error("Error during Mabu 14H initialization: ", e);
             }
-        }, "14:00", "15:00");
+        }, "14:01", "15:00");
     }
 
     @Override

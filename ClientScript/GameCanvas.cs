@@ -371,98 +371,107 @@ public class GameCanvas : IActionListener
     }
     public void initGame()
     {
-        MotherCanvas.instance.setChildCanvas(this);
-        w = MotherCanvas.instance.getWidthz();
-        h = MotherCanvas.instance.getHeightz();
-        HackProcessDetector.init();
-        hw = w / 2;
-        hh = h / 2;
-        isTouch = true;
-        if (w >= 240)
+        try
         {
-            isTouchControl = true;
-        }
-        if (w < 320)
-        {
-            isTouchControlSmallScreen = true;
-        }
-        if (w >= 320)
-        {
-            isTouchControlLargeScreen = true;
-        }
-        msgdlg = new MsgDlg();
-        if (h <= 160)
-        {
-            Paint.hTab = 15;
-            mScreen.cmdH = 17;
-        }
-        GameScr.d = ((w <= h) ? h : w) + 20;
-        instance = this;
-        mFont.init();
-        mScreen.ITEM_HEIGHT = mFont.tahoma_8b.getHeight() + 8;
-        initPaint();
-        loadDust();
-        loadWaterSplash();
-       
-        panel = new Panel();
-        imgShuriken = loadImage("/mainImage/myTexture2df.png");
-        int num = Rms.loadRMSInt("clienttype");
-        if (num != -1)
-        {
-            if (num > 7)
+            Debug.Log("Start Init GameCAnvas");
+            MotherCanvas.instance.setChildCanvas(this);
+            w = MotherCanvas.instance.getWidthz();
+            h = MotherCanvas.instance.getHeightz();
+            HackProcessDetector.init();
+            hw = w / 2;
+            hh = h / 2;
+            isTouch = true;
+            if (w >= 240)
             {
-                Rms.saveRMSInt("clienttype", mSystem.clientType);
+                isTouchControl = true;
             }
-            else
+            if (w < 320)
             {
-                mSystem.clientType = num;
+                isTouchControlSmallScreen = true;
             }
+            if (w >= 320)
+            {
+                isTouchControlLargeScreen = true;
+            }
+            msgdlg = new MsgDlg();
+            if (h <= 160)
+            {
+                Paint.hTab = 15;
+                mScreen.cmdH = 17;
+            }
+            GameScr.d = ((w <= h) ? h : w) + 20;
+            instance = this;
+            mFont.init();
+            mScreen.ITEM_HEIGHT = mFont.tahoma_8b.getHeight() + 8;
+            initPaint();
+            loadDust();
+            loadWaterSplash();
+
+            panel = new Panel();
+            imgShuriken = loadImage("/mainImage/myTexture2df.png");
+            int num = Rms.loadRMSInt("clienttype");
+            if (num != -1)
+            {
+                if (num > 7)
+                {
+                    Rms.saveRMSInt("clienttype", mSystem.clientType);
+                }
+                else
+                {
+                    mSystem.clientType = num;
+                }
+            }
+            if (mSystem.clientType == 7 && (Rms.loadRMSString("fake") == null || Rms.loadRMSString("fake") == string.Empty))
+            {
+                imgShuriken = loadImage("/mainImage/wait.png");
+            }
+            imgClear = loadImage("/mainImage/myTexture2der.png");
+            img12 = loadImage("/mainImage/12+.png");
+            debugUpdate = new MyVector();
+            debugPaint = new MyVector();
+            debugSession = new MyVector();
+            for (int i = 0; i < 3; i++)
+            {
+                imgBorder[i] = loadImage("/mainImage/myTexture2dbd" + i + ".png");
+            }
+            borderConnerW = mGraphics.getImageWidth(imgBorder[0]);
+            borderConnerH = mGraphics.getImageHeight(imgBorder[0]);
+            borderCenterW = mGraphics.getImageWidth(imgBorder[1]);
+            borderCenterH = mGraphics.getImageHeight(imgBorder[1]);
+            Panel.graphics = Rms.loadRMSInt("lowGraphic");
+            lowGraphic = Rms.loadRMSInt("lowGraphic") == 1;
+            GameScr.isPaintChatVip = Rms.loadRMSInt("serverchat") != 1;
+            Char.isPaintAura = Rms.loadRMSInt("isPaintAura") == 1;
+            Char.isPaintAura2 = Rms.loadRMSInt("isPaintAura2") == 1;
+            Res.init();
+            SmallImage.loadBigImage();
+            Panel.WIDTH_PANEL = 186;
+            if (Panel.WIDTH_PANEL > w)
+            {
+                Panel.WIDTH_PANEL = w;
+            }
+            InfoMe.gI().loadCharId();
+            Command.btn0left = loadImage("/mainImage/btn0left.png");
+            Command.btn0mid = loadImage("/mainImage/btn0mid.png");
+            Command.btn0right = loadImage("/mainImage/btn0right.png");
+            Command.btn1left = loadImage("/mainImage/btn1left.png");
+            Command.btn1mid = loadImage("/mainImage/btn1mid.png");
+            Command.btn1right = loadImage("/mainImage/btn1right.png");
+            serverScreen = new ServerListScreen();
+            img12 = loadImage("/mainImage/12+.png");
+            for (int j = 0; j < 7; j++)
+            {
+                imgBlue[j] = loadImage("/effectdata/blue/" + j + ".png");
+                imgViolet[j] = loadImage("/effectdata/violet/" + j + ".png");
+            }
+            ServerListScreen.createDeleteRMS();
+            serverScr = new ServerScr();
+            Debug.LogError("Init Success Canvas");
         }
-        if (mSystem.clientType == 7 && (Rms.loadRMSString("fake") == null || Rms.loadRMSString("fake") == string.Empty))
+        catch (Exception e)
         {
-            imgShuriken = loadImage("/mainImage/wait.png");
+            Debug.LogException(e);
         }
-        imgClear = loadImage("/mainImage/myTexture2der.png");
-        img12 = loadImage("/mainImage/12+.png");
-        debugUpdate = new MyVector();
-        debugPaint = new MyVector();
-        debugSession = new MyVector();
-        for (int i = 0; i < 3; i++)
-        {
-            imgBorder[i] = loadImage("/mainImage/myTexture2dbd" + i + ".png");
-        }
-        borderConnerW = mGraphics.getImageWidth(imgBorder[0]);
-        borderConnerH = mGraphics.getImageHeight(imgBorder[0]);
-        borderCenterW = mGraphics.getImageWidth(imgBorder[1]);
-        borderCenterH = mGraphics.getImageHeight(imgBorder[1]);
-        Panel.graphics = Rms.loadRMSInt("lowGraphic");
-        lowGraphic = Rms.loadRMSInt("lowGraphic") == 1;
-        GameScr.isPaintChatVip = Rms.loadRMSInt("serverchat") != 1;
-        Char.isPaintAura = Rms.loadRMSInt("isPaintAura") == 1;
-        Char.isPaintAura2 = Rms.loadRMSInt("isPaintAura2") == 1;
-        Res.init();
-        SmallImage.loadBigImage();
-        Panel.WIDTH_PANEL = 186;
-        if (Panel.WIDTH_PANEL > w)
-        {
-            Panel.WIDTH_PANEL = w;
-        }
-        InfoMe.gI().loadCharId();
-        Command.btn0left = loadImage("/mainImage/btn0left.png");
-        Command.btn0mid = loadImage("/mainImage/btn0mid.png");
-        Command.btn0right = loadImage("/mainImage/btn0right.png");
-        Command.btn1left = loadImage("/mainImage/btn1left.png");
-        Command.btn1mid = loadImage("/mainImage/btn1mid.png");
-        Command.btn1right = loadImage("/mainImage/btn1right.png");
-        serverScreen = new ServerListScreen();
-        img12 = loadImage("/mainImage/12+.png");
-        for (int j = 0; j < 7; j++)
-        {
-            imgBlue[j] = loadImage("/effectdata/blue/" + j + ".png");
-            imgViolet[j] = loadImage("/effectdata/violet/" + j + ".png");
-        }
-        ServerListScreen.createDeleteRMS();
-        serverScr = new ServerScr();
     }
 
     public static GameCanvas gI()
@@ -484,13 +493,25 @@ public class GameCanvas : IActionListener
 
     public void update()
     {
+        // Debug update performance chi tiết
+        var updateTimer = System.Diagnostics.Stopwatch.StartNew();
+        //DebugManager.gI().AddDebugString("UPDATE", "=== UPDATE START ===");
+
+        // Debug gameTick và timeNow
         if (gameTick % 5 == 0)
         {
             timeNow = mSystem.currentTimeMillis();
         }
+
+        var resTimer = System.Diagnostics.Stopwatch.StartNew();
         Res.updateOnScreenDebug();
+        resTimer.Stop();
+        //DebugManager.gI().AddDebugString("UPDATE", $"Res.updateOnScreenDebug() took: {resTimer.ElapsedMilliseconds}ms");
+
         try
         {
+            // Debug keyboard handling
+            var keyboardTimer = System.Diagnostics.Stopwatch.StartNew();
             if (TouchScreenKeyboard.visible)
             {
                 timeOpenKeyBoard++;
@@ -504,7 +525,13 @@ public class GameCanvas : IActionListener
                 mGraphics.addYWhenOpenKeyBoard = 0;
                 timeOpenKeyBoard = 0;
             }
+            keyboardTimer.Stop();
+            //DebugManager.gI().AddDebugString("UPDATE", $"Keyboard handling took: {keyboardTimer.ElapsedMilliseconds}ms");
+
             debugUpdate.removeAllElements();
+
+            // Debug effect timing
+            var effectTimingTimer = System.Diagnostics.Stopwatch.StartNew();
             long num = mSystem.currentTimeMillis();
             if (num - timeTickEff1 >= 780 && !isEff1)
             {
@@ -524,6 +551,9 @@ public class GameCanvas : IActionListener
             {
                 isEff2 = false;
             }
+            effectTimingTimer.Stop();
+            //DebugManager.gI().AddDebugString("UPDATE", $"Effect timing took: {effectTimingTimer.ElapsedMilliseconds}ms");
+
             if (taskTick > 0)
             {
                 taskTick--;
@@ -537,8 +567,13 @@ public class GameCanvas : IActionListener
                 }
                 gameTick = 0;
             }
+
+            //DebugManager.gI().AddDebugString("UPDATE", $"GameTick: {gameTick}, TaskTick: {taskTick}");
+
             if (currentScreen != null)
             {
+                // Debug chat popup updates
+                var chatTimer = System.Diagnostics.Stopwatch.StartNew();
                 if (ChatPopup.serverChatPopUp != null)
                 {
                     ChatPopup.serverChatPopUp.update();
@@ -549,19 +584,34 @@ public class GameCanvas : IActionListener
                     ChatPopup.currChatPopup.update();
                     ChatPopup.currChatPopup.updateKey();
                 }
-                else if (currentDialog != null)
+                chatTimer.Stop();
+                //DebugManager.gI().AddDebugString("UPDATE", $"Chat popup updates took: {chatTimer.ElapsedMilliseconds}ms");
+
+                // Debug dialog updates
+                var dialogTimer = System.Diagnostics.Stopwatch.StartNew();
+                if (currentDialog != null)
                 {
                     debug("B", 0);
                     currentDialog.update();
                 }
-                else if (menu.showMenu)
+                dialogTimer.Stop();
+                //DebugManager.gI().AddDebugString("UPDATE", $"Dialog update took: {dialogTimer.ElapsedMilliseconds}ms");
+
+                // Debug menu updates
+                var menuTimer = System.Diagnostics.Stopwatch.StartNew();
+                if (menu.showMenu)
                 {
                     debug("C", 0);
                     menu.updateMenu();
                     debug("D", 0);
                     menu.updateMenuKey();
-                }
-                else if (panel.isShow)
+                }else
+                //menuTimer.Stop();
+                ////DebugManager.gI().AddDebugString("UPDATE", $"Menu updates took: {menuTimer.ElapsedMilliseconds}ms");
+
+                //// Debug panel updates (có thể tốn thời gian)
+                //var panelTimer = System.Diagnostics.Stopwatch.StartNew();
+                if (panel.isShow)
                 {
                     panel.update();
                     if (isPointer(panel.X, panel.Y, panel.W, panel.H))
@@ -612,36 +662,82 @@ public class GameCanvas : IActionListener
                         panel.hide();
                     }
                 }
+                //panelTimer.Stop();
+                ////DebugManager.gI().AddDebugString("UPDATE", $"Panel updates took: {panelTimer.ElapsedMilliseconds}ms");
+
                 debug("E", 0);
+
+                // Debug currentScreen update (có thể là bottleneck chính)
+                var screenUpdateTimer = System.Diagnostics.Stopwatch.StartNew();
                 if (!isLoading)
                 {
                     currentScreen.update();
                 }
+                screenUpdateTimer.Stop();
+                //DebugManager.gI().AddDebugString("UPDATE", $"currentScreen.update() took: {screenUpdateTimer.ElapsedMilliseconds}ms");
+
                 debug("F", 0);
+
+                // Debug screen updateKey
+                var screenKeyTimer = System.Diagnostics.Stopwatch.StartNew();
                 if (!panel.isShow && ChatPopup.serverChatPopUp == null)
                 {
                     currentScreen.updateKey();
                 }
+                screenKeyTimer.Stop();
+                //DebugManager.gI().AddDebugString("UPDATE", $"currentScreen.updateKey() took: {screenKeyTimer.ElapsedMilliseconds}ms");
+
+                // Debug các component khác
+                var componentTimer = System.Diagnostics.Stopwatch.StartNew();
                 Hint.update();
                 SoundMn.gI().update();
                 VoiceMessageManager.gI().Update();
+                componentTimer.Stop();
+                //DebugManager.gI().AddDebugString("UPDATE", $"Hint + Sound + Voice took: {componentTimer.ElapsedMilliseconds}ms");
             }
+
             debug("Ix", 0);
+
+            // Debug Timer update
+            var timerTimer = System.Diagnostics.Stopwatch.StartNew();
             Timer.update();
+            timerTimer.Stop();
+            //DebugManager.gI().AddDebugString("UPDATE", $"Timer.update() took: {timerTimer.ElapsedMilliseconds}ms");
+
             debug("Hx", 0);
+
+            // Debug InfoDlg update
+            var infoDlgTimer = System.Diagnostics.Stopwatch.StartNew();
             InfoDlg.update();
+            infoDlgTimer.Stop();
+            //DebugManager.gI().AddDebugString("UPDATE", $"InfoDlg.update() took: {infoDlgTimer.ElapsedMilliseconds}ms");
+
             debug("G", 0);
+
+            // Debug reset logic
+            var resetTimer = System.Diagnostics.Stopwatch.StartNew();
             if (resetToLoginScr)
             {
                 resetToLoginScr = false;
                 doResetToLoginScr(serverScreen);
             }
+            resetTimer.Stop();
+            //DebugManager.gI().AddDebugString("UPDATE", $"Reset logic took: {resetTimer.ElapsedMilliseconds}ms");
+
             debug("Zzz", 0);
+
+            // Debug service clearing
+            var serviceTimer = System.Diagnostics.Stopwatch.StartNew();
             if (mSystem.currentTimeMillis() - lastSend >= 15 * 60000)
             {
                 Service.gI().clearTask();
                 lastSend = mSystem.currentTimeMillis();
             }
+            serviceTimer.Stop();
+            //DebugManager.gI().AddDebugString("UPDATE", $"Service clearing took: {serviceTimer.ElapsedMilliseconds}ms");
+
+            // Debug connection handling (có thể tốn thời gian)
+            var connectionTimer = System.Diagnostics.Stopwatch.StartNew();
             if (Controller.isConnectOK)
             {
                 if (Controller.isMain)
@@ -662,6 +758,11 @@ public class GameCanvas : IActionListener
                 }
                 Controller.isConnectOK = false;
             }
+            connectionTimer.Stop();
+            //DebugManager.gI().AddDebugString("UPDATE", $"Connection OK handling took: {connectionTimer.ElapsedMilliseconds}ms");
+
+            // Debug disconnection handling
+            var disconnectTimer = System.Diagnostics.Stopwatch.StartNew();
             if (Controller.isDisconnected)
             {
                 Debug.Log("disconnect");
@@ -682,6 +783,11 @@ public class GameCanvas : IActionListener
                 }
                 Controller.isDisconnected = false;
             }
+            disconnectTimer.Stop();
+            //DebugManager.gI().AddDebugString("UPDATE", $"Disconnection handling took: {disconnectTimer.ElapsedMilliseconds}ms");
+
+            // Debug connection fail handling
+            var connFailTimer = System.Diagnostics.Stopwatch.StartNew();
             if (Controller.isConnectionFail)
             {
                 Debug.Log("connect fail");
@@ -702,6 +808,11 @@ public class GameCanvas : IActionListener
                 }
                 Controller.isConnectionFail = false;
             }
+            connFailTimer.Stop();
+            //DebugManager.gI().AddDebugString("UPDATE", $"Connection fail handling took: {connFailTimer.ElapsedMilliseconds}ms");
+
+            // Debug resume handling
+            var resumeTimer = System.Diagnostics.Stopwatch.StartNew();
             if (Main.isResume)
             {
                 Main.isResume = false;
@@ -710,9 +821,31 @@ public class GameCanvas : IActionListener
                     currentDialog.left.performAction();
                 }
             }
+            resumeTimer.Stop();
+            //DebugManager.gI().AddDebugString("UPDATE", $"Resume handling took: {resumeTimer.ElapsedMilliseconds}ms");
+
+            updateTimer.Stop();
+            long totalUpdateTime = updateTimer.ElapsedMilliseconds;
+            //DebugManager.gI().AddDebugString("UPDATE", $"=== UPDATE TOTAL: {totalUpdateTime}ms ===");
+
+            // Cảnh báo nếu update quá chậm
+            if (totalUpdateTime > 16) // Hơn 16ms có thể gây FPS drop
+            {
+                //DebugManager.gI().AddDebugString($"⚠️ SLOW UPDATE: {totalUpdateTime}ms (>16ms)");
+            }
+
+            // Cảnh báo nghiêm trọng nếu update cực chậm
+            if (totalUpdateTime > 50) // Hơn 50ms là cực kỳ chậm
+            {
+                //DebugManager.gI().AddDebugString($"🚨 CRITICAL SLOW UPDATE: {totalUpdateTime}ms");
+            }
+
+            // Log thêm thông tin context
+
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            //DebugManager.gI().AddDebugString($"🚨 UPDATE EXCEPTION: {ex.Message}");
         }
     }
     long lastSend = mSystem.currentTimeMillis();
@@ -1808,8 +1941,9 @@ public class GameCanvas : IActionListener
                 paintBG = true;
             }
         }
-        catch (Exception)
+        catch (Exception e)
         {
+            Debug.LogException(e);
             isLoadBGok = false;
         }
     }
@@ -2260,15 +2394,28 @@ public class GameCanvas : IActionListener
     {
         try
         {
+            // Debug paint performance chi tiết
+            var paintTimer = System.Diagnostics.Stopwatch.StartNew();
+            //DebugManager.gI().AddDebugString("PAINT", "=== PAINT START ===");
+
             debugPaint.removeAllElements();
             debug("PA", 1);
+
+            // Debug currentScreen paint
+            var screenTimer = System.Diagnostics.Stopwatch.StartNew();
             if (currentScreen != null)
             {
                 currentScreen.paint(g);
             }
+            screenTimer.Stop();
+            //DebugManager.gI().AddDebugString("PAINT", $"currentScreen.paint() took: {screenTimer.ElapsedMilliseconds}ms");
+
             debug("PB", 1);
             g.translate(-g.getTranslateX(), -g.getTranslateY());
             g.setClip(0, 0, w, h);
+
+            // Debug panel painting
+            var panelTimer = System.Diagnostics.Stopwatch.StartNew();
             if (panel.isShow)
             {
                 panel.paint(g);
@@ -2285,8 +2432,18 @@ public class GameCanvas : IActionListener
                     panel2.chatTField.paint(g);
                 }
             }
+            panelTimer.Stop();
+            //DebugManager.gI().AddDebugString("PAINT", $"Panel painting took: {panelTimer.ElapsedMilliseconds}ms");
+
+            // Debug các component nhỏ
+            var componentTimer = System.Diagnostics.Stopwatch.StartNew();
             Res.paintOnScreenDebug(g);
             InfoDlg.paint(g);
+            componentTimer.Stop();
+            //DebugManager.gI().AddDebugString("PAINT", $"Res + InfoDlg took: {componentTimer.ElapsedMilliseconds}ms");
+
+            // Debug dialog/menu painting
+            var dialogTimer = System.Diagnostics.Stopwatch.StartNew();
             if (currentDialog != null)
             {
                 debug("PC", 1);
@@ -2297,8 +2454,18 @@ public class GameCanvas : IActionListener
                 debug("PD", 1);
                 menu.paintMenu(g);
             }
+            dialogTimer.Stop();
+            //DebugManager.gI().AddDebugString("PAINT", $"Dialog/Menu painting took: {dialogTimer.ElapsedMilliseconds}ms");
+
+            // Debug GameScr info painting
+            var infoTimer = System.Diagnostics.Stopwatch.StartNew();
             GameScr.info1.paint(g);
             GameScr.info2.paint(g);
+            infoTimer.Stop();
+            //DebugManager.gI().AddDebugString("PAINT", $"GameScr info painting took: {infoTimer.ElapsedMilliseconds}ms");
+
+            // Debug popup painting
+            var popupTimer = System.Diagnostics.Stopwatch.StartNew();
             if (GameScr.gI().popUpYesNo != null)
             {
                 GameScr.gI().popUpYesNo.paint(g);
@@ -2312,21 +2479,44 @@ public class GameCanvas : IActionListener
             {
                 ChatPopup.serverChatPopUp.paint(g);
             }
+            popupTimer.Stop();
+            //DebugManager.gI().AddDebugString("PAINT", $"Popup painting took: {popupTimer.ElapsedMilliseconds}ms");
+
+            // Debug Effect2 painting (có thể tốn nhiều time)
+            var effectTimer = System.Diagnostics.Stopwatch.StartNew();
+            int effectCount = 0;
             for (int i = 0; i < Effect2.vEffect2.size(); i++)
             {
                 Effect2 effect = (Effect2)Effect2.vEffect2.elementAt(i);
                 if (effect is ChatPopup && !effect.Equals(ChatPopup.currChatPopup) && !effect.Equals(ChatPopup.serverChatPopUp))
                 {
                     effect.paint(g);
+                    effectCount++;
                 }
             }
+            effectTimer.Stop();
+            //DebugManager.gI().AddDebugString("PAINT", $"Effect2 painting took: {effectTimer.ElapsedMilliseconds}ms (Count: {effectCount}, Total: {Effect2.vEffect2.size()})");
+
+            // Debug loading map painting
+            var loadingTimer = System.Diagnostics.Stopwatch.StartNew();
             if (Char.isLoadingMap || LoginScr.isContinueToLogin || ServerListScreen.waitToLogin || ServerListScreen.isWait)
             {
                 paintChangeMap(g);
             }
+            loadingTimer.Stop();
+            //DebugManager.gI().AddDebugString("PAINT", $"Loading map painting took: {loadingTimer.ElapsedMilliseconds}ms");
+
             debug("PE", 1);
             resetTrans(g);
+
+            // Debug EffecMn painting
+            var effecMnTimer = System.Diagnostics.Stopwatch.StartNew();
             EffecMn.paintLayer4(g);
+            effecMnTimer.Stop();
+            //DebugManager.gI().AddDebugString("PAINT", $"EffecMn.paintLayer4() took: {effecMnTimer.ElapsedMilliseconds}ms");
+
+            // Debug language specific painting
+            var languageTimer = System.Diagnostics.Stopwatch.StartNew();
             if (mResources.language == 0 && open3Hour && !isLoading)
             {
                 if (currentScreen == loginScr || currentScreen == serverScreen || currentScreen == serverScr)
@@ -2338,12 +2528,33 @@ public class GameCanvas : IActionListener
                     g.drawImage(img12, 5, 20, 0);
                 }
             }
+            languageTimer.Stop();
+            //DebugManager.gI().AddDebugString("PAINT", $"Language specific painting took: {languageTimer.ElapsedMilliseconds}ms");
+
+            paintTimer.Stop();
+            long totalPaintTime = paintTimer.ElapsedMilliseconds;
+            //DebugManager.gI().AddDebugString("PAINT", $"=== PAINT TOTAL: {totalPaintTime}ms ===");
+
+            // Cảnh báo nếu paint quá chậm
+            if (totalPaintTime > 16) // Hơn 16ms có thể gây FPS drop
+            {
+                //DebugManager.gI().AddDebugString($"⚠️ SLOW PAINT: {totalPaintTime}ms (>16ms)");
+            }
+
+            // Cảnh báo nghiêm trọng nếu paint cực chậm
+            if (totalPaintTime > 50) // Hơn 50ms là cực kỳ chậm
+            {
+                //DebugManager.gI().AddDebugString($"🚨 CRITICAL SLOW PAINT: {totalPaintTime}ms");
+            }
+
+            // Log thêm thông tin context để debug
+
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            //DebugManager.gI().AddDebugString($"🚨 PAINT EXCEPTION: {ex.Message}");
         }
     }
-
     public static void endDlg()
     {
         if (inputDlg != null)

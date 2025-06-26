@@ -162,7 +162,7 @@ public class LoginScr : mScreen, IActionListener
 		tfUser.isFocus = true;
 		tfUser.setIputType(TField.INPUT_TYPE_ANY);
 		tfUser.name = ((mResources.language != 2) ? (mResources.phone + "/") : string.Empty) + mResources.email;
-		//tfUser.canTelex = tfPass.canTelex = false;
+		
 		tfPass = new TField();
 		tfPass.y = GameCanvas.hh - 4;
 		tfPass.setIputType(TField.INPUT_TYPE_PASSWORD);
@@ -240,7 +240,8 @@ public class LoginScr : mScreen, IActionListener
 		cmdFogetPass.y = cmdLogin.y;
 		center = cmdOK;
 		left = cmdFogetPass;
-	}
+        tfUser.canTelex = tfPass.canTelex = false;
+    }
 
 
 	public override void switchToMe()

@@ -31,6 +31,7 @@ public class Pic extends Boss {
         setInfo(20000000, 1000000, 10000, 100, 5);
         this.willLeaveAtDeath = false;
         point = 3;
+        canDispose = true;
     }
 
     @Override
@@ -67,6 +68,11 @@ public class Pic extends Boss {
             return;
         }
         dropGroupB((Player) obj);
+    }
+
+    @Override
+    public void update() {
+        super.update();
     }
 
     @Override

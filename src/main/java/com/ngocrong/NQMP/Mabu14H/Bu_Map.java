@@ -13,7 +13,9 @@ import com.ngocrong.item.ItemMap;
 import com.ngocrong.map.MapManager;
 import com.ngocrong.map.TMap;
 import com.ngocrong.map.tzone.Zone;
+import com.ngocrong.mob.Mob;
 import com.ngocrong.server.SessionManager;
+import com.ngocrong.skill.SkillName;
 import com.ngocrong.skill.Skills;
 import com.ngocrong.user.Player;
 import com.ngocrong.util.Utils;
@@ -76,7 +78,7 @@ public class Bu_Map extends Boss {
                 break;
             case 4:
                 this.name = "KidBu";
-                setInfo(500_000_000, 1000000, 20000, 1000, 30);
+                setInfo(200_000, 1000000, 20000, 1000, 30);
                 break;
             default:
                 break;
@@ -134,9 +136,30 @@ public class Bu_Map extends Boss {
     }
 
     @Override
+    public long injure(Player plAtt, Mob mob, long dameInput) {
+        if (dameInput <= 0) {
+            return -1;
+        }
+        long dame = dameInput;
+        if (level == 4) {
+            var skill = plAtt.select;
+            if (skill == null) {
+                return -1;
+            }
+            if (skill.template.id == SkillName.QUA_CAU_KENH_KHI || skill.template.id == SkillName.MAKANKOSAPPO) {
+                return dameInput;
+            } else {
+                return -1;
+            }
+        }
+        return dameInput;
+    }
+
+    @Override
     public void update() {
         LocalDateTime now = LocalDateTime.now();
         if (now.getHour() != 14 && zone != null) {
+            System.err.println("hourt : " + now.getHour());
             startDie();
             return;
         }

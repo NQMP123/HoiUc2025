@@ -22,6 +22,7 @@ public class ThienXinHang extends BossDHVT {
             canAttack = true;
         }, 14500);
         super.setDame(10, plAtt);
+        percentDef = 40;
     }
     private static Logger logger = Logger.getLogger(SoiHecQuyn.class);
 

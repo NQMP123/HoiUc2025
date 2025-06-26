@@ -229,9 +229,9 @@ public class Disciple extends Player {
                     Skill skill = null;
                     if (skillOpened == 1) {
                         int random = Utils.nextInt(100);
-                        if (random < 10) {
+                        if (random < 25) {
                             skillID = SkillName.CHIEU_KAMEJOKO;
-                        } else if (random < 40) {
+                        } else if (random < 65) {
                             skillID = SkillName.CHIEU_MASENKO;
                         } else {
                             skillID = SkillName.CHIEU_ANTOMIC;
@@ -576,12 +576,14 @@ public class Disciple extends Player {
             }
         }
         long now = System.currentTimeMillis();
-        if (isDead() && now - deadTime >= 30000 && zone != null) {
+        if (isDead() && now - deadTime >= 30000 && this.master.zone != null) {
             followMaster();
             this.info.hp = info.hpFull;
             this.info.mp = info.mpFull;
             setDead(false);
-            zone.leave(this);
+            if (zone != null) {
+                zone.leave(this);
+            }
             if (discipleStatus != 3) {
                 this.statusMe = 1;
                 if (master.zone != null && !master.zone.map.isMapSingle()) {

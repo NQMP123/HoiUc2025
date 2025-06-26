@@ -107,6 +107,7 @@ public class CreateCharScr : mScreen, IActionListener
 		{
 			right = tAddName.cmdClear;
 		}
+		tAddName.canTelex = false;
 		yBegin = tAddName.y;
 	}
 

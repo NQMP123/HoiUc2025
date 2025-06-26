@@ -31,6 +31,7 @@ public class Android15 extends Boss {
         setInfo(10000000, 1000000, 10000, 100, 5);
         this.willLeaveAtDeath = false;
         point = 3;
+        canDispose = true;
     }
 
     @Override
@@ -80,7 +81,9 @@ public class Android15 extends Boss {
             super.startDie();
         } finally {
             team.next(this);
-            zone.leave(this);
+            if (zone != null) {
+                zone.leave(this);
+            }
         }
     }
 

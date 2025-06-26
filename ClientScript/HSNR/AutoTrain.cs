@@ -286,6 +286,10 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                 Mob mob2 = (Mob)GameScr.vMob.elementAt(i);
                 if (mob2.status != 0 && mob2.status != 1 && mob2.hp > 0 && !mob2.isMobMe)
                 {
+                    if (mob2.levelBoss != 0 && !AutoTrain.isAvoidSuperMob)
+                    {
+                        continue;
+                    }
                     if (AutoTrain.listMobIds.Contains(mob2.mobId))
                     {
                         return mob2;

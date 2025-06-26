@@ -372,6 +372,7 @@ public class Service
 
     public void skill_not_focus(sbyte status)
     {
+        Debug.LogError("skillFocus:" + status);
         Message message = null;
         try
         {

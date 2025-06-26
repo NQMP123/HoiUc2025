@@ -8,7 +8,7 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
     {
         private static MainMod instance;
         public bool isAutoRevive;
-        private Button[] button = new Button[11];
+        private Button[] button = new Button[13];
         public static MainMod gI()
         {
             if (instance == null)
@@ -20,7 +20,7 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
         }
         public MainMod()
         {
-            button = new Button[]
+            button = new Button[13]
                {
                     new Button("J", this, 12),
                     new Button("K", this, 13),
@@ -31,6 +31,8 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                     new Button("G", this, 18),
                     new Button("N", this, 19),
                     new Button("X", this, 20),
+                    new Button("T", this, 23),
+                    new Button("S", this, 24),
                     new Button("C", this, 21),
                     new Button("M", this, 22),
                };
@@ -88,12 +90,12 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                                 button[i].Paint(g);
                             }
                         }
-                        else if (i >= 3 && i <= 8)
+                        else if (i >= 3 && i <= 10)
                         {
                             if (button[i] != null)
                             {
 
-                                button[i].x = ((GameCanvas.w / 2) - (23 * 6)) + 23 * i;
+                                button[i].x = ((GameCanvas.w / 2) - (30 * 6)) + 26 * i;
                                 button[i].y = GameScr.ySkill - GameScr.imgSkill.getHeight() / 2 - 40;
                                 button[i].Paint(g);
                             }
@@ -102,7 +104,7 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                         {
                             if (button[i] != null)
                             {
-                                button[i].x = GameScr.xTG + 45 + 23 * (i - 11);
+                                button[i].x = GameScr.xTG + 25 * (i - 13);
                                 button[i].y = GameScr.yTG - 30;
                                 button[i].Paint(g);
                             }
@@ -111,12 +113,36 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                 }
             }
         }
+        static Char holdNRSD()
+        {
+            for (int i = 0; i < GameScr.vCharInMap.size(); i++)
+            {
+                Char c = (Char)GameScr.vCharInMap.elementAt(i);
+                if (c != null && !c.isPet && !c.isMiniPet)
+                {
+                    if (c.bag >= 61 && c.bag <= 66)
+                    {
+                        return c;
+                    }
+                }
+            }
+            return null;
+        }
         private void paintCharInfo(mGraphics g, Char c)
         {
             string strInfo = string.Empty;
             if (c.mobFocus != null)
             {
                 strInfo = $"{c.mobFocus.getTemplate().name}\n[{NinjaUtil.getMoneys(c.mobFocus.hp)}/{NinjaUtil.getMoneys(c.mobFocus.getTemplate().hp)}]";
+            }
+            else if (holdNRSD() != null)
+            {
+                c = holdNRSD();
+                strInfo = $"{c.cName}\n{NinjaUtil.getMoneys(c.cHP)}/{NinjaUtil.getMoneys(c.cHPFull)}";
+                if (c.clanID != -1)
+                {
+                    strInfo += $"\nClanID: {c.clanID}";
+                }
             }
             else if (c.charFocus != null && !c.charFocus.isPet && !c.charFocus.isMiniPet)
             {
@@ -147,6 +173,11 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                 mFont.tahoma_7b_white.drawString(g, "Hồi sinh: on", 20, num, 0, mFont.tahoma_7b_dark);
                 num += 10;
             }
+            if (autoFocus)
+            {
+                mFont.tahoma_7b_white.drawString(g, "Auto FocusBoss: on", 20, num, 0, mFont.tahoma_7b_dark);
+                num += 10;
+            }
             if (AutoPick.isAutoPick)
             {
                 mFont.tahoma_7b_white.drawString(g, "Auto nhặt: on", 20, num, 0, mFont.tahoma_7b_dark);
@@ -164,6 +195,7 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                 AutoPean.Update();
                 AutoPick.Update();
                 AutoTrain.Update();
+                focusBoss();
                 if (isAutoRevive)
                 {
                     if (Char.myCharz().meDead && GameCanvas.gameTick % 20 == 0)
@@ -187,20 +219,24 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
         }
         public void UpdateKey()
         {
-            ListChars.gI().UpdateKey();
-            if (GameScr.isAnalog == 1 && GameCanvas.isTouch && !ChatTextField.gI().isShow && !GameCanvas.menu.showMenu && !GameCanvas.panel.isShow && !Char.isLoadingMap && !Char.myCharz().meDead)
+           
+            if (Panel.isShowPhimTat)
             {
-                if (button != null)
+                if (GameScr.isAnalog == 1 && GameCanvas.isTouch && !ChatTextField.gI().isShow && !GameCanvas.menu.showMenu && !GameCanvas.panel.isShow && !Char.isLoadingMap && !Char.myCharz().meDead)
                 {
-                    for (int i = 0; i < button.Length; i++)
+                    if (button != null)
                     {
-                        if (button[i] != null && button[i].isPointerPressInside())
+                        for (int i = 0; i < button.Length; i++)
                         {
-                            button[i].performAction();
+                            if (button[i] != null && button[i].isPointerPressInside())
+                            {
+                                button[i].performAction();
+                            }
                         }
                     }
                 }
             }
+            ListChars.gI().UpdateKey();
         }
         public void HotKey()
         {
@@ -252,8 +288,8 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                     {
                         GameUtils.gI().UseItem(921);
                     }
-                    if (isNhapThe)
-                        Service.gI().petStatus(3);
+                    //if (isNhapThe)
+                    //    Service.gI().petStatus(3);
                     break;
                 case 'g':
                     if (Char.myCharz().charFocus == null)
@@ -274,17 +310,41 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                     AutoTrain.ShowMenu();
                     break;
                 case 's':
-                    for (int j = 0; j < GameScr.vCharInMap.size(); j++)
-                    {
-                        Char @char = (Char)GameScr.vCharInMap.elementAt(j);
-                        if (!@char.cName.Equals("") && isBoss(@char) && (Char.myCharz().charFocus == null || (Char.myCharz().charFocus != null && Char.myCharz().charFocus.cName != @char.cName)))
-                        {
-                            resetFocus();
-                            Char.myCharz().charFocus = @char;
-                            break;
-                        }
-                    }
+                    autoFocus = !autoFocus;
+                    GameScr.info1.addInfo("Auto Focus Boss\n" + (autoFocus ? "[ON]" : "[OFF]"), 0);
                     break;
+            }
+        }
+        public static bool autoFocus;
+        public static void focusBoss()
+        {
+            if (autoFocus)
+            {
+                if (Char.myCharz().charFocus != null && isBoss(Char.myCharz().charFocus))
+                {
+                    if (Char.myCharz().charFocus.isDie || Char.myCharz().charFocus.cHP <= 0)
+                    {
+                       
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+                for (int j = 0; j < GameScr.vCharInMap.size(); j++)
+                {
+                    Char @char = (Char)GameScr.vCharInMap.elementAt(j);
+                    if (!@char.cName.Equals("") && isBoss(@char) && (Char.myCharz().charFocus == null || (Char.myCharz().charFocus != null && Char.myCharz().charFocus.cName != @char.cName)))
+                    {
+                        if (@char.isDie || @char.cHP <= 0)
+                        {
+                            continue;
+                        }
+                        resetFocus();
+                        Char.myCharz().charFocus = @char;
+                        break;
+                    }
+                }
             }
         }
         public static void resetFocus()
@@ -348,14 +408,24 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
             else if (text.StartsWith("cheat"))
             {
                 int cheat = int.Parse(text.Substring(5));
-                Time.timeScale = cheat;
+                if (cheat <= 10)
+                { Time.timeScale = cheat; }
+                else
+                {
+                    GameScr.info1.addInfo("Cheat tối đa là 10",0);
+                }
                 text = "";
                 return true;
             }
             else if (text.StartsWith("cheatf"))
             {
                 float cheat = int.Parse(text.Substring(6)) / 10.0f;
-                Time.timeScale = cheat;
+                if (cheat <= 10)
+                { Time.timeScale = cheat; }
+                else
+                {
+                    GameScr.info1.addInfo("Cheat tối đa là 10", 0);
+                }
                 text = "";
                 return true;
             }
@@ -403,10 +473,11 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                     break;
 
 
+
             }
-            if (idAction >= 12 && idAction <= 22)
+            if (idAction >= 12 && idAction <= 24)
             {
-                char[] nChar = new char[] { 'j', 'k', 'l', 'a', 'f', 'e', 'g', 'n', 'x', 'c', 'm' };
+                char[] nChar = new char[] { 'j', 'k', 'l', 'a', 'f', 'e', 'g', 'n', 'x', 'c', 'm','t','s'};
                 GameCanvas.keyAsciiPress = nChar[idAction - 12];
             }
         }

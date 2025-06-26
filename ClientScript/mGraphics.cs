@@ -1265,12 +1265,12 @@ public class mGraphics
 
     public void CreateLineMaterial()
     {
-        if (!lineMaterial)
-        {
-            lineMaterial = new Material(Shader.Find("Specular"));
-            lineMaterial.hideFlags = HideFlags.HideAndDontSave;
-            lineMaterial.shader.hideFlags = HideFlags.HideAndDontSave;
-        }
+        //if (!lineMaterial)
+        //{
+        //    lineMaterial = new Material(Shader.Find("Specular"));
+        //    lineMaterial.hideFlags = HideFlags.HideAndDontSave;
+        //    lineMaterial.shader.hideFlags = HideFlags.HideAndDontSave;
+        //}
     }
 
     public void drawlineGL(MyVector totalLine)

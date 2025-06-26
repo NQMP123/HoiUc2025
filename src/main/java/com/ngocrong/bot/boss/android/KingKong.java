@@ -29,6 +29,7 @@ public class KingKong extends Boss {
         setInfo(30000000, 1000000, 10000, 100, 5);
         this.willLeaveAtDeath = false;
         point = 3;
+        canDispose = true;
     }
 
     @Override

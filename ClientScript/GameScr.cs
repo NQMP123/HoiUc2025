@@ -4859,21 +4859,32 @@ public class GameScr : mScreen, IChatable
     {
         try
         {
+            // Debug paint performance chi tiết cho GameScr
+            var paintTimer = System.Diagnostics.Stopwatch.StartNew();
+            //DebugManager.gI().AddDebugString("GAMESCR_PAINT", "=== GAMESCR PAINT START ===");
+
             countEff = 0;
             if (!isPaint)
             {
+                //DebugManager.gI().AddDebugString("GAMESCR_PAINT", "isPaint = false, skipping paint");
                 return;
             }
+
             GameCanvas.debug("PA1", 1);
+
+            // Debug freeze effect
+            var freezeTimer = System.Diagnostics.Stopwatch.StartNew();
             if (isFreez || (isUseFreez && ChatPopup.currChatPopup == null))
             {
-                dem+=3;
+                dem += 3;
                 if ((dem < 30 && dem >= 0 && GameCanvas.gameTick % 4 == 0) || (dem >= 30 && dem <= 50 && GameCanvas.gameTick % 3 == 0) || dem > 50)
                 {
                     g.setColor(16777215);
                     g.fillRect(0, 0, GameCanvas.w, GameCanvas.h);
                     if (dem <= 50)
                     {
+                        freezeTimer.Stop();
+                        //DebugManager.gI().AddDebugString("GAMESCR_PAINT", $"Freeze effect early return, dem: {dem}, took: {freezeTimer.ElapsedMilliseconds}ms");
                         return;
                     }
                     if (isUseFreez)
@@ -4897,16 +4908,30 @@ public class GameScr : mScreen, IChatable
                     mSystem.paintFlyText(g);
                     resetTranslate(g);
                     paintSelectedSkill(g);
+                    freezeTimer.Stop();
+                    //DebugManager.gI().AddDebugString("GAMESCR_PAINT", $"Freeze effect complete return, took: {freezeTimer.ElapsedMilliseconds}ms");
                     return;
                 }
             }
+            freezeTimer.Stop();
+            //DebugManager.gI().AddDebugString("GAMESCR_PAINT", $"Freeze handling took: {freezeTimer.ElapsedMilliseconds}ms");
+
             GameCanvas.debug("PA2", 1);
+
+            // Debug background painting
+            var bgTimer = System.Diagnostics.Stopwatch.StartNew();
             GameCanvas.paintBGGameScr(g);
             if ((isRongThanXuatHien || isFireWorks) && TileMap.bgID != 3)
             {
                 paintBlackSky(g);
             }
+            bgTimer.Stop();
+            //DebugManager.gI().AddDebugString("GAMESCR_PAINT", $"Background painting took: {bgTimer.ElapsedMilliseconds}ms");
+
             GameCanvas.debug("PA3", 1);
+
+            // Debug camera translation
+            var cameraTimer = System.Diagnostics.Stopwatch.StartNew();
             if (shock_scr > 0)
             {
                 g.translate(-cmx + shock_x[shock_scr % shock_x.Length], -cmy + shock_y[shock_scr % shock_y.Length]);
@@ -4921,10 +4946,20 @@ public class GameScr : mScreen, IChatable
                 int tx = ((GameCanvas.gameTick % 3 != 0) ? (-3) : 3);
                 g.translate(tx, 0);
             }
+            cameraTimer.Stop();
+            //DebugManager.gI().AddDebugString("GAMESCR_PAINT", $"Camera translation took: {cameraTimer.ElapsedMilliseconds}ms");
+
+            // Debug background effects và tilemaps
+            var tileTimer = System.Diagnostics.Stopwatch.StartNew();
             BackgroudEffect.paintBehindTileAll(g);
             EffecMn.paintLayer1(g);
             TileMap.paintTilemap(g);
             TileMap.paintOutTilemap(g);
+            tileTimer.Stop();
+            //DebugManager.gI().AddDebugString("GAMESCR_PAINT", $"Background + Tilemap painting took: {tileTimer.ElapsedMilliseconds}ms");
+
+            // Debug character head painting (Mabu hold)
+            var charHeadTimer = System.Diagnostics.Stopwatch.StartNew();
             for (int i = 0; i < vCharInMap.size(); i++)
             {
                 Char @char = (Char)vCharInMap.elementAt(i);
@@ -4937,7 +4972,13 @@ public class GameScr : mScreen, IChatable
             {
                 Char.myCharz().paintHeadWithXY(g, Char.myCharz().cx, Char.myCharz().cy, 0);
             }
+            charHeadTimer.Stop();
+            //DebugManager.gI().AddDebugString("GAMESCR_PAINT", $"Character head painting took: {charHeadTimer.ElapsedMilliseconds}ms");
+
             paintBgItem(g, 2);
+
+            // Debug command menu
+            var cmdMenuTimer = System.Diagnostics.Stopwatch.StartNew();
             if (Char.myCharz().cmdMenu != null && GameCanvas.isTouch)
             {
                 if (mScreen.keyTouch == 20)
@@ -4949,8 +4990,14 @@ public class GameScr : mScreen, IChatable
                     g.drawImage(imgChat, Char.myCharz().cmdMenu.x + cmx, Char.myCharz().cmdMenu.y + cmy, mGraphics.HCENTER | mGraphics.VCENTER);
                 }
             }
+            cmdMenuTimer.Stop();
+            //DebugManager.gI().AddDebugString("GAMESCR_PAINT", $"Command menu painting took: {cmdMenuTimer.ElapsedMilliseconds}ms");
+
             GameCanvas.debug("PA4", 1);
             GameCanvas.debug("PA5", 1);
+
+            // Debug effects painting (có thể tốn nhiều thời gian)
+            var effectsTimer = System.Diagnostics.Stopwatch.StartNew();
             BackgroudEffect.paintBackAll(g);
             EffectManager.lowEffects.paintAll(g);
             for (int i = 0; i < Effect2.vEffectFeet.size(); i++)
@@ -4958,10 +5005,20 @@ public class GameScr : mScreen, IChatable
                 Effect2 effect = (Effect2)Effect2.vEffectFeet.elementAt(i);
                 effect.paint(g);
             }
+            effectsTimer.Stop();
+            //DebugManager.gI().AddDebugString("GAMESCR_PAINT", $"Effects painting took: {effectsTimer.ElapsedMilliseconds}ms (vEffectFeet: {Effect2.vEffectFeet.size()})");
+
+            // Debug teleport painting
+            var teleportTimer = System.Diagnostics.Stopwatch.StartNew();
             for (int i = 0; i < Teleport.vTeleport.size(); i++)
             {
                 ((Teleport)Teleport.vTeleport.elementAt(i)).paintHole(g);
             }
+            teleportTimer.Stop();
+            //DebugManager.gI().AddDebugString("GAMESCR_PAINT", $"Teleport holes painting took: {teleportTimer.ElapsedMilliseconds}ms (count: {Teleport.vTeleport.size()})");
+
+            // Debug NPC painting
+            var npcTimer = System.Diagnostics.Stopwatch.StartNew();
             for (int i = 0; i < vNpc.size(); i++)
             {
                 Npc npc = (Npc)vNpc.elementAt(i);
@@ -4974,9 +5031,15 @@ public class GameScr : mScreen, IChatable
             {
                 ((Npc)vNpc.elementAt(i)).paint(g);
             }
+            npcTimer.Stop();
+            //DebugManager.gI().AddDebugString("GAMESCR_PAINT", $"NPC painting took: {npcTimer.ElapsedMilliseconds}ms (count: {vNpc.size()})");
+
             g.translate(0, GameCanvas.transY);
             GameCanvas.debug("PA7", 1);
             GameCanvas.debug("PA8", 1);
+
+            // Debug character shadow painting (có thể tốn thời gian)
+            var charShadowTimer = System.Diagnostics.Stopwatch.StartNew();
             for (int i = 0; i < vCharInMap.size(); i++)
             {
                 Char char2 = null;
@@ -4994,15 +5057,31 @@ public class GameScr : mScreen, IChatable
                 }
             }
             Char.myCharz().paintShadow(g);
+            charShadowTimer.Stop();
+            //DebugManager.gI().AddDebugString("GAMESCR_PAINT", $"Character shadow painting took: {charShadowTimer.ElapsedMilliseconds}ms (chars: {vCharInMap.size()})");
+
             EffecMn.paintLayer2(g);
+
+            // Debug mob painting
+            var mobTimer = System.Diagnostics.Stopwatch.StartNew();
             for (int i = 0; i < vMob.size(); i++)
             {
                 ((Mob)vMob.elementAt(i)).paint(g);
             }
+            mobTimer.Stop();
+            //DebugManager.gI().AddDebugString("GAMESCR_PAINT", $"Mob painting took: {mobTimer.ElapsedMilliseconds}ms (count: {vMob.size()})");
+
+            // Debug teleport full painting
+            var teleport2Timer = System.Diagnostics.Stopwatch.StartNew();
             for (int i = 0; i < Teleport.vTeleport.size(); i++)
             {
                 ((Teleport)Teleport.vTeleport.elementAt(i)).paint(g);
             }
+            teleport2Timer.Stop();
+            //DebugManager.gI().AddDebugString("GAMESCR_PAINT", $"Teleport full painting took: {teleport2Timer.ElapsedMilliseconds}ms");
+
+            // Debug character main painting (có thể là bottleneck chính)
+            var charMainTimer = System.Diagnostics.Stopwatch.StartNew();
             for (int i = 0; i < vCharInMap.size(); i++)
             {
                 Char char3 = null;
@@ -5019,6 +5098,11 @@ public class GameScr : mScreen, IChatable
                 }
             }
             Char.myCharz().paint(g);
+            charMainTimer.Stop();
+            //DebugManager.gI().AddDebugString("GAMESCR_PAINT", $"Character main painting took: {charMainTimer.ElapsedMilliseconds}ms");
+
+            // Debug skill painting
+            var skillTimer = System.Diagnostics.Stopwatch.StartNew();
             if (Char.myCharz().skillPaint != null && Char.myCharz().skillInfoPaint() != null && Char.myCharz().indexSkill < Char.myCharz().skillInfoPaint().Length)
             {
                 Char.myCharz().paintCharWithSkill(g);
@@ -5041,18 +5125,35 @@ public class GameScr : mScreen, IChatable
                     char4.paintMount2(g);
                 }
             }
+            skillTimer.Stop();
+            //DebugManager.gI().AddDebugString("GAMESCR_PAINT", $"Skill painting took: {skillTimer.ElapsedMilliseconds}ms");
+
+            // Debug item map painting
+            var itemMapTimer = System.Diagnostics.Stopwatch.StartNew();
             for (int i = 0; i < vItemMap.size(); i++)
             {
                 ((ItemMap)vItemMap.elementAt(i)).paint(g);
             }
+            itemMapTimer.Stop();
+            //DebugManager.gI().AddDebugString("GAMESCR_PAINT", $"Item map painting took: {itemMapTimer.ElapsedMilliseconds}ms (count: {vItemMap.size()})");
+
             g.translate(0, -GameCanvas.transY);
             GameCanvas.debug("PA9", 1);
+
+            // Debug splash và effects
+            var splashTimer = System.Diagnostics.Stopwatch.StartNew();
             paintSplash(g);
             GameCanvas.debug("PA10", 1);
             GameCanvas.debug("PA11", 1);
             GameCanvas.debug("PA13", 1);
             paintEffect(g);
+            splashTimer.Stop();
+            //DebugManager.gI().AddDebugString("GAMESCR_PAINT", $"Splash + Effects painting took: {splashTimer.ElapsedMilliseconds}ms");
+
             paintBgItem(g, 3);
+
+            // Debug NPC names và chat
+            var npcNameTimer = System.Diagnostics.Stopwatch.StartNew();
             for (int i = 0; i < vNpc.size(); i++)
             {
                 Npc npc2 = (Npc)vNpc.elementAt(i);
@@ -5067,6 +5168,11 @@ public class GameScr : mScreen, IChatable
                     npc3?.chatInfo.paint(g, npc3.cx, npc3.cy - npc3.ch - GameCanvas.transY, npc3.cdir);
                 }
             }
+            npcNameTimer.Stop();
+            //DebugManager.gI().AddDebugString("GAMESCR_PAINT", $"NPC names + chat painting took: {npcNameTimer.ElapsedMilliseconds}ms");
+
+            // Debug character chat painting
+            var charChatTimer = System.Diagnostics.Stopwatch.StartNew();
             for (int i = 0; i < vCharInMap.size(); i++)
             {
                 Char char5 = null;
@@ -5086,9 +5192,19 @@ public class GameScr : mScreen, IChatable
             {
                 Char.myCharz().chatInfo.paint(g, Char.myCharz().cx, Char.myCharz().cy - Char.myCharz().ch, Char.myCharz().cdir);
             }
+            charChatTimer.Stop();
+            //DebugManager.gI().AddDebugString("GAMESCR_PAINT", $"Character chat painting took: {charChatTimer.ElapsedMilliseconds}ms");
+
+            // Debug mid effects
+            var midEffectTimer = System.Diagnostics.Stopwatch.StartNew();
             EffectManager.mid_2Effects.paintAll(g);
             EffectManager.midEffects.paintAll(g);
             BackgroudEffect.paintFrontAll(g);
+            midEffectTimer.Stop();
+            //DebugManager.gI().AddDebugString("GAMESCR_PAINT", $"Mid effects painting took: {midEffectTimer.ElapsedMilliseconds}ms");
+
+            // Debug background items layer > 3
+            var bgItemTimer = System.Diagnostics.Stopwatch.StartNew();
             for (int j = 0; j < TileMap.vCurrItem.size(); j++)
             {
                 BgItem bgItem = (BgItem)TileMap.vCurrItem.elementAt(j);
@@ -5097,7 +5213,13 @@ public class GameScr : mScreen, IChatable
                     bgItem.paint(g);
                 }
             }
+            bgItemTimer.Stop();
+            //DebugManager.gI().AddDebugString("GAMESCR_PAINT", $"Background items layer>3 painting took: {bgItemTimer.ElapsedMilliseconds}ms");
+
             PopUp.paintAll(g);
+
+            // Debug Mabu specific painting
+            var mabuTimer = System.Diagnostics.Stopwatch.StartNew();
             if (TileMap.mapID == 120)
             {
                 if (percentMabu != 100)
@@ -5133,6 +5255,11 @@ public class GameScr : mScreen, IChatable
                     }
                 }
             }
+            mabuTimer.Stop();
+            //DebugManager.gI().AddDebugString("GAMESCR_PAINT", $"Mabu specific painting took: {mabuTimer.ElapsedMilliseconds}ms");
+
+            // Debug fog và light effects
+            var lightTimer = System.Diagnostics.Stopwatch.StartNew();
             BackgroudEffect.paintFog(g);
             bool flag = true;
             for (int i = 0; i < BackgroudEffect.vBgEffect.size(); i++)
@@ -5148,9 +5275,10 @@ public class GameScr : mScreen, IChatable
             {
                 flag = false;
             }
+            var num2 = 0;
             if (flag && !isRongThanXuatHien)
             {
-                int num2 = TileMap.pxw / (mGraphics.getImageWidth(TileMap.imgLight) + 50);
+                num2 = TileMap.pxw / (mGraphics.getImageWidth(TileMap.imgLight) + 50);
                 if (num2 <= 0)
                 {
                     num2 = 1;
@@ -5169,24 +5297,33 @@ public class GameScr : mScreen, IChatable
                     }
                 }
             }
+            lightTimer.Stop();
+            //DebugManager.gI().AddDebugString("GAMESCR_PAINT", $"Fog + Light effects painting took: {lightTimer.ElapsedMilliseconds}ms (light count: {(flag ? num2 : 0)})");
+
             mSystem.paintFlyText(g);
             GameCanvas.debug("PA14", 1);
             GameCanvas.debug("PA15", 1);
             GameCanvas.debug("PA16", 1);
+
             paintArrowPointToNPC(g);
             GameCanvas.debug("PA17", 1);
+
             if (!isPaintOther && isPaintRada == 1 && !GameCanvas.panel.isShow)
             {
                 paintInfoBar(g);
             }
             resetTranslate(g);
             MainMod.gI().Paint(g);
+
+            // Debug UI painting (có thể tốn thời gian)
+            var uiTimer = System.Diagnostics.Stopwatch.StartNew();
             if (!isPaintOther)
             {
-
                 GameCanvas.debug("PA21", 1);
                 GameCanvas.debug("PA18", 1);
                 g.translate(-g.getTranslateX(), -g.getTranslateY());
+
+                // Mabu percent bar
                 if ((TileMap.mapID == 128 || TileMap.mapID == 127) && mabuPercent != 0)
                 {
                     int num5 = 30;
@@ -5199,6 +5336,8 @@ public class GameScr : mScreen, IChatable
                     g.setClip(0, 0, 3000, 3000);
                     mFont.tahoma_7b_white.drawString(g, "Mabu", num5, num6 - 112 + 10, 2, mFont.tahoma_7b_dark);
                 }
+
+                // Fusion effects
                 if (Char.myCharz().isFusion)
                 {
                     Char.myCharz().tFusion++;
@@ -5212,6 +5351,8 @@ public class GameScr : mScreen, IChatable
                         Char.myCharz().fusionComplete();
                     }
                 }
+
+                // Character fusion effects
                 for (int i = 0; i < vCharInMap.size(); i++)
                 {
                     Char char6 = null;
@@ -5236,6 +5377,7 @@ public class GameScr : mScreen, IChatable
                         }
                     }
                 }
+
                 GameCanvas.paintz.paintTabSoft(g);
                 GameCanvas.debug("PA19", 1);
                 GameCanvas.debug("PA20", 1);
@@ -5243,12 +5385,14 @@ public class GameScr : mScreen, IChatable
                 paintSelectedSkill(g);
                 GameCanvas.debug("PA22", 1);
                 resetTranslate(g);
+
                 if (GameCanvas.isTouch && GameCanvas.isTouchControl)
                 {
                     paintTouchControl(g);
                 }
                 resetTranslate(g);
                 paintChatVip(g);
+
                 if (!GameCanvas.panel.isShow && GameCanvas.currentDialog == null && ChatPopup.currChatPopup == null && ChatPopup.serverChatPopUp == null && GameCanvas.currentScreen.Equals(instance))
                 {
                     base.paint(g);
@@ -5258,6 +5402,8 @@ public class GameScr : mScreen, IChatable
                     }
                 }
                 resetTranslate(g);
+
+                // Clan members display
                 int num7 = 100 + ((Char.vItemTime.size() != 0) ? (textTime.size() * 12) : 0);
                 if (Char.myCharz().clan != null)
                 {
@@ -5293,11 +5439,15 @@ public class GameScr : mScreen, IChatable
                         }
                     }
                 }
+
                 ChatTextField.gI().paint(g);
+
                 if (isNewClanMessage && !GameCanvas.panel.isShow && GameCanvas.gameTick % 4 == 0)
                 {
                     g.drawImage(ItemMap.imageFlare, cmdMenu.x + 15, cmdMenu.y + 30, mGraphics.BOTTOM | mGraphics.HCENTER);
                 }
+
+                // Super power effect
                 if (isSuperPower)
                 {
                     dxPower += 5;
@@ -5333,6 +5483,8 @@ public class GameScr : mScreen, IChatable
                         tPower = -1;
                     }
                 }
+
+                // Item time display
                 for (int i = 0; i < Char.vItemTime.size(); i++)
                 {
                     ((ItemTime)Char.vItemTime.elementAt(i)).paint(g, cmdMenu.x + 32 + i * 24, 55);
@@ -5341,12 +5493,17 @@ public class GameScr : mScreen, IChatable
                 {
                     ((ItemTime)textTime.elementAt(i)).paintText(g, cmdMenu.x + ((Char.vItemTime.size() == 0) ? 25 : 5), ((Char.vItemTime.size() == 0) ? 45 : 90) + i * 12);
                 }
+
                 paintXoSo(g);
+
+                // Date display
                 if (mResources.language == 1)
                 {
                     long second = mSystem.currentTimeMillis() + deltaTime;
                     mFont.tahoma_7b_white.drawString(g, NinjaUtil.getDate2(second), 10, GameCanvas.h - 65, 0, mFont.tahoma_7b_dark);
                 }
+
+                // Number display
                 if (!yourNumber.Equals(string.Empty))
                 {
                     for (int i = 0; i < strPaint.Length; i++)
@@ -5355,6 +5512,11 @@ public class GameScr : mScreen, IChatable
                     }
                 }
             }
+            uiTimer.Stop();
+            //DebugManager.gI().AddDebugString("GAMESCR_PAINT", $"UI painting took: {uiTimer.ElapsedMilliseconds}ms");
+
+            // Debug final elements
+            var finalTimer = System.Diagnostics.Stopwatch.StartNew();
             int num12 = 0;
             int num13 = GameCanvas.hw;
             if (num13 > 200)
@@ -5363,10 +5525,21 @@ public class GameScr : mScreen, IChatable
             }
             paintPhuBanBar(g, num12 + GameCanvas.w / 2, 0, num13);
             EffectManager.hiEffects.paintAll(g);
+            finalTimer.Stop();
+            //DebugManager.gI().AddDebugString("GAMESCR_PAINT", $"Final elements painting took: {finalTimer.ElapsedMilliseconds}ms");
+
+            paintTimer.Stop();
+            long totalPaintTime = paintTimer.ElapsedMilliseconds;
+            //DebugManager.gI().AddDebugString("GAMESCR_PAINT", $"=== GAMESCR PAINT TOTAL: {totalPaintTime}ms ===");
+
+            //DebugManager.gI().AddDebugString("CurrentFPS : " + Main.main.max);
+
+            // Log context info
         }
         catch (Exception e)
         {
             Debug.LogError(e.ToString());
+            //DebugManager.gI().AddDebugString($"🚨 GAMESCR PAINT EXCEPTION: {e.Message}");
         }
     }
 
@@ -6495,6 +6668,30 @@ public class GameScr : mScreen, IChatable
 
     public void onChatFromMe(string text, string to)
     {
+        //if (text.Equals("onlog"))
+        //{
+        //    DebugManager.gI().SetDebugEnabled(true);
+        //    ChatTextField.gI().isShow = false;
+        //    return;
+        //}
+        //if (text.Equals("closelog"))
+        //{
+        //    DebugManager.gI().GetDebugContent();
+        //    DebugManager.gI().SetDebugEnabled(false);
+        //    ChatTextField.gI().isShow = false;
+
+        //    return;
+        //}
+        if (text == "chat")
+        {
+            for (int i = 0; i < 50; i++)
+            {
+                for (int j = 0; j <= 50; j++)
+                {
+                    NotifyBoss.addSpawnBoss($"NQMP {i}", "Làng Kakarot");
+                }
+            }
+        }
         if (AutoPro.instance.OnChatFromMe(text))
         {
             ChatTextField.gI().isShow = false;

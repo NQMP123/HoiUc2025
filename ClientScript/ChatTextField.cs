@@ -145,15 +145,7 @@ public class ChatTextField : IActionListener
     public void setOpenMic()
     {
 
-        openMic = true;
-        if (openMic)
-        {
-            center = new Command("MIC", this, 8003, null, GameCanvas.w / 2 - 34, GameCanvas.h - mScreen.cmdH + 1);
-            cmdVoiceRecord = center;
-            center.x = GameCanvas.w / 2 - 35;
-            center.y = GameCanvas.h - 30;
-        }
-        UnityEngine.Debug.LogError("set open mic");
+      
     }
     public void updateWhenKeyBoardVisible()
     {
@@ -351,7 +343,6 @@ public class ChatTextField : IActionListener
                     if (num - lastChatTime >= 1000)
                     {
                         lastChatTime = num;
-                        UnityEngine.Debug.Log("chat4+" + tfChat.getText());
                         parentScreen.onChatFromMe(tfChat.getText(), to);
                         tfChat.setText(string.Empty);
                         right.caption = mResources.CLOSE;
@@ -428,7 +419,11 @@ public class ChatTextField : IActionListener
     private void SendVoiceMessage(byte[] audioData, float duration)
     {
         if (parentScreen == null) return;
-
+        if (true)
+        {
+            GameCanvas.startOKDlg("Tính năng vẫn chưa hoàn thiện...");
+            return;
+        }
         try
         {
             // Create voice message
@@ -464,28 +459,28 @@ public class ChatTextField : IActionListener
     {
         try
         {
-            Message msg;
-            msg = new Message(-58);
-            if (voiceMsg.IsWorldChat())
-            {
-                msg.writer().writeByte(0);
-            }
-            else
-            {
-                msg.writer().writeByte(1);
-                msg.writer().writeUTF(voiceMsg.receiverName);
-            }
+        //    Message msg;
+        //    msg = new Message(-58);
+        //    if (voiceMsg.IsWorldChat())
+        //    {
+        //        msg.writer().writeByte(0);
+        //    }
+        //    else
+        //    {
+        //        msg.writer().writeByte(1);
+        //        msg.writer().writeUTF(voiceMsg.receiverName);
+        //    }
 
-            msg.writer().writeUTF(voiceMsg.senderName);
-            msg.writer().writeFloat(voiceMsg.duration);
-            msg.writer().writeLong(voiceMsg.timestamp);
-            msg.writer().writeInt(voiceMsg.audioData.Length);
-            msg.writer().write(voiceMsg.audioData);
+        //    msg.writer().writeUTF(voiceMsg.senderName);
+        //    msg.writer().writeFloat(voiceMsg.duration);
+        //    msg.writer().writeLong(voiceMsg.timestamp);
+        //    msg.writer().writeInt(voiceMsg.audioData.Length);
+        //    msg.writer().write(voiceMsg.audioData);
 
 
-            VoiceSession.gI().sendMessage(msg);
-            UnityEngine.Debug.LogError("Send voice chat successt");
-            msg.cleanup();
+        //    VoiceSession.gI().sendMessage(msg);
+        //    UnityEngine.Debug.LogError("Send voice chat successt");
+        //    msg.cleanup();
         }
         catch (System.Exception e)
         {

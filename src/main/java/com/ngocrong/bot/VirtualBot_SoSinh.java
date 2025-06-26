@@ -26,14 +26,14 @@ public class VirtualBot_SoSinh extends VirtualBot {
         super(name);
         this.gender = (byte) Utils.nextInt(3);
         this.info.power = Utils.nextInt(15000000, 20000000);
-        this.setInfo(Utils.nextInt(18000, 22000), Long.MAX_VALUE, Utils.nextInt(500, 700), 10000, 1);
+        this.setInfo(Utils.nextInt(3000, 5000), Long.MAX_VALUE, Utils.nextInt(50, 70), 10000, 1);
         short[][] hair = new short[][]{
             {64, 30, 31}, {9, 29, 32}, {6, 27, 28}
         };
         short head = hair[this.gender][Utils.nextInt(hair[this.gender].length)];
         short body = (short) (this.gender == 0 ? 14 : this.gender == 1 ? 10 : 16);
         short leg = (short) (this.gender == 0 ? 15 : this.gender == 1 ? 11 : 17);
-        boolean Ctrang = Utils.isTrue(7, 10);
+        boolean Ctrang = false;
         this.setHead(Ctrang ? (short) 1289 : head);
         this.setBody(Ctrang ? (short) 1290 : body);
         this.setLeg(Ctrang ? (short) 1291 : leg);

@@ -22,6 +22,7 @@ public class JackyChun extends BossDHVT {
             canAttack = true;
         }, 14500);
         super.setDame(10, plAtt);
+        percentDef = 30;
     }
     private static Logger logger = Logger.getLogger(SoiHecQuyn.class);
 

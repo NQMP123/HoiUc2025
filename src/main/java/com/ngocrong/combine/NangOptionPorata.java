@@ -140,7 +140,7 @@ public class NangOptionPorata extends Combine {
             if (index != -1) {
                 int rd1 = Utils.nextInt(OPTIONS.length);
                 int idOpt = OPTIONS[rd1];
-                int param = Utils.getParambyRandom(3, 10);
+                int param = Utils.nextInt(3, 10);
                 ItemOption add = new ItemOption(idOpt, param);
                 index++;
                 if (index >= items[0].options.size()) {

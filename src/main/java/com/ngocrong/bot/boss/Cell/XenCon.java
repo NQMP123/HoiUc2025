@@ -32,8 +32,7 @@ public class XenCon extends Boss {
 
     }
 
-    public static int count;
-
+    public int index = -1;
     public XenCon() {
         super();
         this.distanceToAddToList = 500;
@@ -42,6 +41,11 @@ public class XenCon extends Boss {
         setInfo(500000000L, 1000000, 80000, 1000, 50);
         this.waitingTimeToLeave = 0;
         setTypePK((byte) 5);
+    }
+    public XenCon(int index) {
+        this();
+        this.name = "Xên Con " + (index+1);
+        this.index = index;
     }
 
     @Override
@@ -134,11 +138,12 @@ public class XenCon extends Boss {
     @Override
     public void startDie() {
         super.startDie();
+        var _index = this.index;
         Utils.setTimeout(() -> {
-            int[] mapId = new int[]{92, 93, 94, 96, 97, 98, 99, 101, 102, 103};
-            XenCon xc = new XenCon();
+            int[] mapId = new int[]{92, 93, 94, 96, 97, 98, 99, 100, 102, 103};
+            XenCon xc = new XenCon(_index);
             xc.setLocation(mapId[Utils.nextInt(mapId.length)], -1);
-        }, 600000L);
+        }, 10*60000L);
     }
 
     @Override

@@ -205,7 +205,7 @@ public class T1 : mResources
         mResources.HP_EMPTY = "Đã hết đậu thần. Cậu hãy về thu hoạch thêm";
         mResources.ZONE_HERE = "Bạn đang ở khu vực này";
         mResources.DES_TASK = new string[4] { "Hãy đi tìm ", " ở ", " để nhận nhiệm vụ.", "Bạn đã hoàn thành hết nhiệm vụ phiên bản này, vui lòng chờ cho đến khi ra phiên bản tiếp theo." };
-        mResources.DIES = new string[4] { "Kiệt sức", "Chờ", "Về nhà", "Hồi sinh\nngay\n(1 ngọc)" };
+        mResources.DIES = new string[4] { "Kiệt sức", "Chờ", "Về nhà", "Hồi sinh\nngay\n(20tr vàng)" };
         mResources.SYNTHESIS = new string[3] { "Bản đồ", "Nhiệm vụ", "Gia tộc" };
         mResources.tips = new string[13]
         {

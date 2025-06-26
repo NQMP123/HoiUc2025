@@ -1215,94 +1215,105 @@ public class Controller : IMessageHandler
                     }
                 case -74:
                     {
-                        if (ServerListScreen.stopDownload)
+                        try
                         {
-                            return;
-                        }
-                        if (!GameCanvas.isGetResourceFromServer())
-                        {
-                            Service.gI().getResource(3, null);
-                            SmallImage.loadBigRMS();
-                            SplashScr.imgLogo = null;
-                            if (Rms.loadRMSString("acc") != null || Rms.loadRMSString("userAo" + ServerListScreen.ipSelect) != null)
+                            if (ServerListScreen.stopDownload)
                             {
-                                LoginScr.isContinueToLogin = true;
+                                return;
                             }
-                            GameCanvas.loginScr = new LoginScr();
-                            GameCanvas.loginScr.switchToMe();
-                            return;
-                        }
-                        bool flag5 = true;
-                        sbyte b25 = msg.reader().readByte();
-                        Debug.LogError("action = " + b25);
-                        if (b25 == 0)
-                        {
-                            int num42 = msg.reader().readInt();
-                            string text2 = Rms.loadRMSString("ResVersion");
-                            int num43 = ((text2 == null || !(text2 != string.Empty)) ? (-1) : int.Parse(text2));
-                            if (num43 == -1 || num43 != num42)
+                            if (!GameCanvas.isGetResourceFromServer())
                             {
-                                ServerListScreen.loadScreen = false;
-                                GameCanvas.serverScreen.show2();
-                            }
-                            else
-                            {
-                                Res.outz("login ngay");
+                                Service.gI().getResource(3, null);
                                 SmallImage.loadBigRMS();
                                 SplashScr.imgLogo = null;
+                                if (Rms.loadRMSString("acc") != null || Rms.loadRMSString("userAo" + ServerListScreen.ipSelect) != null)
+                                {
+                                    LoginScr.isContinueToLogin = true;
+                                }
+                                GameCanvas.loginScr = new LoginScr();
+                                GameCanvas.loginScr.switchToMe();
+                                return;
+                            }
+                            bool flag5 = true;
+                            sbyte b25 = msg.reader().readByte();
+                            //Debug.LogError("action = " + b25);
+                            if (b25 == 0)
+                            {
+                                int num42 = msg.reader().readInt();
+                                string text2 = Rms.loadRMSString("ResVersion");
+                                int num43 = ((text2 == null || !(text2 != string.Empty)) ? (-1) : int.Parse(text2));
+                                if (num43 == -1 || num43 != num42)
+                                {
+                                    ServerListScreen.loadScreen = false;
+                                    GameCanvas.serverScreen.show2();
+                                }
+                                else
+                                {
+                                    Res.outz("login ngay");
+                                    SmallImage.loadBigRMS();
+                                    SplashScr.imgLogo = null;
+                                    ServerListScreen.loadScreen = true;
+                                    if (GameCanvas.currentScreen != GameCanvas.loginScr)
+                                    {
+                                        GameCanvas.serverScreen.switchToMe();
+                                    }
+                                }
+                            }
+                            if (b25 == 1)
+                            {
+                                ServerListScreen.strWait = mResources.downloading_data;
+                                short num44 = (short)(ServerListScreen.nBig = msg.reader().readShort());
+                                Service.gI().getResource(2, null);
+                            }
+                            if (b25 == 2)
+                            {
+                                try
+                                {
+                                  //  Debug.Log("read Download");
+                                    isLoadingData = true;
+                                    GameCanvas.endDlg();
+                                    ServerListScreen.demPercent++;
+                                    ServerListScreen.percent = ServerListScreen.demPercent * 100 / ServerListScreen.nBig;
+                                    string original = msg.reader().readUTF();
+                                    string[] array4 = Res.split(original, "/", 0);
+                                    string filename = "x" + mGraphics.zoomLevel + array4[array4.Length - 1];
+                                    int num45 = msg.reader().readInt();
+                                    //Debug.LogError("at size: " + num45);
+                                    sbyte[] data2 = new sbyte[num45];
+                                    msg.reader().read(ref data2, 0, num45);
+                                    Rms.saveRMS(filename, data2);
+                                  //  Debug.Log("===========> save asset: " + filename);
+                                }
+                                catch (Exception e)
+                                {
+                                    Debug.LogException(e);
+                                }
+                            }
+                            if (b25 == 3 && flag5)
+                            {
+                                isLoadingData = false;
+                                int num46 = msg.reader().readInt();
+                                Res.outz("last version= " + num46);
+                                Rms.saveRMSString("ResVersion", num46 + string.Empty);
+                                Service.gI().getResource(3, null);
+                                GameCanvas.endDlg();
+                                SplashScr.imgLogo = null;
+                                SmallImage.loadBigRMS();
+                                mSystem.gcc();
+                                ServerListScreen.bigOk = true;
                                 ServerListScreen.loadScreen = true;
+                                GameScr.gI().loadGameScr();
+
                                 if (GameCanvas.currentScreen != GameCanvas.loginScr)
                                 {
                                     GameCanvas.serverScreen.switchToMe();
                                 }
                             }
+                           
                         }
-                        if (b25 == 1)
+                        catch (Exception e)
                         {
-                            ServerListScreen.strWait = mResources.downloading_data;
-                            short num44 = (short)(ServerListScreen.nBig = msg.reader().readShort());
-                            Service.gI().getResource(2, null);
-                        }
-                        if (b25 == 2)
-                        {
-                            try
-                            {
-                                isLoadingData = true;
-                                GameCanvas.endDlg();
-                                ServerListScreen.demPercent++;
-                                ServerListScreen.percent = ServerListScreen.demPercent * 100 / ServerListScreen.nBig;
-                                string original = msg.reader().readUTF();
-                                string[] array4 = Res.split(original, "/", 0);
-                                string filename = "x" + mGraphics.zoomLevel + array4[array4.Length - 1];
-                                int num45 = msg.reader().readInt();
-                                sbyte[] data2 = new sbyte[num45];
-                                msg.reader().read(ref data2, 0, num45);
-                                Rms.saveRMS(filename, data2);
-                            }
-                            catch (Exception)
-                            {
-                                GameCanvas.startOK(mResources.pls_restart_game_error, 8885, null);
-                            }
-                        }
-                        if (b25 == 3 && flag5)
-                        {
-                            isLoadingData = false;
-                            int num46 = msg.reader().readInt();
-                            Res.outz("last version= " + num46);
-                            Rms.saveRMSString("ResVersion", num46 + string.Empty);
-                            Service.gI().getResource(3, null);
-                            GameCanvas.endDlg();
-                            SplashScr.imgLogo = null;
-                            SmallImage.loadBigRMS();
-                            mSystem.gcc();
-                            ServerListScreen.bigOk = true;
-                            ServerListScreen.loadScreen = true;
-                            GameScr.gI().loadGameScr();
-
-                            if (GameCanvas.currentScreen != GameCanvas.loginScr)
-                            {
-                                GameCanvas.serverScreen.switchToMe();
-                            }
+                            Debug.LogException(e);
                         }
                         break;
                     }
@@ -5509,7 +5520,7 @@ public class Controller : IMessageHandler
             }
             string text = msg.reader().readUTF();
             
-            ServerListScreen.getServerList(text);
+            //ServerListScreen.getServerList(text);
             int[] lenght = msg.reader().readInts();
             Item.listTypeBody.Clear();
             Item.listTypeBody.AddRange(lenght);
@@ -5796,10 +5807,10 @@ public class Controller : IMessageHandler
                         GameScr.isNewMember = msg.reader().readByte();
                         Service.gI().updateCaption((sbyte)Char.myCharz().cgender);
                         Service.gI().androidPack();
-                        if (!VoiceSession.gI().isConnected())
-                        {
-                            VoiceSession.gI().connect(GameMidlet.VOICE_IP, GameMidlet.VOICE_PORT);
-                        }
+                        //if (!VoiceSession.gI().isConnected())
+                        //{
+                        //    VoiceSession.gI().connect(GameMidlet.VOICE_IP, GameMidlet.VOICE_PORT);
+                        //}
                         try
                         {
                             Char.myCharz().idAuraEff = msg.reader().readShort();

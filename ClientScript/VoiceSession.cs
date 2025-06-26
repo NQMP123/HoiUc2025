@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class VoiceSession : ISession
 {
@@ -103,7 +104,7 @@ public class VoiceSession : ISession
             client = tempClient;
             stream = tempStream;
             running = true;
-
+            messages.Clear();
             // Start threads
             receiver = new Thread(run);
             receiver.IsBackground = true;
@@ -157,7 +158,7 @@ public class VoiceSession : ISession
     // Events để thông báo kết quả connection
     public event Action onConnectionEstablished;
     public event Action onConnectionFailed;
-
+    private List<Message> messages = new List<Message>();
     private void run()
     {
         try
@@ -167,7 +168,8 @@ public class VoiceSession : ISession
                 Message msg = readMessage();
                 if (msg != null)
                 {
-                    messageHandler?.onMessage(msg);
+                    //messageHandler?.onMessage(msg);//not run on main thread
+                    messages.Add(msg);
                 }
                 else
                 {
@@ -183,6 +185,22 @@ public class VoiceSession : ISession
         finally
         {
             close();
+        }
+    }
+
+    public void update()
+    {
+        while (messages.Count > 0)
+        {
+            try
+            {
+                var msgFirst = messages[0];
+                messages.RemoveAt(0);
+                messageHandler?.onMessage(msgFirst);
+            }
+            catch
+            {
+            }
         }
     }
 

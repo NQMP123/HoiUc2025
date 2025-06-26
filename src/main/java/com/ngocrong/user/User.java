@@ -28,7 +28,7 @@ public class User {
 
     private static Logger logger = Logger.getLogger(User.class);
     private static final int[][] HAIR_ID = {{64, 30, 31}, {9, 29, 32}, {6, 27, 28}};
-    private static final int[][] LOCATION = {{39, 100, 384}, {40, 100, 384}, {41, 100, 384}};
+    private static final int[][] LOCATION = {{21, 100, 336}, {22, 100, 336}, {23, 100, 336}};
 
     private int id;
     private String username;
@@ -61,7 +61,7 @@ public class User {
 
         UserData userData = userDataList.get(0);
         // admin moi dc login
-        if (userData.getRole() != 1 && LocalDateTime.now().isBefore(LocalDateTime.of(2025, 6, 21, 10, 0))) {
+        if (userData.getRole() != 1 && LocalDateTime.now().isBefore(LocalDateTime.of(2025, 6, 23, 17, 59))) {
             return 7;
         }
         setId(userData.id);
@@ -129,6 +129,7 @@ public class User {
             long potential = 0;
             ArrayList<Item> itemBodys = new ArrayList<>();
             ArrayList<Item> itemBoxs = new ArrayList<>();
+            ArrayList<Item> itemBag = new ArrayList<>();
             Gson g = new Gson();
             if (gender == 0) {
                 Item item = new Item(0);
@@ -181,25 +182,23 @@ public class User {
             tv.setDefaultOptions();
             tv.addItemOption(new ItemOption(30, 0));
             itemBoxs.add(tv);
-            
+
             Item pean = new Item(595);
             pean.indexUI = 2;
             pean.quantity = 20_000;
             pean.setDefaultOptions();
             itemBoxs.add(pean);
-
-            Item csl = new Item(194);
-            csl.indexUI = 3;
-            csl.quantity = 1;
-            csl.setDefaultOptions();
-            itemBoxs.add(csl);
-
             Item bongtai = new Item(454);
-            bongtai.indexUI = 4;
+            bongtai.indexUI = 3;
             bongtai.quantity = 1;
             bongtai.setDefaultOptions();
             itemBoxs.add(bongtai);
 
+            Item csl = new Item(194);
+            csl.indexUI = 0;
+            csl.quantity = 1;
+            csl.setDefaultOptions();
+            itemBag.add(csl);
             MagicTree magicTree = new MagicTree();
             magicTree.level = 10;
             Info info = new Info(gender);
@@ -213,11 +212,11 @@ public class User {
             data.gender = gender;
             data.classId = gender;
             data.head = hair;
-            data.task = "{\"id\":0,\"index\":0,\"count\":0,\"lastTask\":0}";
+            data.task = "{\"id\":0,\"index\":2,\"count\":0,\"lastTask\":0}";
             data.gold = 10_000_000_000L;
             data.diamond = 500000;
             data.diamondLock = 0;
-            data.itemBag = "[]";
+            data.itemBag = g.toJson(itemBag);
             data.itemBody = g.toJson(itemBodys);
             data.itemBox = g.toJson(itemBoxs);
             data.boxCrackBall = "[]";

@@ -263,12 +263,6 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
         {
             if (Char.myCharz().myskill == null || Char.myCharz().myskill.template == null)
             {
-               
-                return;
-            }
-            if (GameCanvas.panel != null && GameCanvas.panel.isShow)
-            {
-               
                 return;
             }
             if (Char.myCharz().meDead || Char.myCharz().cHP <= 0 || Char.myCharz().statusMe == 14 || Char.myCharz().statusMe == 5 || Char.myCharz().myskill.template.type == 3 || Char.myCharz().myskill.template.id == 10 || Char.myCharz().myskill.template.id == 11 || (Char.myCharz().myskill.paintCanNotUseSkill))
@@ -278,7 +272,10 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
             }
             if (Char.myCharz().charFocus == null &&Char.myCharz().mobFocus == null)
             {
-              
+                return;
+            }
+            if (Char.myCharz().mobFocus != null &&(Char.myCharz().mobFocus.hp <= 0 || Char.myCharz().mobFocus.status == 0) )
+            {
                 return;
             }
             int mySkillIndex = GetMySkillIndex();
@@ -299,7 +296,6 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
             }
             if (isAutoSendAttack == 2 && !Char.myCharz().isWaiting())
             {
-
                 if (Char.myCharz().mobFocus != null && GameScr.gI().isMeCanAttackMob(Char.myCharz().mobFocus))
                 {
                     getSkillAttack();

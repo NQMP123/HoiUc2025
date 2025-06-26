@@ -16,7 +16,7 @@ public class NangPorata extends Combine {
 
     private static final org.apache.log4j.Logger logger = Logger.getLogger(NangPorata.class);
     public static final int PERCENT = 100;
-    public static final int[] REQUIRE = {1, 9999, 20, 50};
+    public static final int[] REQUIRE = {0, 9999, 20, 50};
 
     public NangPorata() {
         StringBuilder sb = new StringBuilder();
@@ -27,6 +27,7 @@ public class NangPorata extends Combine {
         sb.append("Chọn mảnh bông tai để nâng cấp, số lượng 9999 cái");
         sb.append("\n");
         sb.append("Sau đó chọn 'Nâng cấp'");
+        sb.append("\n");
         setInfo(sb.toString());
 
         StringBuilder sb2 = new StringBuilder();
@@ -52,43 +53,78 @@ public class NangPorata extends Combine {
             player.service.dialogMessage("Vui lòng tách hợp thể ra trước");
             return;
         }
-        String text = String.format("Cần %d bông tai Porata và %d mảnh vỡ bông tai và 20 thỏi vàng", REQUIRE[0], REQUIRE[1]);
-        if (itemCombine.size() != 3) {
+
+        // Thay đổi logic: chỉ cần 2 item chính (Porata + Mảnh vỡ)
+        String text = String.format("Cần %d bông tai Porata và %d mảnh vỡ bông tai", REQUIRE[0], REQUIRE[1]);
+
+        // Kiểm tra tối thiểu phải có 2 item (không bắt buộc phải có thỏi vàng trong combo)
+        if (itemCombine.size() < 2) {
             player.service.dialogMessage(text);
             return;
         }
-        Item[] items = new Item[3];
+
+        Item[] items = new Item[3]; // [0] = Porata, [1] = Mảnh vỡ, [2] = Thỏi vàng (nullable)
+
+        // Tìm các item trong combo
         for (byte index : this.itemCombine) {
             Item item = player.itemBag[index];
             if (item != null) {
-                if (item.template.id == 454) {
+                if (item.template.id == 454) { // Bông tai Porata
                     items[0] = item;
                 }
-                if (item.template.id == 933) {
+                if (item.template.id == 933) { // Mảnh vỡ bông tai
                     items[1] = item;
                 }
-                if (item.template.id == 457) {
+                if (item.template.id == 457) { // Thỏi vàng (optional)
                     items[2] = item;
                 }
             }
         }
-        if (items[0] == null || items[1] == null || items[2] == null) {
+
+        // Kiểm tra 2 item bắt buộc
+        if (items[0] == null || items[1] == null) {
             player.service.dialogMessage(text);
             return;
         }
-        if (items[2] == null || items[2].quantity < REQUIRE[2]) {
-            player.service.dialogMessage("Cần thêm 20 thỏi vàng");
+
+        // Kiểm tra số lượng item bắt buộc
+        if (items[0].quantity < REQUIRE[0]) {
+            player.service.dialogMessage("Cần 1 Bông tai Porata");
             return;
         }
-        if (items[0].quantity < REQUIRE[0] || items[1].quantity < REQUIRE[1]) {
-            player.service.dialogMessage(text);
+        if (items[1].quantity < REQUIRE[1]) {
+            player.service.dialogMessage("Cần x9999 Mảnh vỡ bông tai");
             return;
         }
+
+        // Kiểm tra thỏi vàng (từ combo hoặc hành trang)
+        int availableGoldBars = 0;
+        if (items[2] != null) {
+            // Có thỏi vàng trong combo
+            availableGoldBars = items[2].quantity;
+        } else {
+            // Tìm thỏi vàng trong hành trang
+            int indexGoldBar = player.getIndexBagById(457);
+            if (indexGoldBar >= 0) {
+                Item goldBarInBag = player.itemBag[indexGoldBar];
+                if (goldBarInBag != null) {
+                    availableGoldBars = goldBarInBag.quantity;
+                }
+            }
+        }
+
+        if (availableGoldBars < REQUIRE[2]) {
+            player.service.dialogMessage(String.format("Cần thêm %d thỏi vàng", REQUIRE[2]));
+            return;
+        }
+
         StringBuilder sb = new StringBuilder();
         sb.append("|2|").append(String.format("%s [+%d]", items[0].template.name, 2)).append("\n");
         sb.append(String.format("Tỉ lệ thành công: %d%%", PERCENT)).append("\n");
         sb.append(String.format("Cần %d Mảnh vỡ bông tai", REQUIRE[1])).append("\n");
+        sb.append(String.format("Cần %d Thỏi vàng", REQUIRE[2])).append("\n");
         sb.append("|7|").append(String.format("Thất bại -%d Mảnh vỡ bông tai", REQUIRE[3]));
+
         player.menus.clear();
         player.menus.add(new KeyValue(CMDMenu.COMBINE, String.format("Nâng cấp\n%s thỏi vàng", Utils.formatNumber(REQUIRE[2]))));
         player.menus.add(new KeyValue(CMDMenu.CANCEL, "Từ chối"));
@@ -104,12 +140,16 @@ public class NangPorata extends Combine {
             player.service.dialogMessage("Vui lòng tách hợp thể ra trước");
             return;
         }
-        String text = String.format("Cần %d bông tai Porata và %d mảnh vỡ bông tai và 20 thỏi vàng", REQUIRE[0], REQUIRE[1]);
-        if (itemCombine.size() != 3) {
+
+        String text = String.format("Cần %d bông tai Porata và %d mảnh vỡ bông tai", REQUIRE[0], REQUIRE[1]);
+        if (itemCombine.size() < 2) {
             player.service.dialogMessage(text);
             return;
         }
-        Item[] items = new Item[2];
+
+        Item[] items = new Item[3]; // [0] = Porata, [1] = Mảnh vỡ, [2] = Thỏi vàng (nullable)
+
+        // Tìm các item trong combo
         for (byte index : this.itemCombine) {
             Item item = player.itemBag[index];
             if (item != null) {
@@ -119,38 +159,51 @@ public class NangPorata extends Combine {
                 if (item.template.id == ItemName.MANH_VO_BONG_TAI) {
                     items[1] = item;
                 }
+                if (item.template.id == ItemName.THOI_VANG) {
+                    items[2] = item;
+                }
             }
         }
+
         if (items[0] == null || items[1] == null) {
             player.service.dialogMessage(text);
             return;
         }
-//        ItemOption mvbt = null;
-//        for (ItemOption o : items[1].options) {
-//            if (o.optionTemplate.id == 31) {
-//                mvbt = o;
-//                break;
-//            }
-//        }
-        int indexGoldBar = player.getIndexBagById(ItemName.THOI_VANG);
-        if (indexGoldBar < 0) {
-            player.service.serverMessage2("Không đủ thỏi vàng");
-            return;
-        }
-        Item tv = player.itemBag[indexGoldBar];
 
+        // Kiểm tra số lượng item chính
         if (items[0].quantity < REQUIRE[0] || items[1].quantity < REQUIRE[1]) {
             player.service.dialogMessage(text);
             return;
         }
-        if (REQUIRE[2] > tv.quantity) {
+
+        // Logic xử lý thỏi vàng thông minh
+        Item goldBarToUse = null;
+        int goldBarIndex = -1;
+
+        if (items[2] != null && items[2].quantity >= REQUIRE[2]) {
+            // Sử dụng thỏi vàng từ combo
+            goldBarToUse = items[2];
+            goldBarIndex = items[2].indexUI;
+        } else {
+            // Tìm thỏi vàng trong hành trang
+            goldBarIndex = player.getIndexBagById(ItemName.THOI_VANG);
+            if (goldBarIndex >= 0) {
+                goldBarToUse = player.itemBag[goldBarIndex];
+            }
+        }
+
+        // Kiểm tra cuối cùng về thỏi vàng
+        if (goldBarToUse == null || goldBarToUse.quantity < REQUIRE[2]) {
             player.service.serverMessage2("Không đủ thỏi vàng");
             return;
         }
+
+        // Thực hiện nâng cấp
         player.pointThoiVang += REQUIRE[2];
         player.isChangePoint = true;
-        player.removeItem(indexGoldBar, REQUIRE[2]);
-        if (true) {
+        player.removeItem(goldBarIndex, REQUIRE[2]);
+
+        if (true) { // Luôn thành công (PERCENT = 100)
             items[1].quantity -= REQUIRE[1];
             Item item = new Item(ItemName.BONG_TAI_PORATA_CAP_2);
             item.quantity = 1;
@@ -162,11 +215,13 @@ public class NangPorata extends Combine {
             items[1].quantity -= REQUIRE[3];
             result((byte) 3);
         }
+
+        // Cleanup item đã hết
         if (items[1].quantity <= 0) {
             player.itemBag[items[1].indexUI] = null;
         }
+
         player.service.setItemBag();
         update();
     }
-
 }

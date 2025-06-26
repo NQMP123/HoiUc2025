@@ -22,6 +22,11 @@ public class Math
 	{
 		return (x <= y) ? y : x;
 	}
+	public static long Max(long x, long y)
+	{
+		return (x <= y) ? y : x;
+	}
+
 
 	public static int Pow(int data, int x)
 	{

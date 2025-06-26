@@ -40,7 +40,7 @@ public abstract class Boss extends Player implements Bot {
     public int point;
     public boolean isShow = true;
     public byte percentDame = -1;
-
+    public boolean canDispose = false;
     public static List<Boss> listBoss = new ArrayList<>();
 
     public static String strBoss(Player player) {
@@ -112,7 +112,7 @@ public abstract class Boss extends Player implements Bot {
 
     protected void dropGroupB(Player player) {
         int percent = Utils.nextInt(100);
-        if (percent < 10 ) {
+        if (percent < 10) {
             Item item = new Item(RandomItem.DO_CUOI.next());
             item.setDefaultOptions();
             item.addRandomOption(1, 5);
@@ -494,6 +494,15 @@ public abstract class Boss extends Player implements Bot {
             addTargetToList();
             if (isRecoveryEnergy()) {
                 skillNotFocus((byte) 2);
+            }
+        }
+        if (canDispose) {
+            if (zone == null) {
+                lastAttack = System.currentTimeMillis();
+            }
+            else if (System.currentTimeMillis() - lastAttack >= 15 * 60000 && zone != null) {
+                lastAttack = System.currentTimeMillis();
+                this.startDie();
             }
         }
         updateTimeLiveMobMe();

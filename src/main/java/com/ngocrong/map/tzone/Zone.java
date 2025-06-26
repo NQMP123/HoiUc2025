@@ -648,7 +648,7 @@ public class Zone extends Thread {
                     try {
                         for (Mob mob : this.waitForRespawn) {
                             if (mob != null) {
-                                if (now - mob.deadTime >= Mob.DELAY_RESPAWN && !mob.isFreeze) {
+                                if (now - mob.deadTime >= Mob.DELAY_RESPAWN) {
                                     respawn.add(mob);
                                 }
                             } else {
@@ -892,8 +892,6 @@ public class Zone extends Thread {
             long dame = damageFull + Utils.percentOf(damageFull, (percentDame - 100));
             dame = Utils.nextLong(dame - (dame / 10), dame);
 
-            dame -= Utils.percentOf(dame, target.info.options[94]);
-
             if ((skill.template.id == SkillName.CHIEU_KAMEJOKO)) {
                 dame += (dame * _player.info.optionKame / 100);
             }
@@ -977,9 +975,6 @@ public class Zone extends Thread {
             boolean flag = false;
             if (skill.template.id == SkillName.MAKANKOSAPPO) {
                 dame = Utils.percentOf(_player.info.mp, percentDame);
-//                if (_player.isOptionLaze()) {
-//                    dame += (dame * _player.getParamOptLaze() / 100);
-//                }
                 dame += (dame * _player.info.optionLaze / 100);
                 isCrit = false;
                 isMiss = false;
@@ -1039,11 +1034,11 @@ public class Zone extends Thread {
                     dame = Utils.percentOf(target.info.hpFull, boss.percentDame);
                 }
             }
-
+            dame -= Utils.percentOf(dame, target.info.options[94]);
             if (dame > 0) {
-                if (!isMiss) {
-                    dame = target.injure(_player, null, dame);
-                }
+
+                dame = target.injure(_player, null, dame);
+
                 long reactDame = Utils.percentOf(dame, target.info.options[97] + pPhanDonCanChien);
                 if (!(_player instanceof Broly) && !(_player instanceof SuperBroly)) {
                     reactDame = _player.injure(target, null, reactDame);
@@ -1094,7 +1089,7 @@ public class Zone extends Thread {
                     }
                 }
             }
-            dame = target.injure(_player, null, dame);
+//            dame = target.injure(_player, null, dame);
             if (dame < 0) {
                 dame = 0;
             }
@@ -1189,6 +1184,13 @@ public class Zone extends Thread {
             }
             _player.setSkillSpecial(false);
             if (_player.mobMe != null) {
+                if (target.info.hpFull <= 0) {
+                    return;
+                }
+                double targetPercent = (target.info.hp * 100.0) / target.info.hpFull;
+                if (targetPercent < 5.0) {
+                    return;
+                }
                 _player.mobMe.attack(_player, target);
             }
         }
@@ -1270,7 +1272,7 @@ public class Zone extends Thread {
                 _player.setCritFirstHit(false);
             }
 
-            SpecialSkill sp = _player.getSpecialSkill();
+            SpecialSkill noitai = _player.getSpecialSkill();
             switch (skill.template.id) {
                 case SkillName.QUA_CAU_KENH_KHI:
                     isMiss = false;
@@ -1282,9 +1284,9 @@ public class Zone extends Thread {
                     target.addItemTime(item);
                     target.isSleep = true;
                     service.setEffect(null, target.mobId, Skill.ADD_EFFECT, Skill.MONSTER, (byte) 41);
-                    if (sp != null) {
-                        if (sp.id == 17) {
-                            _player.setPercentDamageBonus(sp.param);
+                    if (noitai != null) {
+                        if (noitai.id == 17) {
+                            _player.setPercentDamageBonus(noitai.param);
                         }
                     }
                     return;
@@ -1298,9 +1300,9 @@ public class Zone extends Thread {
                     target.isBlind = true;
                     percentDame = 200 + (skill.point * 10);
                     _player.setCritFirstHit(true);
-                    if (sp != null) {
-                        if (sp.id == 16) {
-                            _player.setPercentDamageBonus(sp.param);
+                    if (noitai != null) {
+                        if (noitai.id == 16) {
+                            _player.setPercentDamageBonus(noitai.param);
                         }
                     }
 
@@ -1316,9 +1318,9 @@ public class Zone extends Thread {
                         _player.info.mp -= manaUse;
                         service.setSkillPaint_1(target, _player, (byte) skill.id);
                         _player.setCritFirstHit(true);
-                        if (sp != null) {
-                            if (sp.id == 27) {
-                                _player.setPercentDamageBonus(sp.param);
+                        if (noitai != null) {
+                            if (noitai.id == 27) {
+                                _player.setPercentDamageBonus(noitai.param);
                             }
                         }
                     }
@@ -1352,15 +1354,15 @@ public class Zone extends Thread {
                 }
             }
 
-            if (sp != null) {
-                if ((sp.id == 1 && skill.template.id == SkillName.CHIEU_DAM_GALICK) || (sp.id == 2 && skill.template.id == SkillName.CHIEU_ANTOMIC) || (sp.id == 3 && _player.isMonkey())
-                        || (sp.id == 11 && skill.template.id == SkillName.CHIEU_DAM_DRAGON) || (sp.id == 12 && skill.template.id == SkillName.CHIEU_KAMEJOKO)
-                        || (sp.id == 21 && skill.template.id == SkillName.CHIEU_DAM_DEMON) || (sp.id == 22 && skill.template.id == SkillName.CHIEU_MASENKO) || (sp.id == 26 && skill.template.id == SkillName.LIEN_HOAN)) {
-                    dame += Utils.percentOf(dame, sp.param);
+            if (noitai != null) {
+                if ((noitai.id == 1 && skill.template.id == SkillName.CHIEU_DAM_GALICK) || (noitai.id == 2 && skill.template.id == SkillName.CHIEU_ANTOMIC) || (noitai.id == 3 && _player.isMonkey())
+                        || (noitai.id == 11 && skill.template.id == SkillName.CHIEU_DAM_DRAGON) || (noitai.id == 12 && skill.template.id == SkillName.CHIEU_KAMEJOKO)
+                        || (noitai.id == 21 && skill.template.id == SkillName.CHIEU_DAM_DEMON) || (noitai.id == 22 && skill.template.id == SkillName.CHIEU_MASENKO) || (noitai.id == 26 && skill.template.id == SkillName.LIEN_HOAN)) {
+                    dame += Utils.percentOf(dame, noitai.param);
                 }
-                if (sp.id == 31) {
+                if (noitai.id == 31) {
                     long pHP = _player.info.hp * 100 / _player.info.hpFull;
-                    if (pHP < sp.param) {
+                    if (pHP < noitai.param) {
                         isCrit = true;
                     }
                 }
@@ -1491,19 +1493,11 @@ public class Zone extends Thread {
                         _player.info.recovery(Info.MP, Utils.percentOf(dame, _player.info.options[96]));
                     }
                     if (!isMobMe) {
-                        long exp = dame / 6;
+                        long exp = dame / 10;
                         if (exp <= 0) {
                             exp = 1;
                         }
-                        int dlevel = target.level - _player.info.level;
-                        boolean isBarrack = map.isBarrack();
-                        if (isBarrack) {
-                            dlevel = 0;
-                        }
-                        if (dlevel < 0) {
-                            exp -= exp * (dlevel * 10L) / 100;
-                        }
-                        exp = callEXP(_player, exp);
+                        //   exp = callEXP(_player, exp);
 
                         // tuong lai = 0.7
                         if (map.isFuture()) {
@@ -1521,9 +1515,9 @@ public class Zone extends Thread {
                             // tnsm > 10tr
                             exp = Utils.nextInt(9_000_000, 10_000_000);
                         }
-                        if (sp != null) {
-                            if (sp.id == 30) {
-                                exp += exp * sp.param / 100;
+                        if (noitai != null) {
+                            if (noitai.id == 30) {
+                                exp += exp * noitai.param / 100;
                             }
                         }
                         int percent = 0;
@@ -1576,13 +1570,15 @@ public class Zone extends Thread {
         long result = oldEXP;
         long pw = player.info.power;
         if (pw < 10_000_000_000L) {
-            num = 2;
+            num = 5;
+        } else if (pw < 20_000_000_000L) {
+            num = 4;
         } else if (pw < 30_000_000_000L) {
-            num = 1;
+            num = 3;
         } else if (pw < 40_000_000_000L) {
-            num = 0.5;
+            num = 2;
         } else if (pw < 70_000_000_000L) {
-            num = 0.25;
+            num = 1;
         } else if (pw < 80_000_000_000L) {
             num = 0.125;
         } else if (pw < 100_000_000_000L) {
@@ -1591,8 +1587,10 @@ public class Zone extends Thread {
             num = 0.03125;
         } else if (pw < 110_000_000_000L) {
             num = 0.015625;
-        } else {
+        } else if (pw < 115_000_000_000L) {
             num = 0.000590625;
+        } else {
+            num = 0.00000190625;
         }
         return (long) ((double) result * num);
     }
