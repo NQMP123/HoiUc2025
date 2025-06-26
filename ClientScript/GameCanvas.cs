@@ -493,12 +493,21 @@ public class GameCanvas : IActionListener
 
     public void update()
     {
+<<<<<<< HEAD
         // Optimized update with performance improvements
+=======
+        // Debug update performance chi tiết
+        // var updateTimer = System.Diagnostics.Stopwatch.StartNew();
+        //DebugManager.gI().AddDebugString("UPDATE", "=== UPDATE START ===");
+
+        // Debug gameTick và timeNow
+>>>>>>> 1e9872e3c6d2f1be2ee26b099ef2c1d3bf309da0
         if (gameTick % 5 == 0)
         {
             timeNow = mSystem.currentTimeMillis();
         }
 
+<<<<<<< HEAD
         // Only update debug info every few frames
         if (gameTick % 3 == 0)
         {
@@ -508,6 +517,17 @@ public class GameCanvas : IActionListener
         try
         {
             // Optimized keyboard handling
+=======
+        // var resTimer = System.Diagnostics.Stopwatch.StartNew();
+        Res.updateOnScreenDebug();
+        // // resTimer.Stop();
+        //DebugManager.gI().AddDebugString("UPDATE", $"Res.updateOnScreenDebug() took: {resTimer.ElapsedMilliseconds}ms");
+
+        try
+        {
+            // Debug keyboard handling
+            // var keyboardTimer = System.Diagnostics.Stopwatch.StartNew();
+>>>>>>> 1e9872e3c6d2f1be2ee26b099ef2c1d3bf309da0
             if (TouchScreenKeyboard.visible)
             {
                 timeOpenKeyBoard++;
@@ -521,11 +541,16 @@ public class GameCanvas : IActionListener
                 mGraphics.addYWhenOpenKeyBoard = 0;
                 timeOpenKeyBoard = 0;
             }
+<<<<<<< HEAD
+=======
+            // // keyboardTimer.Stop();
+            //DebugManager.gI().AddDebugString("UPDATE", $"Keyboard handling took: {keyboardTimer.ElapsedMilliseconds}ms");
+>>>>>>> 1e9872e3c6d2f1be2ee26b099ef2c1d3bf309da0
 
             debugUpdate.removeAllElements();
 
             // Debug effect timing
-            var effectTimingTimer = System.Diagnostics.Stopwatch.StartNew();
+            // var effectTimingTimer = System.Diagnostics.Stopwatch.StartNew();
             long num = mSystem.currentTimeMillis();
             if (num - timeTickEff1 >= 780 && !isEff1)
             {
@@ -545,7 +570,7 @@ public class GameCanvas : IActionListener
             {
                 isEff2 = false;
             }
-            effectTimingTimer.Stop();
+            // // effectTimingTimer.Stop();
             //DebugManager.gI().AddDebugString("UPDATE", $"Effect timing took: {effectTimingTimer.ElapsedMilliseconds}ms");
 
             if (taskTick > 0)
@@ -567,7 +592,7 @@ public class GameCanvas : IActionListener
             if (currentScreen != null)
             {
                 // Debug chat popup updates
-                var chatTimer = System.Diagnostics.Stopwatch.StartNew();
+                // var chatTimer = System.Diagnostics.Stopwatch.StartNew();
                 if (ChatPopup.serverChatPopUp != null)
                 {
                     ChatPopup.serverChatPopUp.update();
@@ -578,21 +603,21 @@ public class GameCanvas : IActionListener
                     ChatPopup.currChatPopup.update();
                     ChatPopup.currChatPopup.updateKey();
                 }
-                chatTimer.Stop();
+                // // chatTimer.Stop();
                 //DebugManager.gI().AddDebugString("UPDATE", $"Chat popup updates took: {chatTimer.ElapsedMilliseconds}ms");
 
                 // Debug dialog updates
-                var dialogTimer = System.Diagnostics.Stopwatch.StartNew();
+                // var dialogTimer = System.Diagnostics.Stopwatch.StartNew();
                 if (currentDialog != null)
                 {
                     debug("B", 0);
                     currentDialog.update();
                 }
-                dialogTimer.Stop();
+                // // dialogTimer.Stop();
                 //DebugManager.gI().AddDebugString("UPDATE", $"Dialog update took: {dialogTimer.ElapsedMilliseconds}ms");
 
                 // Debug menu updates
-                var menuTimer = System.Diagnostics.Stopwatch.StartNew();
+                // var menuTimer = System.Diagnostics.Stopwatch.StartNew();
                 if (menu.showMenu)
                 {
                     debug("C", 0);
@@ -600,11 +625,11 @@ public class GameCanvas : IActionListener
                     debug("D", 0);
                     menu.updateMenuKey();
                 }else
-                //menuTimer.Stop();
+                //// // menuTimer.Stop();
                 ////DebugManager.gI().AddDebugString("UPDATE", $"Menu updates took: {menuTimer.ElapsedMilliseconds}ms");
 
                 //// Debug panel updates (có thể tốn thời gian)
-                //var panelTimer = System.Diagnostics.Stopwatch.StartNew();
+                //// var panelTimer = System.Diagnostics.Stopwatch.StartNew();
                 if (panel.isShow)
                 {
                     panel.update();
@@ -656,82 +681,82 @@ public class GameCanvas : IActionListener
                         panel.hide();
                     }
                 }
-                //panelTimer.Stop();
+                //// // panelTimer.Stop();
                 ////DebugManager.gI().AddDebugString("UPDATE", $"Panel updates took: {panelTimer.ElapsedMilliseconds}ms");
 
                 debug("E", 0);
 
                 // Debug currentScreen update (có thể là bottleneck chính)
-                var screenUpdateTimer = System.Diagnostics.Stopwatch.StartNew();
+                // var screenUpdateTimer = System.Diagnostics.Stopwatch.StartNew();
                 if (!isLoading)
                 {
                     currentScreen.update();
                 }
-                screenUpdateTimer.Stop();
+                // // screenUpdateTimer.Stop();
                 //DebugManager.gI().AddDebugString("UPDATE", $"currentScreen.update() took: {screenUpdateTimer.ElapsedMilliseconds}ms");
 
                 debug("F", 0);
 
                 // Debug screen updateKey
-                var screenKeyTimer = System.Diagnostics.Stopwatch.StartNew();
+                // var screenKeyTimer = System.Diagnostics.Stopwatch.StartNew();
                 if (!panel.isShow && ChatPopup.serverChatPopUp == null)
                 {
                     currentScreen.updateKey();
                 }
-                screenKeyTimer.Stop();
+                // // screenKeyTimer.Stop();
                 //DebugManager.gI().AddDebugString("UPDATE", $"currentScreen.updateKey() took: {screenKeyTimer.ElapsedMilliseconds}ms");
 
                 // Debug các component khác
-                var componentTimer = System.Diagnostics.Stopwatch.StartNew();
+                // var componentTimer = System.Diagnostics.Stopwatch.StartNew();
                 Hint.update();
                 SoundMn.gI().update();
                 VoiceMessageManager.gI().Update();
-                componentTimer.Stop();
+                // // componentTimer.Stop();
                 //DebugManager.gI().AddDebugString("UPDATE", $"Hint + Sound + Voice took: {componentTimer.ElapsedMilliseconds}ms");
             }
 
             debug("Ix", 0);
 
             // Debug Timer update
-            var timerTimer = System.Diagnostics.Stopwatch.StartNew();
+            // var timerTimer = System.Diagnostics.Stopwatch.StartNew();
             Timer.update();
-            timerTimer.Stop();
+            // // timerTimer.Stop();
             //DebugManager.gI().AddDebugString("UPDATE", $"Timer.update() took: {timerTimer.ElapsedMilliseconds}ms");
 
             debug("Hx", 0);
 
             // Debug InfoDlg update
-            var infoDlgTimer = System.Diagnostics.Stopwatch.StartNew();
+            // var infoDlgTimer = System.Diagnostics.Stopwatch.StartNew();
             InfoDlg.update();
-            infoDlgTimer.Stop();
+            // // infoDlgTimer.Stop();
             //DebugManager.gI().AddDebugString("UPDATE", $"InfoDlg.update() took: {infoDlgTimer.ElapsedMilliseconds}ms");
 
             debug("G", 0);
 
             // Debug reset logic
-            var resetTimer = System.Diagnostics.Stopwatch.StartNew();
+            // var resetTimer = System.Diagnostics.Stopwatch.StartNew();
             if (resetToLoginScr)
             {
                 resetToLoginScr = false;
                 doResetToLoginScr(serverScreen);
             }
-            resetTimer.Stop();
+            // // resetTimer.Stop();
             //DebugManager.gI().AddDebugString("UPDATE", $"Reset logic took: {resetTimer.ElapsedMilliseconds}ms");
 
             debug("Zzz", 0);
 
             // Debug service clearing
-            var serviceTimer = System.Diagnostics.Stopwatch.StartNew();
+            // var serviceTimer = System.Diagnostics.Stopwatch.StartNew();
             if (mSystem.currentTimeMillis() - lastSend >= 15 * 60000)
             {
                 Service.gI().clearTask();
                 lastSend = mSystem.currentTimeMillis();
             }
-            serviceTimer.Stop();
+            // // serviceTimer.Stop();
             //DebugManager.gI().AddDebugString("UPDATE", $"Service clearing took: {serviceTimer.ElapsedMilliseconds}ms");
 
             // Debug connection handling (có thể tốn thời gian)
-            var connectionTimer = System.Diagnostics.Stopwatch.StartNew();
+            // var connectionTimer = System.Diagnostics.Stopwatch.StartNew();
             if (Controller.isConnectOK)
             {
                 if (Controller.isMain)
@@ -752,11 +777,11 @@ public class GameCanvas : IActionListener
                 }
                 Controller.isConnectOK = false;
             }
-            connectionTimer.Stop();
+            // // connectionTimer.Stop();
             //DebugManager.gI().AddDebugString("UPDATE", $"Connection OK handling took: {connectionTimer.ElapsedMilliseconds}ms");
 
             // Debug disconnection handling
-            var disconnectTimer = System.Diagnostics.Stopwatch.StartNew();
+            // var disconnectTimer = System.Diagnostics.Stopwatch.StartNew();
             if (Controller.isDisconnected)
             {
                 Debug.Log("disconnect");
@@ -777,11 +802,11 @@ public class GameCanvas : IActionListener
                 }
                 Controller.isDisconnected = false;
             }
-            disconnectTimer.Stop();
+            // // disconnectTimer.Stop();
             //DebugManager.gI().AddDebugString("UPDATE", $"Disconnection handling took: {disconnectTimer.ElapsedMilliseconds}ms");
 
             // Debug connection fail handling
-            var connFailTimer = System.Diagnostics.Stopwatch.StartNew();
+            // var connFailTimer = System.Diagnostics.Stopwatch.StartNew();
             if (Controller.isConnectionFail)
             {
                 Debug.Log("connect fail");
@@ -802,11 +827,11 @@ public class GameCanvas : IActionListener
                 }
                 Controller.isConnectionFail = false;
             }
-            connFailTimer.Stop();
+            // // connFailTimer.Stop();
             //DebugManager.gI().AddDebugString("UPDATE", $"Connection fail handling took: {connFailTimer.ElapsedMilliseconds}ms");
 
             // Debug resume handling
-            var resumeTimer = System.Diagnostics.Stopwatch.StartNew();
+            // var resumeTimer = System.Diagnostics.Stopwatch.StartNew();
             if (Main.isResume)
             {
                 Main.isResume = false;
@@ -815,10 +840,10 @@ public class GameCanvas : IActionListener
                     currentDialog.left.performAction();
                 }
             }
-            resumeTimer.Stop();
+            // // resumeTimer.Stop();
             //DebugManager.gI().AddDebugString("UPDATE", $"Resume handling took: {resumeTimer.ElapsedMilliseconds}ms");
 
-            updateTimer.Stop();
+            // // updateTimer.Stop();
             long totalUpdateTime = updateTimer.ElapsedMilliseconds;
             //DebugManager.gI().AddDebugString("UPDATE", $"=== UPDATE TOTAL: {totalUpdateTime}ms ===");
 
@@ -2389,19 +2414,19 @@ public class GameCanvas : IActionListener
         try
         {
             // Debug paint performance chi tiết
-            var paintTimer = System.Diagnostics.Stopwatch.StartNew();
+            // var paintTimer = System.Diagnostics.Stopwatch.StartNew();
             //DebugManager.gI().AddDebugString("PAINT", "=== PAINT START ===");
 
             debugPaint.removeAllElements();
             debug("PA", 1);
 
             // Debug currentScreen paint
-            var screenTimer = System.Diagnostics.Stopwatch.StartNew();
+            // var screenTimer = System.Diagnostics.Stopwatch.StartNew();
             if (currentScreen != null)
             {
                 currentScreen.paint(g);
             }
-            screenTimer.Stop();
+            // // screenTimer.Stop();
             //DebugManager.gI().AddDebugString("PAINT", $"currentScreen.paint() took: {screenTimer.ElapsedMilliseconds}ms");
 
             debug("PB", 1);
@@ -2409,7 +2434,7 @@ public class GameCanvas : IActionListener
             g.setClip(0, 0, w, h);
 
             // Debug panel painting
-            var panelTimer = System.Diagnostics.Stopwatch.StartNew();
+            // var panelTimer = System.Diagnostics.Stopwatch.StartNew();
             if (panel.isShow)
             {
                 panel.paint(g);
@@ -2426,18 +2451,18 @@ public class GameCanvas : IActionListener
                     panel2.chatTField.paint(g);
                 }
             }
-            panelTimer.Stop();
+            // // panelTimer.Stop();
             //DebugManager.gI().AddDebugString("PAINT", $"Panel painting took: {panelTimer.ElapsedMilliseconds}ms");
 
             // Debug các component nhỏ
-            var componentTimer = System.Diagnostics.Stopwatch.StartNew();
+            // var componentTimer = System.Diagnostics.Stopwatch.StartNew();
             Res.paintOnScreenDebug(g);
             InfoDlg.paint(g);
-            componentTimer.Stop();
+            // // componentTimer.Stop();
             //DebugManager.gI().AddDebugString("PAINT", $"Res + InfoDlg took: {componentTimer.ElapsedMilliseconds}ms");
 
             // Debug dialog/menu painting
-            var dialogTimer = System.Diagnostics.Stopwatch.StartNew();
+            // var dialogTimer = System.Diagnostics.Stopwatch.StartNew();
             if (currentDialog != null)
             {
                 debug("PC", 1);
@@ -2448,18 +2473,18 @@ public class GameCanvas : IActionListener
                 debug("PD", 1);
                 menu.paintMenu(g);
             }
-            dialogTimer.Stop();
+            // // dialogTimer.Stop();
             //DebugManager.gI().AddDebugString("PAINT", $"Dialog/Menu painting took: {dialogTimer.ElapsedMilliseconds}ms");
 
             // Debug GameScr info painting
-            var infoTimer = System.Diagnostics.Stopwatch.StartNew();
+            // var infoTimer = System.Diagnostics.Stopwatch.StartNew();
             GameScr.info1.paint(g);
             GameScr.info2.paint(g);
-            infoTimer.Stop();
+            // // infoTimer.Stop();
             //DebugManager.gI().AddDebugString("PAINT", $"GameScr info painting took: {infoTimer.ElapsedMilliseconds}ms");
 
             // Debug popup painting
-            var popupTimer = System.Diagnostics.Stopwatch.StartNew();
+            // var popupTimer = System.Diagnostics.Stopwatch.StartNew();
             if (GameScr.gI().popUpYesNo != null)
             {
                 GameScr.gI().popUpYesNo.paint(g);
@@ -2473,11 +2498,11 @@ public class GameCanvas : IActionListener
             {
                 ChatPopup.serverChatPopUp.paint(g);
             }
-            popupTimer.Stop();
+            // // popupTimer.Stop();
             //DebugManager.gI().AddDebugString("PAINT", $"Popup painting took: {popupTimer.ElapsedMilliseconds}ms");
 
             // Debug Effect2 painting (có thể tốn nhiều time)
-            var effectTimer = System.Diagnostics.Stopwatch.StartNew();
+            // var effectTimer = System.Diagnostics.Stopwatch.StartNew();
             int effectCount = 0;
             for (int i = 0; i < Effect2.vEffect2.size(); i++)
             {
@@ -2488,29 +2513,29 @@ public class GameCanvas : IActionListener
                     effectCount++;
                 }
             }
-            effectTimer.Stop();
+            // // effectTimer.Stop();
             //DebugManager.gI().AddDebugString("PAINT", $"Effect2 painting took: {effectTimer.ElapsedMilliseconds}ms (Count: {effectCount}, Total: {Effect2.vEffect2.size()})");
 
             // Debug loading map painting
-            var loadingTimer = System.Diagnostics.Stopwatch.StartNew();
+            // var loadingTimer = System.Diagnostics.Stopwatch.StartNew();
             if (Char.isLoadingMap || LoginScr.isContinueToLogin || ServerListScreen.waitToLogin || ServerListScreen.isWait)
             {
                 paintChangeMap(g);
             }
-            loadingTimer.Stop();
+            // // loadingTimer.Stop();
             //DebugManager.gI().AddDebugString("PAINT", $"Loading map painting took: {loadingTimer.ElapsedMilliseconds}ms");
 
             debug("PE", 1);
             resetTrans(g);
 
             // Debug EffecMn painting
-            var effecMnTimer = System.Diagnostics.Stopwatch.StartNew();
+            // var effecMnTimer = System.Diagnostics.Stopwatch.StartNew();
             EffecMn.paintLayer4(g);
-            effecMnTimer.Stop();
+            // // effecMnTimer.Stop();
             //DebugManager.gI().AddDebugString("PAINT", $"EffecMn.paintLayer4() took: {effecMnTimer.ElapsedMilliseconds}ms");
 
             // Debug language specific painting
-            var languageTimer = System.Diagnostics.Stopwatch.StartNew();
+            // var languageTimer = System.Diagnostics.Stopwatch.StartNew();
             if (mResources.language == 0 && open3Hour && !isLoading)
             {
                 if (currentScreen == loginScr || currentScreen == serverScreen || currentScreen == serverScr)
@@ -2522,10 +2547,10 @@ public class GameCanvas : IActionListener
                     g.drawImage(img12, 5, 20, 0);
                 }
             }
-            languageTimer.Stop();
+            // // languageTimer.Stop();
             //DebugManager.gI().AddDebugString("PAINT", $"Language specific painting took: {languageTimer.ElapsedMilliseconds}ms");
 
-            paintTimer.Stop();
+            // // paintTimer.Stop();
             long totalPaintTime = paintTimer.ElapsedMilliseconds;
             //DebugManager.gI().AddDebugString("PAINT", $"=== PAINT TOTAL: {totalPaintTime}ms ===");
 
