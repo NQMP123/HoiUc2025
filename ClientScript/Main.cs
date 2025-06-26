@@ -107,7 +107,8 @@ public class Main : MonoBehaviour
         }
         //isPC = false;
         started = true;
-        UnityEngine.Time.timeScale = 2f;
+        UnityEngine.Time.timeScale = 1f;
+        QualitySettings.vSyncCount = 0; // disable vSync for consistent FPS
         Application.targetFrameRate = 60;
         if (isPC)
         {
@@ -168,6 +169,8 @@ public class Main : MonoBehaviour
         if (!isRun)
         {
             Application.runInBackground = true;
+            QualitySettings.vSyncCount = 0;
+            Time.timeScale = 1f;
             Application.targetFrameRate = 60;
             base.useGUILayout = false;
             if (main == null)
