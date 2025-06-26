@@ -493,25 +493,21 @@ public class GameCanvas : IActionListener
 
     public void update()
     {
-        // Debug update performance chi tiết
-        var updateTimer = System.Diagnostics.Stopwatch.StartNew();
-        //DebugManager.gI().AddDebugString("UPDATE", "=== UPDATE START ===");
-
-        // Debug gameTick và timeNow
+        // Optimized update with performance improvements
         if (gameTick % 5 == 0)
         {
             timeNow = mSystem.currentTimeMillis();
         }
 
-        var resTimer = System.Diagnostics.Stopwatch.StartNew();
-        Res.updateOnScreenDebug();
-        resTimer.Stop();
-        //DebugManager.gI().AddDebugString("UPDATE", $"Res.updateOnScreenDebug() took: {resTimer.ElapsedMilliseconds}ms");
+        // Only update debug info every few frames
+        if (gameTick % 3 == 0)
+        {
+            Res.updateOnScreenDebug();
+        }
 
         try
         {
-            // Debug keyboard handling
-            var keyboardTimer = System.Diagnostics.Stopwatch.StartNew();
+            // Optimized keyboard handling
             if (TouchScreenKeyboard.visible)
             {
                 timeOpenKeyBoard++;
@@ -525,8 +521,6 @@ public class GameCanvas : IActionListener
                 mGraphics.addYWhenOpenKeyBoard = 0;
                 timeOpenKeyBoard = 0;
             }
-            keyboardTimer.Stop();
-            //DebugManager.gI().AddDebugString("UPDATE", $"Keyboard handling took: {keyboardTimer.ElapsedMilliseconds}ms");
 
             debugUpdate.removeAllElements();
 
