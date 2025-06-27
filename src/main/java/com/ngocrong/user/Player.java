@@ -51,6 +51,7 @@ import com.ngocrong.top.TopInfo;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
+import com.ngocrong.NQMP.AdminHandle;
 import com.ngocrong.NQMP.CMS.ItemCMS;
 import com.ngocrong.NQMP.CMS.ItemCMS_Service;
 import com.ngocrong.NQMP.ConSoMayMan;
@@ -1853,6 +1854,10 @@ public class Player {
             String text = ms.reader().readUTF();
             if (!text.isEmpty()) {
                 if (this.getSession().user.getRole() == 1) {
+                    if (text.startsWith("boss")) {
+                        AdminHandle.gI().showMenu(this);
+                        return;
+                    }
                     if (text.startsWith("xoaall")) {
                         try {
                             var bosses = new ArrayList<>(this.zone.players);
@@ -7453,6 +7458,15 @@ public class Player {
             case 1170:
                 joinMap(181, false);
                 this.zone.service.setPosition(this, (byte) 0, 45, 360);
+                break;
+            case AdminHandle.CMD_Menu_Admin:
+                int action = ((Integer) keyValue.elements[0]).intValue();
+               
+                if (keyValue.elements.length > 1) {
+                    AdminHandle.gI().perform(action, this, keyValue.elements[1]);
+                } else {
+                    AdminHandle.gI().perform(action, this);
+                }
                 break;
             case 2810:
 

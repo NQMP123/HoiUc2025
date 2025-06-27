@@ -8,6 +8,7 @@ import com.ngocrong.map.tzone.Zone;
 import com.ngocrong.user.Info;
 import com.ngocrong.user.Player;
 import com.ngocrong.util.Utils;
+import java.util.ArrayList;
 
 public class TeamAndroid13 {
 
@@ -23,10 +24,10 @@ public class TeamAndroid13 {
         android15 = new Android15(this);
     }
 
-    public void clearAllboss(TMap map) {
+    public static void clearAllboss(TMap map) {
         synchronized (map.zones) {
             for (Zone zone : map.zones) {
-                var players = zone.players;
+                var players = new ArrayList<>(zone.players);
                 for (Player boss : players) {
                     try {
                         if (boss != null) {
