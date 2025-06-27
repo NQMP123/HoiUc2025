@@ -1738,7 +1738,7 @@ public class Service implements IService {
                     ds.writeByte(z.zoneID);
                     ds.writeByte(z.getPts());
                     ds.writeByte(z.getNumPlayer());
-                    ds.writeByte(z.getMaxPlayer());
+                    ds.writeShort(z.getMaxPlayer());
                     ds.writeByte(0);
                 }
             } finally {

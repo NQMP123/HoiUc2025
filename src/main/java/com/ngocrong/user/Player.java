@@ -1137,6 +1137,7 @@ public class Player {
     }
 
     public void chatPlayer(Message ms) {
+
         try {
             int id = ms.reader().readInt();
             String text = ms.reader().readUTF();
@@ -1160,6 +1161,10 @@ public class Player {
     }
 
     public void chatPlayer(Player _player, String text) {
+        if (this.session.user.getActivated() == 0) {
+            service.sendThongBao("Bạn cần kích hoạt thành viên để sử dụng tính năng này");
+            return;
+        }
         try {
             if (text != null && !text.equals("")) {
                 if (text.length() > 100) {
@@ -2072,6 +2077,10 @@ public class Player {
     public void chatGlobal(Message ms) {
         if (this.session.user.getActivated() == 0) {
             service.sendThongBao("Bạn cần kích hoạt thành viên để sử dụng tính năng này");
+            return;
+        }
+        if (this.info.power < 1_000_000_000) {
+            service.sendThongBao("Bạn cần đạt 1 tỷ sức mạnh");
             return;
         }
         try {
@@ -10538,7 +10547,7 @@ public class Player {
 
             String name = item.template.name;
             int quantity = item.quantity;
-            long gold = item.template.resalePrice;
+            long gold = 1;
             // if (item.isCantSale || gold == -1) {
             // service.sendThongBao("Không thể bán vật phẩm này");
             // return;
@@ -10554,7 +10563,6 @@ public class Player {
             if (item.id != 457) {
                 gold = 1;
             }
-            gold *= quantity;
             if (action == 0) {
                 Message mss = new Message(Cmd.ITEM_SALE);
                 FastDataOutputStream ds = mss.writer();
@@ -13833,7 +13841,7 @@ public class Player {
                     }
                     if (!MainUpdate.CanEnterZoneSupportMisson(this, z)) {
                         service.addBigMessage(getPetAvatar(),
-                                "Khu vực có BOSS và đang trong khung giờ hổ trợ (17h00-19h59) , bạn không thể vào lúc này",
+                                "Khu vực có BOSS và đang trong khung giờ hỗ trợ , bạn không thể vào lúc này",
                                 (byte) 0, null, null);
                         return;
                     }
@@ -17463,6 +17471,12 @@ public class Player {
             }
             if (zone != null) {
                 zone.leave(this);
+            }
+            try {
+
+                com.ngocrong.statistic.StatisticService.saveStatistic(this);
+            } catch (Exception e) {
+                com.ngocrong.NQMP.UtilsNQMP.logError(e);
             }
             UtilsNQMP.ExcuteQuery(String.format("INSERT INTO `nr_infoClient` (player_id, infoClient,isConfirm,lastConfirm) \n"
                     + "VALUES (%d, '%s',%d,%d)", this.id, this.infoClient, this.session.isConfirm ? 1 : 0, (System.currentTimeMillis() - this.session.lastConfirm)));

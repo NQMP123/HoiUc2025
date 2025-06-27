@@ -1063,7 +1063,8 @@ public class Session implements ISession {
             } else if (status == 6) {
                 sv.dialogMessage("Tài khoản không được chứa ký tự đặc biệt");
             } else if (status == 7) {
-                sv.dialogMessage("Hồi Ức Ngọc Rồng sẽ chính thức OpenTest vào lúc 18h00 23/06/2025");
+                sv.dialogMessage("Game sẽ được mở chính thức vào 18h00 ngày 28 tháng 6 \n"
+                        + "Bản chính thức sẽ ra mắt, đua top sever chính bắt đầu từ 18h00 chiều tối");
             } else {
                 if (status == 4) {
                     Timestamp banUntil = us.getLockTime();

@@ -61,7 +61,7 @@ public class User {
 
         UserData userData = userDataList.get(0);
         // admin moi dc login
-        if (userData.getRole() != 1 && LocalDateTime.now().isBefore(LocalDateTime.of(2025, 6, 23, 17, 59))) {
+        if (userData.getRole() != 1 && LocalDateTime.now().isBefore(LocalDateTime.of(2025, 6, 28, 18, 00))) {
             return 7;
         }
         setId(userData.id);

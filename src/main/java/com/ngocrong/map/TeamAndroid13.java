@@ -12,11 +12,11 @@ import java.util.ArrayList;
 
 public class TeamAndroid13 {
 
-    private final Android13 android13;
+    private  Android13 android13;
 
-    private final Android14 android14;
+    private  Android14 android14;
 
-    private final Android15 android15;
+    private  Android15 android15;
 
     public TeamAndroid13() {
         android13 = new Android13(this);
@@ -47,6 +47,9 @@ public class TeamAndroid13 {
         TMap map = MapManager.getInstance().getMap(104);
         clearAllboss(map);
         int zoneID = map.randomZoneID();
+        android13 = new Android13(this);
+        android14 = new Android14(this);
+        android15 = new Android15(this);
         if (android15.isDead()) {
             android15.wakeUpFromDead();
         }
@@ -85,7 +88,7 @@ public class TeamAndroid13 {
     }
 
     private void end() {
-        Utils.setTimeout(this::born, 3 * 60000L);
+        Utils.setTimeout(this::born, 10 * 60000L);
     }
 
     public void useAirshipToArrive(Boss boss, int mapID, int zoneID) {

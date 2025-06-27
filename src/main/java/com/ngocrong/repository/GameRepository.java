@@ -24,7 +24,7 @@ public class GameRepository {
     public WhisDataRepository whisDataRepository;
     public OsinCheckInRepository osinCheckInRepository;
     public DropRateRepository dropRateRepository;
-
+    public StatisticServerRepository statisticServerRepository;
 
     public static GameRepository getInstance() {
         if (instance == null) {

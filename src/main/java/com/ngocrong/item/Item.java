@@ -599,6 +599,10 @@ public class Item {
         if (template.id == 457) {
             return false;
         }
+
+        if (template.id >= 663 && template.id <= 667) {
+            return false;
+        }
 //        if (template.id == 2243 || template.id == 2261 || template.id == 568 || template.id == 2197) {
 //            return true;
 //        }

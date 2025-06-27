@@ -135,7 +135,7 @@ public class MainUpdate implements Runnable {
     public static void update() {
         try {
             now = LocalDateTime.now();
-            isSupportMisson = now.getHour() == 17 || now.getHour() == 18 || now.getHour() == 19;
+            isSupportMisson = now.getHour() == 18;
             DHVT23_Service.update();
             ConSoMayMan.update();
             checkKickOut();
@@ -223,14 +223,16 @@ public class MainUpdate implements Runnable {
     }
 
     public static boolean CanEnterZoneSupportMisson(Player player, Zone zone) {
-        if (!isSupportMisson) {
-            return true;
-        }
-
         if (zone.map.mapID == 79 || zone.map.mapID == 82 || zone.map.mapID == 83) {
-            if (player.taskMain != null && player.taskMain.id != 20 && !zone.getBossInZone().isEmpty()) {
+            if (player.taskMain != null && player.taskMain.id != 20 && !zone.getBossInZone().isEmpty()) {                
                 return false;
             }
+            if (player.taskMain != null && player.taskMain.id == 20 && !zone.getBossInZone().isEmpty() && player.taskMain.index == 6) {                
+                return false;
+            }
+        }
+        if (!isSupportMisson) {
+            return true;
         }
         if (zone.map.mapID == 80) {
             if (player.taskMain != null && player.taskMain.id != 21 && !zone.getBossInZone().isEmpty()) {

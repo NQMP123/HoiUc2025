@@ -95,7 +95,7 @@ public class Fide extends Boss {
             Utils.setTimeout(() -> {
                 Fide fide = new Fide((byte) 0);
                 fide.setLocation(80, -1);
-            }, 5 * 60000);
+            }, 10 * 60000);
         }
     }
 

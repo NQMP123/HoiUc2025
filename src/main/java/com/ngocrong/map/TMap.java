@@ -96,8 +96,8 @@ public class TMap {
                 } else {
                     z = new Zone(this, autoIncrease);
                 }
-                if (mapID == MapName.DONG_KARIN) {
-                    z.setMaxPlayer(120);
+                if (mapID == MapName.DONG_KARIN && z.zoneID == 0) {
+                    z.setMaxPlayer(2500);
                 }
                 addZone(z);
             }

@@ -3,16 +3,19 @@ package com.ngocrong.map;
 import com.ngocrong.bot.Boss;
 import com.ngocrong.bot.boss.android.*;
 import com.ngocrong.consts.MapName;
+import com.ngocrong.map.tzone.Zone;
 import com.ngocrong.user.Info;
+import com.ngocrong.user.Player;
 import com.ngocrong.util.Utils;
+import java.util.ArrayList;
 
 public class TeamAndroid16 {
 
-    public final Poc poc;
+    public Poc poc;
 
-    public final Pic pic;
+    public Pic pic;
 
-    public final KingKong kingKong;
+    public KingKong kingKong;
 
     public TeamAndroid16() {
         poc = new Poc(this);
@@ -20,12 +23,36 @@ public class TeamAndroid16 {
         kingKong = new KingKong(this);
     }
 
+    public static void clearAllboss(TMap map) {
+        synchronized (map.zones) {
+            for (Zone zone : map.zones) {
+                var players = new ArrayList<>(zone.players);
+                for (Player boss : players) {
+                    try {
+                        if (boss != null) {
+                            if (boss.name.equals("Pic") || boss.name.equals("Poc") || boss.name.equals("King Kong")) {
+                                zone.leave(boss);
+                            }
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
     public void born() {
         int[] maps = new int[]{MapName.THANH_PHO_PHIA_BAC};
         int z = Utils.nextInt(maps.length);
+
         int mapID = maps[z];
         TMap map = MapManager.getInstance().getMap(mapID);
+        clearAllboss(map);
         int zoneID = map.randomZoneID();
+        poc = new Poc(this);
+        pic = new Pic(this);
+        kingKong = new KingKong(this);
         if (poc.isDead()) {
             poc.wakeUpFromDead();
         }
@@ -64,13 +91,7 @@ public class TeamAndroid16 {
     }
 
     private void end() {
-        if (this.pic.zone != null) {
-            this.pic.zone.leave(pic);
-        }
-        if (this.poc.zone != null) {
-            this.poc.zone.leave(poc);
-        }
-        Utils.setTimeout(this::born, 3 * 60000L);
+        Utils.setTimeout(this::born, 10 * 60000L);
     }
 
     public void useAirshipToArrive(Boss boss, int mapID, int zoneID) {

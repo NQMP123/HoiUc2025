@@ -118,39 +118,34 @@ public class SuperRank {
     }
 
     public static void checkReward(Player player) {
-//        Utils.setTimeout(()
-//                -> {
-//            if (player.superrank.rank < 100 && System.currentTimeMillis() - player.superrank.lastAttack >= 30 * 60000 && System.currentTimeMillis() - player.superrank.lastReward >= HalfDay) {
-//
-//                var rank = player.superrank.rank;
-//                player.superrank.lastReward = System.currentTimeMillis();
-//                player.superrank.lastAttack = System.currentTimeMillis();
-//                int goldReward = 5;
-//                
-//                if (rank == 1) {
-//                    goldReward = 200;
-//                } else if (rank == 2 || rank == 3) {
-//                    goldReward = 100;
-//                } else if (rank <= 9) {
-//                    goldReward = 50;
-//                } else if (rank <= 20) {
-//                    goldReward = 10;
-//                } else if (rank <= 50) {
-//                    goldReward = 5;
-//                } else if (rank <= 100) {
-//                    goldReward = 2;
-//                }
-//
-//                Item thoivang = new Item(457);
-//                thoivang.quantity = goldReward;
-//                player.addItem(thoivang);
-//                player.service.dialogMessage(String.format(
-//                        "Bạn đạt Top %d ở Giải Đấu Siêu Hạng\n"
-//                        + "Bạn nhận được %d thỏi vàng", player.superrank.rank, goldReward));
-//            }
-//
-//        },
-//                5000);
+        Utils.setTimeout(()
+                -> {
+            if (player.superrank.rank < 100 && System.currentTimeMillis() - player.superrank.lastAttack >= 30 * 60000 && System.currentTimeMillis() - player.superrank.lastReward >= HalfDay) {
+
+                var rank = player.superrank.rank;
+                player.superrank.lastReward = System.currentTimeMillis();
+                player.superrank.lastAttack = System.currentTimeMillis();
+                int ruby = 100;
+                if (rank == 1) {
+                    ruby = 500;
+                } else if (rank == 2 || rank == 3) {
+                    ruby = 400;
+                } else if (rank <= 9) {
+                    ruby = 300;
+                } else if (rank <= 20) {
+                    ruby = 200;
+                } else if (rank <= 100) {
+                    ruby = 100;
+                }
+
+                player.addDiamondLock(ruby);
+                player.service.dialogMessage(String.format(
+                        "Bạn đạt Top %d ở Giải Đấu Siêu Hạng\n"
+                        + "Bạn nhận được %d hồng ngọc", player.superrank.rank, ruby));
+            }
+
+        },
+                5000);
 
     }
 

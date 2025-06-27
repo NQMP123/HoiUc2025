@@ -130,7 +130,7 @@ public class SieuBoHung extends Boss {
             Utils.setTimeout(() -> {
                 SieuBoHung sieuBoHung = new SieuBoHung(false);
                 sieuBoHung.setLocation(103, -1);
-            }, 600000);
+            }, 10 * 60000);
         }
     }
 

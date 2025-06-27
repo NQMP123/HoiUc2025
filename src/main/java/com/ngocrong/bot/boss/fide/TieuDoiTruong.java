@@ -69,6 +69,7 @@ public class TieuDoiTruong extends Boss {
         if (killer.taskMain != null && killer.taskMain.id == 20 && killer.taskMain.index == 5
                 && killer.zone.map.mapID > 70) {
             killer.updateTaskCount(1);
+            killer.joinMap(5);
         }
     }
 

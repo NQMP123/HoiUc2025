@@ -40,7 +40,6 @@ public class Top_SieuHang {
     public boolean isReward;
     public static List<Top_SieuHang> elements = new ArrayList<>();
 
-
     public static void setNewRank(int pid, int newRank) {
         for (Top_SieuHang top : elements) {
             if (top != null && top.player_Id == pid) {
@@ -171,23 +170,20 @@ public class Top_SieuHang {
                     info.leg = leg;
                     short goldReward;
                     if (rank == 1) {
-                        goldReward = 200;
-                        info.info = String.format("%s thỏi vàng/ngày", Utils.formatNumber(goldReward));
+                        goldReward = 500;
+                        info.info = String.format("%s hồng ngọc/ngày", Utils.formatNumber(goldReward));
                     } else if (rank == 2 || rank == 3) {
-                        goldReward = 100;
-                        info.info = String.format("%s thỏi vàng/ngày", Utils.formatNumber(goldReward));
+                        goldReward = 400;
+                        info.info = String.format("%s hồng ngọc/ngày", Utils.formatNumber(goldReward));
                     } else if (rank <= 9) {
-                        goldReward = 50;
-                        info.info = String.format("%s thỏi vàng/ngày", Utils.formatNumber(goldReward));
+                        goldReward = 300;
+                        info.info = String.format("%s hồng ngọc/ngày", Utils.formatNumber(goldReward));
                     } else if (rank <= 20) {
-                        goldReward = 10;
-                        info.info = String.format("%s thỏi vàng/ngày", Utils.formatNumber(goldReward));
-                    } else if (rank <= 50) {
-                        goldReward = 5;
-                        info.info = String.format("%s thỏi vàng/ngày", Utils.formatNumber(goldReward));
+                        goldReward = 200;
+                        info.info = String.format("%s hồng ngọc/ngày", Utils.formatNumber(goldReward));
                     } else if (rank <= 100) {
-                        goldReward = 2;
-                        info.info = String.format("%s thỏi vàng/ngày", Utils.formatNumber(goldReward));
+                        goldReward = 100;
+                        info.info = String.format("%s hồng ngọc/ngày", Utils.formatNumber(goldReward));
                     } else {
                         info.info = "";
                     }

@@ -3,18 +3,40 @@ package com.ngocrong.map;
 import com.ngocrong.bot.Boss;
 import com.ngocrong.bot.boss.android.*;
 import com.ngocrong.consts.MapName;
+import com.ngocrong.map.tzone.Zone;
 import com.ngocrong.user.Info;
+import com.ngocrong.user.Player;
 import com.ngocrong.util.Utils;
+import java.util.ArrayList;
 
 public class TeamAndroid19 {
 
-    private final Android19 android19;
+    private Android19 android19;
 
-    private final Android20 android20;
+    private Android20 android20;
 
     public TeamAndroid19() {
         android19 = new Android19(this);
         android20 = new Android20(this);
+    }
+
+    public static void clearAllboss(TMap map) {
+        synchronized (map.zones) {
+            for (Zone zone : map.zones) {
+                var players = new ArrayList<>(zone.players);
+                for (Player boss : players) {
+                    try {
+                        if (boss != null) {
+                            if (boss.name.equals("Android 19") || boss.name.equals("Android 20")) {
+                                zone.leave(boss);
+                            }
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        }
     }
 
     public void born() {
@@ -22,7 +44,10 @@ public class TeamAndroid19 {
         int z = Utils.nextInt(maps.length);
         int mapID = maps[z];
         TMap map = MapManager.getInstance().getMap(mapID);
+        clearAllboss(map);
         int zoneID = map.randomZoneID();
+        android19 = new Android19(this);
+        android20 = new Android20(this);
         if (android19.isDead()) {
             android19.wakeUpFromDead();
         }
@@ -49,7 +74,7 @@ public class TeamAndroid19 {
     }
 
     private void end() {
-        Utils.setTimeout(this::born, 3 * 60000L);
+        Utils.setTimeout(this::born, 10 * 60000L);
     }
 
     public void useAirshipToArrive(Boss boss, int mapID, int zoneID) {

@@ -140,7 +140,7 @@ public class BlackGoku extends Boss {
             Utils.setTimeout(() -> {
                 BlackGoku bl = new BlackGoku(false);
                 bl.setLocation(MAPS[Utils.nextInt(MAPS.length)], -1);
-            }, 600000);
+            }, 10*60000);
         }
     }
 
