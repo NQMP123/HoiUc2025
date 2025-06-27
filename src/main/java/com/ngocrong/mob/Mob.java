@@ -337,6 +337,7 @@ public class Mob {
 //            }
 //        }
         if (this.zone.map.isNappa() || this.zone.map.isCold() || this.zone.map.isFuture()) {
+            dropManhSuuTam(_c);
             int rd = Utils.nextInt(200);
             if (rd == 0) {
                 ItemMap spl = new ItemMap(zone.autoIncrease++);
@@ -376,10 +377,10 @@ public class Mob {
                 item.setDefaultOptions();
                 item.quantity = 1;
                 if (rd <= 281) {
-                    if (Utils.nextInt(1, 10) != 8) {
-                        item.addRandomOption(1, 5);
+                    if (Utils.isTrue(9, 10)) {
+                        item.addRandomOption(1, 3);
                     } else {
-                        item.addRandomOption(4, 6);
+                        item.addRandomOption(4, 5);
                     }
                 }
                 itemDrop.playerID = Math.abs(_c.id);
@@ -642,6 +643,23 @@ public class Mob {
             itemMap.x = (short) (this.x + Utils.nextInt(-30, 30));
             itemMap.y = zone.map.collisionLand(this.x, this.y);
             itemMap.item = item;
+            itemMap.isThrowFromMob = true;
+            itemMap.killerIsHuman = _c.isHuman();
+            itemMap.mobLevel = this.level;
+            this.items.add(itemMap);
+            zone.addItemMap(itemMap);
+        }
+    }
+
+    public void dropManhSuuTam(Player player) {
+        var _c = player;
+        if (Utils.isTrue(5, 100)) {
+            ItemMap itemMap = new ItemMap(zone.autoIncrease++);
+            itemMap.playerID = Math.abs(_c.id);
+            itemMap.isPickedUp = false;
+            itemMap.x = (short) (this.x + Utils.nextInt(-30, 30));
+            itemMap.y = zone.map.collisionLand(this.x, this.y);
+            itemMap.item = new Item(Utils.nextInt(828, 841));
             itemMap.isThrowFromMob = true;
             itemMap.killerIsHuman = _c.isHuman();
             itemMap.mobLevel = this.level;

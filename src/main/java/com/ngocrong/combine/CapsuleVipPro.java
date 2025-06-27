@@ -10,7 +10,7 @@ import com.ngocrong.consts.CMDMenu;
 public class CapsuleVipPro extends Combine {
 
     private static final int REQUIRE_STARFISH = 1000;
-    private static final int REQUIRE_FRAGMENT = 50;
+    private static final int REQUIRE_FRAGMENT = 100;
     private static final int REQUIRE_GOLDBAR = 50;
     private static final int PERCENT = 50;
 

@@ -9,6 +9,7 @@ import com.ngocrong.user.Player;
 import com.ngocrong.util.Utils;
 
 public class SummerBeachEvent {
+
     public static void mobReward(Player player) {
         if (player == null || player.zone == null) {
             return;
@@ -16,7 +17,7 @@ public class SummerBeachEvent {
         if (player.zone.map.mapID != MapName.BAI_BIEN_NGAY_HE) {
             return;
         }
-        if (Utils.isTrue(10, 100)) {
+        if (Utils.isTrue(10, 100) && player.itemDrop[4] < 100) {
             Item it = new Item(ItemName._SAO_BIEN);
             it.setDefaultOptions();
             it.quantity = 1;
@@ -27,7 +28,7 @@ public class SummerBeachEvent {
             map.y = player.zone.map.collisionLand(player.getX(), player.getY());
             player.zone.addItemMap(map);
             player.zone.service.addItemMap(map);
-        } else if (Utils.isTrue(1, 1000)) {
+        } else if (Utils.isTrue(1, 1000) && player.itemDrop[5] < 10) {
             Item it = new Item(ItemName.MANH_CAPSULE_VIPPRO);
             it.setDefaultOptions();
             it.quantity = 1;

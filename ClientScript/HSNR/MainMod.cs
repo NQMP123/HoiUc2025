@@ -1,4 +1,4 @@
-﻿using Assets.src.g;
+﻿using Assets.Scripts.HSNR;
 using System;
 using UnityEngine;
 
@@ -7,8 +7,66 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
     public class MainMod : IActionListener
     {
         private static MainMod instance;
-        public bool isAutoRevive;
+        public static bool isAutoRevive;
         private Button[] button = new Button[13];
+
+
+
+        public static readonly string[] ARR_MOD_NAMES = new string[]
+        {
+            "Tàn Sát (Auto Train)",
+            "Tự Đánh",
+            "Tự Đánh VIP",
+            "Auto Hồi Sinh",
+            "Auto Nhặt",
+            "Auto Nhặt NRSD",
+            "Auto Buff Đậu",
+            "Thông báo BOSS",
+            "Nhân vật trong Map",
+            "Auto Focus vào Boss",
+            "Auto Chat Map",
+            "Auto Chat Thế Giới"
+
+        };
+        public static readonly string[] ARR_TITLE_NAMES = new string[]
+        {
+            "tàn sát (Auto train)",
+            "tự động đánh",
+            "tự động đánh",
+            "tự động hồi sinh",
+            "tự động nhặt",
+            "tự động nhặt NRSD",
+            "Auto Buff Đậu",
+            "xem thông báo Boss",
+            "xem nhân vật trong Map",
+            "auto focus vào Boss",
+            string.Empty,
+            string.Empty
+        };
+       public static bool isPickNRSD;
+        public static bool[] getStatusModFields() => new bool[]
+        {
+            AutoTrainVIP.isAutoTrain,
+            AutoSkill.isAutoSendAttack == 1,
+            AutoSkill.isAutoSendAttack == 2,
+            isAutoRevive,
+            AutoPick.isAutoPick,
+            isPickNRSD,
+            AutoPean.isAutoBuffPean,
+            Boss.gI().isShow,
+            ListChars.gI().isShow,
+            autoFocus,
+            AutoChat.enableChatMap,
+             AutoChat.enableChatGlobal,
+        };
+
+
+        public static void changeStatus(ref bool input, string status)
+        {
+            input = !input;
+            GameScr.info1.addInfo((input ? "Đã bật " : "Đã tắt ") + status, 0);
+        }
+
         public static MainMod gI()
         {
             if (instance == null)
@@ -188,13 +246,14 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
         {
             try
             {
+                AutoChat.update();
                 ListChars.gI().Update();
                 AutoItem.gI().Update();
                 AutoMap.instance.Update();
                 AutoSkill.Update();
                 AutoPean.Update();
                 AutoPick.Update();
-                AutoTrain.Update();
+                AutoTrainVIP.Update();
                 focusBoss();
                 if (isAutoRevive)
                 {
@@ -219,7 +278,7 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
         }
         public void UpdateKey()
         {
-           
+
             if (Panel.isShowPhimTat)
             {
                 if (GameScr.isAnalog == 1 && GameCanvas.isTouch && !ChatTextField.gI().isShow && !GameCanvas.menu.showMenu && !GameCanvas.panel.isShow && !Char.isLoadingMap && !Char.myCharz().meDead)
@@ -242,6 +301,10 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
         {
             switch (GameCanvas.keyAsciiPress)
             {
+                case 'q':
+                    GameCanvas.panel.setTypeMod(false);
+                    GameCanvas.panel.show();
+                    break;
                 case 'x':
                     showMenu();
                     break;
@@ -307,7 +370,7 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                     AutoPick.getInstance().perform(1, null);
                     break;
                 case 't':
-                    AutoTrain.ShowMenu();
+                    AutoTrainVIP.ShowMenu();
                     break;
                 case 's':
                     autoFocus = !autoFocus;
@@ -324,7 +387,7 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                 {
                     if (Char.myCharz().charFocus.isDie || Char.myCharz().charFocus.cHP <= 0)
                     {
-                       
+
                     }
                     else
                     {
@@ -412,7 +475,7 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                 { Time.timeScale = cheat; }
                 else
                 {
-                    GameScr.info1.addInfo("Cheat tối đa là 10",0);
+                    GameScr.info1.addInfo("Cheat tối đa là 10", 0);
                 }
                 text = "";
                 return true;
@@ -455,7 +518,7 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
                     AutoPick.getInstance().perform(1, null);
                     break;
                 case 5:
-                    AutoTrain.ShowMenu();
+                    AutoTrainVIP.ShowMenu();
                     break;
                 case 7:
                     showMoreMenu();
@@ -477,7 +540,7 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
             }
             if (idAction >= 12 && idAction <= 24)
             {
-                char[] nChar = new char[] { 'j', 'k', 'l', 'a', 'f', 'e', 'g', 'n', 'x', 'c', 'm','t','s'};
+                char[] nChar = new char[] { 'j', 'k', 'l', 'a', 'f', 'e', 'g', 'n', 'x', 'c', 'm', 't', 's' };
                 GameCanvas.keyAsciiPress = nChar[idAction - 12];
             }
         }

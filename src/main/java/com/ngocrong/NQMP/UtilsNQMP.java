@@ -75,32 +75,33 @@ public class UtilsNQMP {
 
     public static int checkDrop() {
         //RadioTest
-        if (Utils.nextInt(1, 100) == 1) {
-            int[] awj = new int[]{
-                555, 556, 557, 558, 559, 563, 567
-            };
-            return RandomItem.DO_THAN_LINH.next();
-        } else if (Utils.nextInt(1, 100) == 1) {
-            return RandomItem.DO_CUOI.next();
-        } else if (Utils.nextInt(1, 100) == 1) {
-            int[] awj = new int[]{
-                650, 651, 658,
-                652, 653, 660,
-                654, 655, 662
-            };
-            return RandomItem.DO_THAN_LINH.next();
-        }
-        if (true) {
-            return -1;
-        }
-//        if (Utils.nextInt(1, 20000) == 1) {
+//        if (Utils.nextInt(1, 100) == 1) {
 //            int[] awj = new int[]{
 //                555, 556, 557, 558, 559, 563, 567
 //            };
-//            return awj[Utils.nextInt(awj.length)];
-//        } else if (Utils.nextInt(1, 10000) == 1) {
+//            return RandomItem.DO_THAN_LINH.next();
+//        } else if (Utils.nextInt(1, 100) == 1) {
 //            return RandomItem.DO_CUOI.next();
-//        } else if (Utils.nextInt(1, 150000) == 1) {
+//        } else if (Utils.nextInt(1, 100) == 1) {
+//            int[] awj = new int[]{
+//                650, 651, 658,
+//                652, 653, 660,
+//                654, 655, 662
+//            };
+//            return RandomItem.DO_THAN_LINH.next();
+//        }
+//        if (true) {
+//            return -1;
+//        }
+        if (Utils.nextInt(1, 10000) == 1) {
+            int[] awj = new int[]{
+                555, 556, 557, 558, 559, 563, 567
+            };
+            return awj[Utils.nextInt(awj.length)];
+        } else if (Utils.nextInt(1, 1000) == 1) {
+            return RandomItem.DO_CUOI.next();
+        }
+//        else if (Utils.nextInt(1, 150000) == 1) {
 //            int[] awj = new int[]{
 //                650, 651, 658,
 //                652, 653, 660,

@@ -67,9 +67,9 @@ public class TeamAndroid13 {
     }
 
     public void next(Boss boss) {
-        if (boss.zone != null) {
-            boss.zone.leave(boss);
-        }
+//        if (boss.zone != null) {
+//            boss.zone.leave(boss);
+//        }
         if (boss instanceof Android15) {
             android14.info.recovery(Info.ALL, 100, true);
             android14.setTypePK((byte) 5);

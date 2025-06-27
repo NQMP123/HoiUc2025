@@ -158,7 +158,7 @@ public class Player {
     private short countNumberOfSpecialSkillChanges;
     public short idNRNM = -1;
     public short idGo = -1;
-    public short[] itemDrop = new short[3];
+    public short[] itemDrop = new short[5];
 
     // INT
     public int id;
@@ -690,8 +690,13 @@ public class Player {
     public void setListMap() {
         ArrayList<KeyValue> list = new ArrayList<>();
         int mapID = zone.map.mapID;
+        var map = zone.map;
+        var item = itemBag[capsule];
         if (currMap != null) {
-            list.add(currMap);
+            if (map.isFuture() && item.template.id != 2309) {
+            } else {
+                list.add(currMap);
+            }
         }
         if (mapID != MapName.NHA_GOHAN && mapID != MapName.NHA_MOORI && mapID != MapName.NHA_BROLY) {
             if (gender == 0) {
@@ -833,6 +838,7 @@ public class Player {
             listAccessMap.add(24);
             listAccessMap.add(25);
             listAccessMap.add(26);
+            listAccessMap.add(84);
         }
         if (taskMain.id >= 7) {
             listAccessMap.add(3);
@@ -892,7 +898,7 @@ public class Player {
             listAccessMap.add(72);
             listAccessMap.add(64);
             listAccessMap.add(65);
-            listAccessMap.add(84);
+
         }
         if (taskMain.id >= 19) {
             // kuku mdd rambo
@@ -911,23 +917,26 @@ public class Player {
             listAccessMap.add(81);
             listAccessMap.add(82);
             listAccessMap.add(83);
-            listAccessMap.add(102);
         }
         if (taskMain.id >= 21) {
             // fide
+            listAccessMap.add(102);
             listAccessMap.add(80);
+            listAccessMap.add(92);
+            listAccessMap.add(93);
         }
         if (taskMain.id >= 22) {
             // apk 1920
-            listAccessMap.add(92);
-            listAccessMap.add(93);
             listAccessMap.add(94);
             listAccessMap.add(95);
             listAccessMap.add(96);
+
+        }
+        if (taskMain.id >= 23) {
+            listAccessMap.add(97);
+            listAccessMap.add(104);
         }
         if (taskMain.id >= 24) {
-            // ppkk
-            listAccessMap.add(97);
             listAccessMap.add(98);
             listAccessMap.add(99);
         }
@@ -1555,7 +1564,7 @@ public class Player {
         if (mapID >= 105 && mapID <= 110) {
             return taskMain.id >= 26 || this instanceof BotCold;
         }
-        if (taskMain.id >= 23) {
+        if (taskMain.id >= 26) {
             return true;
         }
         if (info.power > 110000000000L) {
@@ -13457,6 +13466,9 @@ public class Player {
             }
             int cmd = getCommandTransport();
             if (cmd == 0) {
+                if (isDead()) {
+                    return;
+                }
                 Item item = itemBag[capsule];
                 if (item != null && (item.id == 193 || item.id == 194 || item.id == 2309)) {
                     if (item.id == 193) {
@@ -13493,7 +13505,11 @@ public class Player {
                 isGoBack = currMap == keyValue;
                 TMap map = zone.map;
                 if (!map.isCantGoBack()) {
-                    currMap = new KeyValue(curr.mapID, "Về chỗ cũ: " + curr.name, planet);
+                    if (map.isFuture() && item.template.id != 2309) {
+                        currMap = null;
+                    } else {
+                        currMap = new KeyValue(curr.mapID, "Về chỗ cũ: " + curr.name, planet);
+                    }
                 } else {
                     currMap = null;
                 }
@@ -13503,6 +13519,9 @@ public class Player {
                 currZoneId = z.zoneID;
                 listMapTransport = null;
             } else if (cmd == 1) {
+                if (isDead()) {
+                    return;
+                }
                 if (MapManager.getInstance().blackDragonBall == null) {
                     service.serverMessage2("Đã kết thúc");
                     return;
@@ -16933,6 +16952,8 @@ public class Player {
             datadrop.put(String.valueOf(ItemName.MANH_VO_BONG_TAI), itemDrop[0]);
             datadrop.put(String.valueOf(ItemName.MANH_HON_BONG_TAI), itemDrop[1]);
             datadrop.put(String.valueOf(ItemName.NGOC_RONG_LOC_PHAT_7_SAO), itemDrop[2]);
+            datadrop.put(String.valueOf(ItemName._SAO_BIEN), itemDrop[3]);
+            datadrop.put(String.valueOf(ItemName.MANH_CAPSULE_VIPPRO), itemDrop[4]);
             GameRepository.getInstance().player.saveData(this.id, g.toJson(this.taskMain), this.gold, this.diamond,
                     this.diamondLock, g.toJson(bags), g.toJson(bodys), g.toJson(boxs),
                     g.toJson(maps), skills.toString(), g.toJson(this.info), this.clanID, g.toJson(this.shortcut),

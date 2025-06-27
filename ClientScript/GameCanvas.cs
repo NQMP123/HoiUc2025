@@ -493,31 +493,16 @@ public class GameCanvas : IActionListener
 
     public void update()
     {
-<<<<<<< HEAD
-        // Optimized update with performance improvements
-=======
         // Debug update performance chi tiết
         // var updateTimer = System.Diagnostics.Stopwatch.StartNew();
         //DebugManager.gI().AddDebugString("UPDATE", "=== UPDATE START ===");
 
         // Debug gameTick và timeNow
->>>>>>> 1e9872e3c6d2f1be2ee26b099ef2c1d3bf309da0
         if (gameTick % 5 == 0)
         {
             timeNow = mSystem.currentTimeMillis();
         }
 
-<<<<<<< HEAD
-        // Only update debug info every few frames
-        if (gameTick % 3 == 0)
-        {
-            Res.updateOnScreenDebug();
-        }
-
-        try
-        {
-            // Optimized keyboard handling
-=======
         // var resTimer = System.Diagnostics.Stopwatch.StartNew();
         Res.updateOnScreenDebug();
         // // resTimer.Stop();
@@ -527,7 +512,6 @@ public class GameCanvas : IActionListener
         {
             // Debug keyboard handling
             // var keyboardTimer = System.Diagnostics.Stopwatch.StartNew();
->>>>>>> 1e9872e3c6d2f1be2ee26b099ef2c1d3bf309da0
             if (TouchScreenKeyboard.visible)
             {
                 timeOpenKeyBoard++;
@@ -541,11 +525,8 @@ public class GameCanvas : IActionListener
                 mGraphics.addYWhenOpenKeyBoard = 0;
                 timeOpenKeyBoard = 0;
             }
-<<<<<<< HEAD
-=======
             // // keyboardTimer.Stop();
             //DebugManager.gI().AddDebugString("UPDATE", $"Keyboard handling took: {keyboardTimer.ElapsedMilliseconds}ms");
->>>>>>> 1e9872e3c6d2f1be2ee26b099ef2c1d3bf309da0
 
             debugUpdate.removeAllElements();
 
@@ -840,27 +821,6 @@ public class GameCanvas : IActionListener
                     currentDialog.left.performAction();
                 }
             }
-            // // resumeTimer.Stop();
-            //DebugManager.gI().AddDebugString("UPDATE", $"Resume handling took: {resumeTimer.ElapsedMilliseconds}ms");
-
-            // // updateTimer.Stop();
-            long totalUpdateTime = updateTimer.ElapsedMilliseconds;
-            //DebugManager.gI().AddDebugString("UPDATE", $"=== UPDATE TOTAL: {totalUpdateTime}ms ===");
-
-            // Cảnh báo nếu update quá chậm
-            if (totalUpdateTime > 16) // Hơn 16ms có thể gây FPS drop
-            {
-                //DebugManager.gI().AddDebugString($"⚠️ SLOW UPDATE: {totalUpdateTime}ms (>16ms)");
-            }
-
-            // Cảnh báo nghiêm trọng nếu update cực chậm
-            if (totalUpdateTime > 50) // Hơn 50ms là cực kỳ chậm
-            {
-                //DebugManager.gI().AddDebugString($"🚨 CRITICAL SLOW UPDATE: {totalUpdateTime}ms");
-            }
-
-            // Log thêm thông tin context
-
         }
         catch (Exception ex)
         {
@@ -2547,27 +2507,6 @@ public class GameCanvas : IActionListener
                     g.drawImage(img12, 5, 20, 0);
                 }
             }
-            // // languageTimer.Stop();
-            //DebugManager.gI().AddDebugString("PAINT", $"Language specific painting took: {languageTimer.ElapsedMilliseconds}ms");
-
-            // // paintTimer.Stop();
-            long totalPaintTime = paintTimer.ElapsedMilliseconds;
-            //DebugManager.gI().AddDebugString("PAINT", $"=== PAINT TOTAL: {totalPaintTime}ms ===");
-
-            // Cảnh báo nếu paint quá chậm
-            if (totalPaintTime > 16) // Hơn 16ms có thể gây FPS drop
-            {
-                //DebugManager.gI().AddDebugString($"⚠️ SLOW PAINT: {totalPaintTime}ms (>16ms)");
-            }
-
-            // Cảnh báo nghiêm trọng nếu paint cực chậm
-            if (totalPaintTime > 50) // Hơn 50ms là cực kỳ chậm
-            {
-                //DebugManager.gI().AddDebugString($"🚨 CRITICAL SLOW PAINT: {totalPaintTime}ms");
-            }
-
-            // Log thêm thông tin context để debug
-
         }
         catch (Exception ex)
         {

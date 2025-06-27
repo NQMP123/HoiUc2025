@@ -142,7 +142,7 @@ public class Session implements ISession {
                 return;
             }
             if (!version.equals(Server.VERSION)) {
-                ((Service) this.service).dialogMessage(String.format("Vui lòng tải phiên bản [%s] tại %s",Server.VERSION,"HOIUCNGOCRONG.COM"));
+                ((Service) this.service).dialogMessage(String.format("Vui lòng tải phiên bản [%s] tại %s", Server.VERSION, "HOIUCNGOCRONG.COM"));
                 return;
             }
             this.isSetClientInfo = true;
@@ -899,11 +899,12 @@ public class Session implements ISession {
                     _player.itemDrop[0] = (short) itemDrop.getInt(String.valueOf(ItemName.MANH_VO_BONG_TAI));
                     _player.itemDrop[1] = (short) itemDrop.getInt(String.valueOf(ItemName.MANH_HON_BONG_TAI));
                     _player.itemDrop[2] = (short) itemDrop.getInt(String.valueOf(ItemName.NGOC_RONG_LOC_PHAT_7_SAO));
+                    _player.itemDrop[3] = (short) itemDrop.getInt(String.valueOf(ItemName._SAO_BIEN));
+                    _player.itemDrop[4] = (short) itemDrop.getInt(String.valueOf(ItemName.MANH_CAPSULE_VIPPRO));
                 } catch (JSONException e) {
                     // Xử lý lỗi JSON
-                    _player.itemDrop[0] = 0; // Gán giá trị mặc định nếu có lỗi
-                    _player.itemDrop[1] = 0; // Gán giá trị mặc định nếu có lỗi
-                    _player.itemDrop[2] = 0;
+                    _player.itemDrop[0] = _player.itemDrop[1] = _player.itemDrop[2] = 0;
+                    _player.itemDrop[3] = _player.itemDrop[4] = 0;
                 }
             }
 

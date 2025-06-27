@@ -18,14 +18,14 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class TMap {
-
+    
     private static Logger logger = Logger.getLogger(TMap.class);
-
+    
     public static final byte UPDATE_ONE_SECONDS = 0;
     public static final byte UPDATE_THIRTY_SECONDS = 1;
     public static final byte UPDATE_ONE_MINUTES = 2;
     public static final byte UPDATE_FIVE_SECONDS = 3;
-
+    
     public static int T_EMPTY = 0;
     public static int T_TOP = 2;
     public static int T_LEFT = 4;
@@ -46,13 +46,13 @@ public class TMap {
     public static int T_JUM8 = 131072;
     public static int T_NT0 = 262144;
     public static int T_NT1 = 524288;
-
+    
     public int autoIncrease = 0;
     public static byte[] data;
     public static ArrayList<String> mapNames = new ArrayList<>();
     public static int[][] tileType;
     public static int[][][] tileIndex;
-
+    
     public int mapID;
     public String name;
     public int planet;
@@ -73,9 +73,9 @@ public class TMap {
     public byte[] mapData;
     public ArrayList<Floor> floors = new ArrayList<>();
     public ReadWriteLock lock = new ReentrantReadWriteLock();
-
+    
     public long lastBot = System.currentTimeMillis();
-
+    
     public void init() {
         if (tileID != 0) {
             loadMapFromResource();
@@ -96,11 +96,14 @@ public class TMap {
                 } else {
                     z = new Zone(this, autoIncrease);
                 }
+                if (mapID == MapName.DONG_KARIN) {
+                    z.setMaxPlayer(120);
+                }
                 addZone(z);
             }
         }
     }
-
+    
     public boolean isBlackDragonBall() {
         // Sự kiện Ngọc Rồng Sao Đen chỉ diễn ra tại 4 hành tinh bên dưới
         return mapID == MapName.HANH_TINH_M_2
@@ -108,103 +111,103 @@ public class TMap {
                 || mapID == MapName.HANH_TINH_CRETACEOUS
                 || mapID == MapName.HANH_TINH_MONMAASU;
     }
-
+    
     public boolean isBarrack() {
         return mapID == 53 || mapID == 54 || mapID == 55 || mapID == 56 || mapID == 57 || mapID == 58 || mapID == 59 || mapID == 60 || mapID == 61 || mapID == 62;
     }
-
+    
     public boolean isBroly() {
         return mapID == 5 || mapID == 6 || mapID == 27 || mapID == 28 || mapID == 29 || mapID == 30 || mapID == 13 || mapID == 33 || mapID == 34 || mapID == 10 || mapID == 35 || mapID == 36 || mapID == 37 || mapID == 38 || mapID == 19 || mapID == 20;
     }
-
+    
     public boolean isCold() {
         return mapID == 105 || mapID == 106 || mapID == 107 || mapID == 108 || mapID == 109 || mapID == 110;
     }
-
+    
     public boolean isNormalMap2() {
         return isBroly() || (mapID >= 1 && mapID <= 6) || (mapID >= 8 && mapID <= 13) || (mapID >= 15 && mapID <= 20) || isMapSingle();
     }
-
+    
     public boolean isNormalMap() {
         return (mapID >= 1 && mapID <= 6) || (mapID >= 8 && mapID <= 13) || (mapID >= 15 && mapID <= 20) || isMapSingle();
     }
-
+    
     public boolean isNappa() {
         return mapID == 63 || mapID == 64 || mapID == 65 || mapID == 66 || mapID == 67 || mapID == 68 || mapID == 69 || mapID == 70 || mapID == 71 || mapID == 72 || mapID == 73 || mapID == 74 || mapID == 75 || mapID == 76 || mapID == 77 || mapID == 79 || mapID == 80 || mapID == 81 || mapID == 82 || mapID == 83;
     }
-
+    
     public boolean isMapTet() {
         return mapID >= 168 && mapID <= 170;
     }
-
+    
     public boolean isFuture() {
         return mapID == 102 || mapID == 92 || mapID == 93 || mapID == 94 || mapID == 96 || mapID == 97 || mapID == 98 || mapID == 99 || mapID == 100 || mapID == 103;
     }
-
+    
     public boolean isLang() {
         return mapID == 0 || mapID == 7 || mapID == 14;
     }
-
+    
     public boolean isNguHanhSon() {
         return mapID == MapName.NGU_HANH_SON || mapID == MapName.NGU_HANH_SON_2 || mapID == MapName.NGU_HANH_SON_3;
     }
-
+    
     public boolean isBaseBabidi() {
         return mapID == 114 || mapID == 115 || mapID == 117 || mapID == 119 || mapID == 120;
     }
-
+    
     public boolean isHome() {
         return mapID == 21 || mapID == 22 || mapID == 23;
     }
-
+    
     public boolean isMappNgucTu() {
         return mapID == MapName.HANH_TINH_NGUC_TU;
     }
-
+    
     public boolean isMapDeTu() {
         return mapID == 178 || mapID == 179 || mapID == 180;
     }
-
+    
     public boolean isTreasure() {
         return mapID == MapName.DONG_HAI_TAC || mapID == MapName.CANG_HAI_TAC || mapID == MapName.HANG_BACH_TUOC || mapID == MapName.DONG_KHO_BAU;
     }
-
+    
     public boolean isClanTerritory() {
         return mapID == MapName.LANH_DIA_BANG_HOI;
     }
-
+    
     public boolean isMapSingle() {
         return mapID == 21 || mapID == 22 || mapID == 23 || mapID == 39 || mapID == 40 || mapID == 41 || mapID == 45 || mapID == 46 || mapID == 47 || mapID == 48 || mapID == 49 || mapID == 50 || mapID == 111 || mapID == 154;
     }
-
+    
     public boolean isMapPorata2() {
         return mapID == 156 || mapID == 157 || mapID == 158;
     }
-
+    
     public boolean isMapSpecial() {
         return isBarrack() || isBaseBabidi() || isTreasure() || isClanTerritory() || isBlackDragonBall() || isNguHanhSon() || isDauTruong();
     }
-
+    
     public boolean isCantChangeZone() {
         return isMapSingle() || isBarrack() || isBaseBabidi() || isTreasure() || isClanTerritory() || isDauTruong() || mapID == 127 || mapID == 126;
     }
-
+    
     public boolean isUnableToTeleport() {
         return isMapSingle() || isBarrack() || isBaseBabidi() || isTreasure() || isClanTerritory() || isBlackDragonBall() || isDauTruong();
     }
-
+    
     public boolean isCantGoBack() {
         return isBarrack() || isBaseBabidi() || isTreasure() || isClanTerritory() || isDauTruong();
     }
-
+    
     public boolean isCantOffline() {
         return isBarrack() || isBaseBabidi() || isTreasure() || isClanTerritory() || isBlackDragonBall() || isNguHanhSon() || isDauTruong();
     }
-
+    
     public boolean isDauTruong() {
         return mapID == MapName.DAU_TRUONG;
     }
-
+    
     public void addZone(Zone z) {
         lock.writeLock().lock();
         try {
@@ -213,7 +216,7 @@ public class TMap {
             lock.writeLock().unlock();
         }
     }
-
+    
     public void removeZone(Zone z) {
         z.running = false;
         lock.writeLock().lock();
@@ -223,7 +226,7 @@ public class TMap {
             lock.writeLock().unlock();
         }
     }
-
+    
     public Player findCharInMap(int id) {
         synchronized (zones) {
             for (Zone z : zones) {
@@ -235,7 +238,7 @@ public class TMap {
         }
         return null;
     }
-
+    
     public Waypoint findWaypoint(short x, short y) {
         for (Waypoint way : waypoints) {
             if (x >= way.minX && x <= way.maxX && y >= way.minY && y <= way.maxY) {
@@ -244,7 +247,7 @@ public class TMap {
         }
         return null;
     }
-
+    
     public Waypoint getWaypointByNextID(int nextID) {
         for (Waypoint way : waypoints) {
             if (way.next == nextID) {
@@ -253,7 +256,7 @@ public class TMap {
         }
         return null;
     }
-
+    
     public Zone getZoneByID(int id) {
         lock.readLock().lock();
         try {
@@ -267,14 +270,14 @@ public class TMap {
             lock.readLock().unlock();
         }
     }
-
+    
     public void enterZone(Player _player, int zoneID) {
         Zone z = getZoneByID(zoneID);
         if (z != null) {
             z.enter(_player);
         }
     }
-
+    
     public int getZoneID() {
         ArrayList<Integer> list = new ArrayList<>();
         lock.readLock().lock();
@@ -295,11 +298,11 @@ public class TMap {
         }
         return zoneId;
     }
-
+    
     public int randomZoneID() {
         return zones.get(Utils.nextInt(zones.size())).zoneID;
     }
-
+    
     public Zone getMinPlayerZone() {
         int max = 99;
         Zone zone = null;
@@ -316,11 +319,11 @@ public class TMap {
         }
         return zone;
     }
-
+    
     public boolean isDoubleMap() {
         return false;
     }
-
+    
     public static void createData() {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -337,7 +340,7 @@ public class TMap {
             logger.error("failed!", ex);
         }
     }
-
+    
     public void loadMapFromResource() {
         try {
 //            logger.debug("loadMapFromResource map: " + this.name);
@@ -361,13 +364,13 @@ public class TMap {
             logger.error("failed!", ex);
         }
     }
-
+    
     private void loadBlock() {
         File file = new File("resources/map/block/" + this.mapID);
         if (file.exists()) {
             try {
                 byte[] ab = Files.readAllBytes(file.toPath());
-
+                
                 for (int i = 0; i < ab.length; i++) {
                     blocks[i] = ab[i] == 1;
                 }
@@ -377,11 +380,11 @@ public class TMap {
             }
         }
     }
-
+    
     public boolean checkBlock(int px, int py) {
         return blocks[py / 24 * tmw + px / 24];
     }
-
+    
     public void setTile(int index, int[] mapsArr, int type) {
         for (int i = 0; i < mapsArr.length; i++) {
             if (this.maps[index] == mapsArr[i]) {
@@ -390,7 +393,7 @@ public class TMap {
             }
         }
     }
-
+    
     public void setListFloor() {
         for (int i = 0; i < tmw; i++) {
             for (int j = 0; j < tmh; j++) {
@@ -404,7 +407,7 @@ public class TMap {
             }
         }
     }
-
+    
     public void loadMap() {
         this.height = this.tmh * 24;
         this.width = this.tmw * 24;
@@ -422,7 +425,7 @@ public class TMap {
         }
         setListFloor();
     }
-
+    
     public Floor getFloorCloset(int px, int py) {
         int x = px / 24;
         int y = py / 24;
@@ -437,7 +440,7 @@ public class TMap {
         }
         return floorCloset;
     }
-
+    
     public int tileAt(int x, int y) {
         try {
             return maps[y * tmw + x];
@@ -446,7 +449,7 @@ public class TMap {
             return 1000;
         }
     }
-
+    
     public int tileAtPixel(int px, int py) {
         try {
             return maps[py / 24 * tmw + px / 24];
@@ -455,7 +458,7 @@ public class TMap {
             return 1000;
         }
     }
-
+    
     public int tileTypeAtPixel(int px, int py) {
         int result;
         try {
@@ -465,7 +468,7 @@ public class TMap {
             if (px < 0 || py < 0 || index < 0 || index >= this.types.length) {
                 return 1000; // Giá trị mặc định khi vượt biên
             }
-
+            
             return this.types[index];
         } catch (Exception ex) {
             com.ngocrong.NQMP.UtilsNQMP.logError(ex);
@@ -473,7 +476,7 @@ public class TMap {
         }
         return result;
     }
-
+    
     public short collisionLand(short x, short y) {
         int type = -1;
         y = (short) (y / 24 * 24);
@@ -485,7 +488,7 @@ public class TMap {
         }
         return y;
     }
-
+    
     public void close() {
         lock.readLock().lock();
         try {
@@ -500,9 +503,9 @@ public class TMap {
             lock.readLock().unlock();
         }
     }
-
+    
     public class Floor {
-
+        
         public int x;
         public int y;
     }

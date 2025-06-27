@@ -242,8 +242,8 @@ public class SuperBroly extends Boss {
             if (hp > 0) {
                 info.hp += hp;
                 info.hpFull += hp;
-                info.hp = Math.min(20000000, info.hp); // Cao hơn Broly (16M -> 20M)
-                info.hpFull = Math.min(20000000, info.hpFull);
+                info.hp = Math.min(16070777, info.hp); // Cao hơn Broly (16M -> 20M)
+                info.hpFull = Math.min(16070777, info.hpFull);
                 zone.service.playerLoadHP(this, (byte) 0);
             }
         }

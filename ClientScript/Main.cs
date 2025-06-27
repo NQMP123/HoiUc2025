@@ -107,8 +107,8 @@ public class Main : MonoBehaviour
         }
         //isPC = false;
         started = true;
-        UnityEngine.Time.timeScale = 1f;
-        QualitySettings.vSyncCount = 0; // disable vSync for consistent FPS
+        UnityEngine.Time.timeScale = 2f;
+        QualitySettings.vSyncCount = 1; // disable vSync for consistent FPS
         Application.targetFrameRate = 60;
         if (isPC)
         {
@@ -151,26 +151,10 @@ public class Main : MonoBehaviour
                 timefps = mSystem.currentTimeMillis();
             }
             fps++;
-            
-            // Optimize input checking - only check every few frames
-            frameSkipCounter++;
-            if (frameSkipCounter >= INPUT_UPDATE_INTERVAL)
-            {
-                checkInput();
-                frameSkipCounter = 0;
-            }
-            
-            // Optimize session updates - alternate between sessions
-            if (Time.frameCount % 2 == 0)
-            {
-                Session_ME.update();
-                VoiceSession.gI().update();
-            }
-            else
-            {
-                Session_ME2.update();
-            }
-            
+            checkInput();
+            Session_ME.update();
+            Session_ME2.update();
+            //VoiceSession.gI().update();
             if (Event.current.type.Equals(EventType.Repaint))
             {
                 GameMidlet.gameCanvas.paint(g);
@@ -185,8 +169,8 @@ public class Main : MonoBehaviour
         if (!isRun)
         {
             Application.runInBackground = true;
-            QualitySettings.vSyncCount = 0;
-            Time.timeScale = 1f;
+            QualitySettings.vSyncCount = 1;
+            Time.timeScale = 2f;
             Application.targetFrameRate = 60;
             base.useGUILayout = false;
             if (main == null)
@@ -272,9 +256,11 @@ public class Main : MonoBehaviour
 
     void FixedUpdate()
     {
+        Rms.update();
         count++;
         if (count >= 10)
         {
+
             if (up == 0)
             {
                 timeup = mSystem.currentTimeMillis();
@@ -286,20 +272,12 @@ public class Main : MonoBehaviour
                 timeup = mSystem.currentTimeMillis();
             }
             up++;
-
             setsizeChange();
             updateCount++;
-            
-            // Optimize update calls with frame skipping
-            if (updateCount % 2 == 0) // Update every other frame for better performance
-            {
-                ipKeyboard.update();
-                Image.update();
-                DataInputStream.update();
-            }
-            
+            ipKeyboard.update();
             GameMidlet.gameCanvas.update();
-
+            Image.update();
+            DataInputStream.update();
             f++;
             if (f > 8)
             {
@@ -307,9 +285,6 @@ public class Main : MonoBehaviour
             }
         }
     }
-    // Performance optimization: Cache frequently used values
-    private int frameSkipCounter = 0;
-    private const int INPUT_UPDATE_INTERVAL = 2; // Update input every 2 frames
 
     private void Update()
     {

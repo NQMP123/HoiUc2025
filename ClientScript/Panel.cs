@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Assets.Moding;
+﻿using Assets.Moding;
 using Assets.Scripts.Assembly_CSharp.HSNR;
+using Assets.Scripts.HSNR;
 using Assets.src.g;
 using NQMP;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using AutoItem = NQMP.AutoItem;
 public class Panel : IActionListener, IChatable
@@ -1258,9 +1258,22 @@ public class Panel : IActionListener, IChatable
     public void setTypeBodyOnly()
     {
         type = 7;
+        var boxInven = new string[2][]
+           {
+                new string[]{"Bản","Thân" },
+                 new string[]{"Hành", "Trang" }
+           };
+        tabName[type] = boxInven;
         setType(1);
-        setTabInventory();
-        currentTabIndex = 0;
+        switch (currentTabIndex)
+        {
+            case 0:
+                setTabBody();
+                break;
+            case 1:
+                setTabInventory();
+                break;
+        }
     }
 
     public void addChatMessage(InfoItem info)
@@ -2185,6 +2198,7 @@ public class Panel : IActionListener, IChatable
             }
             switch (type)
             {
+                case 29:
                 case 28:
                 case 23:
                 case 24:
@@ -2980,7 +2994,7 @@ public class Panel : IActionListener, IChatable
 
         bool flag = false;
         bool flag2 = false;
-        bool flag3 = (this.Equals(GameCanvas.panel) && type == 0 && currentTabIndex == 2) || (this.Equals(GameCanvas.panel2) && this.type == 7);
+        bool flag3 = (this.Equals(GameCanvas.panel) && type == 0 && currentTabIndex == 2) || (this.Equals(GameCanvas.panel2) && this.type == 7 && currentTabIndex == 1);
         //Debug.Log($"type:{type} currentTabIndex {currentTabIndex}");
         if (flag2 || flag3)
         {
@@ -3408,6 +3422,16 @@ public class Panel : IActionListener, IChatable
                 if (currentTabIndex == 0)
                 {
                     setTabCombine();
+                }
+                if (currentTabIndex == 1)
+                {
+                    setTabInventory();
+                }
+                break;
+            case 7:
+                if (currentTabIndex == 0)
+                {
+                    setTabBody();
                 }
                 if (currentTabIndex == 1)
                 {
@@ -4101,6 +4125,9 @@ public class Panel : IActionListener, IChatable
             paintTab(g);
             switch (type)
             {
+                case 29:
+                    paintModInfo(g);
+                    break;
                 case 28:
                     paintNotifyBoss(g);
                     break;
@@ -4183,7 +4210,16 @@ public class Panel : IActionListener, IChatable
                     paintMap(g);
                     break;
                 case 7:
-                    paintInventory(g);
+                    switch (currentTabIndex)
+                    {
+                        case 0:
+                            paintBody(g);
+                            break;
+                        case 1:
+                            paintInventory(g);
+                            break;
+                    }
+                    //paintInventory(g);
                     break;
                 case 17:
                     paintShop(g);
@@ -5997,6 +6033,13 @@ public class Panel : IActionListener, IChatable
             mFont.tahoma_7b_dark.drawString(g, mResources.gameInfo, xScroll + wScroll / 2, 59, mFont.CENTER);
             return;
         }
+        if (type == 29)
+        {
+            g.setColor(13524492);
+            g.fillRect(X + 1, 78, W - 2, 1);
+            mFont.tahoma_7b_dark.drawString(g, "Chức Năng Mod", xScroll + wScroll / 2, 59, mFont.CENTER);
+            return;
+        }
         if (type == 28)
         {
             g.setColor(13524492);
@@ -6102,13 +6145,13 @@ public class Panel : IActionListener, IChatable
             g.fillRect(X + 1, 78, W - 2, 1);
             return;
         }
-        if (type == 7)
-        {
-            mFont.tahoma_7b_dark.drawString(g, mResources.trangbi, startTabPos + TAB_W / 2, 59, mFont.CENTER);
-            g.setColor(13524492);
-            g.fillRect(X + 1, 78, W - 2, 1);
-            return;
-        }
+        //if (type == 7)
+        //{
+        //    mFont.tahoma_7b_dark.drawString(g, mResources.trangbi, startTabPos + TAB_W / 2, 59, mFont.CENTER);
+        //    g.setColor(13524492);
+        //    g.fillRect(X + 1, 78, W - 2, 1);
+        //    return;
+        //}
         if (type == 17)
         {
             mFont.tahoma_7b_dark.drawString(g, mResources.kigui, startTabPos + TAB_W / 2, 59, mFont.CENTER);
@@ -6497,6 +6540,7 @@ public class Panel : IActionListener, IChatable
             case 23:
             case 24:
             case 28:
+            case 29:
                 SmallImage.drawSmallImage(g, Char.myCharz().avatarz(), X + 25, 50, 0, 33);
                 paintMyInfo(g);
                 break;
@@ -6603,6 +6647,9 @@ public class Panel : IActionListener, IChatable
                 paintMapInfo(g);
                 break;
             case 7:
+                SmallImage.drawSmallImage(g, Char.myCharz().avatarz(), X + 25, 50, 0, 33);
+                paintItemBodyBagInfo(g);
+                break;
             case 17:
                 SmallImage.drawSmallImage(g, Char.myCharz().avatarz(), X + 25, 50, 0, 33);
                 paintMyInfo(g);
@@ -7346,7 +7393,7 @@ public class Panel : IActionListener, IChatable
             {
                 setTypeGame();
             }
-            else if (type == 23 || type == 26)
+            else if (type == 23 || type == 26 || type == 29)
             {
                 setTypeMain();
             }
@@ -7483,6 +7530,9 @@ public class Panel : IActionListener, IChatable
                     Debug.Log("updatekeyType" + type);
                     switch (type)
                     {
+                        case 29:
+                            doFireMod();
+                            break;
                         case 28:
                             doFireNotifyBoss();
                             break;
@@ -7523,7 +7573,16 @@ public class Panel : IActionListener, IChatable
                                 doFireBox();
                                 return;
                             }
-                            doFireInventory();
+                            switch (currentTabIndex)
+                            {
+                                case 0:
+                                    doFireBody();
+                                    break;
+                                case 1:
+                                    doFireInventory();
+                                    break;
+                            }
+                            //doFireInventory();
                             break;
                         case 8:
                             doFireLogMessage();
@@ -8094,11 +8153,12 @@ public class Panel : IActionListener, IChatable
     public void paintTypeGame(mGraphics g)
     {
 
-        string[] strs = new string[4]
+        string[] strs = new string[5]
         {
+            "Chức năng MOD",
             isShowPhimTat ? "Tắt Phím Tắt" : "Bật Phím Tắt",
             "Xem BOSS",
-            "Chức năng MOD",
+            "HDSD MOD",
             "Xem Phím Tắt"
         };
         for (int i = 0; i < strs.Length; i++)
@@ -8156,11 +8216,62 @@ public class Panel : IActionListener, IChatable
             cmy = (cmtoY = cmyLim);
         }
     }
-
+    private void paintModInfo(mGraphics g)
+    {
+        g.setClip(xScroll, yScroll, wScroll, hScroll);
+        g.translate(0, -cmy);
+        for (int i = 0; i < MainMod.ARR_MOD_NAMES.Length; i++)
+        {
+            string modInfo = MainMod.ARR_MOD_NAMES[i];
+            int num = xScroll;
+            int num2 = yScroll + i * ITEM_HEIGHT;
+            int num3 = wScroll - 1;
+            int h = ITEM_HEIGHT - 1;
+            if (num2 - cmy <= yScroll + hScroll && num2 - cmy >= yScroll - ITEM_HEIGHT)
+            {
+                g.setColor((i != selected) ? 15196114 : 16383818);
+                g.fillRect(num, num2, num3, h);
+                mFont.tahoma_7.drawString(g, modInfo, xScroll + 3, num2 + 2, mFont.LEFT);
+                string status = (MainMod.getStatusModFields()[i] ? "Đã bật " : "Đã tắt ") + MainMod.ARR_TITLE_NAMES[i];
+                (MainMod.getStatusModFields()[i] ? mFont.tahoma_7_green : mFont.tahoma_7_blue).drawString(g, status, xScroll + 3, num2 + 12, mFont.LEFT);
+            }
+        }
+        paintScrollArrow(g);
+    }
+    public void setTypeMod(bool isPanel = false)
+    {
+        if (!isPanel)
+        {
+            setType(0);
+            type = 29;
+        }
+        currentListLength = MainMod.ARR_MOD_NAMES.Length;
+        ITEM_HEIGHT = 24;
+        selected = (GameCanvas.isTouch ? (-1) : 0);
+        cmyLim = currentListLength * ITEM_HEIGHT - hScroll;
+        if (cmyLim < 0)
+        {
+            cmyLim = 0;
+        }
+        if (cmy < 0)
+        {
+            cmy = (cmtoY = 0);
+        }
+        if (cmy > cmyLim)
+        {
+            cmy = (cmtoY = cmyLim);
+        }
+        if (isPanel)
+        {
+            setType(0);
+            type = 29;
+            this.cmx = this.cmtoX = 0;
+        }
+    }
     private void setTypeGame()
     {
         Debug.Log("setTypeGame");
-        currentListLength = 4;
+        currentListLength = 5;
         if (currentListLength < 9)
         {
             ITEM_HEIGHT = hScroll / currentListLength;
@@ -8193,16 +8304,19 @@ public class Panel : IActionListener, IChatable
         switch (selected)
         {
             case 0:
-                isShowPhimTat = !isShowPhimTat;
+                setTypeMod(true);
                 break;
             case 1:
+                isShowPhimTat = !isShowPhimTat;
+                break;
+            case 2:
                 Service.gI().requestBoss();
                 Debug.LogError("requestBoss");
                 break;
-            case 2:
+            case 3:
                 NQMPMain.ShowCommand();
                 break;
-            case 3:
+            case 4:
                 ShowPhimTat();
                 break;
         }
@@ -9040,7 +9154,52 @@ public class Panel : IActionListener, IChatable
             throw;
         }
     }
+    private void doFireMod()
+    {
+        if (selected != -1)
+        {
+            switch (selected)
+            {
+                case 0:
+                    AutoTrainVIP.ShowMenu();
+                    break;
+                case 1:
+                    AutoSkill.isAutoSendAttack = AutoSkill.isAutoSendAttack == 1 ?  (byte)0 : (byte)1;
+                    break;
+                case 2:
+                    AutoSkill.isAutoSendAttack = AutoSkill.isAutoSendAttack == 2 ? (byte)0 : (byte)2;
+                    break;
+                case 3:
+                    MainMod.changeStatus(ref MainMod.isAutoRevive, "auto hồi sinh");
+                    break;
+                case 4:
+                    MainMod.changeStatus(ref AutoPick.isAutoPick, "auto nhặt");
+                    break;
+                case 5:
+                    MainMod.changeStatus(ref MainMod.isPickNRSD, "auto nhặt NRSD");
+                    break;
+                case 6:
+                    MainMod.changeStatus(ref AutoPean.isAutoBuffPean, "auto Buff đậu");
+                    break;
+                case 7:
+                    MainMod.changeStatus(ref Boss.gI().isShow, "thông báo Boss");
+                    break;
+                case 8:
+                    MainMod.changeStatus(ref ListChars.gI().isShow, "xem nhân vật trong map");
+                    break;
+                case 9:
+                    MainMod.changeStatus(ref MainMod.autoFocus, "auto focus Boss");
+                    break;
+                case 10:
+                    AutoChat.showMenuChatMap();
+                    break;
+                case 11:
+                    AutoChat.showMenuChatGlobal();
+                    break;
 
+            }
+        }
+    }
     private void doFireMain()
     {
         try
@@ -9113,6 +9272,10 @@ public class Panel : IActionListener, IChatable
                     myVector.addElement(new Command(mResources.SALE, this, 3002, currItem));
                 }
             }
+            //if (GameCanvas.panel.type == 12)
+            //{
+            //    myVector.addElement(new Command(mResources.use_for_combine, this, 6000, currItem));
+            //}
             GameCanvas.menu.startAt(myVector, X, (selected + 1) * ITEM_HEIGHT - cmy + yScroll);
             addItemDetail(currItem);
         }
