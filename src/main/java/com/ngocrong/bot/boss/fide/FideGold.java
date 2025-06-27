@@ -4,6 +4,7 @@ import com.ngocrong.bot.Boss;
 import com.ngocrong.item.Item;
 import com.ngocrong.item.ItemMap;
 import com.ngocrong.item.ItemOption;
+import com.ngocrong.consts.ItemName;
 import com.ngocrong.map.tzone.Zone;
 import com.ngocrong.model.RandomItem;
 import com.ngocrong.server.SessionManager;
@@ -23,7 +24,8 @@ public class FideGold extends Boss {
         this.distanceToAddToList = 500;
         this.limit = -1;
         this.name = "Fide Gold";
-        setInfo(10000000, 1000000, 100000, 1000, 50);
+        setInfo(20000, 1000000, 100000, 1000, 50);
+        this.limitDame = 1;
         this.waitingTimeToLeave = 0;
         setTypePK((byte) 5);
         point = 5;
@@ -83,14 +85,25 @@ public class FideGold extends Boss {
     public void startDie() {
         Zone z = zone;
         super.startDie();
-        Utils.setTimeout(() -> {
-            FideGold fideGold = new FideGold();
-            ArrayList<Zone> zones = new ArrayList<>();
-            for (int i = 2; i < z.map.zones.size(); i++) {
-                zones.add(z.map.zones.get(i));
-            }
-            fideGold.setLocation(zones.get(Utils.nextInt(zones.size())));
-        }, 60000);
+        if (z != null) {
+            dropDragonBall(z, ItemName.NGOC_RONG_3_SAO, 20);
+            dropDragonBall(z, ItemName.NGOC_RONG_4_SAO, 60);
+            dropDragonBall(z, ItemName.NGOC_RONG_5_SAO, 100);
+        }
+    }
+
+    private void dropDragonBall(Zone z, int itemId, int count) {
+        for (int i = 0; i < count; i++) {
+            Item item = new Item(itemId);
+            item.quantity = 1;
+            ItemMap im = new ItemMap(z.autoIncrease++);
+            im.item = item;
+            im.playerID = -1;
+            im.x = (short) Utils.nextInt(0, z.map.width);
+            im.y = z.map.collisionLand(im.x, getY());
+            z.addItemMap(im);
+            z.service.addItemMap(im);
+        }
     }
 
     @Override

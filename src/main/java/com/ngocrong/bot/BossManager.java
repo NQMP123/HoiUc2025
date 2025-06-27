@@ -60,6 +60,7 @@ public class BossManager {
         bossRaiti();
         //   NuThan();
         bossChilled();
+        bossFideGold();
 //        bossTet2();
 //        bossCumber();
         try {
@@ -207,6 +208,17 @@ public class BossManager {
             Chilled chilled = new Chilled(false);
             chilled.setLocation(160, -1);
         }, 5000);
+    }
+
+    public static void bossFideGold() {
+        Runnable task = () -> {
+            FideGold fideGold = new FideGold();
+            fideGold.setLocation(MapName.DONG_KARIN, 1);
+        };
+        long now = System.currentTimeMillis() / 1000;
+        long delay = 3600 - (now % 3600);
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.scheduleAtFixedRate(task, delay, 3600, TimeUnit.SECONDS);
     }
 
 //
