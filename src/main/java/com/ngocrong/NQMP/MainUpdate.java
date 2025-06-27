@@ -193,6 +193,12 @@ public class MainUpdate implements Runnable {
 //        }, "00:00");
     }
 
+    static void setRewardSuperRank() {
+        MainUpdate.runTaskDay(() -> {
+            RewardSuperRank.reward();
+        }, "20:00");
+    }
+
     static void setMabu14h() {
         MainUpdate.runTaskDayInWindow(() -> {
             try {
@@ -210,6 +216,7 @@ public class MainUpdate implements Runnable {
         Server server = DragonBall.getInstance().getServer();
         setBaoTri();
         setRewardWhis();
+        setRewardSuperRank();
         setMabu14h();
         while (server.start) {
             try {

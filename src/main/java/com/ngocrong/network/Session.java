@@ -30,6 +30,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ngocrong.NQMP.DHVT_SH.DHVT_SH_Service;
 import com.ngocrong.NQMP.DHVT_SH.SuperRank;
+import com.ngocrong.NQMP.DHVT_SH.RewardSuperRank;
 import com.ngocrong.NQMP.UtilsNQMP;
 import com.ngocrong.NQMP.Whis.RewardWhis;
 import com.ngocrong.consts.ItemName;
@@ -928,6 +929,7 @@ public class Session implements ISession {
                 _player.setCards(cards);
             }
             SuperRank.loadSuperRank(_player);
+            RewardSuperRank.checkReward(_player);
             RewardWhis.checkReward(_player);
             OsinCheckInEvent.checkPendingReward(_player);
             _player.initializedCollectionBook();

@@ -14,3 +14,15 @@ CREATE TABLE `nr_drop_rate`  (
 -- ----------------------------
 INSERT INTO `nr_drop_rate` VALUES (1, 100, 100);
 
+
+-- ----------------------------
+-- Table structure for nr_top_superrank
+-- ----------------------------
+DROP TABLE IF EXISTS `nr_top_superrank`;
+CREATE TABLE `nr_top_superrank` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `player_id` int NOT NULL,
+  `rank` int NOT NULL,
+  `create_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

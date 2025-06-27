@@ -25,6 +25,7 @@ public class GameRepository {
     public OsinCheckInRepository osinCheckInRepository;
     public DropRateRepository dropRateRepository;
     public StatisticServerRepository statisticServerRepository;
+    public TopSuperRankRepository topSuperRankRepository;
 
     public static GameRepository getInstance() {
         if (instance == null) {
