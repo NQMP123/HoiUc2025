@@ -677,7 +677,7 @@ public class Player {
             }
         }
         //RadioTest
-        return Math.max(result, 100);
+        return result;
     }
 
     public Amulet getAmulet(int id) {
@@ -1302,11 +1302,10 @@ public class Player {
     }
 
     public void revenge(Player c) {
-        // if (escortedPerson != null) {
-        // service.sendThongBao(String.format("Bạn đang hộ tống %s, không thể thực
-        // hiện.", escortedPerson.name));
-        // return;
-        // }
+        if (true) {
+            service.sendThongBao("Chức năng tạm đóng");
+            return;
+        }
         lastTimeRevenge = System.currentTimeMillis();
         subDiamond(1);
         this.x = calculateX(c.zone.map);
@@ -4559,15 +4558,9 @@ public class Player {
                             service.openUISay(npc.id, "Chỉ tếp các bang hội, miễn tiếp khách vãng lai", npc.avatar);
                             return;
                         }
-                        // if (clan.getNumberMember() < 5) {
-                        // service.openUISay(npc.id, "Doanh trại chỉ dành cho bang hội có tối thiểu 5
-                        // thành viên",
-                        // npc.avatar);
-                        // return;
-                        // }
                         ClanMember clanMember = clan.getMember(this.id);
                         LocalDateTime now = LocalDateTime.now();
-                        LocalDateTime openTime = LocalDateTime.of(2025, 6, 26, 16, 0);
+                        LocalDateTime openTime = LocalDateTime.of(2025, 6, 29, 19, 0);
 
                         if (now.isBefore(openTime)) {
                             Duration duration = Duration.between(now, openTime);
@@ -4578,9 +4571,24 @@ public class Player {
                                     npc.id,
                                     "Bạn có thể tham gia doanh trại sau " + minutes + " phút " + seconds
                                     + " giây nữa.\b"
-                                    + "16h00 26/06/2025",
+                                    + "19h00 29/06/2025",
                                     npc.avatar);
                             return;
+                        } else {
+                            if (clan.getNumberMember() < 5) {
+                                service.openUISay(npc.id, "Doanh trại chỉ dành cho bang hội có tối thiểu 5 thành viên",
+                                        npc.avatar
+                                );
+                                return;
+                            }
+                            clanMember = clan.getMember(this.id);
+                            int days = clanMember.getNumberOfDaysJoinClan();
+                            if (days < 1) {
+                                service.openUISay(npc.id,
+                                        "Chỉ những thành viên gia nhập bang hội tối thiểu 1 ngày mới có thể tham gia",
+                                        npc.avatar);
+                                return;
+                            }
                         }
                         Barrack barrack = clan.barrack;
                         if (barrack != null && !barrack.running) {
@@ -4837,9 +4845,10 @@ public class Player {
                                 npc.avatar, menus);
                         break;
                     case NpcName.LY_TIEU_NUONG:
-                        menus.add(new KeyValue(1100, "Con Số May Mắn"));
-                        menus.add(new KeyValue(1118, "Kéo Búa Bao"));
-                        service.openUIConfirm(54, "MINI Game giải trí  ", (short) 3049, menus);
+//                        menus.add(new KeyValue(1100, "Con Số May Mắn"));
+//                        menus.add(new KeyValue(1118, "Kéo Búa Bao"));
+                        menus.add(new KeyValue(CMDMenu.CANCEL, "Đồng ý"));
+                        service.openUIConfirm(54, "Chức năng tạm đóng  ", (short) 3049, menus);
                         break;
                     case NpcName.WHIS:
                         if (zone.map.mapID == MapName.HANH_TINH_BILL) {
@@ -7461,7 +7470,7 @@ public class Player {
                 break;
             case AdminHandle.CMD_Menu_Admin:
                 int action = ((Integer) keyValue.elements[0]).intValue();
-               
+
                 if (keyValue.elements.length > 1) {
                     AdminHandle.gI().perform(action, this, keyValue.elements[1]);
                 } else {
@@ -7846,11 +7855,11 @@ public class Player {
                 long now2 = System.currentTimeMillis();
                 long time = now2 - lastTimeCallDragon;
                 long delay = 10 * 60000;
-//                if (time < delay) {
-//                    int seconds = (int) ((delay - time) / 1000);
-//                    service.sendThongBao(String.format("Vui lòng đợi %s nữa", Utils.timeAgo(seconds)));
-//                    return;
-//                }
+                if (time < delay) {
+                    int seconds = (int) ((delay - time) / 1000);
+                    service.sendThongBao(String.format("Vui lòng đợi %s nữa", Utils.timeAgo(seconds)));
+                    return;
+                }
                 int indexDragonBall1Star = -1;
                 int indexDragonBall2Star = -1;
                 int indexDragonBall3Star = -1;
@@ -7895,10 +7904,10 @@ public class Player {
                     removeItem(indexDragonBall6Star, 1);
                     removeItem(indexDragonBall7Star, 1);
                     callDragon = new CallDragon1Star(this, this.x, this.y);
-                    //  callDragon.appearDragon();
+                    callDragon.appearDragon();
                     callDragon.show();
-//                    SessionManager.serverMessage(
-//                            String.format("%s vừa gọi rồng thần tại %s khu %d", this.name, zone.map.name, zone.zoneID));
+                    SessionManager.serverMessage(
+                            String.format("%s vừa gọi rồng thần tại %s khu %d", this.name, zone.map.name, zone.zoneID));
                 }
             }
             break;
@@ -12810,7 +12819,7 @@ public class Player {
                 int[] rewardCskb = {ItemName.CUONG_NO, ItemName.BO_HUYET, ItemName.BO_KHI, ItemName.AN_DANH, ItemName.GIAP_XEN_BO_HUNG};
                 Item itm = null;
                 int rd = Utils.nextInt(100);
-                if (rd >= 70) {
+                if (rd <= 35) {
                     itm = new Item(rewardCskb[Utils.nextInt(rewardCskb.length)]);
                     itm.quantity = 1;
                 } else {

@@ -46,7 +46,7 @@ public class Broly extends Boss {
         this.distanceToAddToList = 100;
         this.limit = 500;
         this.level = level;
-        setInfo(Utils.nextInt(500000, 1000000), 100000, 10, 100, 20);
+        setInfo(Utils.nextInt(1000, 2000), 100000, 10, 100, 20);
         this.name = "Broly " + Utils.nextInt(100);
         setDefaultPart();
         this.waitingTimeToLeave = 5000;

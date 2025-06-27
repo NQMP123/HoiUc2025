@@ -127,7 +127,7 @@ public abstract class Boss extends Player implements Bot {
         int percent = Utils.nextInt(100);
         int itemId;
         //RadioTest
-        if (percent < 90 && false) {
+        if (percent < 90) {
             itemId = 190;
         } else if (percent < 97) {
             int[] tl = {
@@ -528,6 +528,7 @@ public abstract class Boss extends Player implements Bot {
 
     @Override
     public void updateEveryHalfSeconds() {
+        this.info.percentMiss = this.info.options[108] = Math.max(this.info.options[108], 10);
         super.updateEveryHalfSeconds();
         if (!isDead()) {
             if (isAttack() && meCanAttack()) {

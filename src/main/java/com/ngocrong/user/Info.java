@@ -1073,7 +1073,7 @@ public class Info {
                     if (num != 1 && num != 10 && num != 100 && num != 1000 && num != 10000) {
                         return;
                     }
-                    if (originalHP >= powerLimitMark.hp || (originalHP + num * Info.HP_FROM_1000_TIEM_NANG) >= powerLimitMark.hp) {
+                    if (originalHP >= powerLimitMark.hp + 2000 || (originalHP + num * Info.HP_FROM_1000_TIEM_NANG) >= powerLimitMark.hp + 2000) {
                         _player.service.serverMessage2("HP của bạn đã đạt mức tối đa");
                         return;
                     }
@@ -1088,7 +1088,7 @@ public class Info {
                     if (num != 1 && num != 10 && num != 100 && num != 1000 && num != 10000) {
                         return;
                     }
-                    if (originalMP >= powerLimitMark.mp || (originalMP + num * Info.MP_FROM_1000_TIEM_NANG) >= powerLimitMark.mp) {
+                    if (originalMP >= powerLimitMark.mp + 2000 || (originalMP + num * Info.MP_FROM_1000_TIEM_NANG) >= powerLimitMark.mp + 2000) {
                         _player.service.serverMessage2("MP của bạn đã đạt mức tối đa");
                         return;
                     }
@@ -1103,7 +1103,7 @@ public class Info {
                     if (num != 1 && num != 10 && num != 100 && num != 1000 && num != 10000) {
                         return;
                     }
-                    if (originalDamage >= powerLimitMark.damage || (originalDamage + num * Info.DAMAGE_FROM_1000_TIEM_NANG) >= powerLimitMark.damage) {
+                    if (originalDamage >= powerLimitMark.damage + 100 || (originalDamage + num * Info.DAMAGE_FROM_1000_TIEM_NANG) >= powerLimitMark.damage + 100) {
                         _player.service.serverMessage2("Sức đánh của bạn đã đạt mức tối đa");
                         return;
                     }
@@ -1118,7 +1118,7 @@ public class Info {
                     if (num != 1 && num != 10 && num != 100 && num != 1000 && num != 10000) {
                         return;
                     }
-                    if (originalDefense >= powerLimitMark.defense || (originalDefense + num * Info.DEFENSE_FROM_1000_TIEM_NANG) >= powerLimitMark.defense) {
+                    if (originalDefense >= powerLimitMark.defense + 100 || (originalDefense + num * Info.DEFENSE_FROM_1000_TIEM_NANG) >= powerLimitMark.defense + 100) {
                         _player.service.serverMessage2("Giáp của bạn đã đạt mức tối đa");
                         return;
                     }
@@ -1134,7 +1134,7 @@ public class Info {
                     if (num != 1) {
                         return;
                     }
-                    if (originalCritical >= powerLimitMark.critical) {
+                    if (originalCritical > powerLimitMark.critical) {
                         _player.service.serverMessage2("Chí mạng của bạn đã đạt mức tối đa");
                         return;
                     }

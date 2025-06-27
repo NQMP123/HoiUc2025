@@ -337,8 +337,6 @@ public class SuperBroly extends Boss {
             } else if (skill.template.id == SkillName.MAKANKOSAPPO) {
 
                 long piercingDamage = dameInput * 5 / 100;
-                System.err.println("dameInput :" + dameInput);
-                System.err.println("piercingDamage :" + piercingDamage);
                 return Utils.nextLong((long) (piercingDamage * 0.9), (long) (piercingDamage * 1.1));
             }
         }
