@@ -12,12 +12,12 @@ public class CapsuleVipPro extends Combine {
     private static final int REQUIRE_STARFISH = 1000;
     private static final int REQUIRE_FRAGMENT = 100;
     private static final int REQUIRE_GOLDBAR = 50;
-    private static final int PERCENT = 50;
+    private static final int PERCENT = 100;
 
     public CapsuleVipPro() {
         StringBuilder sb = new StringBuilder();
         sb.append("Vào hành trang\n");
-        sb.append("Chọn 1000 Sao biển, 50 Mảnh Capsule VIPPRO và 50 Thỏi vàng\n");
+        sb.append("Chọn 1000 Sao biển, 100 Mảnh Capsule VIPPRO và 50 Thỏi vàng\n");
         sb.append("Sau đó chọn 'Nâng cấp'");
         setInfo(sb.toString());
 
@@ -36,14 +36,20 @@ public class CapsuleVipPro extends Combine {
         for (byte idx : itemCombine) {
             Item itm = player.itemBag[idx];
             if (itm != null) {
-                if (itm.template.id == ItemName._SAO_BIEN) star = itm;
-                if (itm.template.id == ItemName.MANH_CAPSULE_VIPPRO) frag = itm;
-                if (itm.template.id == ItemName.THOI_VANG) bar = itm;
+                if (itm.template.id == ItemName._SAO_BIEN) {
+                    star = itm;
+                }
+                if (itm.template.id == ItemName.MANH_CAPSULE_VIPPRO) {
+                    frag = itm;
+                }
+                if (itm.template.id == ItemName.THOI_VANG) {
+                    bar = itm;
+                }
             }
         }
         if (star == null || frag == null || bar == null
                 || star.quantity < REQUIRE_STARFISH || frag.quantity < REQUIRE_FRAGMENT || bar.quantity < REQUIRE_GOLDBAR) {
-            player.service.dialogMessage("Cần đủ 1000 Sao biển, 50 Mảnh Capsule VIPPRO và 50 Thỏi vàng");
+            player.service.dialogMessage("Cần đủ 1000 Sao biển, 100 Mảnh Capsule VIPPRO và 50 Thỏi vàng");
             return;
         }
         String text = String.format("Tỉ lệ thành công: %d%%", PERCENT);
@@ -64,17 +70,23 @@ public class CapsuleVipPro extends Combine {
         for (byte idx : itemCombine) {
             Item itm = player.itemBag[idx];
             if (itm != null) {
-                if (itm.template.id == ItemName._SAO_BIEN) star = itm;
-                if (itm.template.id == ItemName.MANH_CAPSULE_VIPPRO) frag = itm;
-                if (itm.template.id == ItemName.THOI_VANG) bar = itm;
+                if (itm.template.id == ItemName._SAO_BIEN) {
+                    star = itm;
+                }
+                if (itm.template.id == ItemName.MANH_CAPSULE_VIPPRO) {
+                    frag = itm;
+                }
+                if (itm.template.id == ItemName.THOI_VANG) {
+                    bar = itm;
+                }
             }
         }
         if (star == null || frag == null || bar == null
                 || star.quantity < REQUIRE_STARFISH || frag.quantity < REQUIRE_FRAGMENT || bar.quantity < REQUIRE_GOLDBAR) {
-            player.service.dialogMessage("Cần đủ 1000 Sao biển, 50 Mảnh Capsule VIPPRO và 50 Thỏi vàng");
+            player.service.dialogMessage("Cần đủ 1000 Sao biển, 100 Mảnh Capsule VIPPRO và 50 Thỏi vàng");
             return;
         }
-        player.removeItem(star.indexUI, Utils.isTrue(PERCENT, 100) ? REQUIRE_STARFISH : 500);
+        player.removeItem(star.indexUI, REQUIRE_STARFISH);
         player.removeItem(frag.indexUI, REQUIRE_FRAGMENT);
         player.removeItem(bar.indexUI, REQUIRE_GOLDBAR);
         if (Utils.isTrue(PERCENT, 100)) {
@@ -82,9 +94,9 @@ public class CapsuleVipPro extends Combine {
             vip.setDefaultOptions();
             vip.quantity = 1;
             player.addItemBag(vip);
-            result((byte)2);
+            result((byte) 2);
         } else {
-            result((byte)3);
+            result((byte) 3);
         }
         player.service.setItemBag();
         update();

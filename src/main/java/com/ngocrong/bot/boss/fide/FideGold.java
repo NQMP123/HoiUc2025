@@ -1,11 +1,13 @@
 package com.ngocrong.bot.boss.fide;
 
 import com.ngocrong.bot.Boss;
+import com.ngocrong.bot.BossManager;
 import com.ngocrong.item.Item;
 import com.ngocrong.item.ItemMap;
 import com.ngocrong.item.ItemOption;
 import com.ngocrong.consts.ItemName;
 import com.ngocrong.map.tzone.Zone;
+import com.ngocrong.mob.Mob;
 import com.ngocrong.model.RandomItem;
 import com.ngocrong.server.SessionManager;
 import com.ngocrong.skill.Skills;
@@ -18,17 +20,27 @@ import java.util.ArrayList;
 public class FideGold extends Boss {
 
     private static final Logger logger = Logger.getLogger(FideGold.class);
+    boolean checkProtect;
 
     public FideGold() {
         super();
         this.distanceToAddToList = 500;
         this.limit = -1;
         this.name = "Fide Gold";
-        setInfo(20000, 1000000, 100000, 1000, 50);
+        setInfo(200_000, 1000000, 100000, 1000, 50);
         this.limitDame = 1;
         this.waitingTimeToLeave = 0;
         setTypePK((byte) 5);
         point = 5;
+    }
+
+    @Override
+    public long injure(Player plAtt, Mob mobAtt, long dameInput) {
+        if (!checkProtect && this.info.hp <= 100) {
+            checkProtect = true;
+            this.startProtect(30);
+        }
+        return 1;
     }
 
     @Override
@@ -40,7 +52,7 @@ public class FideGold extends Boss {
             skills.add(Skills.getSkill((byte) 3, (byte) 7).clone());
             skills.add(Skills.getSkill((byte) 4, (byte) 7).clone());
             skills.add(Skills.getSkill((byte) 19, (byte) 7).clone());
-            skills.add(Skills.getSkill((byte) 8, (byte) 7).clone());
+            //skills.add(Skills.getSkill((byte) 8, (byte) 7).clone());
         } catch (CloneNotSupportedException ex) {
             com.ngocrong.NQMP.UtilsNQMP.logError(ex);
             logger.error("init skill");
@@ -67,29 +79,18 @@ public class FideGold extends Boss {
         if (obj == null) {
             return;
         }
-        Player c = (Player) obj;
-        ItemMap food = new ItemMap(zone.autoIncrease++);
-        Item item = new Item(RandomItem.FOOD.next());
-        item.addItemOption(new ItemOption(30, 0));
-        item.addItemOption(new ItemOption(86, 0));
-        item.quantity = Utils.nextInt(45, 55);
-        food.playerID = Math.abs(c.id);
-        food.isPickedUp = false;
-        food.x = (short) (getX() + Utils.nextInt(-30, 30));
-        food.y = zone.map.collisionLand(getX(), getY());
-        food.item = item;
-        zone.addItemMap(food);
-        zone.service.addItemMap(food);
-    }
-
-    public void startDie() {
         Zone z = zone;
-        super.startDie();
         if (z != null) {
             dropDragonBall(z, ItemName.NGOC_RONG_3_SAO, 20);
             dropDragonBall(z, ItemName.NGOC_RONG_4_SAO, 60);
             dropDragonBall(z, ItemName.NGOC_RONG_5_SAO, 100);
         }
+    }
+
+    @Override
+    public void startDie() {
+        BossManager.setFideGold(null);
+        super.startDie();
     }
 
     private void dropDragonBall(Zone z, int itemId, int count) {
@@ -115,9 +116,4 @@ public class FideGold extends Boss {
     public void sendNotificationWhenDead(String name) {
         SessionManager.chatVip(String.format("%s: Đã tiêu diệt được %s mọi người đều ngưỡng mộ.", name, this.name));
     }
-//
-//    @Override
-//    public long formatDamageInjure(Object attacker, long dame) {
-//        return Math.min(100000, dame);
-//    }
 }

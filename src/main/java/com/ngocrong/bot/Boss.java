@@ -2,8 +2,10 @@ package com.ngocrong.bot;
 
 import com.ngocrong.consts.Cmd;
 import com.ngocrong.consts.ItemName;
+import com.ngocrong.consts.ItemTimeName;
 import com.ngocrong.item.Item;
 import com.ngocrong.item.ItemMap;
+import com.ngocrong.item.ItemTime;
 import com.ngocrong.lib.RandomCollection;
 import com.ngocrong.map.MapManager;
 import com.ngocrong.map.TMap;
@@ -499,8 +501,7 @@ public abstract class Boss extends Player implements Bot {
         if (canDispose) {
             if (zone == null) {
                 lastAttack = System.currentTimeMillis();
-            }
-            else if (System.currentTimeMillis() - lastAttack >= 15 * 60000 && zone != null) {
+            } else if (System.currentTimeMillis() - lastAttack >= 15 * 60000 && zone != null) {
                 lastAttack = System.currentTimeMillis();
                 this.startDie();
             }
@@ -629,6 +630,13 @@ public abstract class Boss extends Player implements Bot {
         if (zone != null) {
             zone.service.chat(this, chat);
         }
+    }
+
+    public void startProtect(int seconds) {
+        ItemTime item = new ItemTime(ItemTimeName.KHIEN_NANG_LUONG, 3784, seconds, false);
+        this.setProtected(true);
+        addItemTime(item);
+        zone.service.setEffect(null, this.id, Skill.ADD_EFFECT, Skill.CHARACTER, (byte) 33);
     }
 
     @Override

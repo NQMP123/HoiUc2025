@@ -3308,6 +3308,35 @@ public class Player {
             }
             boolean added = false;
             if (item.template.isUpToUp()) {
+                var maxQuantity = 999999;
+                if (item.template.id == 457) {
+                    // Tìm item có thể stack quantity (cùng template và options)
+                    Item existingItem = findItemInList2(this.itemBox, item);
+                    if (existingItem != null) {
+                        if (existingItem.quantity + item.quantity > maxQuantity && maxQuantity != 0) {
+                            int add = maxQuantity - existingItem.quantity;
+                            existingItem.quantity = maxQuantity;
+                            item.quantity -= add;
+                        } else {
+                            existingItem.quantity += item.quantity;
+                        }
+                        this.itemBag[index] = null;
+                        service.setItemBag();
+                        service.setItemBox();
+                        return;
+                    } else {
+                        for (int i = 0; i < itemBox.length; i++) {
+                            if (itemBox[i] == null) {
+                                this.itemBag[index] = null;
+                                itemBox[i] = item;
+                                item.indexUI = i;
+                                service.setItemBag();
+                                service.setItemBox();
+                                return;
+                            }
+                        }
+                    }
+                }
                 int indexItem = getIndexBoxById(item.id);
                 if (indexItem != -1) {
                     this.itemBox[indexItem].quantity += quantityCanAdd;
@@ -3421,6 +3450,35 @@ public class Player {
             }
             boolean added = false;
             if (item.template.isUpToUp()) {
+                var maxQuantity = 999999;
+                if (item.template.id == 457) {
+                    // Tìm item có thể stack quantity (cùng template và options)
+                    Item existingItem = findItemInList2(this.itemBag, item);
+                    if (existingItem != null) {
+                        if (existingItem.quantity + item.quantity > maxQuantity && maxQuantity != 0) {
+                            int add = maxQuantity - existingItem.quantity;
+                            existingItem.quantity = maxQuantity;
+                            item.quantity -= add;
+                        } else {
+                            existingItem.quantity += item.quantity;
+                        }
+                        this.itemBox[index] = null;
+                        service.setItemBag();
+                        service.setItemBox();
+                        return;
+                    } else {
+                        for (int i = 0; i < itemBag.length; i++) {
+                            if (itemBag[i] == null) {
+                                this.itemBox[index] = null;
+                                itemBag[i] = item;
+                                item.indexUI = i;
+                                service.setItemBag();
+                                service.setItemBox();
+                                return;
+                            }
+                        }
+                    }
+                }
                 int indexItem = getIndexBagById(item.id);
                 if (indexItem != -1) {
                     this.itemBag[indexItem].quantity += quantityCanAdd;
@@ -4041,8 +4099,7 @@ public class Player {
 
                     case NpcName.DAISHINKAN:
 //                        if (zone.map.mapID == 178 || zone.map.mapID == 179 || zone.map.mapID == 180) {
-                        if (false) {
-                            menus.add(new KeyValue(1163, "Shop hỗ trợ"));
+                        if (zone.map.mapID == 181) {
                             menus.add(new KeyValue(1164, "Về Đảo Kame"));
                         } else {
 //                            menus.add(new KeyValue(1158, "Thiên Đường Mộng Mơ "));
@@ -4246,6 +4303,7 @@ public class Player {
 
                     case NpcName.QUY_LAO_KAME:
 //                        menus.add(new KeyValue(1127, "Đổi mảnh\ntổng hợp"));
+                        menus.add(new KeyValue(1170, "Di chuyển tới Bãi Biển"));
                         menus.add(new KeyValue(605, "Top 100\nSức mạnh"));
                         //   menus.add(new KeyValue(1210, "Úp Bông tai Cấp 2"));
                         if (clan != null) {
@@ -4631,26 +4689,27 @@ public class Player {
 
                     case NpcName.OSIN: {
                         StringBuilder sb = new StringBuilder();
+                        int[] data = OsinCheckInEvent.MILESTONES;
                         if (zone.map.mapID == 7 || zone.map.mapID == 14 || zone.map.mapID == 0) {
                             sb.append("Sự kiện: Điểm Danh Nhận Quà Tại NPC Ôsin\n");
                             sb.append("- Hướng dẫn: Đến gặp NPC Ôsin tại 3 làng để 'Điểm danh'. Số người điểm danh càng đông, quà càng lớn.\n");
                             sb.append("- Các mốc phần thưởng:\n");
+                            sb.append(String.format("  + Mốc %d người: 500 triệu vàng\n", data[5]));
+                            sb.append(String.format("  + Mốc %d người: 500 triệu vàng\n", data[4]));
+                            sb.append(String.format("  + Mốc %d người: x3 Vệ tinh ngẫu nhiên.\n", data[3]));
+                            sb.append(String.format("  + Mốc %d người: 1 tỷ vàng\n", data[2]));
+                            sb.append(String.format("  + Mốc %d người:1 Item cấp 2 ngẫu nhiên và x2 TNSM cho các người điểm danh 1 ngày\n", data[1]));
+                            sb.append(String.format("  + Mốc %d người: 5 Thỏi vàng.\n", data[0]));
+                            //RadioTest
 //                            sb.append("  + Mốc 200 người: 500 triệu vàng\n");
 //                            sb.append("  + Mốc 300 người: 500 triệu vàng\n");
 //                            sb.append("  + Mốc 400 người: x3 Vệ tinh ngẫu nhiên.\n");
-//                            sb.append("  + Mốc 500 người: 1 tỷ vàng\n");
-//                            sb.append("  + Mốc 1000 người:1 Item cấp 2 ngẫu nhiên và x2 TNSM cho các người điểm danh 1 ngày\n");
-//                            sb.append("  + Mốc 2000 người: 5 Thỏi vàng.\n");
-                            //RadioTest
-                            sb.append("  + Mốc 200 người: 500 triệu vàng\n");
-                            sb.append("  + Mốc 300 người: 500 triệu vàng\n");
-                            sb.append("  + Mốc 400 người: x3 Vệ tinh ngẫu nhiên.\n");
-                            sb.append("  + Mốc 500 người: 50k thỏi vàng\n");
-                            sb.append("  + Mốc 1000 người:100k thỏi vàng\n");
-                            sb.append("  + Mốc 2000 người:200k Thỏi vàng.\n");
+//                            sb.append("  + Mốc 500 người: 50k thỏi vàng\n");
+//                            sb.append("  + Mốc 1000 người:100k thỏi vàng\n");
+//                            sb.append("  + Mốc 2000 người:200k Thỏi vàng.\n");
 
                             sb.append("- Lưu ý quan trọng: Phải tham gia 'Điểm danh' mới có thể 'Nhận quà'.\n");
-                            sb.append("- Mẹo nhỏ: Những người điểm danh vào đúng các mốc 200,300,... sẽ được x2 Phần quà\n");
+//                            sb.append("- Mẹo nhỏ: Những người điểm danh vào đúng các mốc 200,300,... sẽ được x2 Phần quà\n");
                             sb.append("- Số người đã điểm danh: " + OsinCheckInEvent.getTotalTodayCheckIns());
 //                            if (OsinCheckInEvent.) {
                             menus.add(new KeyValue(CMDMenu.OSIN_CHECKIN, "Điểm danh"));
@@ -7390,6 +7449,10 @@ public class Player {
                 assert TOP_TASK != null;
                 TOP_TASK.update();
                 TOP_TASK.show(this);
+                break;
+            case 1170:
+                joinMap(181, false);
+                this.zone.service.setPosition(this, (byte) 0, 45, 360);
                 break;
             case 2810:
 
@@ -10676,7 +10739,6 @@ public class Player {
                         }
                     }
                 }
-
             }
             // Tìm item cùng id để cộng options (logic gốc của bạn)
             int index = getIndexBagById(item.id);
@@ -10867,6 +10929,7 @@ public class Player {
     }
 
     public void pickItem(ItemMap itemMap, int distance) {
+
         itemMap.lock.lock();
         try {
             if (!itemMap.isPickedUp) {
@@ -17516,16 +17579,11 @@ public class Player {
                 return;
             }
             Item item;
-            int index = this.getIndexBagById(ItemName.THOI_VANG);
-            if (index != -1) {
-                item = this.itemBag[index];
-                item.quantity += goldBar;
-                service.setItemBag();
-            } else {
-                item = new Item(457);
-                item.quantity = goldBar;
-                addItem(item);
-            }
+            item = new Item(457);
+            item.setDefaultOptions();
+            item.quantity = goldBar;
+            addItem(item);
+
             this.session.user.setGoldBar(0);
             service.sendThongBao("Bạn đã nhận được " + goldBar + " thỏi vàng, hãy kiểm tra hành trang");
         } else {

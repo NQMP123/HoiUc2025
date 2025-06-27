@@ -299,7 +299,7 @@ public class Zone extends Thread {
             if (item.playerID != -1 && this.findCharByID(item.playerID) != null && thuhut) {
                 var player = this.findCharByID(item.playerID);
                 if (player.isBuaThuHut()) {
-                    player.addItem(item.item);
+                    player.pickItem(item, 0);
                     player.service.sendThongBao("Bạn nhặt được " + item.item.template.name);
                     return;
                 }
@@ -1511,6 +1511,8 @@ public class Zone extends Thread {
                         } else if (map.mapID >= 168 && map.mapID <= 174) {
                             //maptet = 0.01
 //                            exp /= 100;
+                        } else if (map.mapID == 181) {
+                            exp = 0;
                         } else if (exp > 10_000_000) {
                             // tnsm > 10tr
                             exp = Utils.nextInt(9_000_000, 10_000_000);

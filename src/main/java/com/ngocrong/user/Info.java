@@ -482,6 +482,13 @@ public class Info {
                 this.mpFullTemp += Utils.percentOf(this.mpFullTemp, _player.myDisciple.petBonus);
             }
         }
+        if (_player.isHuman()) {
+            var itemCapsuleVIP = _player.getItemInBag(ItemName.CAPSULE_VIPPRO);
+            if (itemCapsuleVIP != null && !itemCapsuleVIP.options.isEmpty()) {
+                var itemOption = itemCapsuleVIP.options.get(0);
+                addOption(itemOption.optionTemplate.id, itemOption.param);
+            }
+        }
         this.damageFull += this.options[0];
         this.hpFullTemp += ((this.options[2] + this.options[22]) * 1000L) + this.options[6] + this.options[48];
         this.mpFullTemp += ((this.options[2] + this.options[23]) * 1000L) + this.options[7] + this.options[48];

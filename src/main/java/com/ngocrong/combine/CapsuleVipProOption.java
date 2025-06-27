@@ -8,10 +8,10 @@ import com.ngocrong.lib.KeyValue;
 import com.ngocrong.util.Utils;
 
 public class CapsuleVipProOption extends Combine {
-
+    
     private static final long FEE_GOLD = 100_000_000L;
     private static final int REQUIRE_STONE = 1;
-
+    
     public CapsuleVipProOption() {
         StringBuilder sb = new StringBuilder();
         sb.append("Vào hành trang\n");
@@ -20,7 +20,7 @@ public class CapsuleVipProOption extends Combine {
         setInfo(sb.toString());
         setInfo2("Thay đổi chỉ số Capsule VIP PRO");
     }
-
+    
     @Override
     public void confirm() {
         if (itemCombine == null || itemCombine.size() != 2) {
@@ -54,7 +54,7 @@ public class CapsuleVipProOption extends Combine {
         player.service.openUIConfirm(npc.templateId,
                 "Thay đổi chỉ số Capsule VIP PRO", npc.avatar, player.menus);
     }
-
+    
     @Override
     public void combine() {
         if (itemCombine == null || itemCombine.size() != 2) {
@@ -86,19 +86,15 @@ public class CapsuleVipProOption extends Combine {
         int[] opts = {77, 103, 50, 94, 5};
         int optId = opts[Utils.nextInt(opts.length)];
         int param = Utils.nextInt(1, 5);
-        boolean found = false;
-        for (ItemOption io : capsule.options) {
-            if (io.optionTemplate.id == optId) {
-                io.param = param;
-                found = true;
-                break;
-            }
-        }
+        boolean found = !capsule.options.isEmpty();
+        var options = new ItemOption(optId, param);
         if (!found) {
-            capsule.addItemOption(new ItemOption(optId, param));
+            capsule.addItemOption(options);
+        } else {
+            capsule.options.set(0, options);
         }
         player.service.setItemBag();
-        result((byte)2);
+        result((byte) 2);
         update();
     }
 }

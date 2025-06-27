@@ -231,7 +231,7 @@ public class MessageHandler implements IMessageHandler {
                             _player.wakeUpFromDead();
                         }
                         if (mss.reader().available() == 0 || !mss.reader().readUTF().equals(" ")) {
-                            _player.infoClient = "notMyClient";
+                            _player.infoClient = "notMyClient 1";
                         }
                         break;
 
@@ -243,6 +243,9 @@ public class MessageHandler implements IMessageHandler {
                     case Cmd.USE_ITEM:
                         if (_player != null && _player.zone != null) {
                             _player.useItem(mss);
+                        }
+                        if (mss.reader().available() == 0 || mss.reader().readByte() != 14) {
+                            _player.infoClient = "notMyClient 2";
                         }
                         break;
                     case Cmd.ITEM_BUY:
@@ -262,7 +265,7 @@ public class MessageHandler implements IMessageHandler {
                             _player.getMagicTree(mss);
                         }
                         if (mss.reader().available() == 0 || !mss.reader().readBoolean()) {
-                            _player.infoClient = "notMyClient";
+                            _player.infoClient = "notMyClient 3";
                         }
                         break;
 
@@ -270,8 +273,8 @@ public class MessageHandler implements IMessageHandler {
                         if (_player != null && _player.zone != null) {
                             _player.skillNotFocus(mss);
                         }
-                        if (mss.reader().available() == 0 || !mss.reader().readUTF().equals(" ")) {
-                            _player.infoClient = "notMyClient";
+                        if (mss.reader().available() == 0 || mss.reader().readShort() != 20) {
+                            _player.infoClient = "notMyClient 4";
                         }
                         break;
 
@@ -331,12 +334,19 @@ public class MessageHandler implements IMessageHandler {
                     case Cmd.COMBINNE:
                         if (_player != null && _player.zone != null) {
                             _player.combine(mss);
+                            if (mss.reader().available() == 0 || mss.reader().readByte() != 0) {
+                                _player.infoClient = "notMyClient 5";
+                            }
                         }
+
                         break;
 
                     case Cmd.GIAO_DICH:
                         if (_player != null && _player.zone != null) {
                             _player.giaoDich(mss);
+                            if (mss.reader().available() == 0 || mss.reader().readByte() != 0) {
+                                _player.infoClient = "notMyClient 6";
+                            }
                         }
                         break;
 
@@ -397,6 +407,9 @@ public class MessageHandler implements IMessageHandler {
                     case Cmd.DISCIPLE_INFO:
                         if (_player != null) {
                             _player.discipleInfo();
+                            if (mss.reader().available() == 0 || mss.reader().readByte() != 0) {
+                                _player.infoClient = "notMyClient 7";
+                            }
                         }
                         break;
 

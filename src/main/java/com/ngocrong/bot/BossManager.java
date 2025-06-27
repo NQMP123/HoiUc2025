@@ -36,6 +36,16 @@ import java.util.concurrent.TimeUnit;
 
 public class BossManager {
 
+    private static FideGold fideGold;
+
+    public static FideGold getFideGold() {
+        return fideGold;
+    }
+
+    public static void setFideGold(FideGold fg) {
+        fideGold = fg;
+    }
+
     public static void bornBoss() {
         //bossShizuka();
         bossCooler();
@@ -212,8 +222,12 @@ public class BossManager {
 
     public static void bossFideGold() {
         Runnable task = () -> {
-            FideGold fideGold = new FideGold();
-            fideGold.setLocation(MapName.DONG_KARIN, 1);
+            if (fideGold != null && !fideGold.isDead()) {
+                return;
+            }
+            FideGold fg = new FideGold();
+            setFideGold(fg);
+            fg.setLocation(MapName.DONG_KARIN, 0);
         };
         long now = System.currentTimeMillis() / 1000;
         long delay = 3600 - (now % 3600);

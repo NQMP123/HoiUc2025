@@ -5,19 +5,20 @@ import com.ngocrong.consts.MapName;
 import com.ngocrong.item.Item;
 import com.ngocrong.item.ItemMap;
 import com.ngocrong.lib.KeyValue;
+import com.ngocrong.mob.Mob;
 import com.ngocrong.user.Player;
 import com.ngocrong.util.Utils;
 
 public class SummerBeachEvent {
 
-    public static void mobReward(Player player) {
+    public static void mobReward(Player player, Mob mob) {
         if (player == null || player.zone == null) {
             return;
         }
         if (player.zone.map.mapID != MapName.BAI_BIEN_NGAY_HE) {
             return;
         }
-        if (Utils.isTrue(10, 100) && player.itemDrop[4] < 100) {
+        if (Utils.isTrue(10, 100) && player.itemDrop[3] < 100) {
             Item it = new Item(ItemName._SAO_BIEN);
             it.setDefaultOptions();
             it.quantity = 1;
@@ -27,8 +28,10 @@ public class SummerBeachEvent {
             map.x = player.getX();
             map.y = player.zone.map.collisionLand(player.getX(), player.getY());
             player.zone.addItemMap(map);
-            player.zone.service.addItemMap(map);
-        } else if (Utils.isTrue(1, 1000) && player.itemDrop[5] < 10) {
+            mob.items.add(map);
+            player.itemDrop[3]++;
+        }
+        if (Utils.isTrue(10, 100) && player.itemDrop[4] < 10) {
             Item it = new Item(ItemName.MANH_CAPSULE_VIPPRO);
             it.setDefaultOptions();
             it.quantity = 1;
@@ -38,7 +41,8 @@ public class SummerBeachEvent {
             map.x = player.getX();
             map.y = player.zone.map.collisionLand(player.getX(), player.getY());
             player.zone.addItemMap(map);
-            player.zone.service.addItemMap(map);
+            mob.items.add(map);
+            player.itemDrop[4]++;
         }
     }
 

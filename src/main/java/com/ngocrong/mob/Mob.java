@@ -408,7 +408,7 @@ public class Mob {
 //        EventTet2025.mobReward(_c);
 //        EventDaNangCap.MobReward(_c);
 //        Event1.mobReward(_c);
-        SummerBeachEvent.mobReward(_c);
+        SummerBeachEvent.mobReward(_c,this);
 //        else if (this.zone.map.isNormalMap()) {
         ////            int rd = Utils.nextInt(50);
 //            int rd = 0;
@@ -1011,7 +1011,7 @@ public class Mob {
                 }
                 if (killer.isBuaThuHut() || killer.isAutoPlay() || killer instanceof BotCold) {
                     for (ItemMap itemMap : items) {
-                        killer.pickItem(itemMap, 0);
+                        killer.pickItem(itemMap, 10);
                     }
                 }
             } finally {
