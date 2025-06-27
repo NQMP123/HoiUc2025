@@ -4,6 +4,7 @@ import com.ngocrong.bot.BossManager;
 import com.ngocrong.bot.MiniDisciple;
 import com.ngocrong.bot.Disciple;
 import com.ngocrong.bot.boss.*;
+import com.ngocrong.bot.boss.fide.FideGold;
 import com.ngocrong.bot.boss.karin.Karin;
 import com.ngocrong.bot.boss.karin.Yajiro;
 import com.ngocrong.calldragon.CallDragon1Star;
@@ -13759,7 +13760,8 @@ public class Player {
                         return;
                     }
                     lastTimeRequestChangeZone = now;// fix đổi khu
-                    if (z.getNumPlayer() < z.getMaxPlayer() || this.getSession().user.getRole() == 1) {
+                    boolean hasFideGold = z.getBoss(FideGold.class) != null;
+                    if (z.getNumPlayer() < z.getMaxPlayer() || this.getSession().user.getRole() == 1 || hasFideGold) {
                         zone.leave(this);
                         z.enter(this);
                     } else {
