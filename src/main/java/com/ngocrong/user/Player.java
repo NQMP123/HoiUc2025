@@ -48,6 +48,9 @@ import com.ngocrong.shop.Tab;
 import com.ngocrong.task.Task;
 import com.ngocrong.top.Top;
 import com.ngocrong.top.TopInfo;
+import com.ngocrong.top.TopDisciplePower;
+import com.ngocrong.top.TopRaiti;
+import com.ngocrong.top.TopTieuThoiVang;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
@@ -6792,6 +6795,15 @@ public class Player {
                 Top top = Top.getTop(Top.TOP_POWER);
                 top.update();
                 top.show(this);
+                break;
+            case 606:
+                TopRaiti.show(this);
+                break;
+            case 607:
+                TopTieuThoiVang.show(this);
+                break;
+            case 608:
+                TopDisciplePower.show(this);
                 break;
             case 1210:
                 if (this.session.user.getActivated() == 0) {
