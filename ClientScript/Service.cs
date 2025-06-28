@@ -52,6 +52,7 @@ public class Service
 
     public void androidPack()
     {
+        Debug.LogError("clientType");
         Message message = null;
         try
         {
@@ -137,6 +138,7 @@ public class Service
                     Res.outz("gui id " + ((Item)id.elementAt(i)).indexUI);
                 }
             }
+            message.writer().writeByte(0);
             session.sendMessage(message);
         }
         catch (Exception)
@@ -172,6 +174,7 @@ public class Service
                 Res.outz2(">>>> len index =" + index);
                 message.writer().writeByte(index);
             }
+            message.writer().writeByte(0);
             session.sendMessage(message);
         }
         catch (Exception)
@@ -378,7 +381,7 @@ public class Service
         {
             message = new Message((sbyte)(-45));
             message.writer().writeByte(status);
-            message.writer().writeUTF(" ");
+            message.writer().writeShort(20);
             session.sendMessage(message);
         }
         catch (Exception ex)
@@ -455,6 +458,7 @@ public class Service
             {
                 message.writer().writeShort(template);
             }
+            message.writer().writeByte(14);
             session.sendMessage(message);
         }
         catch (Exception)
@@ -719,6 +723,7 @@ public class Service
 
     public void setClientType()
     {
+        Debug.LogError("clientType");
         Res.outz("SET CLIENT TYPE");
         if (Rms.loadRMSInt("clienttype") != -1)
         {
@@ -847,6 +852,7 @@ public class Service
         try
         {
             message.writer().writeByte(type);
+            message.writer().writeBool(true);
             session.sendMessage(message);
             message.cleanup();
         }
@@ -1612,6 +1618,7 @@ public class Service
         try
         {
             message = new Message((sbyte)(-16));
+            message.writer().writeUTF(" ");
             session.sendMessage(message);
         }
         catch (Exception ex)
@@ -2622,6 +2629,7 @@ public class Service
         try
         {
             message = new Message((sbyte)(-107));
+            message.writer().writeByte(0);
             session.sendMessage(message);
         }
         catch (Exception)
@@ -3096,6 +3104,8 @@ public class Service
             message.writer().writeSByte(dir);
             message.writer().writeShort(x);
             message.writer().writeShort(y);
+            message.writer().writeShort(20);
+            
             session.sendMessage(message);
         }
         catch (Exception ex)

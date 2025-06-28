@@ -1,4 +1,6 @@
-﻿namespace Assets.Scripts.Assembly_CSharp.HSNR
+﻿using UnityEngine;
+
+namespace Assets.Scripts.Assembly_CSharp.HSNR
 {
     public class AutoPean : IActionListener, IChatable
     {
@@ -43,18 +45,18 @@
         {
             updatePetPean();
             if (isAutoRequestPean)
-                RequestPean();
+            { RequestPean(); }
             if (isAutoDonatePean && GameCanvas.gameTick % 20 == 0)
-                DonatePean();
+            { DonatePean(); }
             if (isAutoHarvestPean)
-                HarvestPean();
+            { HarvestPean(); }
             if (!Char.myCharz().meDead)
-                AutoUsePean();
+            { AutoUsePean(); }
         }
         public static void updatePetPean()
         {
 
-            if (isAutoBuffPean&& Char.myCharz().havePet)
+            if (isAutoBuffPean && Char.myCharz().havePet)
             {
                 if (GameCanvas.gameTick % 50 == 0)
                 {
@@ -89,7 +91,7 @@
                     {
                         GameScr.info1.addInfo("%HP không hợp lệ, vui lòng nhập lại", 0);
                     }
-                   GameUtils.gI().resetTF();
+                    GameUtils.gI().resetTF();
                 }
                 else if (ChatTextField.gI().strChat.Equals(inputMPPercent[0]))
                 {
@@ -109,7 +111,7 @@
                     {
                         GameScr.info1.addInfo("%MP không hợp lệ, vui lòng nhập lại", 0);
                     }
-                   GameUtils.gI().resetTF();
+                    GameUtils.gI().resetTF();
                 }
                 else if (ChatTextField.gI().strChat.Equals(inputHP[0]))
                 {
@@ -124,7 +126,7 @@
                     {
                         GameScr.info1.addInfo("HP không hợp lệ, vui lòng nhập lại", 0);
                     }
-                   GameUtils.gI().resetTF();
+                    GameUtils.gI().resetTF();
                 }
                 else
                 {
@@ -141,13 +143,13 @@
                     {
                         GameScr.info1.addInfo("MP không hợp lệ, vui lòng nhập lại", 0);
                     }
-                   GameUtils.gI().resetTF();
+                    GameUtils.gI().resetTF();
                 }
             }
             else
             {
                 ChatTextField.gI().isShow = false;
-               GameUtils.gI().resetTF();
+                GameUtils.gI().resetTF();
             }
         }
 
@@ -272,7 +274,7 @@
             isSaveData = Rms.loadRMSInt("AutoPeanIsSaveRms") == 1;
             if (isSaveData)
             {
-                isAutoBuffPean  = Rms.loadRMSInt("isAutoBuffPean") == 1;
+                isAutoBuffPean = Rms.loadRMSInt("isAutoBuffPean") == 1;
                 isAutoRequestPean = Rms.loadRMSInt("AutoPeanIsAutoRequestPean") == 1;
                 isAutoDonatePean = Rms.loadRMSInt("AutoPeanIsAutoSendPean") == 1;
                 isAutoHarvestPean = Rms.loadRMSInt("AutoPeanIsAutoHarvestPean") == 1;
@@ -374,11 +376,19 @@
             if (GameScr.hpPotion > 0)
             {
                 if (minimumHPPercent != 0 && isMyHPLowerThan(minimumHP, minimumHPPercent) && GameCanvas.gameTick % 20 == 0)
+                { 
                     GameScr.gI().doUseHP();
+                    Debug.LogError("minimumHPPercent " + minimumHPPercent);
+                }
                 else if (minimumMPPercent != 0 && isMyMPLowerThan(minimumMP, minimumMPPercent) && GameCanvas.gameTick % 20 == 0)
                 {
                     GameScr.gI().doUseHP();
                 }
+               
+            }
+            else
+            {
+              
             }
         }
 
@@ -396,20 +406,30 @@
         {
             if (Char.myCharz().cHP > 0)
             {
-                if (MyHPPercent() > minHPPercent)
-                    return Char.myCharz().cHP < minHP;
-                return true;
+                if (MyHPPercent() < minHPPercent && minHPPercent != 0)
+                {
+                    return true; 
+                }
+                if (minHP  != 0 && Char.myCharz().cHP < minHP)
+                {
+                    return true;
+                }
             }
             return false;
         }
 
         private static bool isMyMPLowerThan(int minMP, int minMPPercent)
         {
-            if (Char.myCharz().cHP > 0)
+            if (Char.myCharz().cMP > 0)
             {
-                if (MyMPPercent() > minMPPercent)
-                    return Char.myCharz().cMP < minMP;
-                return true;
+                if (MyMPPercent() < minMPPercent && minMPPercent != 0)
+                {
+                    return true;
+                }
+                if (minMP != 0 && Char.myCharz().cHP < minMP)
+                {
+                    return true;
+                }
             }
             return false;
         }

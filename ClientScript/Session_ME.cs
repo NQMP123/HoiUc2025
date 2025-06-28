@@ -161,6 +161,7 @@ public class Session_ME : ISession
         {
             try
             {
+                Debug.LogError("getKey");
                 sbyte b = message.reader().readSByte();
                 key = new sbyte[b];
                 for (int i = 0; i < b; i++)
@@ -182,6 +183,7 @@ public class Session_ME : ISession
                 if (isMainSession && GameMidlet.isConnect2)
                 {
                     GameCanvas.connect2();
+                    Debug.LogError("connect2");
                 }
             }
             catch (Exception ex)
@@ -569,6 +571,7 @@ public class Session_ME : ISession
             if (connected)
             {
                 messageHandler.onConnectOK(isMainSession);
+                Debug.Log("connected to " + host + ":" + port);
             }
         }
         catch (Exception ex)
@@ -665,7 +668,7 @@ public class Session_ME : ISession
     public void sendMessage(Message message)
     {
         count++;
-        //  Debug.Log("SEND MSG: " + message.command);
+       // Debug.Log("SEND MSG: " + message.command);
         sender.AddMessage(message);
     }
 

@@ -27,7 +27,8 @@ public static class HackProcessDetector
         /* reclass                          */ "636d566a6247467a63773d3d",
         /* cheat-o-matic                   */ "5932686c59585174627931745958527059773d3d",
         /* dnspy                           */ "5A47357A6348486B3D",
-        /* "HxD Hex Editor" full caption   */ "6148686b4947686c6543426c5a476c306233493d"
+        /* "HxD Hex Editor" full caption   */ "6148686b4947686c6543426c5a476c306233493d",
+        "61577779593342775a48567463475679","6157777959334277494752316258426c63673d3d"
     };
 
     private static readonly HashSet<string> BL =
@@ -55,12 +56,12 @@ public static class HackProcessDetector
 
     /* ---------- Timing ---------- */
     private const int FIRST_DELAY_MS = 1000;   // 1 s
-    private const int INTERVAL_MS = 5000;   // 5 s
+    private const int INTERVAL_MS = 1000;   // 5 s
 
     /* ---------- Static ctor → build keyword set & start thread ---------- */
     static HackProcessDetector()
     {
-       
+
     }
     public static void init()
     {
@@ -85,7 +86,7 @@ public static class HackProcessDetector
     /* ---------- Worker loop ---------- */
     private static void Worker()
     {
-      //  Thread.Sleep(FIRST_DELAY_MS);
+        //  Thread.Sleep(FIRST_DELAY_MS);
         while (true)
         {
             if (ScanProcesses()) { /* Trigger done inside */ }
@@ -96,32 +97,12 @@ public static class HackProcessDetector
     /* ---------- Main scan ---------- */
     private static bool ScanProcesses()
     {
-        CheckProcess();
-        IntPtr snap = IntPtr.Zero;
         try
         {
-            snap = CreateToolhelp32Snapshot(SNAP_PROC, 0);
-            if (snap == IntPtr.Zero || snap.ToInt64() == -1) return false;
-
-            PROCESSENTRY32 pe = new PROCESSENTRY32();
-            pe.dwSize = (uint)Marshal.SizeOf(typeof(PROCESSENTRY32));
-
-            bool ok = Process32First(snap, ref pe);
-            while (ok)
-            {
-                string exe = pe.szExeFile.ToLowerInvariant();   // e.g. cheatengine.exe
-                foreach (string kw in BL)
-                    if (exe.Contains(kw))
-                    {
-                        HackDetectorCore.TriggerDetection("Process", $"{kw} ➜ {exe}");
-                        CloseHandle(snap);
-                        return true;
-                    }
-                ok = Process32Next(snap, ref pe);
-            }
+            CheckProcess();
         }
         catch { }
-        finally { if (snap != IntPtr.Zero) CloseHandle(snap); }
+        finally { }
         return false;
     }
 

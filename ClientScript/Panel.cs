@@ -6289,7 +6289,7 @@ public class Panel : IActionListener, IChatable
     {
         mFont.tahoma_7_yellow.drawString(g, mResources.power + ": " + NinjaUtil.getMoneys(Char.myPetz().cPower), X + 60, 4, mFont.LEFT, mFont.tahoma_7_grey);
 
-        mFont.tahoma_7_yellow.drawString(g, $"Chỉ số cộng thêm :{petBonus}%", X + 60, 16, mFont.LEFT, mFont.tahoma_7_grey);
+     //   mFont.tahoma_7_yellow.drawString(g, $"Chỉ số cộng thêm :{petBonus}%", X + 60, 16, mFont.LEFT, mFont.tahoma_7_grey);
 
         if (Char.myPetz().cDamFull > 0)
         {

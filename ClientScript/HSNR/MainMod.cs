@@ -9,7 +9,7 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
         private static MainMod instance;
         public static bool isAutoRevive;
         private Button[] button = new Button[13];
-
+        private Image settingMod = GameCanvas.loadImage("/mainImage/setting.png");
 
 
         public static readonly string[] ARR_MOD_NAMES = new string[]
@@ -128,6 +128,19 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
         }
         private void paintButton(mGraphics g)
         {
+            if (settingMod != null)
+            {
+                if (GameCanvas.panel != null && !GameCanvas.panel.isShow)
+                {
+                    g.drawImage(settingMod, 150, 0);              
+                    if (GameCanvas.isPointerHoldIn(150, 0, settingMod.getWidth(), settingMod.getHeight()) && GameCanvas.isPointerClick && GameCanvas.isPointerJustRelease)
+                    {
+                        GameCanvas.panel.setTypeMod(false);
+                        GameCanvas.panel.show();
+                        GameCanvas.clearAllPointerEvent();
+                    }
+                }
+            }
             if (!Panel.isShowPhimTat)
             {
                 return;
@@ -461,44 +474,77 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
         }
         public bool Chat(string text)
         {
+            if (string.IsNullOrEmpty(text))
+                return false;
+
+            text = text.Trim(); // Remove whitespace
+
             if (text.StartsWith("k"))
             {
-                int zone = int.Parse(text.Substring(1));
-                Service.gI().requestChangeZone(zone, -1);
-                text = "";
-                return true;
+                string zoneStr = text.Substring(1);
+                if (int.TryParse(zoneStr, out int zone))
+                {
+                    Service.gI().requestChangeZone(zone, -1);
+                    return true;
+                }
+                return false;
             }
             else if (text.StartsWith("cheat"))
             {
-                int cheat = int.Parse(text.Substring(5));
-                if (cheat <= 10)
-                { Time.timeScale = cheat; }
-                else
+                string cheatStr = text.Substring(5);
+                if (int.TryParse(cheatStr, out int cheat))
                 {
-                    GameScr.info1.addInfo("Cheat tối đa là 10", 0);
+                    if (cheat >= 0 && cheat <= 10)
+                    {
+                        Time.timeScale = cheat;
+                        GameScr.info1.addInfo($"Cheat: {cheat}", 0);
+                    }
+                    else
+                    {
+                        GameScr.info1.addInfo("Cheat phải từ 0-10", 0);
+                    }
+                    return true;
                 }
-                text = "";
-                return true;
+                return false;
             }
             else if (text.StartsWith("cheatf"))
             {
-                float cheat = int.Parse(text.Substring(6)) / 10.0f;
-                if (cheat <= 10)
-                { Time.timeScale = cheat; }
-                else
+                string cheatStr = text.Substring(6);
+                if (int.TryParse(cheatStr, out int cheatValue))
                 {
-                    GameScr.info1.addInfo("Cheat tối đa là 10", 0);
+                    float cheat = cheatValue / 10.0f;
+                    if (cheat >= 0 && cheat <= 10)
+                    {
+                        Time.timeScale = cheat;
+                        GameScr.info1.addInfo($"Cheat: {cheat:F1}", 0);
+                    }
+                    else
+                    {
+                        GameScr.info1.addInfo("Cheat phải từ 0-100 (0.0-10.0)", 0);
+                    }
+                    return true;
                 }
-                text = "";
-                return true;
+                return false;
             }
             else if (text.StartsWith("s"))
             {
-                int speed = int.Parse(text.Substring(1));
-                Char.myCharz().cspeed = speed;
-                text = "";
-                return true;
+                string speedStr = text.Substring(1);
+                if (int.TryParse(speedStr, out int speed))
+                {
+                    if (speed >= 0 && speed <= 20) // Add reasonable limits
+                    {
+                        Char.myCharz().cspeed = speed;
+                        GameScr.info1.addInfo($"Speed set to {speed}", 0);
+                    }
+                    else
+                    {
+                        GameScr.info1.addInfo("Speed phải từ 0-20", 0);
+                    }
+                    return true;
+                }
+                return false;
             }
+
             return false;
         }
         public void perform(int idAction, object p)

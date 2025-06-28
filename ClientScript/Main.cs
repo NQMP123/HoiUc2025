@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
+﻿using System.Threading;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -25,7 +22,7 @@ public class Main : MonoBehaviour
 
     public static bool isIphone4;
 
-    
+
     public static bool isWindowsPhone;
 
     public static bool isIPhone;
@@ -86,6 +83,7 @@ public class Main : MonoBehaviour
 
     private void Start()
     {
+       // isIPhone = true;
         if (started)
         {
             return;
@@ -157,6 +155,10 @@ public class Main : MonoBehaviour
             //VoiceSession.gI().update();
             if (Event.current.type.Equals(EventType.Repaint))
             {
+                float point = isIPhone ? (Screen.orientation == ScreenOrientation.LandscapeLeft ? Screen.safeArea.x : 0) : 0;
+                g.translate(point, 0);
+                g.setColor(0);
+                g.fillRect((int)point, 0, Screen.width, Screen.height);
                 GameMidlet.gameCanvas.paint(g);
                 paintCount++;
                 g.reset();
@@ -168,6 +170,7 @@ public class Main : MonoBehaviour
     {
         if (!isRun)
         {
+            Screen.orientation = ScreenOrientation.AutoRotation;
             Application.runInBackground = true;
             QualitySettings.vSyncCount = 1;
             Time.timeScale = 2f;
@@ -293,23 +296,26 @@ public class Main : MonoBehaviour
 
     private void checkInput()
     {
+        float vPoint = isIPhone ? (Screen.orientation == ScreenOrientation.LandscapeLeft ? Screen.safeArea.x : 0) : 0;
+        Vector3 vectorScale = new Vector2(vPoint, 0);
         if (Input.GetMouseButtonDown(0))
         {
-            Vector3 mousePosition = Input.mousePosition;
+
+            Vector3 mousePosition = Input.mousePosition - vectorScale;
             GameMidlet.gameCanvas.pointerPressed((int)(mousePosition.x / (float)mGraphics.zoomLevel), (int)(((float)Screen.height - mousePosition.y) / (float)mGraphics.zoomLevel) + mGraphics.addYWhenOpenKeyBoard);
             lastMousePos.x = mousePosition.x / (float)mGraphics.zoomLevel;
             lastMousePos.y = mousePosition.y / (float)mGraphics.zoomLevel + (float)mGraphics.addYWhenOpenKeyBoard;
         }
         if (Input.GetMouseButton(0))
         {
-            Vector3 mousePosition2 = Input.mousePosition;
+            Vector3 mousePosition2 = Input.mousePosition - vectorScale;
             GameMidlet.gameCanvas.pointerDragged((int)(mousePosition2.x / (float)mGraphics.zoomLevel), (int)(((float)Screen.height - mousePosition2.y) / (float)mGraphics.zoomLevel) + mGraphics.addYWhenOpenKeyBoard);
             lastMousePos.x = mousePosition2.x / (float)mGraphics.zoomLevel;
             lastMousePos.y = mousePosition2.y / (float)mGraphics.zoomLevel + (float)mGraphics.addYWhenOpenKeyBoard;
         }
         if (Input.GetMouseButtonUp(0))
         {
-            Vector3 mousePosition3 = Input.mousePosition;
+            Vector3 mousePosition3 = Input.mousePosition - vectorScale;
             lastMousePos.x = mousePosition3.x / (float)mGraphics.zoomLevel;
             lastMousePos.y = mousePosition3.y / (float)mGraphics.zoomLevel + (float)mGraphics.addYWhenOpenKeyBoard;
             GameMidlet.gameCanvas.pointerReleased((int)(mousePosition3.x / (float)mGraphics.zoomLevel), (int)(((float)Screen.height - mousePosition3.y) / (float)mGraphics.zoomLevel) + mGraphics.addYWhenOpenKeyBoard);
@@ -345,7 +351,7 @@ public class Main : MonoBehaviour
         if (isPC)
         {
             GameMidlet.gameCanvas.scrollMouse((int)(Input.GetAxis("Mouse ScrollWheel") * 10f));
-            float x = Input.mousePosition.x;
+            float x = Input.mousePosition.x - vectorScale.x;
             float y = Input.mousePosition.y;
             int x2 = (int)x / mGraphics.zoomLevel;
             int y2 = (Screen.height - (int)y) / mGraphics.zoomLevel;

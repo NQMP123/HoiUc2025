@@ -14,7 +14,8 @@ public class ScaleGUI
 	public static void initScaleGUI()
 	{
 		Cout.println("Init Scale GUI: Screen.w=" + Screen.width + " Screen.h=" + Screen.height);
-		WIDTH = Screen.width;
+		float scaleW = Main.isIPhone ? (Screen.orientation == ScreenOrientation.LandscapeLeft ? Screen.safeArea.x : 0) : 0;
+		WIDTH = Screen.width - scaleW;
 		HEIGHT = Screen.height;
 		scaleScreen = false;
 		if (Screen.width <= 1200)

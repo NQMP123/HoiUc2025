@@ -3727,6 +3727,7 @@ public class GameScr : mScreen, IChatable
 
     public void doUseHP()
     {
+        Debug.LogError("doUseHP");
         if (Char.myCharz().stone || Char.myCharz().blindEff || Char.myCharz().holdEffID > 0)
         {
             return;
@@ -6073,6 +6074,10 @@ public class GameScr : mScreen, IChatable
                 mFont.tahoma_7b_green2.drawString(g, Char.myCharz().charFocus.cName, imgScrW / 2, 9 + mGraphics.addYWhenOpenKeyBoard, mFont.CENTER);
                 mFont.tahoma_7b_green2.drawString(g, NinjaUtil.getMoneys(Char.myCharz().charFocus.cHP) + string.Empty, imgScrW / 2, 22 + mGraphics.addYWhenOpenKeyBoard, mFont.CENTER);
             }
+            else if (Char.myCharz().itemFocus != null)
+            {
+                mFont.tahoma_7_green2.drawString(g, Char.myCharz().itemFocus.template.name, imgScrW / 2, 9 + mGraphics.addYWhenOpenKeyBoard, mFont.CENTER);
+            }
             else
             {
                 mFont.tahoma_7b_green2.drawString(g, Char.myCharz().cName, imgScrW / 2, 9 + mGraphics.addYWhenOpenKeyBoard, mFont.CENTER);
@@ -6682,7 +6687,7 @@ public class GameScr : mScreen, IChatable
 
         //    return;
         //}
-        if (text == "chat")
+        if (text == "chat123")
         {
             for (int i = 0; i < 50; i++)
             {
@@ -6691,11 +6696,6 @@ public class GameScr : mScreen, IChatable
                     NotifyBoss.addSpawnBoss($"NQMP {i}", "Làng Kakarot");
                 }
             }
-        }
-        if (AutoPro.instance.OnChatFromMe(text))
-        {
-            ChatTextField.gI().isShow = false;
-            return;
         }
         Res.outz("CHAT");
         if (!isPaintMessage || GameCanvas.isTouch)
@@ -6778,7 +6778,7 @@ public class GameScr : mScreen, IChatable
                 zones[i] = message.reader().readByte();
                 pts[i] = message.reader().readByte();
                 numPlayer[i] = message.reader().readByte();
-                maxPlayer[i] = message.reader().readByte();
+                maxPlayer[i] = message.reader().readShort();
                 sbyte b = message.reader().readByte();
                 if (b == 1)
                 {
@@ -7550,6 +7550,10 @@ public class GameScr : mScreen, IChatable
         else if (c.charFocus != null)
         {
             mFont.tahoma_7_green2.drawString(g, c.charFocus.cName, x3, y2, 2);
+        }
+        else if (c.itemFocus != null)
+        {
+            mFont.tahoma_7_green2.drawString(g, c.itemFocus.template.name, x3, y2, 2);
         }
     }
 

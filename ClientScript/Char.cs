@@ -195,9 +195,9 @@ public class Char : IMapObject
     public string cName = string.Empty;
     public string subcName()
     {
-        if (cName.Contains('['))
+        if (cName.Contains("</color>"))
         {
-            cName = cName.Split(']')[1];
+            cName = cName.Split("</color>")[1];
         }
         return cName;
     }
@@ -1774,8 +1774,8 @@ public class Char : IMapObject
     {
         if (this.me && GameCanvas.gameTick % 50 == 0)
         {
-            Debug.LogError("cx :" + this.cx);
-            Debug.LogError("cy :" + this.cy);
+            //Debug.LogError("cx :" + this.cx);
+            //Debug.LogError("cy :" + this.cy);
         }
         if (isMafuba)
         {

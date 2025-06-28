@@ -15,7 +15,7 @@ public class GameMidlet
 
     public static sbyte PROVIDER;
 
-    public static string VERSION = "0.0.2";
+    public static string VERSION = "0.0.3";
 
     public static GameCanvas gameCanvas;
 

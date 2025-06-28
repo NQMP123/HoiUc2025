@@ -97,11 +97,7 @@ namespace Assets.Scripts.Assembly_CSharp.HSNR
         }
         public static void setAK()
         {
-            isAutoSendAttack++;
-            if (isAutoSendAttack >= 3)
-            {
-                isAutoSendAttack = 0;
-            }
+            isAutoSendAttack = (byte)(isAutoSendAttack == 1 ? 0 : 1);
             var strs = "";
             switch (isAutoSendAttack)
             {

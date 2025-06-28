@@ -569,7 +569,7 @@ public class Session_ME2 : ISession
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void sendMessage(Message message)
     {
-        Res.outz("SEND MSG: " + message.command);
+        Debug.Log("SEND MSG2: " + message.command);
         sender.AddMessage(message);
     }
 

@@ -1931,13 +1931,11 @@ public class Controller : IMessageHandler
                 case -36:
                     {
                         sbyte b26 = msg.reader().readByte();
-                        Res.outz("cAction= " + b26);
                         if (b26 == 0)
                         {
                             int num47 = msg.reader().readUnsignedByte();
                             Char.myCharz().arrItemBag = new Item[num47];
                             GameScr.hpPotion = 0;
-                            Res.outz("numC=" + num47);
                             for (int num48 = 0; num48 < num47; num48++)
                             {
                                 short num49 = msg.reader().readShort();
@@ -4943,7 +4941,7 @@ public class Controller : IMessageHandler
                 }
             }
             GameCanvas.debug("SA75x7", 2);
-            num = msg.reader().readByte();
+            num = msg.reader().readShort();
             Res.outz("item size = " + num);
             for (int l = 0; l < num; l++)
             {

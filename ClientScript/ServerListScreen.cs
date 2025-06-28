@@ -55,7 +55,7 @@ public class ServerListScreen : mScreen, IActionListener
 
 
     public static string smartPhoneVN = mainIP;
-    
+
 
     public const sbyte languageVersion = 2;
 
@@ -392,7 +392,7 @@ public class ServerListScreen : mScreen, IActionListener
                         {
                             cmdDownload.paint(g);
                         }
-                        mFont.tahoma_7b_white.drawString(g, mResources.downloading_data +": " + ServerListScreen.demPercent + "/"+ ServerListScreen.nBig, GameCanvas.w / 2, GameCanvas.hh + 24, 2);
+                        mFont.tahoma_7b_white.drawString(g, mResources.downloading_data + ": " + ServerListScreen.demPercent + "/" + ServerListScreen.nBig, GameCanvas.w / 2, GameCanvas.hh + 24, 2);
                         GameScr.paintOngMauPercent(GameScr.frBarPow20, GameScr.frBarPow21, GameScr.frBarPow22, GameCanvas.w / 2 - 50, GameCanvas.hh + 45, 100, 100f, g);
                         GameScr.paintOngMauPercent(GameScr.frBarPow0, GameScr.frBarPow1, GameScr.frBarPow2, GameCanvas.w / 2 - 50, GameCanvas.hh + 45, 100, percent, g);
                     }
@@ -983,6 +983,6 @@ public class ServerListScreen : mScreen, IActionListener
     public void setLinkDefault(sbyte language)
     {
         linkDefault = smartPhoneVN;
-   
+
     }
 }
